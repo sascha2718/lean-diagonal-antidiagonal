@@ -1,0 +1,9 @@
+.lake/
+build/
+*.olean
+*.ilean
+*.trace
+.DS_Store
+
+# Agent experiments and axiom printouts
+tools/scratch/

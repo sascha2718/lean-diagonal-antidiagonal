@@ -1,0 +1,12 @@
+name = "boxlike"
+defaultTargets = ["BoxLike"]
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "v4.32.2"
+
+# The glob covers the root module and every submodule.
+[[lean_lib]]
+name = "BoxLike"
+globs = ["BoxLike", "BoxLike.*"]
