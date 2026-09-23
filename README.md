@@ -28,12 +28,13 @@ comparison with the sources under "Fidelity boundary". Eight are on the main lin
 `BoxLike/Literature.lean` and `BoxLike/LiteratureFeng.lean`: `morrisShmerkin_lyapunov_lt`,
 `fengKaenmaki_gibbs`, `fraserJordanJurga_decomposition`, `jordanRapaport_dimension`,
 `System.feng_info_sum`, `System.feng_info_sum_bar`, `System.feng1_planar`, `System.feng1_bar`.
-Two, `fengHu_exactDim` and `fengKaenmaki_unique`, are in `BoxLike/LiteratureRemarks.lean`; no
-main result depends on them. Falconer's bound `eq:hausdorff_affinity_upper_bound`, which the
-article cites, is proved (`System.dimH_attractor_le`). Fraser's theorem and Bárány–Käenmäki's
-theorem are `Prop` hypotheses of the results that use them, and Rossi's bound is a `Prop` that
-no proof uses; none of them is an axiom. `BoxLike/AxCheck.lean` prints the axioms of every
-endpoint, so that each result shows exactly which cited theorems it depends on; `System.main2`
+Five are off the main line and no main result depends on them: `fengHu_exactDim` and
+`fengKaenmaki_unique` in `BoxLike/LiteratureRemarks.lean`, and `fraserBound`, `fraserROSC` and
+`baranyKaenmakiTheorem` in `BoxLike/LiteratureOffMain.lean`. Falconer's bound
+`eq:hausdorff_affinity_upper_bound`, which the article cites, is proved
+(`System.dimH_attractor_le`). Rossi's bound is a `Prop` that no proof uses and is no axiom.
+`BoxLike/AxCheck.lean` prints the axioms of every endpoint, so that each result shows exactly
+which cited theorems it depends on; `System.main2`
 depends on the eight of the main line. The case `s ≥ 2` of `thm:main_extended`
 (`System.main_extended_ge_two`) and `System.dimH_attractor_of_two_le` depend on none.
 
@@ -56,6 +57,7 @@ depends on the eight of the main line. The case `s ≥ 2` of `thm:main_extended`
 | `EntropyFactor` | Lifts of a block to `Σ_Z`, `0 ≤ H_ν(\overline{𝒫}_0^{n-1}) - H_{q_*ν}(𝒫_0^{n-1}) ≤ log 2`, `h(q_*ν) = h(ν)` |
 | `Thermodynamic` | `λ_1`, `λ_2`, `\overline{λ}`, `eq:eq_state_def`, `f_{1,s}`, `f_{2,s}`, Gibbs measures on `Σ_Z`, the conclusion of `thm:eq_state_is_sum`, the coordinate marginals, `\overline{λ} < 0` |
 | `Literature`, `LiteratureFeng` | The eight literature axioms of the main line |
+| `LiteratureOffMain` | Fraser's theorem and the theorem of Bárány and Käenmäki as axioms; `thm:fraser`, the squeeze `dimmaff(X) = dimaff(X)` and `prop:ssc_no_overlap_not_pesc` without hypotheses |
 | `Main` | `thm:entropy_eq_gibbs`, `eq:proj_eq_is_sum`, `eq:gibbs_proj_dim`, for a tuple containing a proximal diagonal generator |
 | `Proximal` | Proximal matrices and tuples through the characteristic polynomial, `thm:box_like_proximal`, irreducible tuples |
 | `Lyapunov` | Existence of the limits defining `λ_1`, `λ_2`, `Λ` by Fekete's lemma, `-∞ < λ_2 ≤ λ_1 < 0`, `eq:energy_def`, `\overline{λ}` as a limit |
@@ -83,6 +85,8 @@ depends on the eight of the main line. The case `s ≥ 2` of `thm:main_extended`
 | `CodingTopology` | `τ`, `ω` as closed embeddings, `β` as a homeomorphism conjugating `σ²` to the shift, the natural projection `η`; `η_*` is injective and preserves ergodicity in both directions |
 | `NaturalExtension` | `η_* : ℳ_σ(Σ) → ℳ_σ(Σ^+)` is a bijection, by the Carathéodory extension of a content on the clopen future sets |
 | `LocalDimBounds` | Pointwise dimensions on `ℝ^d` lie in `[0, d]`, exact-dimensional iff `\overline{\dim}_p = \underline{\dim}_H`, the first line of `eq:haus_dim_sum` for all finite Borel measures, the second line of `eq:dimension_measure_def` |
+| `InvariantMeasures` | The invariant measures are weak-star compact and `h_0 + Λ(𝖠, ·, s)` is upper semicontinuous on them, so it attains its maximum |
+| `EquilibriumExistence` | An `s`-equilibrium state exists for every `s ≥ 0`, by the construction of Misiurewicz; irreducibility is not needed |
 | `Example` | `ex:projection_double_dimensional`, `P(𝖠, t) = log ρ(M(t))`, the characteristic equation, `thm:main1` and `thm:main2` for `0 < s ≤ 1` |
 | `Classification` | `thm:A_classification` for arbitrary planar tuples, counterexamples without proximality, a proximal box-like tuple with rotations is irreducible and not strongly irreducible |
 | `PressureZ` | The pressure `P_Z(f)` of `sec:gibbs_measures` and its limit, `P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s})`, `μ_2 = flip_*μ_1`, the integral formulas of `thm:eq_state_is_sum`, the fourth decomposition from the other three |

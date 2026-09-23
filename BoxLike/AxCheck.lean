@@ -2,9 +2,10 @@
 The axiom audit of the endpoints listed in the state table of `PLAN.md`. This module is
 covered by the library glob and is not imported by the root module. Every line must report
 only `propext`, `Classical.choice`, `Quot.sound` and literature axioms of
-`BoxLike/Literature.lean`, `BoxLike/LiteratureFeng.lean` and `BoxLike/LiteratureRemarks.lean`;
-the literature axioms listed are the cited theorems the endpoint depends on. The axioms of
-`BoxLike/LiteratureRemarks.lean` occur in no endpoint of the four main results.
+`BoxLike/Literature.lean`, `BoxLike/LiteratureFeng.lean`, `BoxLike/LiteratureRemarks.lean` and
+`BoxLike/LiteratureOffMain.lean`; the literature axioms listed are the cited theorems the
+endpoint depends on. The axioms of the last two modules occur in no endpoint of the four main
+results.
 -/
 import BoxLike
 
@@ -240,6 +241,20 @@ open BoxLike
 #print axioms dimH_heavyBallSet_le
 #print axioms ofReal_lowerHausdorffDim_eq_iInf_dimH_of_finiteDimensional
 #print axioms lowerHausdorffDim_eq_toReal_iInf_dimH
+#print axioms compactSpace_probabilityMeasure
+#print axioms isCompact_invariantMeasures
+#print axioms invariantMeasures_nonempty
+#print axioms entropy_eq_iInf
+#print axioms System.energyLim_eq_iInf
+#print axioms upperSemicontinuousOn_entropy
+#print axioms System.upperSemicontinuousOn_energyLim
+#print axioms System.exists_maximiser
+#print axioms System.exists_csSup_entropy_add_energyLim
+#print axioms System.log_svfSum_le_avgBlockMeasure
+#print axioms System.exists_invariant_pressure_le
+#print axioms System.exists_invariant_le_entropy_add_energy
+#print axioms System.exists_isEquilibriumState
+#print axioms System.dimH_attractor_of_strongOpenSet
 #print axioms le_upperBoxDim_of_measure_pos
 #print axioms le_packingDim_of_measure_pos
 #print axioms ofReal_upperPackingDim_le_packingDim
@@ -419,6 +434,13 @@ open BoxLike
 #print axioms NoOverlap.ssc_no_overlap_not_pesc
 #print axioms NoOverlap.ssc_no_overlap_not_pesc'
 #print axioms NoOverlap.planar_separation_not_pesc
+#print axioms System.fraser_packingDim_eq
+#print axioms System.fraser_upperBoxDim_le_dimmaff
+#print axioms System.dim_eq_dimaff_of_rectangularOpenSet
+#print axioms System.dimmaff_eq_dimaff_of_dimH
+#print axioms System.dimmaff_eq_dimaff_main2'
+#print axioms NoOverlap.exists_system_ssc_not_pesc
+#print axioms NoOverlap.exists_system_planar_not_pesc
 
 /-! The literature axioms take the discrete measurable structure of the alphabet,
 `MeasurableSingletonClass ι`, as an instance argument of their own signature. Each example

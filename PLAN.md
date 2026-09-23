@@ -10,20 +10,21 @@ formalises the article on Mathlib alone. The library is sorry-free. It proves `t
 axiom), and with them `\dim_H X = min{2, dimaff(X)}` under the hypotheses of `thm:main_extended`
 (`System.dimH_attractor_eq_min`, and `System.dimH_attractor_of_two_le` for `dimaff(X) ≥ 2`
 under the strong open set condition, with no measure assumed). Off the main line it proves
-`thm:A_classification`, `ex:projection_double_dimensional`, both lines of
-`eq:dimension_measure_def`, `prop:ssc_no_overlap_not_pesc` and the chain
+`thm:A_classification`, `ex:projection_double_dimensional`, the existence of an `s`-equilibrium
+state for every `s ≥ 0`, both lines of `eq:dimension_measure_def`, `prop:ssc_no_overlap_not_pesc` and the chain
 `\dim_H X = \dim_P X = \dim_M X = dimaff(X)` of the introduction, the last two from cited
 theorems taken as hypotheses.
 
 The literature theorems the article cites without proof are axioms, to be restated in
 `Challenge.lean` and whitelisted by name; "Fidelity boundary" lists them, the rules they obey
-and their comparison with the sources. Ten are declared. Eight are on the main line, in
-`BoxLike/Literature.lean` and `BoxLike/LiteratureFeng.lean`. Two, `fengHu_exactDim` and
-`fengKaenmaki_unique`, are in `BoxLike/LiteratureRemarks.lean`; no main result depends on them.
-Falconer's bound `eq:hausdorff_affinity_upper_bound`, which the article cites, is proved
-(`System.dimH_attractor_le`, through the upper Minkowski dimension). Fraser's theorem and
-Bárány–Käenmäki's theorem are `Prop`s that enter as hypotheses of the results that use them;
-Rossi's bound is a `Prop` that no proof uses. None of the three is an axiom.
+and their comparison with the sources. Thirteen are declared. Eight are on the main line, in
+`BoxLike/Literature.lean` and `BoxLike/LiteratureFeng.lean`. Five are off it and no main result
+depends on them: `fengHu_exactDim` and `fengKaenmaki_unique` in `BoxLike/LiteratureRemarks.lean`,
+`fraserBound`, `fraserROSC` and `baranyKaenmakiTheorem` in `BoxLike/LiteratureOffMain.lean`,
+which also derives the statements of the article from them without hypotheses. Falconer's bound
+`eq:hausdorff_affinity_upper_bound`, which the article cites, is proved
+(`System.dimH_attractor_le`, through the upper Minkowski dimension). Rossi's bound is a `Prop`
+that no proof uses and is no axiom.
 
 The module index is the root module `BoxLike.lean`. This file carries the build setup, the
 layers of the formalisation, the state of every labelled result, the remaining work, the
@@ -134,7 +135,8 @@ layer D are fixed.
 | `thm:irred_eq_state`: the Gibbs bounds for `0 < s < 2` | `System.HasGibbsBounds`, `fengKaenmaki_gibbs` | `Thermodynamic`, `Literature` | axiom (section 6) |
 | `thm:irred_eq_state`: uniqueness for every `s > 0`, for a proximal box-like tuple with rotations | `System.unique_equilibrium_of_lt_two`, `System.unique_equilibrium_of_two_le`, `System.unique_equilibrium` | `UniqueEquilibrium` | **done**; for `0 < s < 2` from the axiom `fengKaenmaki_unique` and irreducibility, for `s ≥ 2` with no axiom and no hypothesis on the tuple |
 | `thm:irred_eq_state` for `s ≥ 2`: existence, uniqueness, ergodicity | `System.isEquilibriumState_bernoulli`, `System.IsEquilibriumState.eq_bernoulli`, `System.existsUnique_isEquilibriumState_of_two_le`, `System.IsEquilibriumState.ergodic_of_two_le` | `BernoulliEquilibrium` | **done**, with no literature axiom: the equilibrium state is the Bernoulli measure with weights `|det A_i|^{s/2} / ∑_j |det A_j|^{s/2}` |
-| `thm:irred_eq_state`: existence for `0 < s < 2` | | | open; a hypothesis of the main theorems |
+| `thm:irred_eq_state`: existence, the weak-star infrastructure (tex lines 2322 to 2323, Käenmäki, Theorems 2.6 and 4.1) | `compactSpace_probabilityMeasure`, `InvariantMeasures`, `isCompact_invariantMeasures`, `invariantMeasures_nonempty`, `entropy_eq_iInf`, `System.energyLim_eq_iInf`, `upperSemicontinuousOn_entropy`, `System.upperSemicontinuousOn_energyLim`, `System.exists_maximiser` | `InvariantMeasures` | **done**, with no literature input: `h_0 + Λ(𝖠, ·, s)` attains its maximum on the compact set `ℳ_σ(Σ)` for every `s ≥ 0` |
+| `thm:irred_eq_state`: existence, for every `s ≥ 0` | `System.log_svfSum_le_avgBlockMeasure`, `System.exists_invariant_pressure_le`, `System.exists_invariant_le_entropy_add_energy`, `System.exists_isEquilibriumState` | `EquilibriumExistence` | **done**, with no literature input, by the construction of Misiurewicz: the averaged block measures satisfy the two-parameter estimate, and a weak-star limit point is an equilibrium state. Irreducibility is not used. Ergodicity of the measure produced is not formalised |
 | sub-multiplicativity of the equilibrium state, `C⁻¹ φ^s(A_𝐢) ≤ μ([𝐢]) ≤ C φ^s(A_𝐢)` at `s = dimaff` (tex lines 2330 to 2345) | `System.HasGibbsBounds.submultiplicative`, `System.HasGibbsBounds.cylinder_bounds_dimaff`, `System.IsEquilibriumState.submultiplicative`, `System.IsEquilibriumState.cylinder_bounds_dimaff` | `GibbsProperties` | **done**; the forms for the equilibrium state use `fengKaenmaki_gibbs` |
 | Bernoulli measures, their invariance and ergodicity (tex lines 2451 to 2456) | `bernoulli`, `measurePreserving_shift_bernoulli`, `ergodic_shift_bernoulli`, `eq_bernoulli_of_cylinder`, `eq_bernoulli_weightMeasure_of_measureReal_cylinder`, `entropy_bernoulli`, `IsBernoulli` | `BernoulliEquilibrium`, `GibbsProperties` | **done** |
 | the equilibrium state for `0 < s < 2` is not quasi-Bernoulli and not Bernoulli (tex lines 555 to 560, 2457 to 2463) | `System.exists_mul_svf_le`, `System.not_quasiBernoulli`, `System.not_isBernoulli`, `System.IsEquilibriumState.not_quasiBernoulli`, `System.IsEquilibriumState.not_isBernoulli` | `GibbsProperties` | **done**, from the Gibbs bounds alone, for every proximal box-like tuple with rotations; "grouping a Bernoulli measure in pairs gives a Bernoulli measure" (tex line 2462) is not formalised and not needed |
@@ -205,7 +207,7 @@ layer D are fixed.
 | `∑_i |det A_i| ≤ 1` under the strong open set condition, normalised Lebesgue measure on the open set (tex lines 3699 to 3723) | `System.volume_image_phi`, `System.StrongOpenSet.exists_isBounded`, `System.StrongOpenSet.sum_abs_det_le_one`, `System.StrongOpenSet.exists_isInvariantMeasure_isExactDim` | `LebesgueOpenSet` | **done** |
 | `thm:main_extended`, `s ≥ 2` | `System.StrongOpenSet.sum_abs_det_eq_one`, `System.main_extended_ge_two` | `MainExtended` | **done**, with no literature axiom; rotations, proximality and the projective exponential separation condition are not used. `thm:main2` does not use it |
 | `thm:main_extended` | `System.main_extended`, `System.main_extended_min` | `MainExtended` | **done**; axioms: those of `System.main_extended_dimaff` |
-| `\dim_H X = min{2, dimaff(X)}` under the hypotheses of `thm:main_extended` (paragraph after `eq:hausdorff_ergodic_lyapunov`) | `System.dimH_attractor_eq_min`, `System.dimH_attractor_of_two_le` | `DimensionFormula` | **done**; axioms: the eight of the main line, and none for `dimaff(X) ≥ 2` under the strong open set condition, with no measure assumed |
+| `\dim_H X = min{2, dimaff(X)}` under the hypotheses of `thm:main_extended` (paragraph after `eq:hausdorff_ergodic_lyapunov`) | `System.dimH_attractor_eq_min`, `System.dimH_attractor_of_strongOpenSet`, `System.dimH_attractor_of_two_le` | `DimensionFormula` | **done**; axioms: the eight of the main line, and none for `dimaff(X) ≥ 2` under the strong open set condition, with no measure assumed |
 | `eq:hausdorff_ergodic_lyapunov` (Rossi) | `upperHausdorffDim`, `System.RossiBound`, `IsExactDim.upperHausdorffDim_eq`, `System.upperHausdorffDim_map_proj_eq` | `DimensionFormula` | the bound is the `Prop` `System.RossiBound`, no axiom, and no proof depends on it; equality for the equilibrium state of `thm:main_extended` **done** |
 
 ## 4. Remaining work, in order
@@ -213,24 +215,24 @@ layer D are fixed.
 The four main results are complete, `thm:main_extended` for every `s > 0`, and so is layer E,
 whose design `LAYER_E.md` documents.
 
-1. Existence of the `s`-equilibrium state for `0 < s < 2`: a hypothesis of the main theorems.
-   For `s ≥ 2` it is proved (`System.existsUnique_isEquilibriumState_of_two_le`).
-2. Fraser's theorem (`System.FraserBound`, `System.FraserROSC`) and Bárány–Käenmäki's theorem
-   (`NoOverlap.BaranyKaenmakiPair`, `NoOverlap.BaranyKaenmakiTheorem`) are `Prop` hypotheses.
-   Whether they become axioms is the decision of the project owner.
-3. Not formalised: the metric form of the doubling property (tex lines 2584 to 2588), which the
+1. Ergodicity of the equilibrium state produced by `System.exists_isEquilibriumState`: the
+   construction gives an invariant measure, and the article's source states an ergodic one. For
+   `0 < s < 2` ergodicity of the equilibrium state follows from `thm:eq_state_is_sum`
+   (`System.ergodic_of_hasProximalDiagonal`) and for `s ≥ 2` from the Bernoulli form, so the
+   gap is the ergodic decomposition of `h_0 + Λ(𝖠, ·, s)` in general.
+2. Not formalised: the metric form of the doubling property (tex lines 2584 to 2588), which the
    article does not use; the explicit Lyapunov exponents of `ex:projection_double_dimensional`
    through the Markov measure (tex lines 3111 to 3154); `(π^+)_*μ^+ = π_*μ` (tex lines 896 to
    897), since the library has no one-sided `π^+`; "grouping a Bernoulli measure gives a
    Bernoulli measure" (tex line 2462), which no proof needs.
-4. `tools/LayerE.lean` is superseded by the library and holds no declaration the library lacks.
+3. `tools/LayerE.lean` is superseded by the library and holds no declaration the library lacks.
    Its deletion awaits the decision of the project owner.
-5. `Challenge.lean`, `Solution.lean`, the comparator configuration with the whitelisted axioms;
+4. `Challenge.lean`, `Solution.lean`, the comparator configuration with the whitelisted axioms;
    a LICENSE; a first commit.
-6. `Literature`: optionally shrink `fraserJordanJurga_decomposition` to the measure `μ_1`.
+5. `Literature`: optionally shrink `fraserJordanJurga_decomposition` to the measure `μ_1`.
    `System.decomposition₂_of_decompositions` and `System.GibbsDecomposition.map_flip` support
    it: three decompositions and the finiteness of `μ_1` give the fourth and `μ_2 = flip_*μ_1`.
-7. Facts proved twice under different names, to be merged:
+6. Facts proved twice under different names, to be merged:
    `System.GibbsDecomposition.map_unCode_tau₂` and `System.GibbsDecomposition.map_unCode_omega₂`
    in `PressureZ` and `System.GibbsDecomposition.map_tau_eq_map_omega` in `GibbsProperties`;
    `IsGibbsAt` in `PressureZ` and `IsGibbsWith` in `GibbsProperties`, related by `Iff.rfl`.
@@ -385,6 +387,16 @@ whose design `LAYER_E.md` documents.
   The lemma needs no literature input. The irreducibility of a proximal box-like tuple needs
   only one anti-diagonal generator, no diagonal one, and not `thm:box_like_proximal`. The
   sentence on the union of the coordinate axes is at tex lines 1594 to 1595.
+- From the existence of equilibrium states (tex lines 2322 to 2323, Käenmäki, Theorems 2.6 and
+  4.1):
+  - Existence needs neither irreducibility nor rotations, and holds for every `s ≥ 0`, as the
+    article states it; `thm:irred_eq_state` uses irreducibility only for uniqueness and for the
+    Gibbs bounds.
+  - The sub-additive variational principle needs a limit measure: for the block measures
+    `μ_n` of the construction the inequality `h_0(μ_n) + Λ(𝖠, μ_n, s) ≥ P(𝖠, s) - ε` is false
+    in general, since `φ^s` is sub-multiplicative and Jensen's inequality goes the wrong way.
+    What survives is the two-parameter estimate `System.log_svfSum_le_avgBlockMeasure` for
+    `1 ≤ m ≤ n`, from which a weak-star limit point gives the conclusion.
 - From `sec:affinity_dim` and `sec:normalisation`:
   - tex lines 2335 to 2338: correct; the invariance of `μ` is not used.
   - tex lines 2451 to 2456: the definition of a Bernoulli measure does not say that `(p_i)` is
@@ -526,7 +538,7 @@ Four kinds of assumption are kept apart.
 |---|---|
 | Standing assumptions of a theorem: proximal, with rotations, projective exponential separation, strong open set condition | hypotheses of the statement, as in the article |
 | Literature theorems the article cites without proof | `axiom` in `BoxLike/Literature.lean` or `BoxLike/LiteratureFeng.lean`, and in `BoxLike/LiteratureRemarks.lean` when no main result depends on it; restated in `Challenge.lean`, whitelisted by name in `comparator-config.json`, with the exact citation in the doc comment |
-| Literature theorems behind claims off the main line that are not authorised as axioms | `Prop`-valued definitions, hypotheses of the theorems that use them: `System.FraserBound`, `System.FraserROSC`, `NoOverlap.BaranyKaenmakiPair`, `NoOverlap.BaranyKaenmakiTheorem`; `System.RossiBound` is used by no theorem |
+| Literature theorems behind claims off the main line that are not authorised as axioms | `Prop`-valued definitions, hypotheses of the theorems that use them, when they are not declared as axioms: `System.RossiBound` is used by no theorem. The `Prop`s `System.FraserBound`, `System.FraserROSC`, `NoOverlap.BaranyKaenmakiPair` and `NoOverlap.BaranyKaenmakiTheorem` state what the axioms of `BoxLike/LiteratureOffMain.lean` assert, and the results that use them exist in both forms |
 | Results of the article not proved | `sorry` endpoints of a statement layer, open rows of section 3; they never become axioms |
 
 Rules for a literature axiom:
@@ -561,8 +573,8 @@ Bernoulli form (`System.IsEquilibriumState.ergodic_of_two_le`).
 | Jordan–Rapaport, Theorem 1.1 (arXiv:1908.00271), in `eq:gibbs_proj_dim` | `jordanRapaport_dimension` | declared; compared with the source: faithful. `System.ProjExpSeparation` is their Definition 1 verbatim; ratios of either sign are allowed; reductions: two-sided to one-sided shift |
 | Feng–Käenmäki, `thm:irred_eq_state`: ergodicity of the equilibrium state | | not declared and not needed: for `0 < s < 2` ergodicity follows from `thm:eq_state_is_sum`, since `μ = q_*μ_1` is a factor of the ergodic `μ_1` (`System.ergodic_of_hasProximalDiagonal`); for `s ≥ 2` the equilibrium state is Bernoulli (`System.IsEquilibriumState.ergodic_of_two_le`) |
 | Falconer (1988), cited as Theorem 5.4: `eq:hausdorff_affinity_upper_bound` and the bound for the upper Minkowski dimension (tex lines 573 to 574) | | not declared: proved for every box-like system in `FalconerBound` (`System.upperBoxDim_attractor_le`, `System.dimH_attractor_le`); the `Prop` `System.FalconerBoxBound` of `FraserChain` states the bound and holds (`System.falconerBoxBound`) |
-| Fraser, Theorem 2.3 and Corollary 2.5 (arXiv:1108.2639v1), `thm:fraser` | | not declared: Theorem 2.3 is the pair of `Prop`s `System.FraserBound` (for every box-like set) and `System.FraserROSC` (under the rectangular open set condition) in `FraserChain`, stated as in the source. The first equality `\dim_P X = \overline{\dim}_M X` is proved (`System.packingDim_attractor`), and Corollary 2.5 is derived from `System.FraserROSC` (`System.FraserROSC.dimmaff_eq_dimaff`) |
-| Bárány–Käenmäki, Theorem 2.1 (Adv. Math. 379 (2021), arXiv:1910.04623v4), in `prop:ssc_no_overlap_not_pesc` | | not declared: the `Prop` `NoOverlap.BaranyKaenmakiPair`, the form the article uses (tex lines 1481 to 1490), is the hypothesis of `NoOverlap.ssc_no_overlap_not_pesc`; the `Prop` `NoOverlap.BaranyKaenmakiTheorem`, the form of the source, is the hypothesis of `NoOverlap.ssc_no_overlap_not_pesc'`. Applied to `η_n = exp(-n²)` the source's form gives a pair with every property of `NoOverlap.BaranyKaenmakiPair` except the transcendence of `λ` (`NoOverlap.exists_pair_of_baranyKaenmakiTheorem`) |
+| Fraser, Theorem 2.3 and Corollary 2.5 (arXiv:1108.2639v1), `thm:fraser` | `fraserBound`, `fraserROSC` | declared in `LiteratureOffMain`, as the two parts of Theorem 2.3: `System.FraserBound` for every box-like set and `System.FraserROSC` under the rectangular open set condition, stated as in the source, which was read. The first equality `\dim_P X = \overline{\dim}_M X` is proved without them (`System.packingDim_attractor`), and Corollary 2.5 follows (`System.dim_eq_dimaff_of_rectangularOpenSet`) |
+| Bárány–Käenmäki, Theorem 2.1 (Adv. Math. 379 (2021), arXiv:1910.04623v4), in `prop:ssc_no_overlap_not_pesc` | `baranyKaenmakiTheorem` | declared in `LiteratureOffMain`, in the form of the source (`NoOverlap.BaranyKaenmakiTheorem`), which was compared with arXiv v4 word for word; `NoOverlap.exists_system_ssc_not_pesc` is the proposition without hypotheses. The form the article uses, `NoOverlap.BaranyKaenmakiPair` (tex lines 1481 to 1490), remains a `Prop`; applied to `η_n = exp(-n²)` the source's form gives a pair with all its properties except the transcendence of `λ`, which the proof does not use |
 | Rossi, Theorem 2.2, `eq:hausdorff_ergodic_lyapunov` | | not declared: the `Prop` `System.RossiBound` in `DimensionFormula`; no proof depends on it, since the proof of `thm:main_extended` evaluates the Ledrappier–Young formula to an equality. `System.upperHausdorffDim_map_proj_eq` shows equality in the bound for the equilibrium state |
 | Feng, Theorems 1.2 and 1.3 (arXiv:1901.01691v2), `thm:feng1` | `System.feng1_planar`, `System.feng1_bar` | declared in `LiteratureFeng`; compared with the source: faithful, the cases `s = 2`, `k_1 = k_2 = 1` and `d = 1`. Feng's order of the filtration, of the matrix products and the signs of the formula were checked against the Lean definitions. Reductions: Feng's `Σ'` inside the box-like `Σ'` and partitions modulo null sets; supremum versus Euclidean balls |
 | Feng, Lemma 4.6, first identity of (4.16) | `System.feng_info_sum`, `System.feng_info_sum_bar` | declared in `LiteratureFeng`; compared with the source: faithful; the identity needs Feng's (4.7) and not ergodicity, and the scalar form is stated without ergodicity. `thm:feng_entropy_as_limit` and `thm:feng_entropy_zero` are derived from it with Birkhoff |

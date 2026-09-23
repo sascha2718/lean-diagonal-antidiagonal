@@ -6,6 +6,8 @@ the statement of Rossi's bound `eq:hausdorff_ergodic_lyapunov` of `sec:ledrappie
   `thm:main_extended`, with no restriction on `dimaff(𝖠)`. The article reduces this formula to
   the lower bound `dim π_*μ ≥ min{2, dimL(𝖠, μ)}` in the paragraph after
   `eq:hausdorff_ergodic_lyapunov`.
+* `System.dimH_attractor_of_strongOpenSet`: `dimH X = min{2, dimaff(𝖠)}` under the strong open
+  set condition, with no measure assumed, since an `s`-equilibrium state exists.
 * `System.dimH_attractor_of_two_le`: under the strong open set condition, `dimaff(𝖠) ≥ 2`
   gives `dimH X = 2`; the Bernoulli equilibrium state exists, so no measure is assumed.
 * `upperHausdorffDim`: the upper Hausdorff dimension `\overline{dim}_H(μ)` of a measure.
@@ -16,6 +18,7 @@ the statement of Rossi's bound `eq:hausdorff_ergodic_lyapunov` of `sec:ledrappie
 -/
 import BoxLike.AffinityMain
 import BoxLike.BernoulliEquilibrium
+import BoxLike.EquilibriumExistence
 import BoxLike.MainExtended
 
 namespace BoxLike
@@ -66,6 +69,16 @@ theorem dimH_attractor_of_two_le [Nonempty ι] (hsosc : S.StrongOpenSet) (h2 : 2
   have h2' : ENNReal.ofReal 2 = 2 := by simp
   rw [h2'] at hupper hlower
   exact le_antisymm hupper hlower
+
+/-- `dimH X = min{2, dimaff(𝖠)}` for a proximal box-like self-affine set with rotations that
+satisfies the projective exponential separation condition and the strong open set condition. No
+measure is assumed: an `s`-equilibrium state exists for every `s ≥ 0`
+(`System.exists_isEquilibriumState`). -/
+theorem dimH_attractor_of_strongOpenSet [Nonempty ι] (hrot : S.WithRotations)
+    (hprox : S.Proximal) (hsep : S.ProjExpSeparation) (hsosc : S.StrongOpenSet) :
+    dimH S.attractor = ENNReal.ofReal (min 2 S.dimaff) := by
+  obtain ⟨μ, hprob, hinv, heq⟩ := S.exists_isEquilibriumState S.dimaff_nonneg
+  exact S.dimH_attractor_eq_min hrot hprox hsep μ hinv heq (Or.inr hsosc)
 
 /-- The statement of Rossi's theorem, `eq:hausdorff_ergodic_lyapunov`: for every ergodic
 `μ ∈ M_σ(Σ)`, `\overline{dim}_H(π_*μ) ≤ min{2, dimL(𝖠, μ)}`. The article cites it as motivation;
