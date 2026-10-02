@@ -1,3 +1,5 @@
+module
+
 /-
 Rokhlin's disintegration for the conditional measures `μ_x^ξ` of `sec:conditional` (tex lines
 1817 to 1834), the integrability of the conditional information and the ergodic case of the
@@ -17,12 +19,14 @@ values of `ProbabilityTheory.condExpKernel`, and every statement is derived from
 * `integrable_condInfo`: Feng, Lemma 2.1(v), the conditional information is integrable.
 * `localEntropy_ae_eq`: `eq:ergodic_entropy_constant`.
 -/
-import BoxLike.Conditional
-import Mathlib.Dynamics.Ergodic.Function
-import Mathlib.MeasureTheory.Function.AEEqOfLIntegral
-import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
-import Mathlib.Probability.Kernel.Composition.MeasureCompProd
-import Mathlib.Probability.Kernel.Condexp
+public import BoxLike.Conditional
+public import Mathlib.Dynamics.Ergodic.Function
+public import Mathlib.MeasureTheory.Function.AEEqOfLIntegral
+public import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
+public import Mathlib.Probability.Kernel.Composition.MeasureCompProd
+public import Mathlib.Probability.Kernel.Condexp
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -87,12 +91,12 @@ theorem lintegral_mul_lintegral_condMeas (μ : Measure Ω) [IsFiniteMeasure μ] 
   have hm := saturated_le (Ω := Ω) ξ
   have hF : Measurable[(saturated ξ).prod mΩ] fun p : Ω × Ω => h p.1 * g p.2 :=
     (hh.comp measurable_fst).mul (hg.comp measurable_snd)
-  have hd : @Measurable Ω (Ω × Ω) mΩ ((saturated ξ).prod mΩ) fun ω => (id ω, id ω) :=
+  have hd : @Measurable Ω (Ω × Ω) mΩ ((saturated ξ).prod mΩ) Function.diag :=
     (measurable_id'' hm).prodMk measurable_id
   have h1 := Measure.lintegral_compProd (μ := μ.trim hm) (κ := condExpKernel μ (saturated ξ)) hF
   rw [compProd_trim_condExpKernel hm,
     @lintegral_map Ω (Ω × Ω) mΩ ((saturated ξ).prod mΩ) μ _ _ hF hd] at h1
-  simp only [id_eq] at h1
+  simp only [Function.diag_apply] at h1
   rw [h1, lintegral_trim hm
     (hF.lintegral_kernel_prod_right' (κ := condExpKernel μ (saturated ξ)))]
   refine lintegral_congr fun x => ?_

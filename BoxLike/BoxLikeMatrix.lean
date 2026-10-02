@@ -1,3 +1,5 @@
+module
+
 /-
 Box-like matrices of `sec:box_like_self_affine` and the matrix form of `thm:box_like_sa`.
 
@@ -21,10 +23,12 @@ enters through its square `v 0 ^ 2 + v 1 ^ 2`. The norm of a matrix is the `ℓ�
 * `IsSquareIsometry.boxMat_zero_mul_orientation`: in `A = D R` the isometry `R` is rotating
   exactly when `A` is anti-diagonal.
 -/
-import BoxLike.SingularValue
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.LinearCombination
+public import BoxLike.SingularValue
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.LinearCombination
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -232,7 +236,7 @@ theorem IsSquareIsometry.boxMat_zero_mul_orientation {R : Matrix (Fin 2) (Fin 2)
     · have h00 := congrFun (congrFun h 0) 0
       rw [boxMat_mul] at h00
       simp only [boxMat_zero, boxMat_one, Matrix.of_apply, Matrix.cons_val_zero, add_zero,
-        if_true] at h00
+        ite_true] at h00
       exact absurd h00 (mul_ne_zero h₁ (ne_zero_of_abs_eq_one ha'))
     · exact ⟨a', b', ha', hb', rfl⟩
 

@@ -1,3 +1,5 @@
+module
+
 /-
 The projective gap `Δ_n^Ψ` and the projective exponential separation condition of
 `sec:exponential_separation`.
@@ -13,8 +15,10 @@ The projective gap `Δ_n^Ψ` and the projective exponential separation condition
   every exponential rules out the condition, the last step of
   `prop:ssc_no_overlap_not_pesc`.
 -/
-import BoxLike.System
-import Mathlib.Data.ENNReal.Real
+public import BoxLike.System
+public import Mathlib.Basic.ENNReal.Real
+
+@[expose] public section
 
 namespace BoxLike
 

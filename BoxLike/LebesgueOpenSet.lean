@@ -1,3 +1,5 @@
+module
+
 /-
 The Lebesgue measure of the open set of the strong open set condition: the case `s ≥ 2` of
 `thm:main_extended` in `sec:dimension_result_proof`, tex lines 3699 to 3723.
@@ -25,13 +27,15 @@ The plane `ℝ × ℝ` carries the sup metric, so a closed ball of radius `r` is
 * `System.StrongOpenSet.exists_isInvariantMeasure_isExactDim`: the invariant probability
   measure of exact dimension two.
 -/
-import BoxLike.MeasureDim
-import BoxLike.SelfAffineMeasure
-import BoxLike.SeparationConditions
-import Mathlib.LinearAlgebra.Determinant
-import Mathlib.LinearAlgebra.Matrix.ToLin
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import BoxLike.MeasureDim
+public import BoxLike.SelfAffineMeasure
+public import BoxLike.SeparationConditions
+public import Mathlib.LinearAlgebra.Determinant
+public import Mathlib.LinearAlgebra.Matrix.ToLin
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -116,7 +120,7 @@ theorem phi_eq_add_linPart (i : ι) (z : ℝ × ℝ) : S.phi i z = S.v i + S.lin
 /-- The affine map `φ_i` scales Lebesgue measure by `|det A_i|`. -/
 theorem volume_image_phi (i : ι) (U : Set (ℝ × ℝ)) :
     volume (S.phi i '' U) = ENNReal.ofReal |(S.mat i).det| * volume U := by
-  haveI : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
   have h : S.phi i '' U = (fun z => S.v i + z) '' (S.linPart i '' U) := by
     rw [image_image]
     exact image_congr fun z _ => S.phi_eq_add_linPart i z
@@ -228,7 +232,8 @@ theorem isInvariantMeasure_normalised_volume [Fintype ι] {U : Set (ℝ × ℝ)}
   have hterm : ∀ i, ENNReal.ofReal |(S.mat i).det| •
       ((volume U)⁻¹ • volume.restrict U).map (S.phi i) =
       (volume U)⁻¹ • volume.restrict (S.phi i '' U) := fun i => by
-    rw [Measure.map_smul, smul_comm, smul_map_restrict_phi]
+    rw [Measure.map_smul _ (S.measurableEmbedding_phi i).measurable.aemeasurable, smul_comm,
+      smul_map_restrict_phi]
   unfold IsInvariantMeasure
   simp_rw [hterm]
   rw [← Finset.smul_sum, ← Measure.sum_fintype,

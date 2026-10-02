@@ -1,3 +1,5 @@
+module
+
 /-
 The remark of `sec:dimension_of_projections` that precedes `thm:eq_state_proj_dim`: both
 coordinate marginals of the `s`-equilibrium state are double-dimensional without any
@@ -13,23 +15,27 @@ exact-dimensional by Feng–Hu, the restricted projections `ν_{x,k}`, `ν_{y,k}
 * `System.marginal_isDoubleDim`: the remark for every proximal box-like tuple with rotations.
 * `System.unique_sq_equilibrium`: the uniqueness of `μ^(2)` in `thm:two-block-normalisation`.
 -/
-import BoxLike.General
-import BoxLike.LiteratureRemarks
+public import BoxLike.General
+public import BoxLike.LiteratureRemarks
+
+@[expose] public section
 
 namespace BoxLike
 
 open MeasureTheory Set
 
+universe u
+
 namespace System
 
-variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   {S : System ι} {s : ℝ} {μ : Measure (ℤ → ι)} {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)}
 
 /-- `eq:proj_eq_is_sum` and `eq:restricted-projection-dimensions` without separation: a
 marginal `(\overline{π} ∘ κ)_*μ` of a measure `μ = \overline{κ}_*μ_1 + \overline{κ}_*μ_2` is the
 sum of two non-zero exact-dimensional measures. -/
-theorem exists_exactDim_decomposition_of_coding {r M : ℝ} (hS : S.Bounds r M)
-    [IsProbabilityMeasure μ₁] [IsProbabilityMeasure μ₂]
+theorem exists_exactDim_decomposition_of_coding (hfh : FengHuExactDim.{u}) {r M : ℝ}
+    (hS : S.Bounds r M) [IsProbabilityMeasure μ₁] [IsProbabilityMeasure μ₂]
     (he₁ : Ergodic (shift 1) μ₁) (he₂ : Ergodic (shift 1) μ₂)
     {κ : (ℤ → ι) → ℤ → ι × ZMod 2} (hκ : Measurable κ) {R : Set (ℤ → ι × ZMod 2)}
     (hRm : MeasurableSet R) (hR : ∀ y ∈ R, κ (unCode y) = y) (hpos₁ : 0 < μ₁ R)
@@ -45,8 +51,8 @@ theorem exists_exactDim_decomposition_of_coding {r M : ℝ} (hS : S.Bounds r M)
       Measure.restrict_apply MeasurableSet.univ, univ_inter, Measure.coe_zero,
       Pi.zero_apply] at this
     exact hν.ne' this
-  obtain ⟨d₁, hd₁⟩ := fengHu_exactDim S μ₁ he₁
-  obtain ⟨d₂, hd₂⟩ := fengHu_exactDim S μ₂ he₂
+  obtain ⟨d₁, hd₁⟩ := hfh S μ₁ he₁
+  obtain ⟨d₂, hd₂⟩ := hfh S μ₂ he₂
   refine ⟨(μ₁.restrict R).map S.projBar, (μ₂.restrict R).map S.projBar, d₁, d₂, inferInstance,
     inferInstance, hne μ₁ hpos₁, hne μ₂ hpos₂, ?_, ?_, ?_⟩
   · rw [hμ, Measure.map_add _ _ (hpb.comp hκ), map_comp_coding hκ hRm hR hpb,
@@ -59,22 +65,22 @@ variable (S)
 /-- The remark before `thm:eq_state_proj_dim` for a tuple with a proximal diagonal generator:
 each coordinate marginal of the `s`-equilibrium state, `0 < s < 2`, is double-dimensional, and
 no separation condition is assumed. -/
-theorem marginal_isDoubleDim_normalised (hrot : S.WithRotations)
+theorem marginal_isDoubleDim_normalised (hfk : FengKaenmakiGibbs.{u})
+    (hfjj : FraserJordanJurgaDecomposition.{u}) (hfh : FengHuExactDim.{u}) (hrot : S.WithRotations)
     (hprox : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) (c : ZMod 2) :
     ∃ d₁ d₂ : ℝ, IsDoubleDim (S.marginal c μ) d₁ d₂ := by
-  have hgibbs := fengKaenmaki_gibbs S (irreducible_of_hasProximalDiagonal hrot hprox) hs0 hs2
-    μ hinv heq
-  obtain ⟨μ₁, μ₂, h⟩ := fraserJordanJurga_decomposition S hrot hprox hs0 hs2 μ hinv hgibbs
+  have hgibbs := hfk S (irreducible_of_hasProximalDiagonal hrot hprox) hs0 hs2 μ hinv heq
+  obtain ⟨μ₁, μ₂, h⟩ := hfjj S hrot hprox hs0 hs2 μ hinv hgibbs
   obtain ⟨r, M, hS⟩ := S.exists_bounds
-  haveI := h.prob₁
-  haveI := h.prob₂
-  haveI : Nonempty ι := ⟨hrot.1.choose⟩
+  have := h.prob₁
+  have := h.prob₂
+  have : Nonempty ι := ⟨hrot.1.choose⟩
   rw [S.marginal_eq_map hS]
   rcases zmod_two_cases c with rfl | rfl
   · obtain ⟨ν₁, ν₂, d₁, d₂, hf₁, hf₂, -, -, hsum, hd₁, hd₂⟩ :=
-      exists_exactDim_decomposition_of_coding hS h.ergodic₁ h.ergodic₂
+      exists_exactDim_decomposition_of_coding hfh hS h.ergodic₁ h.ergodic₂
         (measurable_tau S.o) (measurableSet_range_tau S.o) (by rintro _ ⟨x, rfl⟩; rfl)
         (h.gibbs₁.measure_range_tau_pos h.supp₁) (h.gibbs₂.measure_range_tau_pos h.supp₂)
         h.eq_tau
@@ -82,7 +88,7 @@ theorem marginal_isDoubleDim_normalised (hrot : S.WithRotations)
     rw [← hsum] at hdd
     exact ⟨d₁, d₂, hdd⟩
   · obtain ⟨ν₁, ν₂, d₁, d₂, hf₁, hf₂, -, -, hsum, hd₁, hd₂⟩ :=
-      exists_exactDim_decomposition_of_coding hS h.ergodic₁ h.ergodic₂
+      exists_exactDim_decomposition_of_coding hfh hS h.ergodic₁ h.ergodic₂
         (measurable_omega S.o) (measurableSet_range_omega S.o) (by rintro _ ⟨x, rfl⟩; rfl)
         (h.gibbs₁.measure_range_omega_pos h.supp₁) (h.gibbs₂.measure_range_omega_pos h.supp₂)
         h.eq_omega
@@ -93,30 +99,28 @@ theorem marginal_isDoubleDim_normalised (hrot : S.WithRotations)
 /-- The remark before `thm:eq_state_proj_dim`: for a proximal box-like tuple with rotations and
 `0 < s < 2`, both coordinate marginals of the `s`-equilibrium state are double-dimensional
 without any separation assumption. Grouping preserves the marginals. -/
-theorem marginal_isDoubleDim (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 < s)
-    (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
-    (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState s μ) (c : ZMod 2) :
+theorem marginal_isDoubleDim (hfk : FengKaenmakiGibbs.{u})
+    (hfjj : FraserJordanJurgaDecomposition.{u}) (hfh : FengHuExactDim.{u}) (hrot : S.WithRotations)
+    (hprox : S.Proximal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
+    [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+    (heq : S.IsEquilibriumState s μ) (c : ZMod 2) :
     ∃ d₁ d₂ : ℝ, IsDoubleDim (S.marginal c μ) d₁ d₂ := by
   rcases hprox.hasProximalDiagonal_or_sq with h | h
-  · exact S.marginal_isDoubleDim_normalised hrot h hs0 hs2 μ hinv heq c
-  · haveI := nonempty_of_measure μ
-    haveI : IsProbabilityMeasure (μ.map group) :=
-      Measure.isProbabilityMeasure_map measurable_group.aemeasurable
-    have key := S.sq.marginal_isDoubleDim_normalised (S.sq_withRotations hrot) h hs0 hs2
-      (μ.map group) (measurePreserving_shift_map_group hinv) (heq.map_group hinv hs0.le) c
+  · exact S.marginal_isDoubleDim_normalised hfk hfjj hfh hrot h hs0 hs2 μ hinv heq c
+  · have := nonempty_of_measure μ
+    have key := S.sq.marginal_isDoubleDim_normalised hfk hfjj hfh (S.sq_withRotations hrot) h
+      hs0 hs2 (μ.map group) (measurePreserving_shift_map_group hinv) (heq.map_group hinv hs0.le) c
     rwa [S.marginal_sq_map_group] at key
 
 /-- `thm:two-block-normalisation`, uniqueness of `μ^(2)`: if `𝖠²` contains a proximal diagonal
 generator, then `β_*μ` is the unique `s`-equilibrium state of `𝖠²` for `0 < s < 2`. -/
-theorem unique_sq_equilibrium (hrot : S.WithRotations) (hprox : S.sq.HasProximalDiagonal)
-    (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
-    (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState s μ)
-    (μ' : Measure (ℤ → ι × ι)) [IsProbabilityMeasure μ']
+theorem unique_sq_equilibrium (hfku : FengKaenmakiUnique.{u}) (hrot : S.WithRotations)
+    (hprox : S.sq.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
+    [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+    (heq : S.IsEquilibriumState s μ) (μ' : Measure (ℤ → ι × ι)) [IsProbabilityMeasure μ']
     (hinv' : MeasurePreserving (shift 1) μ' μ') (heq' : S.sq.IsEquilibriumState s μ') :
     μ' = μ.map group := by
-  haveI : IsProbabilityMeasure (μ.map group) :=
-    Measure.isProbabilityMeasure_map measurable_group.aemeasurable
-  exact fengKaenmaki_unique S.sq
+  exact hfku S.sq
     (irreducible_of_hasProximalDiagonal (S.sq_withRotations hrot) hprox) hs0 hs2 μ'
     (μ.map group) hinv' (measurePreserving_shift_map_group hinv) heq'
     (heq.map_group hinv hs0.le)

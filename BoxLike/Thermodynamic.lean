@@ -1,3 +1,5 @@
+module
+
 /-
 The thermodynamic vocabulary of `sec:lyapunov_exponents`, `sec:affinity_dim` and
 `sec:gibbs_measures`, for invariant probability measures on the two-sided shifts over `ι` and
@@ -17,13 +19,15 @@ over `ι × ZMod 2`. Invariance of `μ` is `MeasurePreserving (shift 1) μ μ` a
 * `System.GibbsDecomposition`: the conclusion of `thm:eq_state_is_sum`.
 * `System.marginal`: the coordinate marginals `(proj_x)_*(π_*μ)` and `(proj_y)_*(π_*μ)`.
 -/
-import BoxLike.Entropy
-import BoxLike.LyapunovDim
-import BoxLike.Measurable
-import BoxLike.Pressure
-import Mathlib.Dynamics.Ergodic.Ergodic
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Integral.IntegrableOn
+public import BoxLike.Entropy
+public import BoxLike.LyapunovDim
+public import BoxLike.Measurable
+public import BoxLike.Pressure
+public import Mathlib.Dynamics.Ergodic.Ergodic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -133,7 +137,7 @@ noncomputable def marginal (c : ZMod 2) (μ : Measure (ℤ → ι)) : Measure �
 theorem lyapBar_neg [Finite ι] (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν] :
     S.lyapBar ν < 0 := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   obtain ⟨y⟩ : Nonempty (ℤ → ι × ZMod 2) := nonempty_of_isProbabilityMeasure ν
   obtain ⟨p, -, hp⟩ := Finset.exists_max_image Finset.univ
     (fun p : ι × ZMod 2 => Real.log |S.ratio p|) ⟨y 0, Finset.mem_univ _⟩

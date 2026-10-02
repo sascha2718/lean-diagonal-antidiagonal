@@ -1,3 +1,5 @@
+module
+
 /-
 The pressure `P_Z(f)` on the sub-shift of finite type `Σ_Z` of `sec:gibbs_measures`, and the
 first three lines of `thm:eq_state_is_sum`: `P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s})`,
@@ -42,9 +44,11 @@ length `n`.
 * `System.GibbsDecomposition.isGibbsAt₁`, `System.GibbsDecomposition.isGibbsAt₂`: the Gibbs
   constants of `μ_1` and `μ_2` are `P(𝖠, s)`.
 -/
-import BoxLike.Main
-import BoxLike.Variational
-import Mathlib.Algebra.BigOperators.Finprod
+public import BoxLike.Main
+public import BoxLike.Variational
+public import Mathlib.Algebra.BigOperators.Finprod
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -454,16 +458,16 @@ theorem periodicSum_eq_finsum (n : ℕ) :
   rw [h, finsum_mem_def, finsum_eq_sum_of_fintype, periodicSum]
   refine Finset.sum_congr rfl fun w _ => ?_
   by_cases hw : IsCyclicAdmissible o w
-  · rw [if_pos hw, Set.indicator_of_mem (by exact hw)]
-  · rw [if_neg hw, Set.indicator_of_notMem (by exact hw)]
+  · rw [ite_eq_left hw, Set.indicator_of_mem (by exact hw)]
+  · rw [ite_eq_right hw, Set.indicator_of_notMem (by exact hw)]
 
 /-- The sum over the periodic points is at most the sum over the admissible words. -/
 theorem periodicSum_le_admissibleSum (n : ℕ) : periodicSum o φ n ≤ admissibleSum o φ n := by
   classical
   refine Finset.sum_le_sum fun w _ => ?_
   by_cases h : IsCyclicAdmissible o w
-  · rw [if_pos h, if_pos h.isAdmissible]
-  · rw [if_neg h]
+  · rw [ite_eq_left h, ite_eq_left h.isAdmissible]
+  · rw [ite_eq_right h]
     split_ifs <;> positivity
 
 /-- When every generator is anti-diagonal, the axis alternates along every point of `Σ_Z`, so
@@ -473,7 +477,7 @@ theorem periodicSum_eq_zero_of_odd (h1 : ∀ i, o i = 1) {n : ℕ} (hn : Odd n) 
     periodicSum o φ n = 0 := by
   classical
   obtain ⟨k, rfl⟩ : ∃ k, n = k + 1 := ⟨n - 1, by have := hn.pos; omega⟩
-  refine Finset.sum_eq_zero fun w _ => if_neg fun hw => ?_
+  refine Finset.sum_eq_zero fun w _ => ite_eq_right fun hw => ?_
   obtain ⟨y, ⟨hy, hper⟩, -⟩ := (bijOn_block_periodicPoints o k).surjOn hw
   have hs := snd_eq_of_mem_subshift hy ((k + 1 : ℕ) : ℤ)
   have h0 : y ((k + 1 : ℕ) : ℤ) = y 0 := by simpa using congrFun hper 0
@@ -498,9 +502,9 @@ theorem admissibleSum_add_le (m n : ℕ) :
         refine Finset.sum_le_sum fun u _ => Finset.sum_le_sum fun v _ => ?_
         by_cases h : IsAdmissible o (Fin.append u v)
         · obtain ⟨hu, hv⟩ := h.of_append
-          rw [if_pos h, if_pos hu, if_pos hv, ← Real.exp_add, Fin.sum_univ_add]
+          rw [ite_eq_left h, ite_eq_left hu, ite_eq_left hv, ← Real.exp_add, Fin.sum_univ_add]
           simp
-        · rw [if_neg h]
+        · rw [ite_eq_right h]
           positivity
 
 /-- A potential on a finite non-empty alphabet is bounded below. -/
@@ -525,7 +529,7 @@ theorem exp_le_admissibleSum [Nonempty ι] {m : ℝ} (hm : ∀ p, m ≤ φ p) (n
   have h2 := Finset.single_le_sum (f := fun w : Fin n → ι × ZMod 2 =>
     if IsAdmissible o w then Real.exp (∑ k, φ (w k)) else 0)
     (fun w _ => by positivity) (Finset.mem_univ (block n (tau o fun _ => i)))
-  rwa [if_pos hw] at h2
+  rwa [ite_eq_left hw] at h2
 
 /-- The sums over the admissible words are positive. -/
 theorem admissibleSum_pos [Nonempty ι] (n : ℕ) : 0 < admissibleSum o φ n := by
@@ -552,14 +556,14 @@ theorem exp_mul_admissibleSum_le_periodicSum (h0 : ∃ i, o i = 0) {m : ℝ} (hm
             (fun r _ => hG0 _) (Finset.mem_univ r))
           have hGc : G (Fin.cons r w) =
               Real.exp (∑ k, φ ((Fin.cons r w : Fin (n + 2) → ι × ZMod 2) k)) :=
-            if_pos (IsCyclicAdmissible.cons hw h1 h2)
+            ite_eq_left (IsCyclicAdmissible.cons hw h1 h2)
           have hsum : ∑ k, φ ((Fin.cons r w : Fin (n + 2) → ι × ZMod 2) k) =
               φ r + ∑ k, φ (w k) := by
             rw [Fin.sum_univ_succ]
             simp only [Fin.cons_zero, Fin.cons_succ]
-          rw [hGc, if_pos hw, ← Real.exp_add, hsum]
+          rw [hGc, ite_eq_left hw, ← Real.exp_add, hsum]
           exact Real.exp_le_exp.2 (add_le_add (hm r) le_rfl)
-        · rw [if_neg hw, mul_zero]
+        · rw [ite_eq_right hw, mul_zero]
           exact Finset.sum_nonneg fun r _ => hG0 _
     _ = ∑ p : (ι × ZMod 2) × (Fin (n + 1) → ι × ZMod 2), G (Fin.cons p.1 p.2) :=
         (Fintype.sum_prod_type_right
@@ -572,7 +576,7 @@ length `n` are comparable up to a multiplicative constant, when some generator i
 other inequality is `periodicSum_le_admissibleSum`. -/
 theorem exists_mul_admissibleSum_le_periodicSum (h0 : ∃ i, o i = 0) :
     ∃ c : ℝ, 0 < c ∧ ∀ n, 2 ≤ n → c * admissibleSum o φ n ≤ periodicSum o φ n := by
-  haveI : Nonempty ι := ⟨h0.choose⟩
+  have : Nonempty ι := ⟨h0.choose⟩
   obtain ⟨m, hm⟩ := exists_le_potential φ
   have h1 : 0 < admissibleSum o φ 1 := admissibleSum_pos o 1
   refine ⟨Real.exp m / admissibleSum o φ 1, div_pos (Real.exp_pos _) h1, fun n hn => ?_⟩
@@ -613,7 +617,7 @@ periodic points, when some generator is diagonal. -/
 theorem tendsto_log_periodicSum_div (h0 : ∃ i, o i = 0) {L : ℝ}
     (hL : Tendsto (fun n : ℕ => Real.log (admissibleSum o φ n) / n) atTop (𝓝 L)) :
     Tendsto (fun n : ℕ => Real.log (periodicSum o φ n) / n) atTop (𝓝 L) := by
-  haveI : Nonempty ι := ⟨h0.choose⟩
+  have : Nonempty ι := ⟨h0.choose⟩
   obtain ⟨c, hc, hle⟩ := exists_mul_admissibleSum_le_periodicSum o (φ := φ) h0
   have hlow : Tendsto (fun n : ℕ => Real.log c / n + Real.log (admissibleSum o φ n) / n) atTop
       (𝓝 L) := by
@@ -638,7 +642,7 @@ generator is anti-diagonal, `Σ_Z` has no periodic points of odd period, by
 `periodicSum_eq_zero_of_odd`. -/
 theorem tendsto_pressureZ (h0 : ∃ i, o i = 0) :
     Tendsto (fun n : ℕ => Real.log (periodicSum o φ n) / n) atTop (𝓝 (pressureZ o φ)) := by
-  haveI : Nonempty ι := ⟨h0.choose⟩
+  have : Nonempty ι := ⟨h0.choose⟩
   have h := tendsto_log_periodicSum_div o h0
     ((subadditive_log_admissibleSum o (φ := φ)).tendsto_lim (bddBelow_log_admissibleSum_div o))
   rwa [pressureZ, h.limUnder_eq]
@@ -647,7 +651,7 @@ theorem tendsto_pressureZ (h0 : ∃ i, o i = 0) :
 length `n`. -/
 theorem tendsto_pressureZ_admissibleSum (h0 : ∃ i, o i = 0) :
     Tendsto (fun n : ℕ => Real.log (admissibleSum o φ n) / n) atTop (𝓝 (pressureZ o φ)) := by
-  haveI : Nonempty ι := ⟨h0.choose⟩
+  have : Nonempty ι := ⟨h0.choose⟩
   have hL := (subadditive_log_admissibleSum o (φ := φ)).tendsto_lim
     (bddBelow_log_admissibleSum_div o)
   rwa [tendsto_nhds_unique (tendsto_pressureZ o φ h0) (tendsto_log_periodicSum_div o h0 hL)]
@@ -658,7 +662,7 @@ theorem periodicSum_comp_flipSymbol (n : ℕ) :
   classical
   refine Fintype.sum_equiv (Function.Involutive.toPerm
     (fun (w : Fin n → ι × ZMod 2) k => flipSymbol (w k)) fun w => by simp) _ _ fun w => ?_
-  simp only [Function.Involutive.coe_toPerm, isCyclicAdmissible_flipSymbol_iff]
+  simp only [Function.Involutive.toPerm, Equiv.coe_fn_mk, isCyclicAdmissible_flipSymbol_iff]
 
 /-- The sums over the admissible words are invariant under the exchange of the axes. -/
 theorem admissibleSum_comp_flipSymbol (n : ℕ) :
@@ -666,7 +670,7 @@ theorem admissibleSum_comp_flipSymbol (n : ℕ) :
   classical
   refine Fintype.sum_equiv (Function.Involutive.toPerm
     (fun (w : Fin n → ι × ZMod 2) k => flipSymbol (w k)) fun w => by simp) _ _ fun w => ?_
-  simp only [Function.Involutive.coe_toPerm, isAdmissible_flipSymbol_iff]
+  simp only [Function.Involutive.toPerm, Equiv.coe_fn_mk, isAdmissible_flipSymbol_iff]
 
 /-- `P_Z(f ∘ flip) = P_Z(f)`: the symmetry behind `P_Z(f_{1,s}) = P_Z(f_{2,s})` in
 `sec:gibbs_measures` (tex lines 2671 to 2672). -/
@@ -682,8 +686,8 @@ theorem admissibleSum_succ (n : ℕ) :
   classical
   rw [admissibleSum, ← Fintype.sum_of_injective _ (liftBlock_injective o)
     (fun p : (Fin (n + 1) → ι) × ZMod 2 => Real.exp (∑ k, φ (liftBlock o p.2 p.1 k))) _
-    (fun v hv => if_neg fun h => hv h.mem_range_liftBlock)
-    (fun p => (if_pos (isAdmissible_liftBlock o p.2 p.1)).symm), Fintype.sum_prod_type]
+    (fun v hv => ite_eq_right fun h => hv h.mem_range_liftBlock)
+    (fun p => (ite_eq_left (isAdmissible_liftBlock o p.2 p.1)).symm), Fintype.sum_prod_type]
 
 end Sums
 
@@ -730,7 +734,7 @@ theorem IsGibbsAt.tendsto_log_admissibleSum [IsProbabilityMeasure ν]
     (hν : ν (subshift o)ᶜ = 0) {P : ℝ} (h : IsGibbsAt o φ ν P) :
     Tendsto (fun n : ℕ => Real.log (admissibleSum o φ n) / n) atTop (𝓝 P) := by
   classical
-  haveI : Nonempty ι := ⟨((nonempty_of_isProbabilityMeasure ν).some 0).1⟩
+  have : Nonempty ι := ⟨((nonempty_of_isProbabilityMeasure ν).some 0).1⟩
   obtain ⟨C, hC, hb⟩ := h
   have key : ∀ n : ℕ,
       C⁻¹ * (Real.exp (-((n + 1 : ℕ) * P)) * admissibleSum o φ (n + 1)) ≤ 1 ∧
@@ -741,15 +745,15 @@ theorem IsGibbsAt.tendsto_log_admissibleSum [IsProbabilityMeasure ν]
     refine ⟨Finset.sum_le_sum fun w _ => ?_, Finset.sum_le_sum fun w _ => ?_⟩ <;>
       by_cases hw : IsAdmissible o w
     · obtain ⟨y, hy, rfl⟩ := hw.exists_block_eq
-      rw [if_pos hw, if_pos hw, ← Real.exp_add]
+      rw [ite_eq_left hw, ite_eq_left hw, ← Real.exp_add]
       have := (hb y hy (n + 1) (Nat.succ_pos n)).1
       rwa [Finset.sum_range] at this
-    · rw [if_neg hw, if_neg hw]; simp
+    · rw [ite_eq_right hw, ite_eq_right hw]; simp
     · obtain ⟨y, hy, rfl⟩ := hw.exists_block_eq
-      rw [if_pos hw, if_pos hw, ← Real.exp_add]
+      rw [ite_eq_left hw, ite_eq_left hw, ← Real.exp_add]
       have := (hb y hy (n + 1) (Nat.succ_pos n)).2
       rwa [Finset.sum_range] at this
-    · rw [if_neg hw, if_neg hw]; simp
+    · rw [ite_eq_right hw, ite_eq_right hw]; simp
   have hlow : Tendsto (fun n : ℕ => P - Real.log C / n) atTop (𝓝 P) := by
     simpa using tendsto_const_nhds.sub (tendsto_const_div_atTop_nhds_zero_nat (Real.log C))
   have hupp : Tendsto (fun n : ℕ => P + Real.log C / n) atTop (𝓝 P) := by
@@ -816,7 +820,7 @@ theorem flipAxis_omega (o : ι → ZMod 2) (x : ℤ → ι) : flipAxis (omega o 
 /-- The exchange of the axes is measurable. -/
 theorem measurable_flipAxis [MeasurableSpace ι] :
     Measurable (flipAxis : (ℤ → ι × ZMod 2) → ℤ → ι × ZMod 2) :=
-  measurable_pi_lambda _ fun n => (measurable_fst.comp (measurable_pi_apply n)).prodMk
+  Measurable.of_eval fun n => (measurable_fst.comp (measurable_pi_apply n)).prodMk
     ((measurable_snd.comp (measurable_pi_apply n)).add_const 1)
 
 variable [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
@@ -989,7 +993,7 @@ theorem decomposition₂_of_decompositions {o : ι → ZMod 2} [IsFiniteMeasure 
 theorem GibbsDecomposition.map_unCode_tau₂ (h : S.GibbsDecomposition s μ μ₁ μ₂) :
     (μ₂.restrict (Set.range (tau S.o))).map unCode =
       (μ₁.restrict (Set.range (omega S.o))).map unCode := by
-  haveI := h.prob₁
+  have := h.prob₁
   exact (Measure.add_right_inj _ _ _).1 (h.eq_tau.symm.trans h.eq₁)
 
 /-- `\overline{ω}_*μ_2 = \overline{τ}_*μ_1`, as noted in `sec:gibbs_measures` (tex lines 2695 to
@@ -998,7 +1002,7 @@ theorem GibbsDecomposition.map_unCode_tau₂ (h : S.GibbsDecomposition s μ μ�
 theorem GibbsDecomposition.map_unCode_omega₂ (h : S.GibbsDecomposition s μ μ₁ μ₂) :
     (μ₂.restrict (Set.range (omega S.o))).map unCode =
       (μ₁.restrict (Set.range (tau S.o))).map unCode := by
-  haveI := h.prob₁
+  have := h.prob₁
   have h' := h.eq_omega.symm.trans h.eq₁
   rw [add_comm ((μ₁.restrict (Set.range (tau S.o))).map unCode)] at h'
   exact (Measure.add_right_inj _ _ _).1 h'
@@ -1108,7 +1112,7 @@ theorem _root_.BoxLike.IsGibbsAt.eq_pressure₂ {ν : Measure (ℤ → ι × ZMo
 with the constant `P(𝖠, s) = P_Z(f_{1,s})`. -/
 theorem GibbsDecomposition.isGibbsAt₁ (h : S.GibbsDecomposition s μ μ₁ μ₂) (hs0 : 0 < s)
     (hs2 : s < 2) : IsGibbsAt S.o (S.potential₁ s) μ₁ (S.pressure s) := by
-  haveI := h.prob₁
+  have := h.prob₁
   obtain ⟨P, hP⟩ := isGibbs_iff_exists_isGibbsAt.1 h.gibbs₁
   rwa [← hP.eq_pressure₁ h.supp₁ hs0 hs2]
 
@@ -1116,7 +1120,7 @@ theorem GibbsDecomposition.isGibbsAt₁ (h : S.GibbsDecomposition s μ μ₁ μ�
 with the constant `P(𝖠, s) = P_Z(f_{2,s})`. -/
 theorem GibbsDecomposition.isGibbsAt₂ (h : S.GibbsDecomposition s μ μ₁ μ₂) (hs0 : 0 < s)
     (hs2 : s < 2) : IsGibbsAt S.o (S.potential₂ s) μ₂ (S.pressure s) := by
-  haveI := h.prob₂
+  have := h.prob₂
   obtain ⟨P, hP⟩ := isGibbs_iff_exists_isGibbsAt.1 h.gibbs₂
   rwa [← hP.eq_pressure₂ h.supp₂ hs0 hs2]
 

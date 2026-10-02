@@ -1,3 +1,5 @@
+module
+
 /-
 The two-lift comparison in the proof of `thm:entropy_eq_gibbs` in `sec:entropy_eq_state`: a
 probability measure `ν` carried by the sub-shift `Σ_Z` and its image `q_*ν` under the factor map
@@ -23,11 +25,13 @@ disjoint union of the two atoms `[liftBlock o 0 w]` and `[liftBlock o 1 w]` of
   `0 ≤ H_ν(\overline{𝒫}_0^{n-1}) - H_{q_*ν}(𝒫_0^{n-1}) ≤ log 2` for every `n`.
 * `entropy_map_unCode`: `thm:entropy_eq_gibbs` in measure-theoretic form, `h(q_*ν) = h(ν)`.
 -/
-import BoxLike.Coding
-import BoxLike.Entropy
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.MeasureTheory.MeasurableSpace.Instances
-import Mathlib.Order.Interval.Finset.Fin
+public import BoxLike.Coding
+public import BoxLike.Entropy
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.MeasureTheory.MeasurableSpace.Instances
+public import Mathlib.Order.Interval.Finset.Fin
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -123,7 +127,7 @@ variable [MeasurableSpace ι]
 
 /-- The factor map `q = unCode` that forgets the axis is measurable. -/
 theorem measurable_unCode : Measurable (unCode : (ℤ → ι × ZMod 2) → ℤ → ι) :=
-  measurable_pi_lambda _ fun n => measurable_fst.comp (measurable_pi_apply n)
+  Measurable.of_eval fun n => measurable_fst.comp (measurable_pi_apply n)
 
 /-- The sub-shift `Σ_Z` is a measurable subset of the full shift over `ι × ZMod 2`. -/
 theorem measurableSet_subshift [Fintype ι] [MeasurableSingletonClass ι] :
@@ -169,7 +173,7 @@ theorem measureReal_preimage_unCode_cylinder [IsFiniteMeasure ν] (hν : ν (sub
   rw [← h]
   refine Finset.sum_congr rfl fun c _ => measureReal_congr ?_
   have hae : ∀ᵐ y ∂ν, y ∈ subshift o := mem_ae_iff.2 hν
-  refine Filter.eventuallyEq_set.2 (hae.mono fun y hy => ⟨?_, fun h => ⟨?_, ?_⟩⟩)
+  refine Filter.eventuallyEqSet_iff.2 (hae.mono fun y hy => ⟨?_, fun h => ⟨?_, ?_⟩⟩)
   · rintro ⟨hw, rfl⟩
     exact mem_cylinder_liftBlock hy hw
   · exact fun k => congrArg Prod.fst (h k)
@@ -188,8 +192,6 @@ theorem blockEntropy_map_unCode (o : ι → ZMod 2) (ν : Measure (ℤ → ι ×
     [IsProbabilityMeasure ν] (hν : ν (subshift o)ᶜ = 0) (n : ℕ) :
     blockEntropy (ν.map unCode) n ≤ blockEntropy ν n ∧
       blockEntropy ν n ≤ blockEntropy (ν.map unCode) n + Real.log 2 := by
-  haveI : IsProbabilityMeasure (ν.map unCode) :=
-    Measure.isProbabilityMeasure_map measurable_unCode.aemeasurable
   rcases n with _ | n
   · simpa using Real.log_nonneg one_le_two
   have hbase : ∀ w : Fin (n + 1) → ι, (ν.map unCode).real (cylinder w)

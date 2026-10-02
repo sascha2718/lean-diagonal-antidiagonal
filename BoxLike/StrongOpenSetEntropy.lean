@@ -1,3 +1,5 @@
+module
+
 /-
 The strong open set condition and the vanishing of the `2`-dimensional entropy:
 `thm:SOSC_h2_zero` of `sec:higher_dimensional_entropies`.
@@ -24,17 +26,22 @@ open sets `φ_a(U)` then separate `π(𝐢)` from `π(𝐣)` for every `𝐣` wi
 * `System.xi_two_subset_singleton`: `ξ_2(𝐢) = {𝐢}` on the set of the geometric step.
 * `System.SOSC_h2_zero`: `thm:SOSC_h2_zero`.
 -/
-import BoxLike.FengEntropy
-import BoxLike.General
-import BoxLike.SeparationConditions
-import BoxLike.SigmaMeasure
-import Mathlib.Dynamics.Ergodic.Conservative
-import Mathlib.Dynamics.Ergodic.Ergodic
-import Mathlib.MeasureTheory.Measure.Dirac
+public import BoxLike.FengEntropy
+public import BoxLike.General
+public import BoxLike.SeparationConditions
+public import BoxLike.SigmaMeasure
+public import Mathlib.Dynamics.Ergodic.Conservative
+public import Mathlib.Dynamics.Ergodic.Ergodic
+public import Mathlib.MeasureTheory.Measure.Dirac.Def
+public import Mathlib.MeasureTheory.Measure.Dirac.Basic
+
+@[expose] public section
 
 namespace BoxLike
 
 open MeasureTheory Filter Topology Set
+
+universe u
 
 namespace System
 
@@ -42,7 +49,7 @@ namespace System
 
 section Geometry
 
-variable {ι : Type*} (S : System ι)
+variable {ι : Type u} (S : System ι)
 
 /-- The inverse of the affine map `φ_i` of `sec:box_like_self_affine`. -/
 noncomputable def phiInv (i : ι) (w : ℝ × ℝ) : ℝ × ℝ :=
@@ -242,7 +249,7 @@ theorem ae_frequently_iterate_mem {X : Type*} [MeasurableSpace X] {μ : Measure 
     exact MeasurableSet.measurableSet_limsup fun n => (hT.measurable.iterate n) hs
   have hinv : T ⁻¹' {x | ∃ᶠ n in atTop, T^[n] x ∈ s} = {x | ∃ᶠ n in atTop, T^[n] x ∈ s} := by
     ext x
-    simp only [mem_preimage, mem_setOf_eq]
+    simp only [mem_preimage, mem_ofPred_eq]
     conv_rhs => rw [← map_add_atTop_eq_nat 1, frequently_map]
     simp only [Function.iterate_succ_apply]
   rcases hT.toPreErgodic.ae_mem_or_ae_notMem hAm hinv with h | h
@@ -276,7 +283,7 @@ namespace System
 
 section Atom
 
-variable {ι : Type*} [MeasurableSpace ι] (S : System ι)
+variable {ι : Type u} [MeasurableSpace ι] (S : System ι)
 
 /-- The last step of the proof of `thm:SOSC_h2_zero`: if `𝐢 ∈ Σ'` and `π(𝐣) = π(𝐢)` implies
 `𝐣^+ = 𝐢^+`, then `ξ_2(𝐢) = {𝐢}`, since `V_𝐢^2 = {0}` and the atom fixes the past. -/
@@ -303,7 +310,7 @@ end Atom
 
 section Entropy
 
-variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   (S : System ι) {s : ℝ}
 
 omit [MeasurableSingletonClass ι] in
@@ -321,18 +328,20 @@ theorem HasGibbsBounds.measure_cylinder_pos_of_pos {S : System ι} {μ : Measure
 /-- `thm:SOSC_h2_zero`: under the strong open set condition, `h_2(μ) = 0` for the ergodic
 `s`-equilibrium state, `0 < s < 2`, of a proximal box-like tuple with rotations. Neither
 projective exponential separation nor a proximal diagonal generator is assumed.
-Depends on: `thm:irred_eq_state` (ergodicity as `herg`; full support through
-`fengKaenmaki_gibbs`), `eq:simple_lyapunov`, `measure_SigmaPrime_compl`,
+Depends on: `thm:irred_eq_state` (ergodicity as `herg`; full support through the Gibbs bounds
+of Feng–Käenmäki, `FengKaenmakiGibbs`), `eq:simple_lyapunov`, `measure_SigmaPrime_compl`,
 `ae_frequently_shift_mem` (the article uses Birkhoff's ergodic theorem for this recurrence),
 `System.Bounds.proj_eq`, `condMeas_atom`, `thm:feng_entropy_zero`,
 `eq:ergodic_entropy_constant`. -/
-theorem SOSC_h2_zero (hrot : S.WithRotations) (hprox : S.Proximal) (hsosc : S.StrongOpenSet)
-    (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
-    (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
-    (heq : S.IsEquilibriumState s μ) : S.dimEntropy μ 2 = 0 := by
+theorem SOSC_h2_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+    (hfi : FengInfoSum.{u}) (hrot : S.WithRotations) (hprox : S.Proximal)
+    (hsosc : S.StrongOpenSet) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
+    [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+    (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) :
+    S.dimEntropy μ 2 = 0 := by
   obtain ⟨U, hU, hne, hsub, hdisj⟩ := hsosc
-  have hlt := S.simple_lyapunov hrot hprox hs0 hs2 μ hinv heq
-  have hgibbs := fengKaenmaki_gibbs S (S.irreducible_of_proximal hrot hprox) hs0 hs2 μ hinv heq
+  have hlt := S.simple_lyapunov hms hrot hprox hs0 hs2 μ hinv heq
+  have hgibbs := hfk S (S.irreducible_of_proximal hrot hprox) hs0 hs2 μ hinv heq
   -- A cylinder of positive measure coded into `U`, visited infinitely often.
   obtain ⟨x₀, n, hn, hcyl⟩ := S.exists_cylinder_proj_mem hU hne
   have hrec := ae_frequently_shift_mem herg (measurableSet_cylinder (block n x₀))
@@ -351,8 +360,8 @@ theorem SOSC_h2_zero (hrot : S.WithRotations) (hprox : S.Proximal) (hsosc : S.St
     exact eq_dirac_of_measure_singleton hx
   -- `thm:feng_entropy_zero` and `eq:ergodic_entropy_constant`.
   have hzero : ∀ᵐ _ ∂μ, S.dimEntropy μ 2 = 0 := by
-    filter_upwards [S.feng_entropy_zero μ hinv herg hlt 2, localEntropy_ae_eq μ herg (S.xi μ 2),
-      hdirac] with x h1 h2 h3
+    filter_upwards [S.feng_entropy_zero hfi μ hinv herg hlt 2,
+      localEntropy_ae_eq μ herg (S.xi μ 2), hdirac] with x h1 h2 h3
     exact h2.symm.trans (h1.2 h3)
   exact hzero.exists.elim fun _ h => h
 

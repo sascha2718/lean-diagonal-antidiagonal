@@ -1,3 +1,5 @@
+module
+
 /-
 Partitions, conditional measures, conditional information and conditional entropy: the generic
 part of `sec:conditional` and of `sec:entropies`, on a standard Borel space `Ω` and on the
@@ -21,11 +23,13 @@ measures are the values of Mathlib's regular conditional probability kernel
 * `localEntropy`, `integral_localEntropy`: the pointwise entropy `E_μ(I_μ(𝒫 | \widehat{ξ}) | ℐ)`
   and its integral `H_μ(𝒫 | \widehat{ξ})`.
 -/
-import BoxLike.Orientation
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
-import Mathlib.MeasureTheory.MeasurableSpace.Instances
-import Mathlib.MeasureTheory.MeasurableSpace.Invariants
-import Mathlib.Probability.Kernel.Condexp
+public import BoxLike.Orientation
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import Mathlib.MeasureTheory.MeasurableSpace.Instances
+public import Mathlib.MeasureTheory.MeasurableSpace.Invariants
+public import Mathlib.Probability.Kernel.Condexp
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -89,7 +93,7 @@ theorem saturated_eq_comap {Y : Type*} [MeasurableSpace Ω] [StandardBorelSpace 
     [MeasurableSpace Y] [StandardBorelSpace Y] {f : Ω → Y} (hf : Measurable f)
     {ξ : Ω → Set Ω} (hξ : ∀ x y, y ∈ ξ x ↔ f y = f x) :
     saturated ξ = MeasurableSpace.comap f inferInstance := by
-  letI := upgradeStandardBorel Y
+  let := upgradeStandardBorel Y
   apply le_antisymm
   · rintro A ⟨hAm, hsat⟩
     have h1 : AnalyticSet (f '' A) := hAm.analyticSet_image hf

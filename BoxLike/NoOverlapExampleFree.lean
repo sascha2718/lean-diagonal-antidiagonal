@@ -1,3 +1,5 @@
+module
+
 /-
 The algebraic part of the proof of `prop:ssc_no_overlap_not_pesc` in
 `sec:exponential_separation`: the choice of algebraically independent parameters (tex lines
@@ -25,12 +27,14 @@ The eleven parameters are indexed by `Fin 11` in the order
   every box of non-empty open intervals contains a tuple algebraically independent over a
   countable subfield of `ℝ`.
 -/
-import BoxLike.System
-import Mathlib.Algebra.AlgebraicCard
-import Mathlib.Algebra.FreeAlgebra.Cardinality
-import Mathlib.Analysis.Real.Cardinality
-import Mathlib.RingTheory.AlgebraicIndependent.Transcendental
-import Mathlib.SetTheory.Cardinal.Subfield
+public import BoxLike.System
+public import Mathlib.Algebra.AlgebraicCard
+public import Mathlib.Algebra.FreeAlgebra.Cardinality
+public import Mathlib.Analysis.Real.Cardinality
+public import Mathlib.RingTheory.AlgebraicIndependent.Transcendental
+public import Mathlib.SetTheory.Cardinal.Subfield
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -468,7 +472,7 @@ theorem exists_algebraicIndependent_mem_Ioo (K : Subfield ℝ) [Countable K] :
   | succ n ih =>
     intro lo hi h
     obtain ⟨x, hx, hmem⟩ := ih (Fin.tail lo) (Fin.tail hi) fun k => h k.succ
-    haveI : Countable (Algebra.adjoin K (Set.range x)) := by
+    have : Countable (Algebra.adjoin K (Set.range x)) := by
       rw [← mk_le_aleph0_iff]
       refine (Algebra.cardinalMk_adjoin_le K (Set.range x)).trans ?_
       exact max_le (max_le mk_le_aleph0 (le_aleph0_iff_set_countable.2 (Set.countable_range x)))

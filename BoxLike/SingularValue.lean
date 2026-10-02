@@ -1,3 +1,5 @@
+module
+
 /-
 The singular value function `φ^s` of `sec:Singular_value_function`.
 
@@ -12,10 +14,12 @@ The norm on `2 × 2` matrices is the `ℓ²` operator norm, so `‖A‖ = α_1(A
   `α_1^s`, `α_1 α_2^{s-1}` and `(α_1 α_2)^{s/2}` of `φ^s` on such matrices, with
   `α_2 = min{|a|, |b|}`.
 -/
-import BoxLike.System
-import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import BoxLike.System
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -75,8 +79,8 @@ theorem norm_boxMat (c : ZMod 2) (a b : ℝ) : ‖boxMat c a b‖ = max |a| |b| 
   have h : ‖boxMat c a b‖ * ‖boxMat c a b‖ = max |a| |b| * max |a| |b| := by
     rw [← l2_opNorm_conjTranspose_mul_self, conjTranspose_mul_self_boxMat, l2_opNorm_diagonal]
     rcases zmod_two_cases c with rfl | rfl
-    · simp only [if_true]; rw [norm_vec2, hsq]
-    · rw [if_neg (by decide), norm_vec2, max_comm, hsq]
+    · simp only [ite_true]; rw [norm_vec2, hsq]
+    · rw [ite_eq_right (by decide), norm_vec2, max_comm, hsq]
   rcases mul_self_eq_mul_self_iff.1 h with h | h
   · exact h
   · have := norm_nonneg (boxMat c a b); linarith
@@ -96,7 +100,7 @@ theorem abs_mul_abs_eq_max_mul_min (a b : ℝ) : |a| * |b| = max |a| |b| * min |
 /-- `φ^s(A) = α_1(A)^s` for `0 ≤ s ≤ 1`. -/
 theorem svf_boxMat_of_le_one {s : ℝ} (hs : s ≤ 1) (c : ZMod 2) (a b : ℝ) :
     svf s (boxMat c a b) = max |a| |b| ^ s := by
-  rw [svf, if_pos hs, norm_boxMat]
+  rw [svf, ite_eq_left hs, norm_boxMat]
 
 /-- `φ^s(A) = α_1(A) α_2(A)^{s-1}` for `1 < s ≤ 2`, when `A ≠ 0`. -/
 theorem svf_boxMat_of_le_two {s : ℝ} (hs1 : 1 < s) (hs2 : s ≤ 2) (c : ZMod 2) {a : ℝ} (b : ℝ)
@@ -104,7 +108,7 @@ theorem svf_boxMat_of_le_two {s : ℝ} (hs1 : 1 < s) (hs2 : s ≤ 2) (c : ZMod 2
     svf s (boxMat c a b) = max |a| |b| * min |a| |b| ^ (s - 1) := by
   have hmax : 0 < max |a| |b| := lt_max_of_lt_left (abs_pos.2 ha)
   have hmin : 0 ≤ min |a| |b| := le_min (abs_nonneg _) (abs_nonneg _)
-  rw [svf, if_neg (not_le.2 hs1), if_pos hs2, norm_boxMat, abs_det_boxMat,
+  rw [svf, ite_eq_right (not_le.2 hs1), ite_eq_left hs2, norm_boxMat, abs_det_boxMat,
     abs_mul_abs_eq_max_mul_min, Real.mul_rpow hmax.le hmin, ← mul_assoc,
     ← Real.rpow_add hmax]
   norm_num
@@ -112,7 +116,7 @@ theorem svf_boxMat_of_le_two {s : ℝ} (hs1 : 1 < s) (hs2 : s ≤ 2) (c : ZMod 2
 /-- `φ^s(A) = (α_1(A) α_2(A))^{s/2}` for `s > 2`. -/
 theorem svf_boxMat_of_two_lt {s : ℝ} (hs : 2 < s) (c : ZMod 2) (a b : ℝ) :
     svf s (boxMat c a b) = (max |a| |b| * min |a| |b|) ^ (s / 2) := by
-  rw [svf, if_neg (by linarith), if_neg (not_le.2 hs), abs_det_boxMat,
+  rw [svf, ite_eq_right (by linarith), ite_eq_right (not_le.2 hs), abs_det_boxMat,
     abs_mul_abs_eq_max_mul_min]
 
 end BoxLike

@@ -6,61 +6,94 @@ coordinate projections of the equilibrium state are double-dimensional. This lib
 formalises the article on Mathlib alone. The library is sorry-free. It proves `thm:main1`
 (`System.main1_dimaff`), `thm:eq_state_proj_dim` (`System.eq_state_proj_dim`), `thm:main2`
 (`System.main2`) and `thm:main_extended` in full (`System.main_extended`,
-`System.main_extended_min`; the case `s ≥ 2`, `System.main_extended_ge_two`, uses no literature
-axiom), and with them `\dim_H X = min{2, dimaff(X)}` under the hypotheses of `thm:main_extended`
-(`System.dimH_attractor_eq_min`, and `System.dimH_attractor_of_two_le` for `dimaff(X) ≥ 2`
+`System.main_extended_min`; the case `s ≥ 2`, `System.main_extended_ge_two`, takes no
+literature hypothesis), and with them `\dim_H X = min{2, dimaff(X)}` under the hypotheses of
+`thm:main_extended` (`System.dimH_attractor_eq_min`, and `System.dimH_attractor_of_two_le` for `dimaff(X) ≥ 2`
 under the strong open set condition, with no measure assumed). Off the main line it proves
 `thm:A_classification`, `ex:projection_double_dimensional`, the existence of an `s`-equilibrium
 state for every `s ≥ 0`, both lines of `eq:dimension_measure_def`, `prop:ssc_no_overlap_not_pesc` and the chain
 `\dim_H X = \dim_P X = \dim_M X = dimaff(X)` of the introduction, the last two from cited
 theorems taken as hypotheses.
 
-The literature theorems the article cites without proof are axioms, to be restated in
-`Challenge.lean` and whitelisted by name; "Fidelity boundary" lists them, the rules they obey
-and their comparison with the sources. Thirteen are declared. Eight are on the main line, in
-`BoxLike/Literature.lean` and `BoxLike/LiteratureFeng.lean`. Five are off it and no main result
-depends on them: `fengHu_exactDim` and `fengKaenmaki_unique` in `BoxLike/LiteratureRemarks.lean`,
-`fraserBound`, `fraserROSC` and `baranyKaenmakiTheorem` in `BoxLike/LiteratureOffMain.lean`,
-which also derives the statements of the article from them without hypotheses. Falconer's bound
+The library declares no axiom: every constant depends on `propext`, `Classical.choice` and
+`Quot.sound` only. The literature theorems the article cites without proof are `Prop`-valued
+definitions, and every result that uses one takes it as an explicit hypothesis; "Fidelity
+boundary" lists them, the rules they obey and their comparison with the sources. Ten are
+quantified over every alphabet and every system. Eight are on the main line, in
+`BoxLike/Literature.lean` and `BoxLike/LiteratureFeng.lean`. Two are off it and no main result
+takes them: `FengHuExactDim` and `FengKaenmakiUnique` in `BoxLike/LiteratureRemarks.lean`.
+Fraser's theorem and the theorem of Bárány and Käenmäki are the `Prop`s `System.FraserBound`,
+`System.FraserROSC`, `NoOverlap.BaranyKaenmakiTheorem` and `NoOverlap.BaranyKaenmakiPair`,
+defined beside the results that take them. Falconer's bound
 `eq:hausdorff_affinity_upper_bound`, which the article cites, is proved
 (`System.dimH_attractor_le`, through the upper Minkowski dimension). Rossi's bound is a `Prop`
-that no proof uses and is no axiom.
+that no theorem takes.
 
-The module index is the root module `BoxLike.lean`. This file carries the build setup, the
-layers of the formalisation, the state of every labelled result, the remaining work, the
-findings about the document, the fidelity boundary, and technique notes.
+`Challenge.lean` states seven headline results over Mathlib alone, `Solution.lean` proves them
+from the library, and the comparator checks the pair (section 0). The module index is the root
+module `BoxLike.lean`. This file carries the build setup, the layers of the formalisation, the
+state of every labelled result, the remaining work, the findings about the document, the
+fidelity boundary, and technique notes.
 
 Convention: state, not history. Edit in place, append nothing; `git log` has the rest.
 
 ## 0. Build setup
 
 The checked-in `lakefile.toml` and `lake-manifest.json` are the standard portable ones:
-Mathlib is required at `rev = "v4.32.2"` and `packagesDir` is the default `.lake/packages`.
+Mathlib is required at `rev = "v4.35.0-rc2"` and `packagesDir` is the default `.lake/packages`.
 On this machine `.lake/packages` is a symlink to the already-built tree
 `~/Documents/lean/mathematics_in_lean/.lake/packages`, shared with `ML-ST/lean`, `JA-ST/lean`
 and the `LeanLibraries` projects. On another machine run `lake exe cache get`.
 
-- `lean-toolchain` is pinned to `v4.32.2`; Mathlib is pinned to rev `905b9581`.
+- `lean-toolchain` is pinned to `v4.35.0-rc2`; Mathlib is pinned to rev `06535612`.
 - Do not run `lake update` and do not edit `lean-toolchain` or `lakefile.toml` during routine
   work: re-resolution drags the shared checkouts and breaks the sibling projects.
 - Never put an absolute `packagesDir` into `lakefile.toml` or the manifest.
-- `native_decide` is banned, since it introduces `Lean.ofReduceBool`.
+- `native_decide` is banned: at this toolchain every use declares an axiom
+  (`<name>._native.native_decide.ax_…`), which the comparator rejects.
 
 ```
 cd lean
-lake build            # the library and the axiom audit `BoxLike/AxCheck.lean`
+lake build                                # the library `BoxLike`, the default target
+lake build Solution                       # the proofs of the headline results
+python3 scripts/check_module_headers.py   # the module header of every tracked Lean file
+lake comparator --config comparator.json --inadvisably-no-sandbox   # local preflight, macOS
+./comparator-audit.sh                     # the sandboxed comparator audit, Linux only
 ```
 
-`BoxLike/AxCheck.lean` prints the axioms of every endpoint of the state table; each line
-must list only `propext`, `Classical.choice`, `Quot.sound` and literature axioms of
-`BoxLike/Literature.lean`, `BoxLike/LiteratureFeng.lean` and `BoxLike/LiteratureRemarks.lean`.
-The literature axioms an endpoint lists are exactly the cited theorems it depends on. Its
-section `Binders` checks that every literature axiom takes the instance
-`MeasurableSingletonClass ι` (section 6).
+Module system. Every Lean file of the project begins with `module` and imports with
+`public import`; every file with declarations opens `@[expose] public section`.
+`scripts/check_module_headers.py` checks the first line of every Lean file tracked by git.
 
-The comparator pair `Challenge.lean` / `Solution.lean` with `comparator-config.json` and
-`comparator-audit.sh` (copy from `ML-ST/lean`) is added once the headline statements of
-layer D are fixed.
+Palomar layout, after the registered project `JA-ST/lean`. `lakefile.toml` declares the
+libraries `BoxLike` (the default target), `Challenge` and `Solution`. `Challenge.lean` states
+the headline results over Mathlib alone, with the eight literature `Prop`s of the main line
+restated in it, and with an intentional `sorry` for each proof. Its definition block is
+identical to `Solution/Definitions.lean`. `Solution.lean` and `Solution/` prove the statements
+from the library. The development is licensed under Apache-2.0 (`LICENSE`).
+
+| `Challenge` | Article | Library |
+|---|---|---|
+| `audit_main1` | `thm:main1` | `System.main1_dimaff` |
+| `audit_eq_state_proj_dim` | `thm:eq_state_proj_dim` | `System.eq_state_proj_dim` |
+| `audit_main2` | `thm:main2` | `System.main2` |
+| `audit_main_extended` | `thm:main_extended` | `System.main_extended_min` |
+| `audit_main_extended_ge_two` | `thm:main_extended`, `s ≥ 2` | `System.main_extended_ge_two` |
+| `audit_dimH_eq_min` | `\dim_H X = min{2, dimaff(X)}` | `System.dimH_attractor_eq_min` |
+| `audit_dimH_of_two_le` | the same for `dimaff(X) ≥ 2` under the strong open set condition | `System.dimH_attractor_of_two_le` |
+
+The comparator is the axiom audit. `comparator.json` lists the seven theorems and permits only
+`propext`, `Quot.sound` and `Classical.choice`. `comparator-audit.sh` runs the toolchain's
+`lake comparator` inside a `bwrap` sandbox, which exists on Linux only; on macOS the unsandboxed
+call above serves as a local preflight.
+
+CI. `.github/workflows/build.yml` runs on every push: it checks the module headers, builds the
+library, and in a second job runs `comparator-audit.sh` on `ubuntu-24.04` without compiling
+project code beforehand. `.github/workflows/palomar-preflight.yml`, started by hand, runs
+Palomar's own submission pipeline on the current commit as a predictive preflight.
+
+`Archive/` is ignored by git. It holds `Archive/tools/LayerE.lean`, the statement layer of
+layer E, which the library supersedes (`LAYER_E.md`); it is not built.
 
 ## 1. Representation
 
@@ -81,9 +114,9 @@ layer D are fixed.
 | A | `sec:box_like_self_affine`, `sec:irreducibility`, `sec:subshift`, `sec:projective_system`: matrices, `ε_n`, `Σ_Z`, `τ`, `ω`, `Ψ`, `π`, `\overline{π}`, the commutative diagram | elementary, proved in full |
 | B | `sec:exponential_separation`, `sec:Singular_value_function`, `sec:affinity_dim`, `sec:normalisation` (algebraic part): `Δ_n^Ψ`, the projective exponential separation condition, `φ^s`, pressure by Fekete, affinity dimension, second iterates | elementary to moderate, proved in full |
 | C | `sec:ledrappier_young_formula`: pointwise dimension, exact- and double-dimensional measures, `thm:exact-dimensional-mixture`, `eq:haus_dim_sum` | measure theory on Mathlib's differentiation theorem, proved in full |
-| D | `sec:dimension_of_projections`, `sec:dimension_result_proof`: `thm:eq_state_proj_dim`, `thm:main1`, `thm:main_extended`, `thm:main2`, `\dim_H X = min{2, dimaff(X)}`; for `s ≥ 2` the Bernoulli equilibrium state, the Lebesgue measure of the open set and Hutchinson's uniqueness of the invariant measure | proved from the literature axioms and the endpoints of layer E; the case `s ≥ 2` without literature axioms |
-| E | `sec:lyapunov_exponents`, `sec:conditional`, `sec:entropies`, `sec:gibbs_measures`, `sec:average_gibbs` to `sec:higher_dimensional_entropies`: the box-like `Σ'`, measurable partitions, conditional measures, the entropies `h_i`, Gibbs measures, `P_Z(f)` | Birkhoff's theorem, Rokhlin disintegration along measurable partitions and conditional entropy are built here, since Mathlib lacks them; Feng's results are axioms; proved in full |
-| F | off the main line: the introduction (`thm:fraser`, the chain `\dim_H X = \dim_P X = \dim_M X = dimaff(X)`, `dimmaff`), `thm:A_classification`, `prop:ssc_no_overlap_not_pesc`, `ex:projection_double_dimensional`, the natural extension of `sec:two_sided_shift_space`, `thm:irred_eq_state` apart from the Gibbs bounds, and the unlabelled claims about the equilibrium state and the Gibbs measures | proved; cited theorems enter as `Prop` hypotheses or as the axioms of `BoxLike/LiteratureRemarks.lean` |
+| D | `sec:dimension_of_projections`, `sec:dimension_result_proof`: `thm:eq_state_proj_dim`, `thm:main1`, `thm:main_extended`, `thm:main2`, `\dim_H X = min{2, dimaff(X)}`; for `s ≥ 2` the Bernoulli equilibrium state, the Lebesgue measure of the open set and Hutchinson's uniqueness of the invariant measure | proved from the literature hypotheses and the results of layer E; the case `s ≥ 2` with no literature hypothesis |
+| E | `sec:lyapunov_exponents`, `sec:conditional`, `sec:entropies`, `sec:gibbs_measures`, `sec:average_gibbs` to `sec:higher_dimensional_entropies`: the box-like `Σ'`, measurable partitions, conditional measures, the entropies `h_i`, Gibbs measures, `P_Z(f)` | Birkhoff's theorem, Rokhlin disintegration along measurable partitions and conditional entropy are built here, since Mathlib lacks them; Feng's results are hypotheses; proved in full |
+| F | off the main line: the introduction (`thm:fraser`, the chain `\dim_H X = \dim_P X = \dim_M X = dimaff(X)`, `dimmaff`), `thm:A_classification`, `prop:ssc_no_overlap_not_pesc`, `ex:projection_double_dimensional`, the natural extension of `sec:two_sided_shift_space`, `thm:irred_eq_state` apart from the Gibbs bounds, and the unlabelled claims about the equilibrium state and the Gibbs measures | proved; cited theorems enter as `Prop` hypotheses |
 
 ## 3. State
 
@@ -120,7 +153,7 @@ layer D are fixed.
 | `Δ_n^Ψ`, projective exponential separation | `System.gap`, `System.ProjExpSeparation` | `Separation` | **done** |
 | `Δ_{m+1}^Ψ ≤ Δ_m^Ψ` (proof of `thm:two-block-normalisation`) | `System.gap_succ_le` | `Separation` | **done** |
 | `lem:proj_gap_dominated` | `System.diagGap`, `System.gap_le_diagGap` | `Separation` | **done** |
-| `prop:ssc_no_overlap_not_pesc` | `NoOverlap.ssc_no_overlap_not_pesc`, `NoOverlap.ssc_no_overlap_not_pesc'`, `NoOverlap.exists_system_of_homFree`, `NoOverlap.BaranyKaenmakiPair`, `NoOverlap.BaranyKaenmakiTheorem`, `NoOverlap.exists_pair_of_baranyKaenmakiTheorem`, `System.FreeProjective`, `System.not_projExpSeparation_of_diagGap` | `NoOverlapExample`, `NoOverlapExampleFree`, `Separation` | **done** from the `Prop` hypothesis `NoOverlap.BaranyKaenmakiPair` (the form the article uses), with no axiom; the primed form assumes Theorem 2.1 of the source, `NoOverlap.BaranyKaenmakiTheorem`. "Not strongly irreducible" is `¬ TupleStronglyIrreducible` of `Classification` |
+| `prop:ssc_no_overlap_not_pesc` | `NoOverlap.ssc_no_overlap_not_pesc`, `NoOverlap.ssc_no_overlap_not_pesc'`, `NoOverlap.exists_system_of_homFree`, `NoOverlap.BaranyKaenmakiPair`, `NoOverlap.BaranyKaenmakiTheorem`, `NoOverlap.exists_pair_of_baranyKaenmakiTheorem`, `System.FreeProjective`, `System.not_projExpSeparation_of_diagGap` | `NoOverlapExample`, `NoOverlapExampleFree`, `Separation` | **done** from the `Prop` hypothesis `NoOverlap.BaranyKaenmakiPair` (the form the article uses); the primed form assumes Theorem 2.1 of the source, `NoOverlap.BaranyKaenmakiTheorem`. "Not strongly irreducible" is `¬ TupleStronglyIrreducible` of `Classification` |
 | freeness of the projective semigroup and the choice of parameters in the proof of `prop:ssc_no_overlap_not_pesc` (tex lines 1490 to 1504, 1543 to 1572) | `NoOverlap.exists_algebraicIndependent_mem_Ioo`, `NoOverlap.exists_params`, `NoOverlap.genDeriv_transfer`, `NoOverlap.genVal_transfer`, `NoOverlap.eq_of_genDeriv_eq_of_genVal_eq`, `NoOverlap.Params.freeProjective` | `NoOverlapExampleFree`, `NoOverlapExample` | **done** |
 | the paragraph after `prop:ssc_no_overlap_not_pesc`: planar exponential separation does not imply projective exponential separation (tex lines 1583 to 1593) | `System.StrongSeparation.exists_le_dist_phiWord`, `NoOverlap.planar_separation_not_pesc` | `NoOverlapExample` | **done** from `NoOverlap.BaranyKaenmakiPair` |
 | `φ^s`, sub-multiplicativity | `svf`, `svf_mul_le` | `SingularValue` | **done**, on all real `2 × 2` matrices with the `ℓ²` operator norm |
@@ -129,26 +162,26 @@ layer D are fixed.
 | `s ↦ P(𝖠, s)` continuous, strictly decreasing, `P(𝖠, 0) = log N`, `P → -∞`, `dimaff` as its unique zero | `System.pressure_zero`, `System.exists_pressure_slope`, `System.strictAntiOn_pressure`, `System.continuousOn_pressure`, `System.tendsto_pressure_atTop`, `System.dimaff`, `System.pressure_dimaff`, `System.dimaff_eq`, `System.dimaff_pos` | `AffinityDim` | **done** |
 | Minkowski and packing dimensions of sets (tex lines 2267 to 2268, Falconer, *Techniques*, §2) | `upperBoxDim`, `lowerBoxDim`, `packingDim`, `upperBoxDim_le_of_forall`, `le_lowerBoxDim_of_forall`, `upperBoxDim_image_eq`, `lowerBoxDim_image_eq`, `packingDim_image_eq`, `upperBoxDim_le_lowerBoxDim_of_superMul`, `dimH_le_lowerBoxDim`, `dimH_le_packingDim`, `packingDim_le_upperBoxDim`, `packingDim_eq_upperBoxDim` | `SetDimensions` | **done**, with values in `ℝ≥0∞`; the packing dimension is the modified upper Minkowski dimension |
 | the modified affinity dimension `dimmaff(X)` (tex lines 2267 to 2282), Fraser's Lemma 2.1, the existence of the Minkowski dimensions of the projections (after Fraser's Lemma 2.7), `dimmaff(X) ≤ dimaff(X)` (tex lines 578 to 579) | `System.projDim`, `System.modSvf`, `System.modSvf_append_le`, `System.le_modSvf_append`, `System.modPressure`, `System.tendsto_modPressure`, `System.dimmaff`, `System.dimmaff_eq`, `System.lowerBoxDim_coord_eq`, `System.projDim_eq_lowerBoxDim`, `System.upperBoxDim_coord_le_dimaff`, `System.projDim_le_dimaff`, `System.dimmaff_le_dimaff`, `System.dimmaff_eq_dimaff_of_full`, `System.dimaff_eq_dimmaff_of_projDim_eq_one` | `ModifiedAffinity` | **done**, with no literature input; `s(𝐢)` is the Minkowski dimension of the projection, the modified pressure is a limit, and `dimmaff(X) ≤ dimaff(X)` holds for every box-like set |
-| `thm:fraser` | `System.FraserBound`, `System.FraserROSC`, `System.packingDim_attractor`, `System.fraserBound_iff`, `System.fraserROSC_of_le`, `System.FraserROSC.dimmaff_eq_dimaff`, `System.FraserROSC.dim_eq_dimaff`, `System.fraserBound_of_subsingleton`, `System.fraserROSC_of_subsingleton` | `FraserChain` | `\dim_P X = \overline{\dim}_M X` **done** for every box-like set; the first two parts are Fraser's Theorem 2.3 as the `Prop`s `System.FraserBound` and `System.FraserROSC`, no axiom, compared with arXiv:1108.2639v1; the third part (Fraser's Corollary 2.5) **done** from `System.FraserROSC`, and without the rectangular open set condition when `dimaff(X) ≤ 2` (`System.dimmaff_eq_dimaff_of_full`) |
+| `thm:fraser` | `System.FraserBound`, `System.FraserROSC`, `System.packingDim_attractor`, `System.fraserBound_iff`, `System.fraserROSC_of_le`, `System.FraserROSC.dimmaff_eq_dimaff`, `System.FraserROSC.dim_eq_dimaff`, `System.fraserBound_of_subsingleton`, `System.fraserROSC_of_subsingleton` | `FraserChain` | `\dim_P X = \overline{\dim}_M X` **done** for every box-like set; the first two parts are Fraser's Theorem 2.3 as the `Prop`s `System.FraserBound` and `System.FraserROSC`, hypotheses of the results that use them, compared with arXiv:1108.2639v1; the third part (Fraser's Corollary 2.5) **done** from `System.FraserROSC`, and without the rectangular open set condition when `dimaff(X) ≤ 2` (`System.dimmaff_eq_dimaff_of_full`) |
 | `eq:hausdorff_affinity_upper_bound` and Falconer's bound for the upper Minkowski dimension (tex lines 2255 to 2265, 573 to 574) | `System.upperBoxDim_attractor_le_of_pressure_neg`, `System.upperBoxDim_attractor_le_dimaff`, `System.upperBoxDim_attractor_le`, `System.dimH_attractor_le`, `System.falconerBoxBound` | `FalconerBound`, `FraserChain` | **done**, with no literature input, for every box-like system; no separation, rotations or proximality |
-| the chain `\dim_H X = \dim_P X = \dim_M X = dimaff(X)` and the squeeze `dimmaff(X) = dimaff(X)` (tex lines 571 to 581) | `System.FalconerBoxBound`, `System.falconerBoxBound_iff`, `System.falconerBoxBound_iff_euclidean`, `System.FalconerBoxBound.dimH_le`, `System.FalconerBoxBound.dimmaff_le_dimaff`, `System.dim_chain`, `System.dimmaff_eq_dimaff`, `System.dim_chain_main2`, `System.dimmaff_eq_dimaff_main2` | `FraserChain` | **done**: the chain for every box-like set with `\dim_H X = dimaff(X)`, with no hypothesis beyond it; the squeeze from the `Prop` `System.FraserBound`; the `main2` forms add the axioms of `System.main2` |
-| `thm:irred_eq_state`: the Gibbs bounds for `0 < s < 2` | `System.HasGibbsBounds`, `fengKaenmaki_gibbs` | `Thermodynamic`, `Literature` | axiom (section 6) |
-| `thm:irred_eq_state`: uniqueness for every `s > 0`, for a proximal box-like tuple with rotations | `System.unique_equilibrium_of_lt_two`, `System.unique_equilibrium_of_two_le`, `System.unique_equilibrium` | `UniqueEquilibrium` | **done**; for `0 < s < 2` from the axiom `fengKaenmaki_unique` and irreducibility, for `s ≥ 2` with no axiom and no hypothesis on the tuple |
-| `thm:irred_eq_state` for `s ≥ 2`: existence, uniqueness, ergodicity | `System.isEquilibriumState_bernoulli`, `System.IsEquilibriumState.eq_bernoulli`, `System.existsUnique_isEquilibriumState_of_two_le`, `System.IsEquilibriumState.ergodic_of_two_le` | `BernoulliEquilibrium` | **done**, with no literature axiom: the equilibrium state is the Bernoulli measure with weights `|det A_i|^{s/2} / ∑_j |det A_j|^{s/2}` |
+| the chain `\dim_H X = \dim_P X = \dim_M X = dimaff(X)` and the squeeze `dimmaff(X) = dimaff(X)` (tex lines 571 to 581) | `System.FalconerBoxBound`, `System.falconerBoxBound_iff`, `System.falconerBoxBound_iff_euclidean`, `System.FalconerBoxBound.dimH_le`, `System.FalconerBoxBound.dimmaff_le_dimaff`, `System.dim_chain`, `System.dimmaff_eq_dimaff`, `System.dim_chain_main2`, `System.dimmaff_eq_dimaff_main2` | `FraserChain` | **done**: the chain for every box-like set with `\dim_H X = dimaff(X)`, with no hypothesis beyond it; the squeeze from the `Prop` `System.FraserBound`; the `main2` forms add the hypotheses of `System.main2` |
+| `thm:irred_eq_state`: the Gibbs bounds for `0 < s < 2` | `System.HasGibbsBounds`, `FengKaenmakiGibbs` | `Thermodynamic`, `Literature` | hypothesis (section 6) |
+| `thm:irred_eq_state`: uniqueness for every `s > 0`, for a proximal box-like tuple with rotations | `System.unique_equilibrium_of_lt_two`, `System.unique_equilibrium_of_two_le`, `System.unique_equilibrium` | `UniqueEquilibrium` | **done**; for `0 < s < 2` from the hypothesis `FengKaenmakiUnique` and irreducibility, for `s ≥ 2` with no literature hypothesis and no hypothesis on the tuple |
+| `thm:irred_eq_state` for `s ≥ 2`: existence, uniqueness, ergodicity | `System.isEquilibriumState_bernoulli`, `System.IsEquilibriumState.eq_bernoulli`, `System.existsUnique_isEquilibriumState_of_two_le`, `System.IsEquilibriumState.ergodic_of_two_le` | `BernoulliEquilibrium` | **done**, with no literature hypothesis: the equilibrium state is the Bernoulli measure with weights `|det A_i|^{s/2} / ∑_j |det A_j|^{s/2}` |
 | `thm:irred_eq_state`: existence, the weak-star infrastructure (tex lines 2322 to 2323, Käenmäki, Theorems 2.6 and 4.1) | `compactSpace_probabilityMeasure`, `InvariantMeasures`, `isCompact_invariantMeasures`, `invariantMeasures_nonempty`, `entropy_eq_iInf`, `System.energyLim_eq_iInf`, `upperSemicontinuousOn_entropy`, `System.upperSemicontinuousOn_energyLim`, `System.exists_maximiser` | `InvariantMeasures` | **done**, with no literature input: `h_0 + Λ(𝖠, ·, s)` attains its maximum on the compact set `ℳ_σ(Σ)` for every `s ≥ 0` |
 | `thm:irred_eq_state`: existence, for every `s ≥ 0` | `System.log_svfSum_le_avgBlockMeasure`, `System.exists_invariant_pressure_le`, `System.exists_invariant_le_entropy_add_energy`, `System.exists_isEquilibriumState` | `EquilibriumExistence` | **done**, with no literature input, by the construction of Misiurewicz: the averaged block measures satisfy the two-parameter estimate, and a weak-star limit point is an equilibrium state. Irreducibility is not used. Ergodicity of the measure produced is not formalised |
-| sub-multiplicativity of the equilibrium state, `C⁻¹ φ^s(A_𝐢) ≤ μ([𝐢]) ≤ C φ^s(A_𝐢)` at `s = dimaff` (tex lines 2330 to 2345) | `System.HasGibbsBounds.submultiplicative`, `System.HasGibbsBounds.cylinder_bounds_dimaff`, `System.IsEquilibriumState.submultiplicative`, `System.IsEquilibriumState.cylinder_bounds_dimaff` | `GibbsProperties` | **done**; the forms for the equilibrium state use `fengKaenmaki_gibbs` |
+| sub-multiplicativity of the equilibrium state, `C⁻¹ φ^s(A_𝐢) ≤ μ([𝐢]) ≤ C φ^s(A_𝐢)` at `s = dimaff` (tex lines 2330 to 2345) | `System.HasGibbsBounds.submultiplicative`, `System.HasGibbsBounds.cylinder_bounds_dimaff`, `System.IsEquilibriumState.submultiplicative`, `System.IsEquilibriumState.cylinder_bounds_dimaff` | `GibbsProperties` | **done**; the forms for the equilibrium state take `FengKaenmakiGibbs` |
 | Bernoulli measures, their invariance and ergodicity (tex lines 2451 to 2456) | `bernoulli`, `measurePreserving_shift_bernoulli`, `ergodic_shift_bernoulli`, `eq_bernoulli_of_cylinder`, `eq_bernoulli_weightMeasure_of_measureReal_cylinder`, `entropy_bernoulli`, `IsBernoulli` | `BernoulliEquilibrium`, `GibbsProperties` | **done** |
 | the equilibrium state for `0 < s < 2` is not quasi-Bernoulli and not Bernoulli (tex lines 555 to 560, 2457 to 2463) | `System.exists_mul_svf_le`, `System.not_quasiBernoulli`, `System.not_isBernoulli`, `System.IsEquilibriumState.not_quasiBernoulli`, `System.IsEquilibriumState.not_isBernoulli` | `GibbsProperties` | **done**, from the Gibbs bounds alone, for every proximal box-like tuple with rotations; "grouping a Bernoulli measure in pairs gives a Bernoulli measure" (tex line 2462) is not formalised and not needed |
-| `s ≥ 2` in `sec:normalisation` (tex lines 2471 to 2480): `φ^s = |det|^{s/2}`, `P(𝖠, s) = log ∑_i |det A_i|^{s/2}`, the equilibrium state is Bernoulli | `svf_of_two_le`, `System.pressure_of_two_le`, `System.lyapunov₁_add_lyapunov₂`, `System.IsEquilibriumState.log_sum_eq`, `entropy_le_blockEntropy_one`, `measureReal_preimage_shift_cylinder_eq_prod_of_entropy_eq`, `blockEntropy_one_add_sum_le`, `System.IsEquilibriumState.eq_bernoulli` | `PressureLarge`, `BernoulliEntropy`, `BernoulliEquilibrium` | **done**, for every box-like tuple, with no literature axiom |
+| `s ≥ 2` in `sec:normalisation` (tex lines 2471 to 2480): `φ^s = |det|^{s/2}`, `P(𝖠, s) = log ∑_i |det A_i|^{s/2}`, the equilibrium state is Bernoulli | `svf_of_two_le`, `System.pressure_of_two_le`, `System.lyapunov₁_add_lyapunov₂`, `System.IsEquilibriumState.log_sum_eq`, `entropy_le_blockEntropy_one`, `measureReal_preimage_shift_cylinder_eq_prod_of_entropy_eq`, `blockEntropy_one_add_sum_le`, `System.IsEquilibriumState.eq_bernoulli` | `PressureLarge`, `BernoulliEntropy`, `BernoulliEquilibrium` | **done**, for every box-like tuple, with no literature hypothesis |
 | `eq:variational`, `\dim_L ≤ dimaff`, `\dim_L = dimaff` for an equilibrium state at `dimaff` | `System.entropy_add_energyLim_le_pressure`, `add_energy_lyapDim`, `System.pressure_lyapDim_nonneg`, `System.lyapDim_le_dimaff`, `System.IsEquilibriumState.lyapDim_eq_dimaff` | `Variational`, `AffinityMain` | **done** |
-| `thm:main1` with `s = dimaff(X) < 2` | `System.main1_dimaff` | `AffinityMain` | **done**; axioms: the four of `System.main1` |
+| `thm:main1` with `s = dimaff(X) < 2` | `System.main1_dimaff` | `AffinityMain` | **done**; hypotheses: the four of `System.main1` |
 | `dim(π_*μ) ≤ \dim_H(X)`, the use of `eq:dimension_measure_def` in `thm:main2` | `IsExactDim.le_dimH`, `IsExactDim.le_dimH_of_map`, `System.le_dimH_attractor` | `MassDistribution`, `AffinityMain` | **done**, by the mass distribution principle |
 | `φ^s(A_{𝐢|_n}) = max{exp S_n f_{1,s}(τ𝐢), exp S_n f_{2,s}(τ𝐢)}`, `eq:lyapunov_exp_for_psi` | `System.svf_matWord_futureWord`, `System.abs_gDeriv_futureWord` | `Variational` | **done** |
 | `Φ^(2)`, `𝖠²`, `g^{(2)}_{(i,j),c} = g_{i,c} ∘ g_{j,c+o(i)}` (`thm:two-block-normalisation`) | `System.sq`, `System.sq_mat`, `System.sq_phi`, `System.sq_g` | `SecondIterate` | **done** |
 | `Δ_n^{Ψ^(2)} ≥ Δ_{2n}^Ψ`, projective exponential separation passes to `Φ^(2)` | `System.gap_two_mul_le_gap_sq`, `System.gap_anti`, `System.projExpSeparation_iff_frequently`, `System.ProjExpSeparation.sq` | `SecondIterate` | **done** |
 | `thm:two-block-normalisation`: `β`, `π^(2) ∘ β = π`, `P(𝖠², t) = 2P(𝖠, t)`, `h_0(μ^(2)) = 2h_0(μ)`, `λ_i(𝖠², μ^(2)) = 2λ_i(𝖠, μ)`, `π^(2)_*μ^(2) = π_*μ`, `μ^(2)` an equilibrium state of `𝖠²` | `group`, `System.proj_sq_group`, `System.pressure_sq`, `entropy_map_group`, `System.lyapunov₁_sq_map_group`, `System.lyapunov₂_sq_map_group`, `System.marginal_sq_map_group`, `System.sq_withRotations`, `System.IsEquilibriumState.map_group` | `Grouping`, `General` | **done** |
-| `thm:two-block-normalisation`: uniqueness of `μ^(2)` | `System.unique_sq_equilibrium` | `NoSeparation` | **done**, for `0 < s < 2` and `𝖠²` with a proximal diagonal generator; axiom: `fengKaenmaki_unique`. Ergodicity of `μ^(2)` is proved from `thm:eq_state_is_sum` inside `System.main_extended_lt_two'` |
+| `thm:two-block-normalisation`: uniqueness of `μ^(2)` | `System.unique_sq_equilibrium` | `NoSeparation` | **done**, for `0 < s < 2` and `𝖠²` with a proximal diagonal generator; hypothesis: `FengKaenmakiUnique`. Ergodicity of `μ^(2)` is proved from `thm:eq_state_is_sum` inside `System.main_extended_lt_two'` |
 | `eq:energy_def`, `eq:diml_min2` | `energy`, `lyapDim`, `lyapDim_eq` | `LyapunovDim` | **done**, as functions of real parameters `h_0`, `λ_1`, `λ_2` |
 | threshold `h_0 < -λ_2 ↔ s < 2 - λ_1/λ_2` (proofs of `thm:main1`, `thm:main2`) | `entropy_lt_iff`, `entropy_le_iff` | `LyapunovDim` | **done** |
 | `thm:main1` from `thm:eq_state_proj_dim`: the dichotomy | `min_ne_min_iff`, `min_eq_one_of_le` | `LyapunovDim` | **done** |
@@ -170,18 +203,18 @@ layer D are fixed.
 | `\overline{λ}` as the limit of `sec:lyapunov_exponents` equals `∫ f_{1,1} dν` | `System.lyapBarLim`, `System.lyapBarLim_eq` | `Lyapunov` | **done** |
 | `P_Z(f)` (tex lines 2575 to 2578), the existence of its limit, the Gibbs constant is `P_Z(f)` | `periodicPoints`, `bijOn_block_periodicPoints`, `periodicSum_eq_finsum`, `pressureZ`, `tendsto_pressureZ`, `tendsto_pressureZ_admissibleSum`, `periodicSum_eq_zero_of_odd`, `pressureZ_comp_flipSymbol`, `IsGibbsAt.pressure_eq`, `IsGibbs.pressure_eq` | `PressureZ` | **done**, literal to the article; the limit over periodic points needs a diagonal generator |
 | doubling of Gibbs measures (tex lines 2584 to 2588) | `IsGibbsWith`, `IsGibbsWith.measureReal_cylinder_le_succ`, `IsGibbsWith.doubling`, `IsGibbs.doubling`, `IsGibbsWith.measureReal_preimage_shift_cylinder_le` | `GibbsProperties` | **done**, as the inequality of cylinder measures with its extension to the left; the metric form is not formalised |
-| `thm:eq_state_is_sum`: the four decompositions, `λ_1(𝖠, μ) = \overline{λ}(𝖠, μ_1)`, `λ_2(𝖠, μ) = \overline{λ}(𝖠, μ_2)` | `System.GibbsDecomposition`, `fraserJordanJurga_decomposition` | `Thermodynamic`, `Literature` | axiom (section 6) |
-| `thm:eq_state_is_sum`: `P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s})` | `System.svfSum_le_admissibleSum`, `System.pressure_eq_pressureZ₁`, `System.pressure_eq_pressureZ₂` | `PressureZ` | **done**, for every box-like system with a diagonal generator and `0 < s < 2`, with no axiom |
-| `thm:eq_state_is_sum`: the integral formulas for `λ_1`, `λ_2`, `μ_2 = flip_*μ_1`, the Gibbs constants are `P(𝖠, s)`, the fourth decomposition follows from the other three | `System.GibbsDecomposition.lyapunov₁_eq_integral`, `System.GibbsDecomposition.lyapunov₁_eq_integral_potential₂`, `System.GibbsDecomposition.lyapunov₂_eq_integral`, `System.GibbsDecomposition.lyapunov₂_eq_integral_potential₂`, `System.GibbsDecomposition.map_flip`, `System.GibbsDecomposition.isGibbsAt₁`, `System.GibbsDecomposition.isGibbsAt₂`, `System.decomposition₂_of_decompositions` | `PressureZ` | **done**, from the decompositions, with no axiom |
-| `μ_1 ≠ μ_2`, `μ_1 ⟂ μ_2` (tex lines 2671 to 2683), `eq:tau_cylinder`, `\overline{τ}_*μ_1 = \overline{ω}_*μ_2` and `\overline{τ}_*μ_2 = \overline{ω}_*μ_1` (tex lines 2695 to 2696), absolute continuity (tex lines 2723 to 2725) | `System.not_isGibbs_potential₁_and_potential₂`, `System.GibbsDecomposition.ne`, `mutuallySingular_of_ergodic_of_ne`, `System.GibbsDecomposition.mutuallySingular`, `cylinder_tau_inter_subshift`, `System.GibbsDecomposition.map_tau_eq_map_omega`, `System.GibbsDecomposition.map_absolutelyContinuous` | `GibbsProperties` | **done**, with no axiom; `eq:tau_cylinder` needs `n ≥ 1` |
+| `thm:eq_state_is_sum`: the four decompositions, `λ_1(𝖠, μ) = \overline{λ}(𝖠, μ_1)`, `λ_2(𝖠, μ) = \overline{λ}(𝖠, μ_2)` | `System.GibbsDecomposition`, `FraserJordanJurgaDecomposition` | `Thermodynamic`, `Literature` | hypothesis (section 6) |
+| `thm:eq_state_is_sum`: `P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s})` | `System.svfSum_le_admissibleSum`, `System.pressure_eq_pressureZ₁`, `System.pressure_eq_pressureZ₂` | `PressureZ` | **done**, for every box-like system with a diagonal generator and `0 < s < 2`, with no literature hypothesis |
+| `thm:eq_state_is_sum`: the integral formulas for `λ_1`, `λ_2`, `μ_2 = flip_*μ_1`, the Gibbs constants are `P(𝖠, s)`, the fourth decomposition follows from the other three | `System.GibbsDecomposition.lyapunov₁_eq_integral`, `System.GibbsDecomposition.lyapunov₁_eq_integral_potential₂`, `System.GibbsDecomposition.lyapunov₂_eq_integral`, `System.GibbsDecomposition.lyapunov₂_eq_integral_potential₂`, `System.GibbsDecomposition.map_flip`, `System.GibbsDecomposition.isGibbsAt₁`, `System.GibbsDecomposition.isGibbsAt₂`, `System.decomposition₂_of_decompositions` | `PressureZ` | **done**, from the decompositions, with no literature hypothesis |
+| `μ_1 ≠ μ_2`, `μ_1 ⟂ μ_2` (tex lines 2671 to 2683), `eq:tau_cylinder`, `\overline{τ}_*μ_1 = \overline{ω}_*μ_2` and `\overline{τ}_*μ_2 = \overline{ω}_*μ_1` (tex lines 2695 to 2696), absolute continuity (tex lines 2723 to 2725) | `System.not_isGibbs_potential₁_and_potential₂`, `System.GibbsDecomposition.ne`, `mutuallySingular_of_ergodic_of_ne`, `System.GibbsDecomposition.mutuallySingular`, `cylinder_tau_inter_subshift`, `System.GibbsDecomposition.map_tau_eq_map_omega`, `System.GibbsDecomposition.map_absolutelyContinuous` | `GibbsProperties` | **done**, with no literature hypothesis; `eq:tau_cylinder` needs `n ≥ 1` |
 | `thm:entropy_eq_gibbs` | `blockEntropy_map_unCode`, `entropy_map_unCode`, `map_unCode_of_decomposition`, `System.GibbsDecomposition.entropy_eq₁`, `System.GibbsDecomposition.entropy_eq₂` | `EntropyFactor`, `Main` | **done** |
-| `eq:proj_eq_is_sum`, `eq:gibbs_proj_dim`, normalised tuple | `map_comp_coding`, `System.exists_decomposition_of_coding`, `System.marginal_decomposition_normalised` | `Main` | **done**, from `fraserJordanJurga_decomposition` and `jordanRapaport_dimension` |
+| `eq:proj_eq_is_sum`, `eq:gibbs_proj_dim`, normalised tuple | `map_comp_coding`, `System.exists_decomposition_of_coding`, `System.marginal_decomposition_normalised` | `Main` | **done**; hypotheses: `JordanRapaportDimension`, and for the normalised tuple also `FengKaenmakiGibbs` and `FraserJordanJurgaDecomposition` |
 | `eq:proj_eq_is_sum`, `eq:gibbs_proj_dim` for every proximal mixed tuple | `System.marginal_decomposition` | `General` | **done** |
-| `eq:simple_lyapunov` | `System.simple_lyapunov` | `General` | **done**, from `morrisShmerkin_lyapunov_lt`, transferred through `𝖠²` when no generator is proximal |
-| `thm:eq_state_proj_dim` | `System.eq_state_proj_dim` | `General` | **done**, in the article's form with `\overline{\dim}_p` and `\underline{\dim}_H`; axioms: the four of `Literature` |
-| `thm:main1` | `System.main1` | `General` | **done**, with the article's hypotheses, `s = dimaff` entering as `0 < s < 2` and `P(𝖠, s) = 0`; axioms: the four of `Literature` |
-| the remark before `thm:eq_state_proj_dim`: the coordinate marginals are double-dimensional without separation | `System.exists_exactDim_decomposition_of_coding`, `System.marginal_isDoubleDim_normalised`, `System.marginal_isDoubleDim` | `NoSeparation` | **done**, for every proximal box-like tuple with rotations and `0 < s < 2`; axioms: `fengHu_exactDim`, `fengKaenmaki_gibbs`, `fraserJordanJurga_decomposition` |
-| `ex:projection_double_dimensional` | `Example.sys`, `Example.withRotations`, `Example.proximal`, `Example.irreducible`, `Example.strongSeparation`, `Example.projExpSeparation`, `Example.dimaff_pos_lt_one`, `Example.marginal_doubleDim`, `Example.dimH_attractor`, `Example.mutuallySingular_marginal`, `Example.pressure_eq_log_spectralRadius`, `Example.dimaff_charEq`, `Example.eq_dimaff_of_charEq` | `Example` | **done**, including `P(𝖠, t) = log ρ(M(t))` and the characteristic equation; the explicit Lyapunov exponents through the Markov measure and the numerical values (tex lines 3111 to 3154) are not formalised. Axioms: `Example.marginal_doubleDim` the four of `Literature`, `Example.dimH_attractor` the eight of the main line |
+| `eq:simple_lyapunov` | `System.simple_lyapunov` | `General` | **done**, from `MorrisShmerkinLyapunov`, transferred through `𝖠²` when no generator is proximal |
+| `thm:eq_state_proj_dim` | `System.eq_state_proj_dim` | `General` | **done**, in the article's form with `\overline{\dim}_p` and `\underline{\dim}_H`; hypotheses: the four of `Literature` |
+| `thm:main1` | `System.main1` | `General` | **done**, with the article's hypotheses, `s = dimaff` entering as `0 < s < 2` and `P(𝖠, s) = 0`; hypotheses: the four of `Literature` |
+| the remark before `thm:eq_state_proj_dim`: the coordinate marginals are double-dimensional without separation | `System.exists_exactDim_decomposition_of_coding`, `System.marginal_isDoubleDim_normalised`, `System.marginal_isDoubleDim` | `NoSeparation` | **done**, for every proximal box-like tuple with rotations and `0 < s < 2`; hypotheses: `FengHuExactDim`, `FengKaenmakiGibbs`, `FraserJordanJurgaDecomposition` |
+| `ex:projection_double_dimensional` | `Example.sys`, `Example.withRotations`, `Example.proximal`, `Example.irreducible`, `Example.strongSeparation`, `Example.projExpSeparation`, `Example.dimaff_pos_lt_one`, `Example.marginal_doubleDim`, `Example.dimH_attractor`, `Example.mutuallySingular_marginal`, `Example.pressure_eq_log_spectralRadius`, `Example.dimaff_charEq`, `Example.eq_dimaff_of_charEq` | `Example` | **done**, including `P(𝖠, t) = log ρ(M(t))` and the characteristic equation; the explicit Lyapunov exponents through the Markov measure and the numerical values (tex lines 3111 to 3154) are not formalised. Hypotheses: `Example.marginal_doubleDim` the four of `Literature`, `Example.dimH_attractor` the eight of the main line |
 | `thm:main1`, `thm:main2` for `0 < s ≤ 1`; the common-prefix bound for `Δ_n^Ψ`; `P(𝖠, s) = log ρ` for a positive eigenvector | `System.main1_of_le_one`, `System.main2_of_le_one`, `System.le_gap`, `System.projExpSeparation_of_le_abs`, `System.pressure_le`, `System.transfer`, `System.pressure_eq_log_of_eigenvector` | `Example` | **done** |
 | Birkhoff's pointwise ergodic theorem, maximal ergodic theorem | `birkhoff_ae`, `birkhoff_ergodic`, `maximal_ergodic` | `Birkhoff` | **done** |
 | `sec:conditional`: `\widehat{ξ}`, conditional measures, Rokhlin's properties | `saturated`, `saturated_eq_comap`, `condMeas`, `setLIntegral_condMeas`, `condMeas_unique`, `condMeas_atom` | `Conditional`, `ConditionalMeasures` | **done**, with `condExpKernel` on a standard Borel space |
@@ -190,30 +223,31 @@ layer D are fixed.
 | `Σ'`, `Σ^τ`, `Σ^ω`, `eq:tau_omega_partition2`, `thm:lyapunov_exponents_via_g_system` | `System.SigmaPrime`, `System.SigmaTau`, `System.SigmaOmega`, `System.slowAxis`, `System.lyapunov_exponents_via_g_system` | `SlowAxis` | **done**; `Σ'` in the box-like form, no Oseledets |
 | partitions `ξ_i`, `ξ_1^⊥`, `\overline{ξ}_i`; measurable (Feng, Lemma 4.2); `h_i`, `\overline{h}_i`; `\overline{μ}` | `System.xi`, `System.xiPerp`, `System.xiBar`, `System.isMeasurablePartition_xi`, `…_xiPerp`, `…_xiBar`, `System.dimEntropy`, `System.dimEntropyBar`, `avgMeasure` | `DimPartitions`, `MeasurablePartitions` | **done** |
 | `eq:sigma_tau_omega_positive_eq_measure1`, `thm:partitions_xi1`, `thm:partition_tau_conj` | `System.shift_mem_SigmaTau_iff`, `System.partitions_xi1`, `System.partition_tau_conj` | `PartitionIdentities` | **done** |
-| ergodicity of the equilibrium state | `System.ergodic_of_gibbsDecomposition`, `System.ergodic_of_hasProximalDiagonal`, `System.IsEquilibriumState.ergodic_of_two_le` | `DimPartitions`, `BernoulliEquilibrium` | **done**; for `0 < s < 2` from `thm:eq_state_is_sum`, for `s ≥ 2` from the Bernoulli form, with no axiom |
+| ergodicity of the equilibrium state | `System.ergodic_of_gibbsDecomposition`, `System.ergodic_of_hasProximalDiagonal`, `System.IsEquilibriumState.ergodic_of_two_le` | `DimPartitions`, `BernoulliEquilibrium` | **done**; for `0 < s < 2` from `thm:eq_state_is_sum` (hypotheses `FengKaenmakiGibbs`, `FraserJordanJurgaDecomposition`), for `s ≥ 2` from the Bernoulli form; no citation of ergodicity is used |
 | `μ(Σ') = 1`, `eq:lyapunov_exponent_gsystem`, `thm:sigma_tau_omega_positive_eq_measure` | `System.measure_SigmaPrime_compl`, `System.lyapunov_exponent_gsystem`, `System.sigma_tau_omega_positive`, `System.irreducible_of_proximal` | `SigmaMeasure` | **done** |
 | `thm:gibbs_tau_omega_positive`, `eq:orientation-restrictions` | `System.gibbs_tau_omega_positive`, `System.orientation_restrictions` | `GibbsOrientation` | **done** |
 | `h_0(μ) = h(μ)`, `\overline{h}_0(ν) = h(ν)` (tex lines 2087 to 2091) | `integral_sum_negMulLog_condExp_past`, `System.dimEntropy_zero_eq_entropy`, `System.dimEntropyBar_zero_eq_entropy` | `PastEntropy` | **done**, directly, without Shannon–McMillan–Breiman |
-| `thm:feng_entropy_as_limit`, `thm:feng_entropy_zero` | `System.feng_entropy_as_limit`, `…_bar`, `System.feng_entropy_zero`, `…_bar` | `FengEntropy` | **done**, from Feng's (4.16) and Birkhoff |
+| `thm:feng_entropy_as_limit`, `thm:feng_entropy_zero` | `System.feng_entropy_as_limit`, `…_bar`, `System.feng_entropy_zero`, `…_bar` | `FengEntropy` | **done**, from Feng's (4.16) (`FengInfoSum`, `FengInfoSumBar`) and Birkhoff |
 | `thm:feng_entropy_kolmogorov_sinai` | | | not formalised and not needed |
 | `thm:conditional_two_ways` | `condMeas_transport`, `System.conditional_two_ways` | `ConditionalTwoWays` | **done** |
 | `thm:overline_h1_zero`, `thm:overline_h1_zero_large` | `System.overline_h1_zero`, `System.overline_h1_zero_large` | `AverageEntropy` | **done** |
 | `thm:overline_h1_large`, `thm:eq_state_h1_large` | `System.overline_h1_large`, `System.eq_state_h1_large` | `EquilibriumEntropyLarge` | **done** |
 | `thm:eq_state_h1_zero`, `thm:eq_state_h2_zero`, `thm:orto_partition_dirac` | `System.eq_state_h1_zero`, `System.eq_state_h2_zero`, `System.orto_partition_dirac` | `EquilibriumEntropySmall` | **done** |
 | `thm:SOSC_h2_zero` | `System.future_eq_of_proj_eq`, `System.SOSC_h2_zero` | `StrongOpenSetEntropy` | **done**, with Poincaré recurrence |
-| `thm:main_extended`, `0 < s < 2` | `System.main_extended_normalised`, `System.main_extended_lt_two'`, `System.main_extended_dimaff` | `MainTwo` | **done**; axioms: the eight of the main line |
-| `thm:main2` | `System.main2_of_bounds`, `System.main2` | `MainTwo` | **done**; axioms: the eight of the main line; the upper bound is the theorem `System.dimH_attractor_le` |
+| `thm:main_extended`, `0 < s < 2` | `System.main_extended_normalised`, `System.main_extended_lt_two'`, `System.main_extended_dimaff` | `MainTwo` | **done**; hypotheses: the eight of the main line |
+| `thm:main2` | `System.main2_of_bounds`, `System.main2` | `MainTwo` | **done**; hypotheses: the eight of the main line; the upper bound is the theorem `System.dimH_attractor_le` |
 | invariant measures `ν = ∑_i p_i (φ_i)_*ν`, Hutchinson's uniqueness, invariance of the projection of a Bernoulli measure (tex lines 3718 to 3721) | `System.IsInvariantMeasure`, `System.IsInvariantMeasure.unique`, `System.IsInvariantMeasure.sum_eq_one`, `System.isInvariantMeasure_map_proj`, `System.map_proj_eq_of_isInvariantMeasure` | `SelfAffineMeasure`, `InvariantMeasure` | **done**; uniqueness among all Borel probability measures |
 | `∑_i |det A_i| ≤ 1` under the strong open set condition, normalised Lebesgue measure on the open set (tex lines 3699 to 3723) | `System.volume_image_phi`, `System.StrongOpenSet.exists_isBounded`, `System.StrongOpenSet.sum_abs_det_le_one`, `System.StrongOpenSet.exists_isInvariantMeasure_isExactDim` | `LebesgueOpenSet` | **done** |
-| `thm:main_extended`, `s ≥ 2` | `System.StrongOpenSet.sum_abs_det_eq_one`, `System.main_extended_ge_two` | `MainExtended` | **done**, with no literature axiom; rotations, proximality and the projective exponential separation condition are not used. `thm:main2` does not use it |
-| `thm:main_extended` | `System.main_extended`, `System.main_extended_min` | `MainExtended` | **done**; axioms: those of `System.main_extended_dimaff` |
-| `\dim_H X = min{2, dimaff(X)}` under the hypotheses of `thm:main_extended` (paragraph after `eq:hausdorff_ergodic_lyapunov`) | `System.dimH_attractor_eq_min`, `System.dimH_attractor_of_strongOpenSet`, `System.dimH_attractor_of_two_le` | `DimensionFormula` | **done**; axioms: the eight of the main line, and none for `dimaff(X) ≥ 2` under the strong open set condition, with no measure assumed |
-| `eq:hausdorff_ergodic_lyapunov` (Rossi) | `upperHausdorffDim`, `System.RossiBound`, `IsExactDim.upperHausdorffDim_eq`, `System.upperHausdorffDim_map_proj_eq` | `DimensionFormula` | the bound is the `Prop` `System.RossiBound`, no axiom, and no proof depends on it; equality for the equilibrium state of `thm:main_extended` **done** |
+| `thm:main_extended`, `s ≥ 2` | `System.StrongOpenSet.sum_abs_det_eq_one`, `System.main_extended_ge_two` | `MainExtended` | **done**, with no literature hypothesis; rotations, proximality and the projective exponential separation condition are not used. `thm:main2` does not use it |
+| `thm:main_extended` | `System.main_extended`, `System.main_extended_min` | `MainExtended` | **done**; hypotheses: those of `System.main_extended_dimaff` |
+| `\dim_H X = min{2, dimaff(X)}` under the hypotheses of `thm:main_extended` (paragraph after `eq:hausdorff_ergodic_lyapunov`) | `System.dimH_attractor_eq_min`, `System.dimH_attractor_of_strongOpenSet`, `System.dimH_attractor_of_two_le` | `DimensionFormula` | **done**; hypotheses: the eight of the main line, and none for `dimaff(X) ≥ 2` under the strong open set condition, with no measure assumed |
+| `eq:hausdorff_ergodic_lyapunov` (Rossi) | `upperHausdorffDim`, `System.RossiBound`, `IsExactDim.upperHausdorffDim_eq`, `System.upperHausdorffDim_map_proj_eq` | `DimensionFormula` | the bound is the `Prop` `System.RossiBound`, which no theorem takes; equality for the equilibrium state of `thm:main_extended` **done** |
 
 ## 4. Remaining work, in order
 
 The four main results are complete, `thm:main_extended` for every `s > 0`, and so is layer E,
-whose design `LAYER_E.md` documents.
+whose design `LAYER_E.md` documents. The comparator pair `Challenge.lean` / `Solution.lean`
+audits the seven headline results (section 0).
 
 1. Ergodicity of the equilibrium state produced by `System.exists_isEquilibriumState`: the
    construction gives an invariant measure, and the article's source states an ergodic one. For
@@ -225,14 +259,12 @@ whose design `LAYER_E.md` documents.
    through the Markov measure (tex lines 3111 to 3154); `(π^+)_*μ^+ = π_*μ` (tex lines 896 to
    897), since the library has no one-sided `π^+`; "grouping a Bernoulli measure gives a
    Bernoulli measure" (tex line 2462), which no proof needs.
-3. `tools/LayerE.lean` is superseded by the library and holds no declaration the library lacks.
-   Its deletion awaits the decision of the project owner.
-4. `Challenge.lean`, `Solution.lean`, the comparator configuration with the whitelisted axioms;
-   a LICENSE; a first commit.
-5. `Literature`: optionally shrink `fraserJordanJurga_decomposition` to the measure `μ_1`.
+3. `Literature`: optionally weaken the hypothesis `FraserJordanJurgaDecomposition` to the
+   measure `μ_1`, which strengthens every result that takes it; the restatement in
+   `Challenge.lean` and `Solution/Definitions.lean` changes with it.
    `System.decomposition₂_of_decompositions` and `System.GibbsDecomposition.map_flip` support
    it: three decompositions and the finiteness of `μ_1` give the fourth and `μ_2 = flip_*μ_1`.
-6. Facts proved twice under different names, to be merged:
+4. Facts proved twice under different names, to be merged:
    `System.GibbsDecomposition.map_unCode_tau₂` and `System.GibbsDecomposition.map_unCode_omega₂`
    in `PressureZ` and `System.GibbsDecomposition.map_tau_eq_map_omega` in `GibbsProperties`;
    `IsGibbsAt` in `PressureZ` and `IsGibbsWith` in `GibbsProperties`, related by `Iff.rfl`.
@@ -249,7 +281,7 @@ whose design `LAYER_E.md` documents.
   hypothesis, and only the Gibbs measures `μ_1`, `μ_2` need to be ergodic, for Jordan–Rapaport.
   Of `thm:irred_eq_state` only the Gibbs bounds are used: Fraser–Jordan–Jurga prove
   `thm:eq_state_is_sum` for the measure characterised by these bounds, and
-  `fengKaenmaki_gibbs` is the passage from the variational definition to them.
+  `FengKaenmakiGibbs` is the passage from the variational definition to them.
 - `thm:box_like_proximal` holds for every box-like tuple; the hypothesis "with rotations" is
   not used.
 - `eq:haus_dim_sum` is stated in the article for all finite Borel measures. With real-valued
@@ -532,16 +564,17 @@ whose design `LAYER_E.md` documents.
 
 ## 6. Fidelity boundary
 
-Four kinds of assumption are kept apart.
+Four kinds of assumption are kept apart. The library declares no axiom: every constant depends
+on `propext`, `Classical.choice` and `Quot.sound` only, and the comparator permits no other for the headline results.
 
 | Kind | Form in Lean |
 |---|---|
 | Standing assumptions of a theorem: proximal, with rotations, projective exponential separation, strong open set condition | hypotheses of the statement, as in the article |
-| Literature theorems the article cites without proof | `axiom` in `BoxLike/Literature.lean` or `BoxLike/LiteratureFeng.lean`, and in `BoxLike/LiteratureRemarks.lean` when no main result depends on it; restated in `Challenge.lean`, whitelisted by name in `comparator-config.json`, with the exact citation in the doc comment |
-| Literature theorems behind claims off the main line that are not authorised as axioms | `Prop`-valued definitions, hypotheses of the theorems that use them, when they are not declared as axioms: `System.RossiBound` is used by no theorem. The `Prop`s `System.FraserBound`, `System.FraserROSC`, `NoOverlap.BaranyKaenmakiPair` and `NoOverlap.BaranyKaenmakiTheorem` state what the axioms of `BoxLike/LiteratureOffMain.lean` assert, and the results that use them exist in both forms |
-| Results of the article not proved | `sorry` endpoints of a statement layer, open rows of section 3; they never become axioms |
+| Literature theorems the article cites without proof | `Prop`-valued definitions in `BoxLike/Literature.lean` or `BoxLike/LiteratureFeng.lean`, and in `BoxLike/LiteratureRemarks.lean` when no main result depends on it, quantified over every alphabet and every system, with the exact citation in the doc comment; every result that uses one takes it as an explicit hypothesis, and `Challenge.lean` restates those the headline results take |
+| Literature theorems behind claims off the main line | `Prop`-valued definitions beside the results that use them, taken as hypotheses: `System.FraserBound`, `System.FraserROSC` in `FraserChain`, `NoOverlap.BaranyKaenmakiPair`, `NoOverlap.BaranyKaenmakiTheorem` in `NoOverlapExample`; `System.RossiBound` in `DimensionFormula` is taken by no theorem |
+| Results of the article not proved | `sorry` endpoints of a statement layer, open rows of section 3; they never become literature hypotheses or axioms |
 
-Rules for a literature axiom:
+Rules for a literature statement:
 
 - It is a statement about defined objects only, never about an opaque constant, so that a
   reader can compare it with the cited theorem.
@@ -549,62 +582,66 @@ Rules for a literature axiom:
   `Real.log 0 = 0`, junk values of limits that do not exist) make an under-hypothesised
   transcription false in a degenerate case.
 - It is tested against a degenerate instance (`N = 1`, `λ_1 = λ_2`, all translations zero)
-  before it is admitted. A false axiom makes every endpoint vacuous and `#print axioms` shows
-  no trace of it.
-- It lists its instance arguments in its own signature. Lean omits from an `axiom` the section
-  variables its statement does not mention. The cited theorems concern the discrete
+  before it is admitted. A false statement makes every result that takes it vacuous, and
+  neither the build nor the comparator shows a trace of it.
+- A statement of the three `Literature` modules quantifies over every alphabet `ι : Type u`
+  with the instances `[Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]`, and over
+  every system, as the cited theorem does. The cited theorems concern the discrete
   `σ`-algebra on the alphabet, which is the instance `MeasurableSingletonClass ι`; without it
-  `morrisShmerkin_lyapunov_lt` and `fengKaenmaki_gibbs` would be refutable with the trivial
-  `σ`-algebra on `ι`. The section `Binders` of `BoxLike/AxCheck.lean` fails to elaborate if an
-  axiom lacks that argument.
-- An axiom that no main result depends on lives in `BoxLike/LiteratureRemarks.lean`.
-- New axioms need explicit authorisation.
+  `MorrisShmerkinLyapunov` and `FengKaenmakiGibbs` would be false with the trivial
+  `σ`-algebra on `ι`.
+- A result that uses it takes it as an explicit hypothesis with the binder of the table below
+  and the universe named, `(hfk : FengKaenmakiGibbs.{u})` (section 8).
+- A statement that no main result depends on lives in `BoxLike/LiteratureRemarks.lean`.
+- A statement that a headline result takes is restated in `Challenge.lean`, whose definition
+  block stays identical to `Solution/Definitions.lean`.
+- New literature statements need explicit authorisation.
 
-Ergodicity of the equilibrium state is a theorem and no axiom: for `0 < s < 2` it follows
-from `thm:eq_state_is_sum` (`System.ergodic_of_hasProximalDiagonal`), for `s ≥ 2` from the
-Bernoulli form (`System.IsEquilibriumState.ergodic_of_two_le`).
+Ergodicity of the equilibrium state is a theorem and no literature hypothesis: for `0 < s < 2`
+it follows from `thm:eq_state_is_sum` (`System.ergodic_of_hasProximalDiagonal`), for `s ≥ 2`
+from the Bernoulli form (`System.IsEquilibriumState.ergodic_of_two_le`).
 
-| Literature theorem | Axiom | State |
+| Literature theorem | `Prop` (binder) | State |
 |---|---|---|
-| Morris–Shmerkin, Theorem 3.1 (arXiv:1602.08789v3), for `eq:simple_lyapunov` | `morrisShmerkin_lyapunov_lt` | declared; compared with the source: faithful. Reductions: two-sided to one-sided shift; transposed tuple for the order of products; the conclusion drops full support |
-| Feng–Käenmäki, Proposition 1.2 (arXiv:1009.3129), with `q = s` for `0 < s ≤ 1` and for `1 < s < 2` with `q = 2 - s` for the rescaled tuple `A'_i = |det A_i|^{(s-1)/(2-s)} A_i`: the Gibbs bounds of `thm:irred_eq_state` | `fengKaenmaki_gibbs` | declared; hypothesis `System.Irreducible`, range `0 < s < 2`, conclusion `System.HasGibbsBounds`. For `1 < s < 2`, `‖A'_𝐢‖^{2-s} = φ^s(A_𝐢)` and `A'` is irreducible when `𝖠` is, which justifies the range. Uniqueness is `fengKaenmaki_unique`; ergodicity is a theorem |
-| Feng–Käenmäki, Proposition 1.2 (arXiv:1009.3129v1 and Discrete Contin. Dyn. Syst. 30 (2011), p. 700): the uniqueness part of `thm:irred_eq_state` | `fengKaenmaki_unique` | declared in `LiteratureRemarks`; compared with the source on 2026-09-21: faithful. The source allows `F = ℝ` and every `q > 0`; its irreducibility, no common invariant proper subspace, is `System.Irreducible` for `d = 2`. For `1 < s < 2` it applies to the rescaled tuple `A'_i = |det A_i|^{(s-1)/(2-s)} A_i` with `q = 2 - s`. Reduction: two-sided to one-sided shift. Used by `System.unique_equilibrium` and `System.unique_sq_equilibrium`, by no main result; for `s ≥ 2` uniqueness is proved without it |
-| Fraser–Jordan–Jurga, Lemma 1.3, Corollaries 1.5 and 1.6 (arXiv:1706.06833), `thm:eq_state_is_sum` | `fraserJordanJurga_decomposition` | declared; hypothesis: an invariant probability measure with `System.HasGibbsBounds`, which is their characterisation of the Käenmäki measure; an invariant measure with these bounds is absolutely continuous with respect to the ergodic one and equals it. Includes Bowen's ergodic Gibbs measures on the mixing `Σ_Z`. Reductions: signed entries to moduli; one-sided to two-sided; three of the four decompositions from the symmetry exchanging the axes. The parts of the source it omits are theorems: the Gibbs constants are `P(𝖠, s)` (`System.GibbsDecomposition.isGibbsAt₁`, `System.GibbsDecomposition.isGibbsAt₂`), `P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s})` (`System.pressure_eq_pressureZ₁`, `System.pressure_eq_pressureZ₂`), and the `f_{2,1}` identities (`System.GibbsDecomposition.lyapunov₁_eq_integral_potential₂`, `System.GibbsDecomposition.lyapunov₂_eq_integral_potential₂`) |
-| Jordan–Rapaport, Theorem 1.1 (arXiv:1908.00271), in `eq:gibbs_proj_dim` | `jordanRapaport_dimension` | declared; compared with the source: faithful. `System.ProjExpSeparation` is their Definition 1 verbatim; ratios of either sign are allowed; reductions: two-sided to one-sided shift |
+| Morris–Shmerkin, Theorem 3.1 (arXiv:1602.08789v3), for `eq:simple_lyapunov` | `MorrisShmerkinLyapunov` (`hms`) | declared in `Literature`; compared with the source: faithful. Reductions: two-sided to one-sided shift; transposed tuple for the order of products; the conclusion drops full support |
+| Feng–Käenmäki, Proposition 1.2 (arXiv:1009.3129), with `q = s` for `0 < s ≤ 1` and for `1 < s < 2` with `q = 2 - s` for the rescaled tuple `A'_i = |det A_i|^{(s-1)/(2-s)} A_i`: the Gibbs bounds of `thm:irred_eq_state` | `FengKaenmakiGibbs` (`hfk`) | declared in `Literature`; hypothesis `System.Irreducible`, range `0 < s < 2`, conclusion `System.HasGibbsBounds`. For `1 < s < 2`, `‖A'_𝐢‖^{2-s} = φ^s(A_𝐢)` and `A'` is irreducible when `𝖠` is, which justifies the range. Uniqueness is `FengKaenmakiUnique`; ergodicity is a theorem |
+| Feng–Käenmäki, Proposition 1.2 (arXiv:1009.3129v1 and Discrete Contin. Dyn. Syst. 30 (2011), p. 700): the uniqueness part of `thm:irred_eq_state` | `FengKaenmakiUnique` (`hfku`) | declared in `LiteratureRemarks`; compared with the source on 2026-09-21: faithful. The source allows `F = ℝ` and every `q > 0`; its irreducibility, no common invariant proper subspace, is `System.Irreducible` for `d = 2`. For `1 < s < 2` it applies to the rescaled tuple `A'_i = |det A_i|^{(s-1)/(2-s)} A_i` with `q = 2 - s`. Reduction: two-sided to one-sided shift. Taken by `System.unique_equilibrium_of_lt_two`, `System.unique_equilibrium` and `System.unique_sq_equilibrium`, by no main result; for `s ≥ 2` uniqueness is proved without it |
+| Fraser–Jordan–Jurga, Lemma 1.3, Corollaries 1.5 and 1.6 (arXiv:1706.06833), `thm:eq_state_is_sum` | `FraserJordanJurgaDecomposition` (`hfjj`) | declared in `Literature`; hypothesis: an invariant probability measure with `System.HasGibbsBounds`, which is their characterisation of the Käenmäki measure; an invariant measure with these bounds is absolutely continuous with respect to the ergodic one and equals it. Includes Bowen's ergodic Gibbs measures on the mixing `Σ_Z`. Reductions: signed entries to moduli; one-sided to two-sided; three of the four decompositions from the symmetry exchanging the axes. The parts of the source it omits are theorems: the Gibbs constants are `P(𝖠, s)` (`System.GibbsDecomposition.isGibbsAt₁`, `System.GibbsDecomposition.isGibbsAt₂`), `P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s})` (`System.pressure_eq_pressureZ₁`, `System.pressure_eq_pressureZ₂`), and the `f_{2,1}` identities (`System.GibbsDecomposition.lyapunov₁_eq_integral_potential₂`, `System.GibbsDecomposition.lyapunov₂_eq_integral_potential₂`) |
+| Jordan–Rapaport, Theorem 1.1 (arXiv:1908.00271), in `eq:gibbs_proj_dim` | `JordanRapaportDimension` (`hjr`) | declared in `Literature`; compared with the source: faithful. `System.ProjExpSeparation` is their Definition 1 verbatim; ratios of either sign are allowed; reductions: two-sided to one-sided shift |
 | Feng–Käenmäki, `thm:irred_eq_state`: ergodicity of the equilibrium state | | not declared and not needed: for `0 < s < 2` ergodicity follows from `thm:eq_state_is_sum`, since `μ = q_*μ_1` is a factor of the ergodic `μ_1` (`System.ergodic_of_hasProximalDiagonal`); for `s ≥ 2` the equilibrium state is Bernoulli (`System.IsEquilibriumState.ergodic_of_two_le`) |
-| Falconer (1988), cited as Theorem 5.4: `eq:hausdorff_affinity_upper_bound` and the bound for the upper Minkowski dimension (tex lines 573 to 574) | | not declared: proved for every box-like system in `FalconerBound` (`System.upperBoxDim_attractor_le`, `System.dimH_attractor_le`); the `Prop` `System.FalconerBoxBound` of `FraserChain` states the bound and holds (`System.falconerBoxBound`) |
-| Fraser, Theorem 2.3 and Corollary 2.5 (arXiv:1108.2639v1), `thm:fraser` | `fraserBound`, `fraserROSC` | declared in `LiteratureOffMain`, as the two parts of Theorem 2.3: `System.FraserBound` for every box-like set and `System.FraserROSC` under the rectangular open set condition, stated as in the source, which was read. The first equality `\dim_P X = \overline{\dim}_M X` is proved without them (`System.packingDim_attractor`), and Corollary 2.5 follows (`System.dim_eq_dimaff_of_rectangularOpenSet`) |
-| Bárány–Käenmäki, Theorem 2.1 (Adv. Math. 379 (2021), arXiv:1910.04623v4), in `prop:ssc_no_overlap_not_pesc` | `baranyKaenmakiTheorem` | declared in `LiteratureOffMain`, in the form of the source (`NoOverlap.BaranyKaenmakiTheorem`), which was compared with arXiv v4 word for word; `NoOverlap.exists_system_ssc_not_pesc` is the proposition without hypotheses. The form the article uses, `NoOverlap.BaranyKaenmakiPair` (tex lines 1481 to 1490), remains a `Prop`; applied to `η_n = exp(-n²)` the source's form gives a pair with all its properties except the transcendence of `λ`, which the proof does not use |
-| Rossi, Theorem 2.2, `eq:hausdorff_ergodic_lyapunov` | | not declared: the `Prop` `System.RossiBound` in `DimensionFormula`; no proof depends on it, since the proof of `thm:main_extended` evaluates the Ledrappier–Young formula to an equality. `System.upperHausdorffDim_map_proj_eq` shows equality in the bound for the equilibrium state |
-| Feng, Theorems 1.2 and 1.3 (arXiv:1901.01691v2), `thm:feng1` | `System.feng1_planar`, `System.feng1_bar` | declared in `LiteratureFeng`; compared with the source: faithful, the cases `s = 2`, `k_1 = k_2 = 1` and `d = 1`. Feng's order of the filtration, of the matrix products and the signs of the formula were checked against the Lean definitions. Reductions: Feng's `Σ'` inside the box-like `Σ'` and partitions modulo null sets; supremum versus Euclidean balls |
-| Feng, Lemma 4.6, first identity of (4.16) | `System.feng_info_sum`, `System.feng_info_sum_bar` | declared in `LiteratureFeng`; compared with the source: faithful; the identity needs Feng's (4.7) and not ergodicity, and the scalar form is stated without ergodicity. `thm:feng_entropy_as_limit` and `thm:feng_entropy_zero` are derived from it with Birkhoff |
+| Falconer (1988), cited as Theorem 5.4: `eq:hausdorff_affinity_upper_bound` and the bound for the upper Minkowski dimension (tex lines 573 to 574) | `System.FalconerBoxBound` | a theorem: proved for every box-like system in `FalconerBound` (`System.upperBoxDim_attractor_le`, `System.dimH_attractor_le`); the `Prop` `System.FalconerBoxBound` of `FraserChain` states the bound and holds (`System.falconerBoxBound`) |
+| Fraser, Theorem 2.3 and Corollary 2.5 (arXiv:1108.2639v1), `thm:fraser` | `System.FraserBound`, `System.FraserROSC` | declared in `FraserChain`, as the two parts of Theorem 2.3: `System.FraserBound` for every box-like set and `System.FraserROSC` under the rectangular open set condition, stated as in the source, which was read. The first equality `\dim_P X = \overline{\dim}_M X` is proved without them (`System.packingDim_attractor`), and Corollary 2.5 follows from `System.FraserROSC` (`System.FraserROSC.dim_eq_dimaff`) |
+| Bárány–Käenmäki, Theorem 2.1 (Adv. Math. 379 (2021), arXiv:1910.04623v4), in `prop:ssc_no_overlap_not_pesc` | `NoOverlap.BaranyKaenmakiTheorem`, `NoOverlap.BaranyKaenmakiPair` | declared in `NoOverlapExample`. `NoOverlap.BaranyKaenmakiTheorem` is the form of the source, compared with arXiv v4 word for word, and `NoOverlap.ssc_no_overlap_not_pesc'` derives the proposition from it. `NoOverlap.BaranyKaenmakiPair` is the form the article uses (tex lines 1481 to 1490), taken by `NoOverlap.ssc_no_overlap_not_pesc`; applied to `η_n = exp(-n²)` the source's form gives a pair with all its properties except the transcendence of `λ`, which the proof does not use (`NoOverlap.exists_pair_of_baranyKaenmakiTheorem`) |
+| Rossi, Theorem 2.2, `eq:hausdorff_ergodic_lyapunov` | `System.RossiBound` | declared in `DimensionFormula`; no theorem takes it, since the proof of `thm:main_extended` evaluates the Ledrappier–Young formula to an equality. `System.upperHausdorffDim_map_proj_eq` shows equality in the bound for the equilibrium state |
+| Feng, Theorems 1.2 and 1.3 (arXiv:1901.01691v2), `thm:feng1` | `FengLedrappierYoung` (`hly`), `FengLedrappierYoungBar` (`hlyb`) | declared in `LiteratureFeng`; compared with the source: faithful, the cases `s = 2`, `k_1 = k_2 = 1` and `d = 1`. Feng's order of the filtration, of the matrix products and the signs of the formula were checked against the Lean definitions. Reductions: Feng's `Σ'` inside the box-like `Σ'` and partitions modulo null sets; supremum versus Euclidean balls |
+| Feng, Lemma 4.6, first identity of (4.16) | `FengInfoSum` (`hfi`), `FengInfoSumBar` (`hfib`) | declared in `LiteratureFeng`; compared with the source: faithful; the identity needs Feng's (4.7) and not ergodicity, and the scalar form is stated without ergodicity. `thm:feng_entropy_as_limit` and `thm:feng_entropy_zero` are derived from it with Birkhoff |
 | Birkhoff's pointwise ergodic theorem | | proved: `birkhoff_ae`, `birkhoff_ergodic` in `Birkhoff` |
 | Shannon–McMillan–Breiman; Feng (4.17), `thm:feng_entropy_kolmogorov_sinai` | | not needed: `h_0(μ) = h(μ)` and `\overline{h}_0(ν) = h(ν)` are proved directly in `PastEntropy` |
-| Feng–Hu, Theorem 2.8 (arXiv:1002.2036v1 and Comm. Pure Appl. Math. 62 (2009), same number): exact-dimensionality of `\overline{π}_*ν` without separation | `fengHu_exactDim` | declared in `LiteratureRemarks`; compared with the source on 2026-09-21: faithful. The source treats `m`-conformal `C^1` systems on the one-sided full shift with closed balls, with no separation condition, maps that need not be distinct and any ergodic `m`; the similarities of `Ψ` are `m`-conformal for every `m`. Reduction: two-sided to one-sided shift, by restriction to the coordinates `k ≥ 0`. Used only for the remark that the marginals are double-dimensional without separation (`System.marginal_isDoubleDim`) |
+| Feng–Hu, Theorem 2.8 (arXiv:1002.2036v1 and Comm. Pure Appl. Math. 62 (2009), same number): exact-dimensionality of `\overline{π}_*ν` without separation | `FengHuExactDim` (`hfh`) | declared in `LiteratureRemarks`; compared with the source on 2026-09-21: faithful. The source treats `m`-conformal `C^1` systems on the one-sided full shift with closed balls, with no separation condition, maps that need not be distinct and any ergodic `m`; the similarities of `Ψ` are `m`-conformal for every `m`. Reduction: two-sided to one-sided shift, by restriction to the coordinates `k ≥ 0`. Taken only by the remark that the marginals are double-dimensional without separation (`System.marginal_isDoubleDim`) |
 
 The journal versions of Morris–Shmerkin and Jordan–Rapaport were not accessible; their
 numbering is that of the arXiv versions. Fraser–Jordan–Jurga was read in the published version,
 Feng–Hu and Feng–Käenmäki in the arXiv and the published versions.
 
-Checks made on the declared axioms, by inspection and not by machine:
+Checks made on the literature statements, by inspection and not by machine:
 
-- `jordanRapaport_dimension` at a Dirac mass on a constant sequence gives entropy `0`,
+- `JordanRapaportDimension` at a Dirac mass on a constant sequence gives entropy `0`,
   dimension `0`, and a Dirac push-forward, which has local dimension `0`; with all
-  translations zero the projective exponential separation condition fails, so the axiom is
-  silent there.
-- The four decompositions of `fraserJordanJurga_decomposition` are mutually consistent exactly
+  translations zero the projective exponential separation condition fails, so the statement
+  is silent there.
+- The four decompositions of `FraserJordanJurgaDecomposition` are mutually consistent exactly
   when `\overline{ω}_*μ_1 = \overline{τ}_*μ_2` and `\overline{τ}_*μ_1 = \overline{ω}_*μ_2`,
   which is the symmetry noted in `sec:gibbs_measures`.
-- The quantities in the axioms are literal limits (`entropy`, `System.lyapunov₁`,
+- The quantities in the statements are literal limits (`entropy`, `System.lyapunov₁`,
   `System.lyapunov₂`, `System.energyLim`). They exist for invariant measures: `tendsto_entropy`,
   `System.tendsto_lyapunov₁`, `System.tendsto_lyapunov₂`, `System.tendsto_energyLim`.
 - `System.gap n = ⊤` is possible only for `n ≤ 1`, since two letters in either order have the
   same derivative; the projective exponential separation condition is therefore the condition
   `Δ_n ≥ c^n` for infinitely many `n` of Jordan–Rapaport.
-- `fengHu_exactDim` and `fengKaenmaki_unique` pass the degenerate tests: for the empty
+- `FengHuExactDim` and `FengKaenmakiUnique` pass the degenerate tests: for the empty
   alphabet `System.Irreducible` is false; one letter; Dirac measures.
 
-`LyapunovDim` is arithmetic in real parameters and depends on no axiom.
+`LyapunovDim` is arithmetic in real parameters and takes no literature hypothesis.
 
 ## 7. Reuse
 
@@ -623,7 +660,7 @@ Checks made on the declared axioms, by inspection and not by machine:
 - Nested absolute-value bars misparse: write `abs (Real.log |x|)`. The letter `Σ` is a reserved
   token and cannot occur in an identifier.
 - While agents have unfinished files under `BoxLike/`, the glob target fails on them: build
-  named targets, `lake build BoxLike BoxLike.AxCheck`.
+  the named target, `lake build BoxLike`.
 - A module under development is checked with `lake env lean BoxLike/X.lean`, which writes
   nothing and is safe beside a running `lake build`.
 - The `ℓ²` operator norm on matrices is scoped: `open scoped Matrix.Norms.L2Operator`. The norm
@@ -635,9 +672,9 @@ Checks made on the declared axioms, by inspection and not by machine:
 - Identities in `ZMod 2` close by `generalize` on every atom followed by `revert; decide`.
 - The recursion `ε_{m+1} = ε_m + o(i_m)` with `ε_0 = 0` determines `ε` (`eq_eps_of_succ`);
   cocycle identities over `ℤ` are proved through it, avoiding interval sums.
-- An `axiom` omits the section variables its statement does not mention, instance arguments
-  included: an axiom declared under `variable [MeasurableSingletonClass ι]` does not take that
-  instance. Every literature axiom therefore lists its instance arguments in its own signature.
-- Lean `v4.32.2` accepts two modules that declare the same theorem name when both are imported.
+- A literature hypothesis names its universe: `(hfk : FengKaenmakiGibbs.{u})` beside
+  `{ι : Type u}`. Without `.{u}` Lean generalises the universe of the hypothesis to a fresh
+  one, and the proof cannot apply it at `ι`.
+- Lean `v4.35.0-rc2` accepts two modules that declare the same theorem name when both are imported.
   The build does not detect name clashes between the files of different agents; check them by
   grep.

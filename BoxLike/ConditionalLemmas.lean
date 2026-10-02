@@ -1,3 +1,5 @@
+module
+
 /-
 The three lemmas on conditional measures of `sec:conditional` (tex lines 1845 to 1942):
 restriction to a Borel set, successive conditioning on nested measurable partitions, and
@@ -16,12 +18,15 @@ the uniqueness of the disintegration, `condMeas_unique`.
 * `double_conditional`: `thm:double_conditional`.
 * `finer_partition_dirac_mass`: `thm:finer_partition_dirac_mass`.
 -/
-import BoxLike.ConditionalMeasures
-import Mathlib.MeasureTheory.Measure.Dirac
-import Mathlib.MeasureTheory.Measure.GiryMonad
-import Mathlib.MeasureTheory.Measure.WithDensity
-import Mathlib.Probability.ConditionalProbability
-import Mathlib.Probability.Kernel.MeasurableLIntegral
+public import BoxLike.ConditionalMeasures
+public import Mathlib.MeasureTheory.Measure.Dirac.Def
+public import Mathlib.MeasureTheory.Measure.Dirac.Basic
+public import Mathlib.MeasureTheory.Measure.GiryMonad
+public import Mathlib.MeasureTheory.Measure.WithDensity
+public import Mathlib.Probability.ConditionalProbability
+public import Mathlib.Probability.Kernel.MeasurableLIntegral
+
+@[expose] public section
 
 namespace BoxLike
 

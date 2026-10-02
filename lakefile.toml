@@ -4,9 +4,18 @@ defaultTargets = ["BoxLike"]
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4"
-rev = "v4.32.2"
+rev = "v4.35.0-rc2"
 
 # The glob covers the root module and every submodule.
 [[lean_lib]]
 name = "BoxLike"
 globs = ["BoxLike", "BoxLike.*"]
+
+# Comparator audit modules (not part of the library, not default targets):
+# `Challenge` restates the headline theorems with `sorry`, `Solution` proves them
+# by the library declarations. See comparator.json.
+[[lean_lib]]
+name = "Challenge"
+
+[[lean_lib]]
+name = "Solution"

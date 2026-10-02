@@ -1,3 +1,5 @@
+module
+
 /-
 The canonical projections `\overline{π} : Σ_Z → ℝ` and `π : Σ → ℝ²` of
 `sec:two_sided_shift_space` and `sec:projective_system`, and the self-affine set `X = π(Σ)`.
@@ -16,9 +18,11 @@ The canonical projections `\overline{π} : Σ_Z → ℝ` and `π : Σ → ℝ²`
 * `System.attractor`, `System.attractor_eq_iUnion`: `X = π(Σ)` satisfies
   `eq:self_affine_set_def`.
 -/
-import BoxLike.Separation
-import Mathlib.Analysis.Normed.Group.InfiniteSum
-import Mathlib.Analysis.SpecificLimits.Basic
+public import BoxLike.Separation
+public import Mathlib.Analysis.Normed.Group.InfiniteSum
+public import Mathlib.Analysis.SpecificLimits.Basic
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -69,7 +73,7 @@ structure Bounds (r M : ℝ) : Prop where
 /-- A finite system has uniform bounds. -/
 theorem exists_bounds [Finite ι] : ∃ r M, S.Bounds r M := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   by_cases hι : Nonempty (ι × ZMod 2)
   · obtain ⟨p₁, -, h₁⟩ := Finset.exists_max_image Finset.univ (fun p => |S.ratio p|)
       Finset.univ_nonempty
@@ -281,7 +285,7 @@ theorem Bounds.attractor_eq_iUnion (hS : S.Bounds r M) :
   · rintro ⟨i, x, rfl⟩
     refine ⟨fun k => if k = 0 then i else x (k - 1), ?_⟩
     rw [hS.proj_eq]
-    simp only [if_true]
+    simp only [ite_true]
     congr 1
     apply S.proj_congr
     intro k

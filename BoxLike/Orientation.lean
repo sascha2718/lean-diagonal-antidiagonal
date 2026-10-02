@@ -1,3 +1,5 @@
+module
+
 /-
 The two-sided full shift of `sec:two_sided_shift_space` and the orientation cocycle
 `ε_n` of `eq:def_of_eps_mod2` in `sec:subshift`.
@@ -15,9 +17,11 @@ relabelling `{1, …, ℓ}` diagonal, `{ℓ+1, …, N}` anti-diagonal is the spe
   `thm:tau_omega_sigma_commutative`.
 * `eps_shift`: the cocycle identity `eq:tau_omega_sigma_commutative1`.
 -/
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.CharP.Two
-import Mathlib.Data.ZMod.Basic
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Algebra.CharP.Two
+public import Mathlib.Data.ZMod.Basic
+
+@[expose] public section
 
 namespace BoxLike
 

@@ -1,3 +1,5 @@
+module
+
 /-
 The mass distribution principle for exact-dimensional measures. It gives the inequality
 `dim μ ≤ dim_H A` for every set `A` of positive `μ`-measure, which is the half of
@@ -16,8 +18,10 @@ reads `dim(π_* μ) ≤ dim_H X`.
   exact-dimensional, then `dim(f_* ν) ≤ dim_H f(Y)`. This is the form used for the attractor
   `X = π(Σ)`.
 -/
-import BoxLike.MeasureDim
-import Mathlib.Topology.MetricSpace.HausdorffDimension
+public import BoxLike.MeasureDim
+public import Mathlib.Topology.MetricSpace.HausdorffDimension
+
+@[expose] public section
 
 namespace BoxLike
 

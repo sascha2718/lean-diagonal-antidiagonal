@@ -1,3 +1,5 @@
+module
+
 /-
 The dimension of the coordinate projections of the equilibrium state, for a tuple containing a
 proximal diagonal generator: `sec:entropy_eq_state` and the decomposition of
@@ -11,14 +13,18 @@ proximal diagonal generator: `sec:entropy_eq_state` and the decomposition of
 * `System.marginal_decomposition_normalised`: `eq:proj_eq_is_sum`,
   `eq:restricted-projection-dimensions` and `eq:gibbs_proj_dim`.
 -/
-import BoxLike.EntropyFactor
-import BoxLike.Literature
+public import BoxLike.EntropyFactor
+public import BoxLike.Literature
+
+@[expose] public section
 
 namespace BoxLike
 
 open MeasureTheory Set
 
-variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+universe u
+
+variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
 
 /-- `τ(Σ) = ⋃_{i ≤ N} [i]` is a Borel subset of `Σ_Z`. -/
 theorem measurableSet_range_tau (o : ι → ZMod 2) : MeasurableSet (range (tau o)) := by
@@ -112,14 +118,14 @@ variable {S : System ι} {s : ℝ} {μ : Measure (ℤ → ι)} {μ₁ μ₂ : Me
 /-- `thm:entropy_eq_gibbs`, first half: `h_0(μ) = \overline{h}_0(μ_1)`. -/
 theorem GibbsDecomposition.entropy_eq₁ (h : S.GibbsDecomposition s μ μ₁ μ₂) :
     entropy μ₁ = entropy μ := by
-  haveI := h.prob₁
+  have := h.prob₁
   rw [← map_unCode_of_decomposition h.supp₁ h.eq₁]
   exact (entropy_map_unCode S.o μ₁ h.ergodic₁.toMeasurePreserving h.supp₁).symm
 
 /-- `thm:entropy_eq_gibbs`, second half: `h_0(μ) = \overline{h}_0(μ_2)`. -/
 theorem GibbsDecomposition.entropy_eq₂ (h : S.GibbsDecomposition s μ μ₁ μ₂) :
     entropy μ₂ = entropy μ := by
-  haveI := h.prob₂
+  have := h.prob₂
   rw [← map_unCode_of_decomposition h.supp₂ h.eq₂]
   exact (entropy_map_unCode S.o μ₂ h.ergodic₂.toMeasurePreserving h.supp₂).symm
 
@@ -139,8 +145,9 @@ the push-forward of `μ = \overline{κ}_*μ_1 + \overline{κ}_*μ_2` under `\ove
 the sum `ν_{a,1} + ν_{a,2}` of `eq:proj_eq_is_sum`, the summands are non-zero, and by
 `eq:restricted-projection-dimensions` and Jordan–Rapaport they are exact-dimensional with the
 dimensions of `eq:gibbs_proj_dim`. -/
-theorem exists_decomposition_of_coding {r M : ℝ} (hS : S.Bounds r M)
-    (hsep : S.ProjExpSeparation) [IsProbabilityMeasure μ₁] [IsProbabilityMeasure μ₂]
+theorem exists_decomposition_of_coding (hjr : JordanRapaportDimension.{u}) {r M : ℝ}
+    (hS : S.Bounds r M) (hsep : S.ProjExpSeparation) [IsProbabilityMeasure μ₁]
+    [IsProbabilityMeasure μ₂]
     (he₁ : Ergodic (shift 1) μ₁) (he₂ : Ergodic (shift 1) μ₂)
     {κ : (ℤ → ι) → ℤ → ι × ZMod 2} (hκ : Measurable κ) {R : Set (ℤ → ι × ZMod 2)}
     (hRm : MeasurableSet R) (hR : ∀ y ∈ R, κ (unCode y) = y) (hpos₁ : 0 < μ₁ R)
@@ -162,9 +169,9 @@ theorem exists_decomposition_of_coding {r M : ℝ} (hS : S.Bounds r M)
     inferInstance, hne μ₁ hpos₁, hne μ₂ hpos₂, ?_, ?_, ?_⟩
   · rw [hμ, Measure.map_add _ _ (hpb.comp hκ), map_comp_coding hκ hRm hR hpb,
       map_comp_coding hκ hRm hR hpb]
-  · exact (jordanRapaport_dimension S hsep μ₁ he₁).of_le
+  · exact (hjr S hsep μ₁ he₁).of_le
       (Measure.map_mono Measure.restrict_le_self hpb)
-  · exact (jordanRapaport_dimension S hsep μ₂ he₂).of_le
+  · exact (hjr S hsep μ₂ he₂).of_le
       (Measure.map_mono Measure.restrict_le_self hpb)
 
 variable (S)
@@ -173,33 +180,34 @@ variable (S)
 coordinate marginal of the `s`-equilibrium state, `0 < s < 2`, is the sum of two non-zero
 exact-dimensional measures, of dimensions `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and
 `min{1, -h_0(μ)/λ_2(𝖠, μ)}`. -/
-theorem marginal_decomposition_normalised (hrot : S.WithRotations) (hprox : S.HasProximalDiagonal)
-    (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
+theorem marginal_decomposition_normalised (hfk : FengKaenmakiGibbs.{u})
+    (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
+    (hrot : S.WithRotations) (hprox : S.HasProximalDiagonal) (hsep : S.ProjExpSeparation)
+    (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) (c : ZMod 2) :
     ∃ ν₁ ν₂ : Measure ℝ, IsFiniteMeasure ν₁ ∧ IsFiniteMeasure ν₂ ∧ ν₁ ≠ 0 ∧ ν₂ ≠ 0 ∧
       S.marginal c μ = ν₁ + ν₂ ∧
       IsExactDim ν₁ (min 1 (-entropy μ / S.lyapunov₁ μ)) ∧
       IsExactDim ν₂ (min 1 (-entropy μ / S.lyapunov₂ μ)) := by
-  have hgibbs := fengKaenmaki_gibbs S (irreducible_of_hasProximalDiagonal hrot hprox) hs0 hs2
-    μ hinv heq
-  obtain ⟨μ₁, μ₂, h⟩ := fraserJordanJurga_decomposition S hrot hprox hs0 hs2 μ hinv hgibbs
+  have hgibbs := hfk S (irreducible_of_hasProximalDiagonal hrot hprox) hs0 hs2 μ hinv heq
+  obtain ⟨μ₁, μ₂, h⟩ := hfjj S hrot hprox hs0 hs2 μ hinv hgibbs
   obtain ⟨r, M, hS⟩ := S.exists_bounds
-  haveI := h.prob₁
-  haveI := h.prob₂
-  haveI : Nonempty ι := ⟨hrot.1.choose⟩
+  have := h.prob₁
+  have := h.prob₂
+  have : Nonempty ι := ⟨hrot.1.choose⟩
   have e₁ : min 1 (-entropy μ₁ / S.lyapBar μ₁) = min 1 (-entropy μ / S.lyapunov₁ μ) := by
     rw [h.entropy_eq₁, h.lyapunov₁_eq]
   have e₂ : min 1 (-entropy μ₂ / S.lyapBar μ₂) = min 1 (-entropy μ / S.lyapunov₂ μ) := by
     rw [h.entropy_eq₂, h.lyapunov₂_eq]
   rw [← e₁, ← e₂, S.marginal_eq_map hS]
   rcases zmod_two_cases c with rfl | rfl
-  · exact exists_decomposition_of_coding hS hsep h.ergodic₁ h.ergodic₂ (measurable_tau S.o)
+  · exact exists_decomposition_of_coding hjr hS hsep h.ergodic₁ h.ergodic₂ (measurable_tau S.o)
       (measurableSet_range_tau S.o) (by rintro _ ⟨x, rfl⟩; rfl)
       (h.gibbs₁.measure_range_tau_pos h.supp₁) (h.gibbs₂.measure_range_tau_pos h.supp₂)
       h.eq_tau
-  · exact exists_decomposition_of_coding hS hsep h.ergodic₁ h.ergodic₂ (measurable_omega S.o)
-      (measurableSet_range_omega S.o) (by rintro _ ⟨x, rfl⟩; rfl)
+  · exact exists_decomposition_of_coding hjr hS hsep h.ergodic₁ h.ergodic₂
+      (measurable_omega S.o) (measurableSet_range_omega S.o) (by rintro _ ⟨x, rfl⟩; rfl)
       (h.gibbs₁.measure_range_omega_pos h.supp₁) (h.gibbs₂.measure_range_omega_pos h.supp₂)
       h.eq_omega
 

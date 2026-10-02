@@ -1,0 +1,478 @@
+version: 1
+
+manuscript_files:
+  - diagonal-antidiagonal.tex
+
+# This manifest records statement-level correspondences only. It deliberately
+# omits source-file locations and proof-helper inventories, which are not part
+# of the mathematical correspondence and become stale under refactoring.
+#
+# Every labelled theorem, proposition, lemma and example of the manuscript has one
+# entry. Entries of kind `structure` record definitions made in running text, and
+# entries of kind `claim` record statements made in running text; their sources are
+# synthetic identifiers.
+#
+# status: `formalized`, `cited` (a theorem the paper quotes from the literature
+# without proof) or `intentionally_unformalized`.
+# hypotheses: the `Prop`-valued definitions stating cited theorems that the listed
+# declarations take as hypotheses. The library declares no axiom.
+# library: for a headline entry, the library theorems that Solution.lean applies.
+# Lean names in notes omit the root namespace `BoxLike`.
+entries:
+  - source: "thm:fraser"
+    kind: theorem
+    status: cited
+    hypotheses: ["BoxLike.System.FraserBound", "BoxLike.System.FraserROSC"]
+    lean: ["BoxLike.System.packingDim_attractor", "BoxLike.System.FraserROSC.dimmaff_eq_dimaff", "BoxLike.System.FraserROSC.dim_eq_dimaff", "BoxLike.System.dimmaff_eq_dimaff_of_full", "BoxLike.System.fraserBound_of_subsingleton", "BoxLike.System.fraserROSC_of_subsingleton"]
+    relation: split
+    headline: false
+    note: "Fraser, Theorem 2.3 (Nonlinearity 25 (2012), arXiv:1108.2639v1), enters as two Prop-valued definitions stated as in the source: System.FraserBound, dim_P X = upper dim_M X ≤ dimmaff(X) for every box-like set, and System.FraserROSC, dim_P X = dim_M X = dimmaff(X) under the rectangular open set condition. The first display of the paper writes dim_M X; without a separation condition the source bounds only the upper Minkowski dimension. The first equality dim_P X = upper dim_M X is proved for every box-like set. The third part, Fraser's Corollary 2.5, is derived from System.FraserROSC, and holds without the rectangular open set condition when dimaff(X) ≤ 2 (System.dimmaff_eq_dimaff_of_full). The source assumes at least two maps; the statements hold for a single map."
+
+  - source: "thm:main1"
+    kind: theorem
+    status: formalized
+    lean: ["Challenge.audit_main1"]
+    library: ["BoxLike.System.main1_dimaff", "BoxLike.System.main1"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension"]
+    relation: exact
+    headline: true
+    note: "The audited statement, like the library theorem, holds for every shift-invariant s-equilibrium state μ at s = dimaff(X) < 2; uniqueness and ergodicity of μ are not assumed. The two coordinate projections of μ are the marginals System.marginal c μ, c in ZMod 2. The three conjuncts are double-dimensionality, the failure of exact-dimensionality precisely when s < 2 - λ_1/λ_2, and exact dimension one at and above the threshold. System.main1 is the same statement with s a zero of the pressure in (0, 2)."
+
+  - source: "thm:main2"
+    kind: theorem
+    status: formalized
+    lean: ["Challenge.audit_main2"]
+    library: ["BoxLike.System.main2"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengInfoSum", "BoxLike.FengInfoSumBar", "BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar"]
+    relation: exact
+    headline: true
+    note: "The audited statement, like the library theorem, holds for every shift-invariant s-equilibrium state μ at s = dimaff(X) < 2, under the alternative dimaff(X) ≤ 2 - λ_1/λ_2 or the strong open set condition. The upper bound dim_H X ≤ dimaff(X) is Falconer's bound, proved for every box-like set (System.dimH_attractor_le); the lower bound is the mass distribution principle for the exact-dimensional measure π_*μ."
+
+  - source: "thm:box_like_sa"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.IsSquareIsometry", "BoxLike.isSquareIsometry_iff", "BoxLike.IsBoxLikeMatrix", "BoxLike.isBoxLikeMatrix_iff", "BoxLike.IsSquareIsometry.boxMat_zero_mul_orientation"]
+    relation: split
+    headline: false
+    note: "The lemma is formalised for a single matrix: A = DR with D diagonal, ‖D‖ < 1 and R a linear isometry of the square, if and only if A is diagonal or anti-diagonal with nonzero entries in (-1, 1). The forward direction uses only R([-1,1]^2) ⊆ [-1,1]^2. That both types occur is the hypothesis System.WithRotations."
+
+  - source: "thm:A_classification"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.TupleIrreducible", "BoxLike.TupleStronglyIrreducible", "BoxLike.TupleProximal", "BoxLike.tuple_classification", "BoxLike.tuple_trichotomy", "BoxLike.not_tupleIrreducible_iff_simultaneouslyTriangular", "BoxLike.simultaneouslyBoxLike_of_proximal", "BoxLike.simultaneouslyBoxLike_iff", "BoxLike.tupleIrreducible_iff_lines", "BoxLike.tupleStronglyIrreducible_iff_lines", "BoxLike.System.irreducible_and_not_stronglyIrreducible"]
+    relation: split
+    headline: false
+    note: "Stated for planar tuples of invertible matrices over an arbitrary index type, with no literature input. Precisely one of the three conditions holds for every tuple; the second is equivalent to irreducible and not strongly irreducible under proximality, and the third to reducible. Without proximality both directions of the second equivalence fail (not_tupleIrreducible_swap, not_simultaneouslyBoxLike_rotThree). A proximal box-like tuple with rotations lies in the second case (System.irreducible_and_not_stronglyIrreducible)."
+
+  - source: "thm:box_like_proximal"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.System.Proximal.hasProximalDiagonal_or_sq"]
+    relation: exact
+    headline: false
+
+  - source: "thm:tau_omega_sigma_commutative"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.tau_shift_of_eps_eq_zero", "BoxLike.omega_shift_of_eps_eq_zero", "BoxLike.tau_shift_of_eps_eq_one", "BoxLike.omega_shift_of_eps_eq_one"]
+    relation: split
+    headline: false
+
+  - source: "thm:matrix_products_g_derivatives"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.System.abs_matWord_pastWord_e1", "BoxLike.System.abs_matWord_pastWord_e2"]
+    relation: split
+    headline: false
+    note: "The modulus of the image of a basis vector is written as the sum of the moduli of its two coordinates, one of which vanishes."
+
+  - source: "lem:proj_gap_dominated"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.System.diagGap", "BoxLike.System.gap_le_diagGap"]
+    relation: generalization
+    headline: false
+    note: "Stated for every set of indices whose maps share the first-row entry a; that the maps are diagonal and that the set has at least two elements are not used."
+
+  - source: "prop:ssc_no_overlap_not_pesc"
+    kind: proposition
+    status: formalized
+    lean: ["BoxLike.NoOverlap.ssc_no_overlap_not_pesc", "BoxLike.NoOverlap.ssc_no_overlap_not_pesc'", "BoxLike.NoOverlap.exists_system_of_homFree", "BoxLike.NoOverlap.exists_pair_of_baranyKaenmakiTheorem", "BoxLike.System.FreeProjective", "BoxLike.NoOverlap.planar_separation_not_pesc"]
+    hypotheses: ["BoxLike.NoOverlap.BaranyKaenmakiPair", "BoxLike.NoOverlap.BaranyKaenmakiTheorem"]
+    relation: exact
+    headline: false
+    note: "The proposition is proved in two forms. NoOverlap.ssc_no_overlap_not_pesc takes the input of Bárány–Käenmäki in the form the proof uses, NoOverlap.BaranyKaenmakiPair. NoOverlap.ssc_no_overlap_not_pesc' takes Theorem 2.1 of Bárány–Käenmäki (Adv. Math. 379 (2021), arXiv:1910.04623v4) as the source states it, NoOverlap.BaranyKaenmakiTheorem, applied to η_n = exp(-n^2); neither the transcendence of λ nor the uncountability of the first-coordinate projection is needed. The choice of parameters, the standing hypotheses, strong separation and the freeness of the projective semigroup are proved. Not strongly irreducible is the negation of TupleStronglyIrreducible. NoOverlap.planar_separation_not_pesc is the paragraph after the proof."
+
+  - source: "thm:lyapunov_exponents_via_g_system"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.System.lyapunov_exponents_via_g_system"]
+    relation: exact
+    headline: false
+    note: "With the box-like set Σ' of the paper the four limits hold by definition at every point of Σ', with no hypothesis. The content of the lemma is that Σ' has full measure, which follows from Birkhoff's theorem without Oseledets' theorem (System.measure_SigmaPrime_compl)."
+
+  - source: "thm:conditional_measures_of_a_conditional_measure"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.condMeas_cond", "BoxLike.condMeas_cond_of_saturated"]
+    relation: split
+    headline: false
+    note: "Conditional measures are built from Mathlib's condExpKernel on a standard Borel space."
+
+  - source: "thm:double_conditional"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.double_conditional"]
+    relation: exact
+    headline: false
+
+  - source: "thm:finer_partition_dirac_mass"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.finer_partition_dirac_mass"]
+    relation: exact
+    headline: false
+
+  - source: "thm:feng_entropy_as_limit"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.System.feng_entropy_as_limit", "BoxLike.System.feng_entropy_as_limit_bar"]
+    hypotheses: ["BoxLike.FengInfoSum", "BoxLike.FengInfoSumBar"]
+    relation: split
+    headline: false
+    note: "The paper quotes the lemma from Feng, Lemma 4.6 (Duke Math. J. 172 (2023), arXiv:1901.01691v2). The library derives it from Birkhoff's theorem and the first identity of Feng's (4.16), which enters as FengInfoSum and FengInfoSumBar."
+
+  - source: "thm:feng_entropy_kolmogorov_sinai"
+    kind: lemma
+    status: intentionally_unformalized
+    lean: []
+    headline: false
+    reason: "The paper uses the lemma to identify h_0(μ) with the Kolmogorov–Sinai entropy h(μ). The library proves that identity directly, by the chain rule and martingale convergence and without the Shannon–McMillan–Breiman theorem (System.dimEntropy_zero_eq_entropy, System.dimEntropyBar_zero_eq_entropy). The pointwise limit is not needed."
+
+  - source: "thm:feng_entropy_zero"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.System.feng_entropy_zero", "BoxLike.System.feng_entropy_zero_bar"]
+    hypotheses: ["BoxLike.FengInfoSum", "BoxLike.FengInfoSumBar"]
+    relation: split
+    headline: false
+    note: "The scalar form assumes no ergodicity, as in the paper's proof."
+
+  - source: "thm:partitions_xi1"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.System.partitions_xi1"]
+    relation: exact
+    headline: false
+
+  - source: "thm:partition_tau_conj"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.System.partition_tau_conj"]
+    relation: exact
+    headline: false
+
+  - source: "thm:irred_eq_state"
+    kind: proposition
+    status: cited
+    hypotheses: ["BoxLike.FengKaenmakiGibbs", "BoxLike.FengKaenmakiUnique"]
+    lean: ["BoxLike.System.HasGibbsBounds", "BoxLike.System.exists_isEquilibriumState", "BoxLike.System.unique_equilibrium", "BoxLike.System.existsUnique_isEquilibriumState_of_two_le", "BoxLike.System.IsEquilibriumState.ergodic_of_two_le", "BoxLike.System.ergodic_of_hasProximalDiagonal"]
+    relation: split
+    headline: false
+    note: "Feng–Käenmäki, Proposition 1.2 (Discrete Contin. Dyn. Syst. 30 (2011)), enters for irreducible box-like systems and 0 < s < 2 as two Prop-valued definitions: FengKaenmakiGibbs, the Gibbs bounds, and FengKaenmakiUnique, uniqueness. For 1 < s < 2 both apply the source to the rescaled tuple |det A_i|^((s-1)/(2-s)) A_i with q = 2 - s. Existence of an s-equilibrium state is proved for every s ≥ 0 without irreducibility. For s ≥ 2 existence, uniqueness and ergodicity are proved with no literature hypothesis, since the equilibrium state is Bernoulli. For 0 < s < 2 ergodicity is proved from thm:eq_state_is_sum. The main results use only the Gibbs bounds."
+
+  - source: "thm:two-block-normalisation"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.System.attractor_sq", "BoxLike.System.sq_withRotations", "BoxLike.System.StrongSeparation.sq", "BoxLike.System.StrongOpenSet.sq", "BoxLike.System.ProjExpSeparation.sq", "BoxLike.group", "BoxLike.System.proj_sq_group", "BoxLike.System.pressure_sq", "BoxLike.entropy_map_group", "BoxLike.System.lyapunov₁_sq_map_group", "BoxLike.System.lyapunov₂_sq_map_group", "BoxLike.System.IsEquilibriumState.map_group", "BoxLike.System.unique_sq_equilibrium"]
+    hypotheses: ["BoxLike.FengKaenmakiUnique"]
+    relation: split
+    headline: false
+    note: "μ^(2) is the push-forward of μ under the grouping map group. Its uniqueness for 0 < s < 2 takes FengKaenmakiUnique; its ergodicity follows from thm:eq_state_is_sum. The proximal diagonal generator of the second iterate comes from thm:box_like_proximal."
+
+  - source: "thm:sigma_tau_omega_positive_eq_measure"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.System.sigma_tau_omega_positive"]
+    hypotheses: ["BoxLike.FengKaenmakiGibbs"]
+    relation: exact
+    headline: false
+    note: "The counting inequality of the proof is integrated against the invariant measure; neither Birkhoff's theorem nor a proximal diagonal generator is used. FengKaenmakiGibbs supplies the full support of μ."
+
+  - source: "thm:eq_state_is_sum"
+    kind: proposition
+    status: cited
+    hypotheses: ["BoxLike.FraserJordanJurgaDecomposition"]
+    lean: ["BoxLike.System.GibbsDecomposition", "BoxLike.System.pressure_eq_pressureZ₁", "BoxLike.System.pressure_eq_pressureZ₂", "BoxLike.System.GibbsDecomposition.lyapunov₁_eq_integral", "BoxLike.System.GibbsDecomposition.lyapunov₂_eq_integral", "BoxLike.System.GibbsDecomposition.map_flip", "BoxLike.System.decomposition₂_of_decompositions"]
+    relation: split
+    headline: false
+    note: "Fraser–Jordan–Jurga, Lemma 1.3 and Corollaries 1.5 and 1.6 (J. Fractal Geom. 7 (2020)), together with the existence of ergodic Gibbs measures on the mixing sub-shift, enter as FraserJordanJurgaDecomposition: an invariant probability measure with the Gibbs bounds of thm:irred_eq_state is the sum of the push-forwards in each of the four ways, with λ_1(𝖠, μ) = λ̄(𝖠, μ_1) and λ_2(𝖠, μ) = λ̄(𝖠, μ_2). No separation condition is assumed. The remaining assertions are proved: P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s}) for every box-like system with a diagonal generator, the integral formulas, μ_2 = flip_*μ_1, and the fourth decomposition from the other three."
+
+  - source: "thm:exact-dimensional-mixture"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.IsExactDim.ae_hasLocalDim_add_left", "BoxLike.IsExactDim.ae_hasLocalDim_add_right", "BoxLike.IsExactDim.isDoubleDim_add", "BoxLike.IsExactDim.measure_hasLocalDim_add_left_pos", "BoxLike.IsExactDim.measure_hasLocalDim_add_right_pos", "BoxLike.isExactDim_add_iff"]
+    relation: split
+    headline: false
+    note: "Proved from Besicovitch's differentiation theorem in Mathlib."
+
+  - source: "thm:feng1"
+    kind: theorem
+    status: cited
+    hypotheses: ["BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar"]
+    lean: []
+    headline: false
+    note: "Feng, Theorems 1.2 and 1.3 (Duke Math. J. 172 (2023), arXiv:1901.01691v2), for d = 2 and simple Lyapunov spectrum, enter as FengLedrappierYoung, the planar formula eq:feng1_1, and FengLedrappierYoungBar, the formula for the projective system on Σ_Z. Feng's set Σ' is taken inside the box-like Σ', where the partitions agree modulo null sets. Exact-dimensionality on ℝ × ℝ uses balls of the supremum norm, which give the same pointwise dimension as Euclidean balls."
+
+  - source: "thm:entropy_eq_gibbs"
+    kind: proposition
+    status: formalized
+    lean: ["BoxLike.blockEntropy_map_unCode", "BoxLike.entropy_map_unCode", "BoxLike.map_unCode_of_decomposition", "BoxLike.System.GibbsDecomposition.entropy_eq₁", "BoxLike.System.GibbsDecomposition.entropy_eq₂"]
+    relation: split
+    headline: false
+
+  - source: "thm:eq_state_proj_dim"
+    kind: theorem
+    status: formalized
+    lean: ["Challenge.audit_eq_state_proj_dim"]
+    library: ["BoxLike.System.eq_state_proj_dim"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension"]
+    relation: exact
+    headline: true
+    note: "The audited statement, like the library theorem, holds for every shift-invariant s-equilibrium state with 0 < s < 2; uniqueness and ergodicity are not assumed. It asserts double-dimensionality of both marginals and the values of their upper packing and lower Hausdorff dimensions, as in the paper."
+
+  - source: "ex:projection_double_dimensional"
+    kind: example
+    status: formalized
+    lean: ["BoxLike.Example.sys", "BoxLike.Example.withRotations", "BoxLike.Example.proximal", "BoxLike.Example.strongSeparation", "BoxLike.Example.projExpSeparation", "BoxLike.Example.dimaff_pos_lt_one", "BoxLike.Example.pressure_eq_log_spectralRadius", "BoxLike.Example.dimaff_charEq", "BoxLike.Example.eq_dimaff_of_charEq", "BoxLike.Example.marginal_doubleDim", "BoxLike.Example.mutuallySingular_marginal", "BoxLike.Example.dimH_attractor"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengInfoSum", "BoxLike.FengInfoSumBar", "BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar"]
+    relation: partial
+    headline: false
+    note: "The system, its standing hypotheses, P(𝖠, t) = log ρ(M(t)), the characteristic equation for dimaff(X), the double-dimensional marginals and dim_H X = dimaff(X) are formalised. The explicit Lyapunov exponents through the Markov measure and the numerical values are not."
+
+  - source: "thm:gibbs_tau_omega_positive"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.System.gibbs_tau_omega_positive", "BoxLike.System.orientation_restrictions"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs"]
+    relation: split
+    headline: false
+
+  - source: "thm:conditional_two_ways"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.condMeas_transport", "BoxLike.System.conditional_two_ways"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs"]
+    relation: split
+    headline: false
+
+  - source: "thm:overline_h1_zero"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.System.overline_h1_zero"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension", "BoxLike.FengInfoSumBar", "BoxLike.FengLedrappierYoungBar"]
+    relation: exact
+    headline: false
+
+  - source: "thm:overline_h1_zero_large"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.System.overline_h1_zero_large"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension", "BoxLike.FengInfoSumBar", "BoxLike.FengLedrappierYoungBar"]
+    relation: exact
+    headline: false
+    note: "The paper writes the second assertion as an equality of measures of sets; the library states the conditional measures as Dirac masses almost everywhere."
+
+  - source: "thm:overline_h1_large"
+    kind: lemma
+    status: formalized
+    lean: ["BoxLike.System.overline_h1_large"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FengInfoSum", "BoxLike.FengInfoSumBar"]
+    relation: exact
+    headline: false
+
+  - source: "thm:eq_state_h1_zero"
+    kind: proposition
+    status: formalized
+    lean: ["BoxLike.System.eq_state_h1_zero"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengInfoSum", "BoxLike.FengInfoSumBar", "BoxLike.FengLedrappierYoungBar"]
+    relation: exact
+    headline: false
+
+  - source: "thm:eq_state_h1_large"
+    kind: proposition
+    status: formalized
+    lean: ["BoxLike.System.eq_state_h1_large"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengInfoSum", "BoxLike.FengInfoSumBar", "BoxLike.FengLedrappierYoungBar"]
+    relation: exact
+    headline: false
+
+  - source: "thm:eq_state_h2_zero"
+    kind: proposition
+    status: formalized
+    lean: ["BoxLike.System.eq_state_h2_zero"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengInfoSum", "BoxLike.FengInfoSumBar", "BoxLike.FengLedrappierYoungBar"]
+    relation: exact
+    headline: false
+
+  - source: "thm:orto_partition_dirac"
+    kind: proposition
+    status: formalized
+    lean: ["BoxLike.System.orto_partition_dirac"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengInfoSum", "BoxLike.FengInfoSumBar", "BoxLike.FengLedrappierYoungBar"]
+    relation: exact
+    headline: false
+
+  - source: "thm:SOSC_h2_zero"
+    kind: proposition
+    status: formalized
+    lean: ["BoxLike.System.future_eq_of_proj_eq", "BoxLike.System.SOSC_h2_zero"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FengInfoSum"]
+    relation: split
+    headline: false
+    note: "The proof uses Poincaré recurrence in place of Birkhoff's theorem."
+
+  - source: "thm:main_extended"
+    kind: theorem
+    status: formalized
+    lean: ["Challenge.audit_main_extended", "Challenge.audit_main_extended_ge_two"]
+    library: ["BoxLike.System.main_extended_min", "BoxLike.System.main_extended", "BoxLike.System.main_extended_ge_two"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengInfoSum", "BoxLike.FengInfoSumBar", "BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar"]
+    relation: split
+    headline: true
+    note: "The audited statement, like the library theorem, asserts that π_*μ is exact-dimensional of dimension min{2, dimaff(X)} for every shift-invariant s-equilibrium state μ at s = dimaff(X), under the alternative h_0(μ) ≤ -λ_2(𝖠, μ) or the strong open set condition. Challenge.audit_main_extended_ge_two is the case s ≥ 2 under the strong open set condition, where π_*μ is normalised Lebesgue measure on an open set; it takes no literature hypothesis and uses neither rotations, proximality nor projective exponential separation."
+
+  - source: "claim:dimH-eq-min"
+    kind: claim
+    status: formalized
+    lean: ["Challenge.audit_dimH_eq_min", "Challenge.audit_dimH_of_two_le"]
+    library: ["BoxLike.System.dimH_attractor_eq_min", "BoxLike.System.dimH_attractor_of_two_le"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengInfoSum", "BoxLike.FengInfoSumBar", "BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar"]
+    relation: split
+    headline: true
+    note: "The paragraph after eq:hausdorff_ergodic_lyapunov sets out to prove dim_H X = min{2, dimaff(X)}, which follows from thm:main_extended, the mass distribution principle and Falconer's bound. Challenge.audit_dimH_eq_min holds under the hypotheses of thm:main_extended. Challenge.audit_dimH_of_two_le is the case dimaff(X) ≥ 2 under the strong open set condition; it assumes no measure and takes no literature hypothesis."
+
+  - source: "claim:dimension-chain"
+    kind: claim
+    status: formalized
+    lean: ["BoxLike.System.dim_chain", "BoxLike.System.dim_chain_main2", "BoxLike.System.dimmaff_le_dimaff", "BoxLike.System.dimmaff_eq_dimaff", "BoxLike.System.dimmaff_eq_dimaff_main2"]
+    hypotheses: ["BoxLike.System.FraserBound", "BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengInfoSum", "BoxLike.FengInfoSumBar", "BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar"]
+    relation: split
+    headline: false
+    note: "The introduction derives dim_H X = dim_P X = dim_M X = dimaff(X) from thm:main2, and squeezes dimmaff(X) = dimaff(X). The chain holds for every box-like set with dim_H X = dimaff(X), from Falconer's bound alone (System.dim_chain). The squeeze takes System.FraserBound. The inequality dimmaff(X) ≤ dimaff(X) holds for every box-like set. The forms with suffix main2 add the hypotheses of thm:main2."
+
+  - source: "claim:falconer-bound"
+    kind: claim
+    status: formalized
+    lean: ["BoxLike.System.upperBoxDim_attractor_le", "BoxLike.System.dimH_attractor_le"]
+    relation: exact
+    headline: false
+    note: "eq:hausdorff_affinity_upper_bound and the bound upper dim_M X ≤ min{2, dimaff(X)}, which the paper cites from Falconer (Math. Proc. Cambridge Philos. Soc. 103 (1988)), are proved for every box-like set, with no separation condition, rotations or proximality."
+
+  - source: "claim:rossi-bound"
+    kind: claim
+    status: cited
+    hypotheses: ["BoxLike.System.RossiBound"]
+    lean: ["BoxLike.System.upperHausdorffDim_map_proj_eq"]
+    relation: exact
+    headline: false
+    note: "eq:hausdorff_ergodic_lyapunov, Rossi, Theorem 2.2, is the Prop-valued definition System.RossiBound. No theorem takes it as a hypothesis, since the proof of thm:main_extended evaluates the Ledrappier–Young formula to an equality. Equality in the bound for the equilibrium state of thm:main_extended is proved (System.upperHausdorffDim_map_proj_eq)."
+
+  - source: "claim:marginals-double-dimensional"
+    kind: claim
+    status: formalized
+    lean: ["BoxLike.System.marginal_isDoubleDim_normalised", "BoxLike.System.marginal_isDoubleDim"]
+    hypotheses: ["BoxLike.FengHuExactDim", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition"]
+    relation: exact
+    headline: false
+    note: "The remark before thm:eq_state_proj_dim: for 0 < s < 2 both coordinate marginals of the s-equilibrium state are double-dimensional without any separation condition. The exact-dimensionality of the projected Gibbs measures enters as FengHuExactDim, from Feng–Hu, Theorem 2.8 (Comm. Pure Appl. Math. 62 (2009))."
+
+  - source: "structure:box-like-system"
+    kind: structure
+    status: formalized
+    lean: ["BoxLike.System", "BoxLike.System.WithRotations", "BoxLike.System.HasProximalDiagonal"]
+    relation: representation
+    headline: false
+    note: "The alphabet is a finite type ι with an orientation o : ι → ZMod 2, where o i = 0 for a diagonal and o i = 1 for an anti-diagonal generator. The plane is ℝ × ℝ."
+
+  - source: "structure:coding"
+    kind: structure
+    status: formalized
+    lean: ["BoxLike.eps", "BoxLike.subshift", "BoxLike.tau", "BoxLike.omega"]
+    relation: representation
+    headline: false
+    note: "Σ is ℤ → ι. The alphabet {1, ..., 2N} of Σ_Z is ι × ZMod 2, whose second coordinate records the coordinate axis followed."
+
+  - source: "structure:projections"
+    kind: structure
+    status: formalized
+    lean: ["BoxLike.System.proj", "BoxLike.System.projBar", "BoxLike.System.attractor", "BoxLike.System.marginal"]
+    relation: representation
+    headline: false
+
+  - source: "structure:proximality-irreducibility"
+    kind: structure
+    status: formalized
+    lean: ["BoxLike.IsProximalMatrix", "BoxLike.System.Proximal", "BoxLike.System.Irreducible"]
+    relation: representation
+    headline: false
+
+  - source: "structure:separation-conditions"
+    kind: structure
+    status: formalized
+    lean: ["BoxLike.System.StrongSeparation", "BoxLike.System.StrongOpenSet", "BoxLike.System.RectangularOpenSet", "BoxLike.System.gap", "BoxLike.System.ProjExpSeparation"]
+    relation: representation
+    headline: false
+
+  - source: "structure:affinity-dimension"
+    kind: structure
+    status: formalized
+    lean: ["BoxLike.svf", "BoxLike.System.pressure", "BoxLike.System.dimaff"]
+    relation: representation
+    headline: false
+    note: "The singular value function is defined on all real 2 × 2 matrices with the ℓ² operator norm, and dimaff(X) is the unique zero of the pressure."
+
+  - source: "structure:modified-affinity-dimension"
+    kind: structure
+    status: formalized
+    lean: ["BoxLike.System.modSvf", "BoxLike.System.dimmaff"]
+    relation: representation
+    headline: false
+
+  - source: "structure:set-dimensions"
+    kind: structure
+    status: formalized
+    lean: ["BoxLike.upperBoxDim", "BoxLike.lowerBoxDim", "BoxLike.packingDim"]
+    relation: representation
+    headline: false
+    note: "Values in ℝ≥0∞. The packing dimension is the modified upper Minkowski dimension; the Hausdorff dimension is Mathlib's dimH."
+
+  - source: "structure:equilibrium-state"
+    kind: structure
+    status: formalized
+    lean: ["BoxLike.entropy", "BoxLike.System.lyapunov₁", "BoxLike.System.lyapunov₂", "BoxLike.System.IsEquilibriumState"]
+    relation: representation
+    headline: false
+    note: "The entropy and the Lyapunov exponents are the limits that define them in the paper."
+
+  - source: "structure:measure-dimensions"
+    kind: structure
+    status: formalized
+    lean: ["BoxLike.HasLocalDim", "BoxLike.IsExactDim", "BoxLike.IsDoubleDim", "BoxLike.upperPackingDim", "BoxLike.lowerHausdorffDim"]
+    relation: representation
+    headline: false
+    note: "Pointwise dimensions use closed balls; on ℝ × ℝ these are balls of the supremum norm."
+
+  - source: "structure:gibbs-measures"
+    kind: structure
+    status: formalized
+    lean: ["BoxLike.System.potential₁", "BoxLike.System.potential₂", "BoxLike.IsGibbs", "BoxLike.System.lyapBar", "BoxLike.pressureZ"]
+    relation: representation
+    headline: false
+
+  - source: "structure:entropies"
+    kind: structure
+    status: formalized
+    lean: ["BoxLike.condMeas", "BoxLike.System.xi", "BoxLike.System.xiBar", "BoxLike.System.dimEntropy", "BoxLike.System.dimEntropyBar"]
+    relation: representation
+    headline: false

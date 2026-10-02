@@ -1,3 +1,5 @@
+module
+
 /-
 Measurability of the codings and of the canonical projections, for the push-forwards of
 `sec:two_sided_shift_space` and `sec:dimension_of_projections`. The alphabet carries a
@@ -9,11 +11,13 @@ the Borel `σ`-algebra of the product topology.
 * `System.Bounds.measurable_projBar`, `System.Bounds.measurable_proj`: the canonical
   projections `\overline{π}` and `π` are measurable.
 -/
-import BoxLike.Projection
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Metrizable
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
-import Mathlib.MeasureTheory.Group.Arithmetic
-import Mathlib.MeasureTheory.MeasurableSpace.Instances
+public import BoxLike.Projection
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Metrizable
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
+public import Mathlib.MeasureTheory.Group.Arithmetic
+public import Mathlib.MeasureTheory.MeasurableSpace.Instances
+
+@[expose] public section
 
 namespace BoxLike
 

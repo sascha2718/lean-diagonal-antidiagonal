@@ -1,3 +1,5 @@
+module
+
 /-
 The sub-shift of finite type `Σ_Z` and the codings `τ, ω : Σ → Σ_Z` of `sec:subshift`.
 
@@ -17,7 +19,9 @@ axis is being followed. With this alphabet the transition matrix `Z` reads
 * `tau_shift_of_eps_eq_zero`, …, `omega_shift_of_eps_eq_one`:
   `thm:tau_omega_sigma_commutative`.
 -/
-import BoxLike.Orientation
+public import BoxLike.Orientation
+
+@[expose] public section
 
 namespace BoxLike
 

@@ -1,3 +1,5 @@
+module
+
 /-
 The affinity dimension `dimaff(𝖠)` of `sec:affinity_dim`.
 
@@ -22,10 +24,12 @@ Lemma 2.1, for box-like systems. The affinity dimension is its unique zero on `[
   `System.dimaff_pos`, `System.le_dimaff_of_pressure_nonneg`: the affinity dimension and its
   characterisation.
 -/
-import BoxLike.Pressure
-import BoxLike.Projection
-import Mathlib.Topology.MetricSpace.Lipschitz
-import Mathlib.Topology.Order.IntermediateValue
+public import BoxLike.Pressure
+public import BoxLike.Projection
+public import Mathlib.Topology.MetricSpace.Lipschitz
+public import Mathlib.Topology.Order.IntermediateValue
+
+@[expose] public section
 
 namespace BoxLike
 

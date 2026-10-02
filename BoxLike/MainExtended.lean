@@ -1,3 +1,5 @@
+module
+
 /-
 `thm:main_extended` of `sec:dimension_result_proof` in full: the case `s ≥ 2` and the assembly
 with the case `0 < s < 2` of `BoxLike/MainTwo.lean`.
@@ -15,19 +17,23 @@ normalised Lebesgue measure has exact dimension two.
 * `System.main_extended_ge_two`: `thm:main_extended` for `s ≥ 2`.
 * `System.main_extended`: `thm:main_extended`.
 -/
-import BoxLike.BernoulliEntropy
-import BoxLike.InvariantMeasure
-import BoxLike.LebesgueOpenSet
-import BoxLike.MainTwo
-import BoxLike.PressureLarge
+public import BoxLike.BernoulliEntropy
+public import BoxLike.InvariantMeasure
+public import BoxLike.LebesgueOpenSet
+public import BoxLike.MainTwo
+public import BoxLike.PressureLarge
+
+@[expose] public section
 
 namespace BoxLike
 
 open MeasureTheory
 
+universe u
+
 namespace System
 
-variable {ι : Type*} (S : System ι) {s : ℝ}
+variable {ι : Type u} (S : System ι) {s : ℝ}
 
 /-- `|det A_i| > 0`. -/
 theorem abs_det_mat_pos (i : ι) : 0 < |(S.mat i).det| := by
@@ -37,8 +43,8 @@ theorem abs_det_mat_pos (i : ι) : 0 < |(S.mat i).det| := by
 /-- `|det A_i| < 1`. -/
 theorem abs_det_mat_lt_one (i : ι) : |(S.mat i).det| < 1 := by
   rw [mat, abs_det_boxMat]
-  exact mul_lt_one_of_nonneg_of_lt_one_left (abs_nonneg _) (S.abs_a_lt_one i)
-    (S.abs_b_lt_one i).le
+  exact (mul_le_of_le_one_right (abs_nonneg _) (S.abs_b_lt_one i).le).trans_lt
+    (S.abs_a_lt_one i)
 
 /-- `|det A_i|^{t} ≤ |det A_i|` for `t ≥ 1`. -/
 theorem abs_det_mat_rpow_le {t : ℝ} (ht : 1 ≤ t) (i : ι) :
@@ -81,7 +87,6 @@ projective exponential separation condition are not used. -/
 theorem main_extended_ge_two (hsosc : S.StrongOpenSet) (hs : 2 ≤ s) (hP : S.pressure s = 0)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) : IsExactDim (μ.map S.proj) 2 := by
-  haveI := nonempty_of_measure μ
   obtain ⟨hterm, hsum⟩ := hsosc.sum_abs_det_eq_one S hs hP
   have hd := S.abs_det_mat_pos
   -- The equilibrium equation reads `0 = h(μ) + ∑_i μ[i] log |det A_i|`.
@@ -109,9 +114,6 @@ theorem main_extended_ge_two (hsosc : S.StrongOpenSet) (hs : 2 ≤ s) (hP : S.pr
     (fun n w => measureReal_cylinder_eq_prod_of_entropy_eq hinv hent w)
   rw [funext hweight] at hinvμ
   obtain ⟨ν, hν, hinvν, hdim⟩ := hsosc.exists_isInvariantMeasure_isExactDim S hsum
-  obtain ⟨r, M, hS⟩ := S.exists_bounds
-  haveI : IsProbabilityMeasure (μ.map S.proj) :=
-    Measure.isProbabilityMeasure_map hS.measurable_proj.aemeasurable
   have hp : ∑ i, ENNReal.ofReal |(S.mat i).det| = 1 := by
     rw [← ENNReal.ofReal_sum_of_nonneg fun i _ => abs_nonneg _, hsum, ENNReal.ofReal_one]
   rwa [hinvμ.unique hp hinvν]
@@ -121,7 +123,11 @@ satisfying the projective exponential separation condition, let `s = dimaff(𝖠
 an `s`-equilibrium state. If `h_0(μ) ≤ -λ_2(𝖠, μ)` or the strong open set condition holds, then
 `π_*μ` is exact-dimensional with `dim π_*μ = min{2, dimaff(𝖠)}`. For `s ≥ 2` the entropy
 alternative is impossible. -/
-theorem main_extended (hrot : S.WithRotations) (hprox : S.Proximal)
+theorem main_extended (hms : MorrisShmerkinLyapunov.{u})
+    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
+    (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
+    (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (hP : S.pressure s = 0)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ)
@@ -129,7 +135,8 @@ theorem main_extended (hrot : S.WithRotations) (hprox : S.Proximal)
     IsExactDim (μ.map S.proj) (min 2 s) := by
   rcases lt_or_ge s 2 with hs2 | hs2
   · rw [min_eq_right hs2.le]
-    exact S.main_extended_lt_two' hrot hprox hsep hs0 hs2 hP μ hinv heq hor
+    exact S.main_extended_lt_two' hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox hsep hs0 hs2
+      hP μ hinv heq hor
   · rw [min_eq_left hs2]
     have henergy : entropy μ + energy (S.lyapunov₁ μ) (S.lyapunov₂ μ) s = 0 := by
       rw [← heq.pressure_eq hinv hs0.le, hP]
@@ -139,13 +146,18 @@ theorem main_extended (hrot : S.WithRotations) (hprox : S.Proximal)
 
 /-- `thm:main_extended` with `s = dimaff(𝖠)`, the zero of the pressure:
 `dim π_*μ = min{2, dimaff(𝖠)}`. -/
-theorem main_extended_min [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
+theorem main_extended_min (hms : MorrisShmerkinLyapunov.{u})
+    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
+    (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
+    [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsep : S.ProjExpSeparation) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
     (hor : entropy μ ≤ -S.lyapunov₂ μ ∨ S.StrongOpenSet) :
     IsExactDim (μ.map S.proj) (min 2 S.dimaff) := by
-  haveI := S.nontrivial_of_withRotations hrot
-  exact S.main_extended hrot hprox hsep S.dimaff_pos S.pressure_dimaff μ hinv heq hor
+  have := S.nontrivial_of_withRotations hrot
+  exact S.main_extended hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox hsep S.dimaff_pos
+    S.pressure_dimaff μ hinv heq hor
 
 end System
 

@@ -1,3 +1,5 @@
+module
+
 /-
 The separation conditions of `sec:box_like_self_affine` and their passage to the second
 iterate `Φ^(2)` in `thm:two-block-normalisation`.
@@ -14,7 +16,9 @@ iterate `Φ^(2)` in `thm:two-block-normalisation`.
 * `System.StrongSeparation.sq`, `System.StrongOpenSet.sq`: both conditions pass from `Φ` to
   `Φ^(2)`.
 -/
-import BoxLike.Attractor
+public import BoxLike.Attractor
+
+@[expose] public section
 
 namespace BoxLike
 

@@ -1,3 +1,5 @@
+module
+
 /-
 The packing half of `eq:dimension_measure_def`, from `sec:ledrappier_young_formula`: for a finite
 Borel measure `μ` on `ℝ^d`,
@@ -29,10 +31,12 @@ dimension, and the proofs use no packing measures.
 * `upperPackingDim_le_of_absolutelyContinuous`: `μ ≪ ν` gives
   `\overline{dim}_p(μ) ≤ \overline{dim}_p(ν)`, the argument of tex lines 2769 to 2772.
 -/
-import BoxLike.LocalDimBounds
-import BoxLike.SetDimensions
-import Mathlib.Algebra.Order.Floor.Extended
-import Mathlib.MeasureTheory.OuterMeasure.BorelCantelli
+public import BoxLike.LocalDimBounds
+public import BoxLike.SetDimensions
+public import Mathlib.Algebra.Order.Floor.Extended
+public import Mathlib.MeasureTheory.OuterMeasure.BorelCantelli
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -226,7 +230,7 @@ theorem ofReal_upperPackingDim_le_packingDim [IsFiniteMeasure μ] {A : Set X} (h
   rcases eq_or_ne μ 0 with rfl | hne
   · rw [upperPackingDim_zero, ENNReal.ofReal_zero]
     exact zero_le
-  haveI : (ae μ).NeBot := ae_neBot.2 hne
+  have : (ae μ).NeBot := ae_neBot.2 hne
   refine le_of_forall_lt_imp_le_of_dense fun c hc => ?_
   have hctop : c ≠ ∞ := ne_top_of_lt hc
   have ht : c.toReal < upperPackingDim μ := (ENNReal.lt_ofReal_iff_toReal_lt hctop).1 hc

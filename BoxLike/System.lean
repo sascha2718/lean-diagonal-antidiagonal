@@ -1,3 +1,5 @@
+module
+
 /-
 Box-like affine iterated function systems in box-like coordinates and their projective
 systems: `sec:box_like_self_affine`, `sec:subshift` and `sec:projective_system`.
@@ -21,11 +23,13 @@ systems: `sec:box_like_self_affine`, `sec:subshift` and `sec:projective_system`.
   `System.abs_matWord_pastWord_e1`, `System.abs_matWord_pastWord_e2`:
   `thm:matrix_products_g_derivatives` as stated, along `i_{-n} ⋯ i_{-1}`.
 -/
-import BoxLike.Coding
-import Mathlib.Algebra.BigOperators.Group.List.Basic
-import Mathlib.Data.Real.Basic
-import Mathlib.LinearAlgebra.Matrix.Notation
-import Mathlib.Tactic.Ring
+public import BoxLike.Coding
+public import Mathlib.Algebra.BigOperators.Group.List.Basic
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.LinearAlgebra.Matrix.Notation
+public import Mathlib.Tactic.Ring
+
+@[expose] public section
 
 namespace BoxLike
 

@@ -1,3 +1,5 @@
+module
+
 /-
 The partitions of `sec:entropies` are measurable partitions (tex lines 1959 to 1960 and 2007 to
 2008; Feng, Lemma 4.2): each of `ξ_0, ξ_1, ξ_2`, `ξ_1^⊥`, `\overline{ξ}_0`, `\overline{ξ}_1` is
@@ -14,9 +16,11 @@ or of `Σ_Z` to one separate value. `LAYER_E.md` records the choices made.
 * `System.isMeasurablePartition_xi`, `System.isMeasurablePartition_xiPerp`,
   `System.isMeasurablePartition_xiBar`: the partitions of `sec:entropies` are measurable.
 -/
-import BoxLike.DimPartitions
-import Mathlib.MeasureTheory.Constructions.Polish.EmbeddingReal
-import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
+public import BoxLike.DimPartitions
+public import Mathlib.MeasureTheory.Constructions.Polish.EmbeddingReal
+public import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -45,7 +49,7 @@ theorem past_eq_iff {α : Type*} {x y : ℤ → α} : past y = past x ↔ SamePa
 /-- The past `𝐢 ↦ 𝐢^-` of `sec:two_sided_shift_space` is a Borel map. -/
 theorem measurable_past {α : Type*} [MeasurableSpace α] :
     Measurable (past : (ℤ → α) → ℕ → α) :=
-  measurable_pi_lambda _ fun _ => measurable_pi_apply _
+  Measurable.of_eval fun _ => measurable_pi_apply _
 
 /-! ### Fibres of a Borel map on a Borel set -/
 
@@ -64,7 +68,7 @@ theorem isMeasurablePartition_atomsOn {Ω X : Type*} [MeasurableSpace Ω] [Measu
   · by_cases hx : x ∈ D
     · rw [atomsOn_of_mem hx]
       by_cases hy : y ∈ D
-      · simp only [mem_inter_iff, hy, and_true, if_pos hx, if_true, Real.exp_eq_exp,
+      · simp only [mem_inter_iff, hy, and_true, ite_eq_left hx, ite_true, Real.exp_eq_exp,
           he.injective.eq_iff]
         exact hξ x hx y hy
       · simp [hx, hy, (Real.exp_pos _).ne]
@@ -117,7 +121,7 @@ theorem isMeasurablePartition_xi (μ : Measure (ℤ → ι)) (i : ℕ) :
     simp [mem_oseledets_iff, past_eq_iff]
   · refine isMeasurablePartition_atomsOn (S.measurableSet_SigmaPrime μ)
       (measurable_past.prodMk (S.measurable_coord_slowAxis_proj μ 1)) fun x _ y _ => ?_
-    simp only [mem_setOf_eq, mem_oseledets_iff, Prod.mk.injEq, past_eq_iff]
+    simp only [mem_ofPred_eq, mem_oseledets_iff, Prod.mk.injEq, past_eq_iff]
     constructor
     · rintro ⟨hp, h⟩
       refine ⟨hp, ?_⟩
@@ -139,7 +143,7 @@ theorem isMeasurablePartition_xiPerp (μ : Measure (ℤ → ι)) :
   unfold xiPerp
   refine isMeasurablePartition_atomsOn (S.measurableSet_SigmaPrime μ)
     (measurable_past.prodMk h0) fun x _ y _ => ?_
-  simp only [mem_setOf_eq, coord_sub, sub_eq_zero, Prod.mk.injEq, past_eq_iff]
+  simp only [mem_ofPred_eq, coord_sub, sub_eq_zero, Prod.mk.injEq, past_eq_iff]
   constructor
   · rintro ⟨hp, h⟩
     exact ⟨hp, by rw [S.slowAxis_eq_of_samePast μ hp.symm, h]⟩

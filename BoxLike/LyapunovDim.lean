@@ -1,3 +1,5 @@
+module
+
 /-
 The real-variable part of `sec:affinity_dim`, `sec:dimension_of_projections` and
 `sec:dimension_result_proof`. The entropy `h = h_0(μ)` and the Lyapunov exponents
@@ -14,11 +16,13 @@ The real-variable part of `sec:affinity_dim`, `sec:dimension_of_projections` and
 * `ledrappierYoung_small`, `ledrappierYoung_large`: `eq:main_extended1` and
   `eq:main_extended2`.
 -/
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Data.Real.Basic
-import Mathlib.Order.Interval.Set.Basic
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Order.Interval.Set.Basic
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -46,7 +50,7 @@ theorem lyapDim_eq (hl : l2 ≤ l1) (hl1 : l1 < 0) (heq : h + energy l1 l2 s = 0
     have hle : h ≤ -l1 := by
       have := mul_nonneg (sub_nonneg.2 hs1) (neg_nonneg.2 hl1.le)
       rw [hh]; nlinarith
-    rw [if_pos hle, hh]
+    rw [ite_eq_left hle, hh]
     field_simp
   · have hh : h = -(l1 + (s - 1) * l2) := by linarith
     have hs1' : 0 < s - 1 := by linarith
@@ -56,7 +60,7 @@ theorem lyapDim_eq (hl : l2 ≤ l1) (hl1 : l1 < 0) (heq : h + energy l1 l2 s = 0
     have hle : h ≤ -l1 - l2 := by
       have := mul_nonneg (show 0 ≤ 2 - s by linarith) (neg_nonneg.2 hl2.le)
       rw [hh]; nlinarith
-    rw [if_neg hn, if_pos hle, hh]
+    rw [ite_eq_right hn, ite_eq_left hle, hh]
     field_simp
     ring
   · have hh : h = -(s / 2 * (l1 + l2)) := by linarith
@@ -66,7 +70,7 @@ theorem lyapDim_eq (hl : l2 ≤ l1) (hl1 : l1 < 0) (heq : h + energy l1 l2 s = 0
       have := mul_pos hs2' (neg_pos.2 hsum)
       rw [hh, not_le]; nlinarith
     have hn1 : ¬ h ≤ -l1 := fun hle => hn2 (by linarith)
-    rw [if_neg hn1, if_neg hn2, hh]
+    rw [ite_eq_right hn1, ite_eq_right hn2, hh]
     have : l1 + l2 ≠ 0 := hsum.ne
     field_simp
 
@@ -184,13 +188,13 @@ theorem min_eq_one_of_le (hl : l2 < l1) (hl1 : l1 < 0) (hs2 : s < 2)
 Ledrappier–Young formula `eq:feng_ledrappier_young` evaluates to `dim_L(𝖠, μ)`. -/
 theorem ledrappierYoung_small (hle : h ≤ -l1) :
     (0 - h) / l1 + (0 - 0) / l2 = lyapDim h l1 l2 := by
-  rw [lyapDim, if_pos hle]; simp
+  rw [lyapDim, ite_eq_left hle]; simp
 
 /-- `eq:main_extended2`: if `-λ_1 < h_0(μ) ≤ -λ_1 - λ_2`, `h_1(μ) = h_0(μ) + λ_1` and
 `h_2(μ) = 0`, then the Ledrappier–Young formula evaluates to `dim_L(𝖠, μ)`. -/
 theorem ledrappierYoung_large (hl1 : l1 < 0) (hlt : -l1 < h) (hle : h ≤ -l1 - l2) :
     (h + l1 - h) / l1 + (0 - (h + l1)) / l2 = lyapDim h l1 l2 := by
-  rw [lyapDim, if_neg (not_le.2 hlt), if_pos hle]
+  rw [lyapDim, ite_eq_right (not_le.2 hlt), ite_eq_left hle]
   have : l1 ≠ 0 := hl1.ne
   field_simp
   ring

@@ -1,3 +1,5 @@
+module
+
 /-
 The pointwise dimension of a measure, exact-dimensional and double-dimensional measures, and
 `thm:exact-dimensional-mixture` of `sec:ledrappier_young_formula`.
@@ -17,10 +19,12 @@ The pointwise dimension of a measure, exact-dimensional and double-dimensional m
   `IsExactDim.measure_hasLocalDim_add_right_pos`, `isExactDim_add_iff`:
   `thm:exact-dimensional-mixture`.
 -/
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.MeasureTheory.Covering.Besicovitch
-import Mathlib.MeasureTheory.Covering.BesicovitchVectorSpace
-import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.MeasureTheory.Covering.Besicovitch
+public import Mathlib.MeasureTheory.Covering.BesicovitchVectorSpace
+public import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -57,7 +61,7 @@ theorem HasLocalDim.unique (h : HasLocalDim μ x d) (h' : HasLocalDim μ x d') :
 /-- The dimension of a nonzero exact-dimensional measure is unique. -/
 theorem IsExactDim.unique (hne : μ ≠ 0) (h : IsExactDim μ d) (h' : IsExactDim μ d') :
     d = d' := by
-  haveI : (ae μ).NeBot := ae_neBot.2 hne
+  have : (ae μ).NeBot := ae_neBot.2 hne
   obtain ⟨x, hx, hx'⟩ := (h.and h').exists
   exact hx.unique hx'
 
@@ -113,7 +117,7 @@ differentiation theorem gives `ν'(B(x, r)) / ν(B(x, r)) → dν'/dν(x)` for `
 the proof of `thm:exact-dimensional-mixture`. -/
 theorem ae_hasLocalDim_iff_of_le [IsFiniteMeasure ν] (h : ν' ≤ ν) :
     ∀ᵐ x ∂ν', ∀ d : ℝ, HasLocalDim ν' x d ↔ HasLocalDim ν x d := by
-  haveI : IsFiniteMeasure ν' := isFiniteMeasure_of_le ν h
+  have : IsFiniteMeasure ν' := isFiniteMeasure_of_le ν h
   have hac : ν' ≪ ν := Measure.absolutelyContinuous_of_le h
   filter_upwards [hac.ae_le (Besicovitch.ae_tendsto_rnDeriv ν' ν), Measure.rnDeriv_pos hac,
     hac.ae_le (Measure.rnDeriv_ne_top ν' ν)] with x hx hpos htop d
@@ -164,7 +168,7 @@ theorem IsExactDim.measure_hasLocalDim_add_left_pos [IsFiniteMeasure ν₁] [IsF
   have hpos : 0 < ν₁ {x | HasLocalDim (ν₁ + ν₂) x d₁} := by
     rw [pos_iff_ne_zero]
     intro h0
-    haveI : (ae ν₁).NeBot := ae_neBot.2 hne
+    have : (ae ν₁).NeBot := ae_neBot.2 hne
     obtain ⟨x, hx, hx'⟩ :=
       ((measure_eq_zero_iff_ae_notMem.1 h0).and (h₁.ae_hasLocalDim_add_left (ν₂ := ν₂))).exists
     exact hx hx'
@@ -179,7 +183,7 @@ theorem IsExactDim.measure_hasLocalDim_add_right_pos [IsFiniteMeasure ν₁] [Is
   have hpos : 0 < ν₂ {x | HasLocalDim (ν₁ + ν₂) x d₂} := by
     rw [pos_iff_ne_zero]
     intro h0
-    haveI : (ae ν₂).NeBot := ae_neBot.2 hne
+    have : (ae ν₂).NeBot := ae_neBot.2 hne
     obtain ⟨x, hx, hx'⟩ :=
       ((measure_eq_zero_iff_ae_notMem.1 h0).and (h₂.ae_hasLocalDim_add_right (ν₁ := ν₁))).exists
     exact hx hx'
@@ -193,8 +197,8 @@ theorem isExactDim_add_iff [IsFiniteMeasure ν₁] [IsFiniteMeasure ν₂]
   constructor
   · rintro ⟨d, hd⟩
     have hd' := ae_add_measure_iff.1 hd
-    haveI : (ae ν₁).NeBot := ae_neBot.2 hne₁
-    haveI : (ae ν₂).NeBot := ae_neBot.2 hne₂
+    have : (ae ν₁).NeBot := ae_neBot.2 hne₁
+    have : (ae ν₂).NeBot := ae_neBot.2 hne₂
     obtain ⟨x, hx, hx'⟩ := (hd'.1.and (h₁.ae_hasLocalDim_add_left (ν₂ := ν₂))).exists
     obtain ⟨y, hy, hy'⟩ := (hd'.2.and (h₂.ae_hasLocalDim_add_right (ν₁ := ν₁))).exists
     rw [← hx.unique hx', ← hy.unique hy']

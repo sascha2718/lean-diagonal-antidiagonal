@@ -1,3 +1,5 @@
+module
+
 /-
 The limits of `sec:lyapunov_exponents` and `eq:energy_def` of `sec:affinity_dim`, for an
 invariant probability measure `μ` on the two-sided full shift over a finite alphabet. The
@@ -23,10 +25,12 @@ Fekete's lemma.
 * `System.lyapBarLim`, `System.lyapBarLim_eq`: the limit defining `\overline{λ}(𝖠, ν)` is the
   integral `∫ log |g'_{j_0}| dν` for an invariant measure `ν` on the shift over `ι × ZMod 2`.
 -/
-import BoxLike.Thermodynamic
-import Mathlib.Analysis.Subadditive
-import Mathlib.MeasureTheory.Function.L1Space.Integrable
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import BoxLike.Thermodynamic
+public import Mathlib.Analysis.Subadditive
+public import Mathlib.MeasureTheory.Function.L1Space.Integrable
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -347,7 +351,7 @@ variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClas
 theorem tendsto_lyapunov₁ (hμ : MeasurePreserving (shift 1) μ μ) :
     Tendsto (fun n : ℕ => (∫ x, Real.log ‖S.matWord (futureWord x n)‖ ∂μ) / n) atTop
       (𝓝 (S.lyapunov₁ μ)) := by
-  haveI : Nonempty ι := ⟨(nonempty_of_isProbabilityMeasure μ).some 0⟩
+  have : Nonempty ι := ⟨(nonempty_of_isProbabilityMeasure μ).some 0⟩
   obtain ⟨δ, hδ⟩ := S.exists_ratioLowerBound
   obtain ⟨L, hL⟩ := exists_tendsto_integral_futureWord_div hμ
     (G := fun w => Real.log ‖S.matWord w‖) S.log_norm_matWord_append_le
@@ -409,7 +413,7 @@ variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClas
 theorem tendsto_energyLim (hμ : MeasurePreserving (shift 1) μ μ) {s : ℝ} (hs : 0 ≤ s) :
     Tendsto (fun n : ℕ => (∫ x, Real.log (svf s (S.matWord (futureWord x n))) ∂μ) / n) atTop
       (𝓝 (S.energyLim s μ)) := by
-  haveI : Nonempty ι := ⟨(nonempty_of_isProbabilityMeasure μ).some 0⟩
+  have : Nonempty ι := ⟨(nonempty_of_isProbabilityMeasure μ).some 0⟩
   obtain ⟨δ, hδ⟩ := S.exists_ratioLowerBound
   obtain ⟨L, hL⟩ := exists_tendsto_integral_futureWord_div hμ
     (G := fun w => Real.log (svf s (S.matWord w))) (S.log_svf_matWord_append_le hs)

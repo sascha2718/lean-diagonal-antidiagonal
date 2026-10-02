@@ -1,3 +1,5 @@
+module
+
 /-
 The entropy argument for the case `s ≥ 2` of `thm:main_extended` in `sec:normalisation`, tex
 lines 2471 to 2480: the entropy of an invariant measure `μ` on the full shift `ℤ → α` is at most
@@ -31,8 +33,10 @@ term.
 * `blockEntropy_one_add_sum_le`, `measureReal_cylinder_eq_of_blockEntropy_one_add_sum_eq`: Gibbs'
   inequality for the one-symbol distribution of `μ`, and its equality case.
 -/
-import BoxLike.Entropy
-import Mathlib.Algebra.BigOperators.Field
+public import BoxLike.Entropy
+public import Mathlib.Algebra.BigOperators.Field
+
+@[expose] public section
 
 namespace BoxLike
 

@@ -1,3 +1,5 @@
+module
+
 /-
 The weak-star infrastructure behind the existence of an `s`-equilibrium state, tex lines 2310 to
 2313, where the article cites Käenmäki, Ann. Acad. Sci. Fenn. Math. 29 (2004), Theorems 2.6 and
@@ -32,10 +34,12 @@ semicontinuous, so `h_0(μ) + Λ(𝖠, μ, s)` attains its maximum on `ℳ_σ(Σ
   `System.exists_csSup_entropy_add_energyLim`: the supremum of `h_0(μ) + Λ(𝖠, μ, s)` over
   `ℳ_σ(Σ)` is attained.
 -/
-import BoxLike.CodingTopology
-import BoxLike.Variational
-import Mathlib.MeasureTheory.Measure.Prokhorov
-import Mathlib.Topology.Semicontinuity.Basic
+public import BoxLike.CodingTopology
+public import BoxLike.Variational
+public import Mathlib.MeasureTheory.Measure.Prokhorov
+public import Mathlib.Topology.Semicontinuity.Basic
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -164,8 +168,6 @@ theorem mem_invariantMeasures_iff {ν : ProbabilityMeasure (ℤ → ι)} :
     rwa [Nat.cast_one] at h
   · intro h
     refine ⟨measurable_shift 1, ?_⟩
-    haveI : IsProbabilityMeasure (Measure.map (shift 1) (ν : Measure (ℤ → ι))) :=
-      Measure.isProbabilityMeasure_map (measurable_shift 1).aemeasurable
     refine ext_of_forall_integral_eq_of_IsFiniteMeasure fun f => ?_
     rw [integral_map (measurable_shift 1).aemeasurable
       f.continuous.measurable.aestronglyMeasurable]
@@ -178,7 +180,7 @@ theorem isClosed_invariantMeasures : IsClosed (InvariantMeasures ι) := by
       {ν : ProbabilityMeasure (ℤ → ι) |
         ∫ x, f (shift 1 x) ∂(ν : Measure (ℤ → ι)) = ∫ x, f x ∂(ν : Measure (ℤ → ι))} := by
     ext ν
-    simp only [Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq]
     exact mem_invariantMeasures_iff
   rw [he]
   refine isClosed_iInter fun f => isClosed_eq ?_ ?_

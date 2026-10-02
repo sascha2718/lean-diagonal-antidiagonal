@@ -1,3 +1,5 @@
+module
+
 /-
 The variational inequality `eq:variational` of `sec:affinity_dim`, its consequence for the
 Lyapunov dimension of `eq:diml_min2`, and the formula for `φ^s(A_{𝐢|_n})` through the Birkhoff
@@ -21,10 +23,12 @@ sums of the potentials `f_{1,s}`, `f_{2,s}` of `sec:gibbs_measures`.
 * `System.svf_matWord_futureWord`:
   `φ^s(A_{𝐢|_n}) = max{exp S_n f_{1,s}(τ(𝐢)), exp S_n f_{2,s}(τ(𝐢))}`.
 -/
-import BoxLike.Lyapunov
-import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.MeasureTheory.Integral.Bochner.SumMeasure
+public import BoxLike.Lyapunov
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.MeasureTheory.Integral.Bochner.SumMeasure
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -101,14 +105,14 @@ theorem lyapDim_nonneg_and_add_energy {h l1 l2 : ℝ} (hl : l2 ≤ l1) (hl1 : l1
   · have hs1 : -h / l1 ≤ 1 := by
       rw [div_le_one_of_neg hl1]; linarith
     refine ⟨div_nonneg_of_nonpos (by linarith) hl1.le, ?_⟩
-    rw [energy, if_pos hs1, div_mul_cancel₀ _ hl1.ne]
+    rw [energy, ite_eq_left hs1, div_mul_cancel₀ _ hl1.ne]
     ring
   · rw [not_le] at h1
     have hneg : (h + l1) / l2 < 0 := div_neg_of_pos_of_neg (by linarith) hl2
     have hge : -1 ≤ (h + l1) / l2 := by
       rw [le_div_iff_of_neg hl2]; linarith
     refine ⟨by linarith, ?_⟩
-    rw [energy, if_neg (by linarith), if_pos (by linarith)]
+    rw [energy, ite_eq_right (by linarith), ite_eq_left (by linarith)]
     have e : (h + l1) / l2 * l2 = h + l1 := div_mul_cancel₀ _ hl2.ne
     linarith
   · rw [not_le] at h1 h2
@@ -116,7 +120,7 @@ theorem lyapDim_nonneg_and_add_energy {h l1 l2 : ℝ} (hl : l2 ≤ l1) (hl1 : l1
     have hs2 : 2 < -(2 * h) / (l1 + l2) := by
       rw [lt_div_iff_of_neg hsum]; linarith
     refine ⟨by linarith, ?_⟩
-    rw [energy, if_neg (by linarith), if_neg (by linarith)]
+    rw [energy, ite_eq_right (by linarith), ite_eq_right (by linarith)]
     have e : -(2 * h) / (l1 + l2) * (l1 + l2) = -(2 * h) := div_mul_cancel₀ _ hsum.ne
     linarith
 
@@ -147,7 +151,7 @@ logarithm with the weights `μ([𝐢])`. -/
 theorem integral_log_svf_add_blockEntropy_le (n : ℕ) {s : ℝ} (hs : 0 ≤ s) :
     (∫ x, Real.log (svf s (S.matWord (futureWord x n))) ∂μ) + blockEntropy μ n
       ≤ Real.log (S.svfSum s n) := by
-  haveI : Nonempty ι := ⟨(nonempty_of_isProbabilityMeasure μ).some 0⟩
+  have : Nonempty ι := ⟨(nonempty_of_isProbabilityMeasure μ).some 0⟩
   obtain ⟨δ, hδ⟩ := S.exists_ratioLowerBound
   have hZ : 0 < S.svfSum s n := hδ.svfSum_pos hs n
   have h := sum_mul_log_add_sum_negMulLog_le (p := fun w : Fin n → ι => μ.real (cylinder w))
@@ -161,7 +165,7 @@ theorem integral_log_svf_add_blockEntropy_le (n : ℕ) {s : ℝ} (hs : 0 ≤ s) 
 `μ` and every `s ≥ 0`. -/
 theorem entropy_add_energyLim_le_pressure (hμ : MeasurePreserving (shift 1) μ μ) {s : ℝ}
     (hs : 0 ≤ s) : entropy μ + S.energyLim s μ ≤ S.pressure s := by
-  haveI : Nonempty ι := ⟨(nonempty_of_isProbabilityMeasure μ).some 0⟩
+  have : Nonempty ι := ⟨(nonempty_of_isProbabilityMeasure μ).some 0⟩
   obtain ⟨δ, hδ⟩ := S.exists_ratioLowerBound
   refine le_of_tendsto_of_tendsto' ((tendsto_entropy hμ).add (S.tendsto_energyLim hμ hs))
     (hδ.tendsto_pressure hs) fun n => ?_
@@ -205,14 +209,14 @@ theorem svf_boxMat_eq_max_exp {s : ℝ} (hs0 : 0 < s) (hs2 : s < 2) (c : ZMod 2)
   · rw [svf_boxMat_of_le_one h1, hu, hv, ← Real.exp_monotone.map_max, ← Real.exp_mul]
     congr 1
     rcases h1.lt_or_eq with h1' | rfl
-    · rw [if_pos h1', if_pos h1']
+    · rw [ite_eq_left h1', ite_eq_left h1']
       rcases le_total u v with h | h
       · rw [max_eq_right h, max_eq_right (mul_le_mul_of_nonneg_left h hs0.le), mul_comm]
       · rw [max_eq_left h, max_eq_left (mul_le_mul_of_nonneg_left h hs0.le), mul_comm]
     · simp
   · rw [svf_boxMat_of_le_two h1 hs2.le c b ha, hu, hv, ← Real.exp_monotone.map_max,
-      ← Real.exp_monotone.map_min, ← Real.exp_mul, ← Real.exp_add, if_neg (not_lt.2 h1.le),
-      if_neg (not_lt.2 h1.le)]
+      ← Real.exp_monotone.map_min, ← Real.exp_mul, ← Real.exp_add, ite_eq_right (not_lt.2 h1.le),
+      ite_eq_right (not_lt.2 h1.le)]
     congr 1
     rcases le_total u v with h | h
     · rw [max_eq_right h, min_eq_left h, max_eq_right (by nlinarith)]

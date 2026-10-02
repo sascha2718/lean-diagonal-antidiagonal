@@ -1,3 +1,5 @@
+module
+
 /-
 Bernoulli measures and the equilibrium state for `s ≥ 2` of `sec:normalisation`, tex lines 2451
 to 2456 and 2471 to 2480. A Bernoulli measure on `ℤ → ι` is the product of copies of a
@@ -29,11 +31,13 @@ Bernoulli measure with the weights `p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2
 * `System.existsUnique_isEquilibriumState_of_two_le`: existence and uniqueness of the
   `s`-equilibrium state for `s ≥ 2`.
 -/
-import BoxLike.BernoulliEntropy
-import BoxLike.PressureLarge
-import Mathlib.MeasureTheory.Measure.MeasuredSets
-import Mathlib.Probability.Independence.InfinitePi
-import Mathlib.Probability.ProductMeasure
+public import BoxLike.BernoulliEntropy
+public import BoxLike.PressureLarge
+public import Mathlib.MeasureTheory.Measure.MeasuredSets
+public import Mathlib.Probability.Independence.InfinitePi
+public import Mathlib.Probability.ProductMeasure
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -81,7 +85,7 @@ theorem bernoulli_inter_preimage_shift (p : Measure ι) [IsProbabilityMeasure p]
   let T : Finset ℤ := I.map (addLeftEmbedding m)
   have hT : ∀ i : I, m + (i : ℤ) ∈ T := fun i => Finset.mem_map.2 ⟨i, i.2, rfl⟩
   let r : (∀ _ : T, ι) → ∀ _ : I, ι := fun y i => y ⟨m + i, hT i⟩
-  have hr : Measurable r := measurable_pi_lambda _ fun i => measurable_pi_apply _
+  have hr : Measurable r := Measurable.of_eval fun i => measurable_pi_apply _
   have hpre : shift m ⁻¹' (I.restrict ⁻¹' S) = T.restrict ⁻¹' (r ⁻¹' S) := rfl
   have hdisj : Disjoint I T := by
     rw [Finset.disjoint_left]
@@ -162,7 +166,7 @@ theorem ergodic_shift_bernoulli (p : Measure ι) [IsProbabilityMeasure p] :
     abs_eq_zero.1 <| le_antisymm (le_of_forall_pos_le_add fun ε hε => by
       have := key (ε / 4) (by positivity)
       linarith) (abs_nonneg _)
-  rw [eventuallyConst_set', ae_eq_empty, ae_eq_univ, prob_compl_eq_zero_iff hA]
+  rw [eventuallyEmptyOrUniv_iff', ae_eq_empty, ae_eq_univ, prob_compl_eq_zero_iff hA]
   have h01 : (bernoulli p).real A = 0 ∨ (bernoulli p).real A = 1 := by
     have : (bernoulli p).real A * (1 - (bernoulli p).real A) = 0 := by linarith
     rcases mul_eq_zero.1 this with h | h
@@ -265,9 +269,9 @@ theorem eq_bernoulli_of_cylinder (p : Measure ι) [IsProbabilityMeasure p] {μ :
     (h : ∀ (k : ℤ) (n : ℕ) (w : Fin n → ι),
       μ {x | ∀ j : Fin n, x (k + j) = w j} = ∏ j, p {w j}) :
     μ = bernoulli p := by
-  haveI : IsFiniteMeasure μ := ⟨by
+  have : IsFiniteMeasure μ := ⟨by
     have h0 := h 0 0 Fin.elim0
-    simp only [IsEmpty.forall_iff, Set.setOf_true, Finset.univ_eq_empty,
+    simp only [IsEmpty.forall_iff, Set.ofPred_true, Finset.univ_eq_empty,
       Finset.prod_empty] at h0
     rw [h0]
     exact ENNReal.one_lt_top⟩
@@ -354,7 +358,7 @@ theorem eq_bernoulli_weightMeasure_of_measureReal_cylinder {p : ι → ℝ} (hp 
     (h : ∀ (k : ℤ) (n : ℕ), 0 < n → ∀ w : Fin n → ι,
       μ.real (shift k ⁻¹' cylinder w) = ∏ j, p (w j)) :
     μ = bernoulli (weightMeasure p) := by
-  haveI := isProbabilityMeasure_weightMeasure hp hsum
+  have := isProbabilityMeasure_weightMeasure hp hsum
   refine eq_bernoulli_of_measureReal_cylinder _ fun k n w => ?_
   simp only [measureReal_weightMeasure_singleton (hp _)]
   rcases Nat.eq_zero_or_pos n with rfl | hn
@@ -454,7 +458,7 @@ variational expression of this distribution is maximised only by `(p_i)`. -/
 theorem IsEquilibriumState.eq_bernoulli {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ]
     (heq : S.IsEquilibriumState s μ) (hinv : MeasurePreserving (shift 1) μ μ) (hs : 2 ≤ s) :
     μ = bernoulli (S.detWeightMeasure s) := by
-  haveI : Nonempty ι := ⟨(nonempty_of_isProbabilityMeasure μ).some 0⟩
+  have : Nonempty ι := ⟨(nonempty_of_isProbabilityMeasure μ).some 0⟩
   have hq := S.rpow_abs_det_mat_pos (s / 2)
   have hE := heq.log_sum_eq hinv hs
   have hrw : s / 2 * ∑ i, μ.real (cylinder ![i]) * Real.log |(S.mat i).det| =
@@ -480,7 +484,7 @@ theorem IsEquilibriumState.eq_bernoulli {μ : Measure (ℤ → ι)} [IsProbabili
 theorem IsEquilibriumState.ergodic_of_two_le {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ]
     (heq : S.IsEquilibriumState s μ) (hinv : MeasurePreserving (shift 1) μ μ) (hs : 2 ≤ s) :
     Ergodic (shift 1) μ := by
-  haveI : Nonempty ι := ⟨(nonempty_of_isProbabilityMeasure μ).some 0⟩
+  have : Nonempty ι := ⟨(nonempty_of_isProbabilityMeasure μ).some 0⟩
   rw [heq.eq_bernoulli hinv hs]
   exact ergodic_shift_bernoulli _
 

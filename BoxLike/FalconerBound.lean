@@ -1,3 +1,5 @@
+module
+
 /-
 Falconer's upper bound for the upper Minkowski dimension of a box-like self-affine set, in
 `sec:affinity_dim`: `eq:hausdorff_affinity_upper_bound` (tex lines 2255 to 2265) and the bound
@@ -31,7 +33,9 @@ such a word is covered by `(α_1/ρ + 1)(α_2/ρ + 1) ≤ 4 (δ₀ρ)^{-t} φ^t(
 * `System.upperBoxDim_attractor_le_dimaff`, `System.upperBoxDim_attractor_le`,
   `System.dimH_attractor_le`: `\dim_H X ≤ \overline{\dim}_M X ≤ min{2, dimaff(X)}`.
 -/
-import BoxLike.ModifiedAffinity
+public import BoxLike.ModifiedAffinity
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -164,7 +168,7 @@ theorem card_le_svf_of_alpha₁ {t ρ : ℝ} (ht0 : 0 ≤ t) (ht1 : t ≤ 1) (h�
   have ha₂ : S.alpha₂ w / ρ ≤ 1 := (div_le_one hρ).2 ((S.alpha₂_le_alpha₁ w).trans h2)
   have ha₂0 : 0 ≤ S.alpha₂ w / ρ := div_nonneg (S.alpha₂_pos w).le hρ.le
   have hsvf : svf t (S.matWord w) = S.alpha₁ w ^ t := by
-    rw [svf_matWord_eq, svfExp, if_pos ht1, sub_self, Real.rpow_zero, mul_one]
+    rw [svf_matWord_eq, svfExp, ite_eq_left ht1, sub_self, Real.rpow_zero, mul_one]
   have hpow : (δ₀ * ρ) ^ (-t) * (δ₀ * ρ) ^ t = 1 := by
     rw [Real.rpow_neg hδρ.le, inv_mul_cancel₀ (Real.rpow_pos_of_pos hδρ t).ne']
   calc (S.alpha₁ w / ρ + 1) * (S.alpha₂ w / ρ + 1) ≤ 2 * 2 :=

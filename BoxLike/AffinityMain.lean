@@ -1,3 +1,5 @@
+module
+
 /-
 The affinity dimension in the main results: `sec:affinity_dim`, `thm:main1` and the last step
 of the proof of `thm:main2`.
@@ -11,18 +13,22 @@ of the proof of `thm:main2`.
 * `System.le_dimH_attractor`: `dim(π_*μ) ≤ \dim_H(X)`, the use of `eq:dimension_measure_def` in
   the proof of `thm:main2`.
 -/
-import BoxLike.AffinityDim
-import BoxLike.General
-import BoxLike.MassDistribution
-import BoxLike.Variational
+public import BoxLike.AffinityDim
+public import BoxLike.General
+public import BoxLike.MassDistribution
+public import BoxLike.Variational
+
+@[expose] public section
 
 namespace BoxLike
 
 open MeasureTheory
 
+universe u
+
 namespace System
 
-variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   (S : System ι)
 
 omit [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] in
@@ -57,17 +63,18 @@ projective exponential separation condition such that `dimaff(X) < 2`, and let `
 double-dimensional. Both projections fail to be exact-dimensional precisely when
 `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`. At equality and above, both projections are exact-dimensional
 of dimension one. -/
-theorem main1_dimaff [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
-    (hsep : S.ProjExpSeparation) (h2 : S.dimaff < 2) (μ : Measure (ℤ → ι))
-    [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
-    (heq : S.IsEquilibriumState S.dimaff μ) (c : ZMod 2) :
+theorem main1_dimaff (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+    (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
+    [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation)
+    (h2 : S.dimaff < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
+    (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ) (c : ZMod 2) :
     IsDoubleDim (S.marginal c μ) (min 1 (-entropy μ / S.lyapunov₁ μ))
         (min 1 (-entropy μ / S.lyapunov₂ μ)) ∧
       ((¬ ∃ d, IsExactDim (S.marginal c μ) d) ↔
         S.dimaff < 2 - S.lyapunov₁ μ / S.lyapunov₂ μ) ∧
       (2 - S.lyapunov₁ μ / S.lyapunov₂ μ ≤ S.dimaff → IsExactDim (S.marginal c μ) 1) := by
-  haveI := S.nontrivial_of_withRotations hrot
-  exact S.main1 hrot hprox hsep S.dimaff_pos h2 S.pressure_dimaff μ hinv heq c
+  have := S.nontrivial_of_withRotations hrot
+  exact S.main1 hms hfk hfjj hjr hrot hprox hsep S.dimaff_pos h2 S.pressure_dimaff μ hinv heq c
 
 /-- `dim(π_*μ) ≤ \dim_H(X)` for an exact-dimensional projected measure: the use of
 `eq:dimension_measure_def` in the proof of `thm:main2`. -/

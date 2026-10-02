@@ -1,3 +1,5 @@
+module
+
 /-
 Topological and measure-theoretic claims about the coding maps that the article states without
 a label: the natural projection `η : Σ → Σ^+` of `sec:two_sided_shift_space` (tex lines 850 to
@@ -30,15 +32,17 @@ for a countable discrete alphabet this is the Borel `σ`-algebra (`borelSpace_tw
 * `exists_preimage_eta_ae_eq`: a `σ`-invariant set is `η^{-1}(B)` up to a null set.
 * `ergodic_map_eta_iff`: `η_*μ` is ergodic if and only if `μ` is.
 -/
-import BoxLike.Attractor
-import BoxLike.Entropy
-import BoxLike.Grouping
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Dynamics.Ergodic.Ergodic
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.MeasureTheory.Measure.SeparableMeasure
-import Mathlib.MeasureTheory.OuterMeasure.BorelCantelli
-import Mathlib.Topology.Separation.Hausdorff
+public import BoxLike.Attractor
+public import BoxLike.Entropy
+public import BoxLike.Grouping
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Dynamics.Ergodic.Ergodic
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import Mathlib.MeasureTheory.Measure.SeparableMeasure
+public import Mathlib.MeasureTheory.OuterMeasure.BorelCantelli
+public import Mathlib.Topology.Separation.Hausdorff
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -158,10 +162,10 @@ def ungroup (y : ℤ → α × α) : ℤ → α := fun k => if k % 2 = 0 then (y
 @[simp] theorem ungroup_group (x : ℤ → α) : ungroup (group x) = x := by
   funext k
   rcases Int.emod_two_eq_zero_or_one k with h | h
-  · simp only [ungroup, h, if_true, group_apply]
+  · simp only [ungroup, h, ite_true, group_apply]
     congr 1
     omega
-  · simp only [ungroup, h, one_ne_zero, if_false, group_apply]
+  · simp only [ungroup, h, one_ne_zero, ite_false, group_apply]
     congr 1
     omega
 
@@ -172,7 +176,7 @@ def ungroup (y : ℤ → α × α) : ℤ → α := fun k => if k % 2 = 0 then (y
   have h1 : (2 * n + 1) % 2 ≠ 0 := by omega
   have h2 : 2 * n / 2 = n := by omega
   have h3 : (2 * n + 1) / 2 = n := by omega
-  simp only [group_apply, ungroup, h0, h1, h2, h3, if_true, if_false]
+  simp only [group_apply, ungroup, h0, h1, h2, h3, ite_true, ite_false]
 
 variable [TopologicalSpace α]
 
@@ -184,9 +188,9 @@ theorem continuous_group : Continuous (group : (ℤ → α) → ℤ → α × α
 theorem continuous_ungroup : Continuous (ungroup : (ℤ → α × α) → ℤ → α) := by
   refine continuous_pi fun k => ?_
   by_cases h : k % 2 = 0
-  · simp only [ungroup, h, if_true]
+  · simp only [ungroup, h, ite_true]
     exact continuous_fst.comp (continuous_apply _)
-  · simp only [ungroup, h, if_false]
+  · simp only [ungroup, h, ite_false]
     exact continuous_snd.comp (continuous_apply _)
 
 /-- The grouping map `β` of `sec:normalisation` is a homeomorphism (tex line 2402). -/
@@ -305,9 +309,9 @@ theorem continuous_shiftPlus : Continuous (shiftPlus : (ℕ → α) → ℕ → 
 theorem continuous_embed (a : α) : Continuous (embed a) := by
   refine continuous_pi fun k => ?_
   by_cases h : 0 ≤ k
-  · simp only [embed, h, if_true]
+  · simp only [embed, h, ite_true]
     exact continuous_apply _
-  · simp only [embed, h, if_false]
+  · simp only [embed, h, ite_false]
     exact continuous_const
 
 /-- The embedding `e : Σ^+ → Σ` is injective and continuous, and it is a topological embedding
@@ -326,11 +330,11 @@ variable {α : Type*} [MeasurableSpace α]
 
 /-- The natural projection `η` is measurable. -/
 theorem measurable_eta : Measurable (eta : (ℤ → α) → ℕ → α) :=
-  measurable_pi_lambda _ fun k => measurable_pi_apply (k : ℤ)
+  Measurable.of_eval fun k => measurable_pi_apply (k : ℤ)
 
 /-- The one-sided shift `σ^+` is measurable. -/
 theorem measurable_shiftPlus : Measurable (shiftPlus : (ℕ → α) → ℕ → α) :=
-  measurable_pi_lambda _ fun k => measurable_pi_apply (k + 1)
+  Measurable.of_eval fun k => measurable_pi_apply (k + 1)
 
 /-- If `μ ∈ ℳ_σ(Σ)`, then `η_*μ ∈ ℳ_σ(Σ^+)` (tex lines 877 to 883). -/
 theorem measurePreserving_shiftPlus_map_eta {μ : Measure (ℤ → α)}
@@ -340,7 +344,7 @@ theorem measurePreserving_shiftPlus_map_eta {μ : Measure (ℤ → α)}
 
 /-- The map `𝐢 ↦ (i_k)_{k ≥ -m}` is measurable. -/
 theorem measurable_etaFrom (m : ℕ) : Measurable (etaFrom m : (ℤ → α) → ℕ → α) :=
-  measurable_pi_lambda _ fun k => measurable_pi_apply (-(m : ℤ) + k)
+  Measurable.of_eval fun k => measurable_pi_apply (-(m : ℤ) + k)
 
 /-- The sets that depend on the coordinates `k ≥ -m` only, for some `m ∈ ℕ`. They contain the
 cylinders `[i_k ⋯ i_ℓ]` of tex line 849. -/

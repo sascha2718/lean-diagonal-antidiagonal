@@ -1,3 +1,5 @@
+module
+
 /-
 The sets `Σ^τ`, `Σ^ω`, `Σ'` and the Oseledets filtration of `sec:lyapunov_exponents`, in the
 box-like form of tex lines 1675 to 1689: `Σ'` is the set of sequences for which the two backward
@@ -23,8 +25,10 @@ slow subspace `V_𝐢^1` is a coordinate axis. The measure enters through the tw
 * `System.measurableSet_SigmaTau`, `System.measurableSet_SigmaOmega`,
   `System.measurableSet_SigmaPrime`: the three sets are Borel.
 -/
-import BoxLike.Lyapunov
-import Mathlib.MeasureTheory.MeasurableSpace.MeasurablyGenerated
+public import BoxLike.Lyapunov
+public import Mathlib.MeasureTheory.MeasurableSpace.MeasurablyGenerated
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -178,7 +182,7 @@ theorem mem_SigmaTau_of_samePast (μ : Measure (ℤ → ι)) {x y : ℤ → ι} 
   have e2 : ∀ n, pastWord (omega S.o y) n = pastWord (omega S.o x) n := fun n => by
     rw [← S.codeWord_pastWord_omega, ← S.codeWord_pastWord_omega, ← S.oWord_pastWord,
       ← S.oWord_pastWord, pastWord_congr h n]
-  simpa only [SigmaTau, HasBackRate, mem_setOf_eq, e1, e2] using hx
+  simpa only [SigmaTau, HasBackRate, mem_ofPred_eq, e1, e2] using hx
 
 /-- `sec:lyapunov_exponents`, tex lines 1680 to 1681, proved: `Σ^ω` is saturated with respect to
 the past. -/
@@ -190,7 +194,7 @@ theorem mem_SigmaOmega_of_samePast (μ : Measure (ℤ → ι)) {x y : ℤ → ι
   have e2 : ∀ n, pastWord (omega S.o y) n = pastWord (omega S.o x) n := fun n => by
     rw [← S.codeWord_pastWord_omega, ← S.codeWord_pastWord_omega, ← S.oWord_pastWord,
       ← S.oWord_pastWord, pastWord_congr h n]
-  simpa only [SigmaOmega, HasBackRate, mem_setOf_eq, e1, e2] using hx
+  simpa only [SigmaOmega, HasBackRate, mem_ofPred_eq, e1, e2] using hx
 
 /-- The slow axis depends only on the past. -/
 theorem slowAxis_eq_of_samePast (μ : Measure (ℤ → ι)) {x y : ℤ → ι} (h : SamePast x y) :

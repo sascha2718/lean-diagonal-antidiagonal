@@ -1,3 +1,5 @@
+module
+
 /-
 The singular value pressure `P(𝖠, s)` of `sec:affinity_dim`.
 
@@ -11,9 +13,11 @@ The singular value pressure `P(𝖠, s)` of `sec:affinity_dim`.
 * `System.pressure`, `System.RatioLowerBound.tendsto_pressure`: the pressure, and the
   existence of the limit defining it by Fekete's lemma.
 -/
-import BoxLike.SingularValue
-import Mathlib.Analysis.Subadditive
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import BoxLike.SingularValue
+public import Mathlib.Analysis.Subadditive
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -43,7 +47,7 @@ def RatioLowerBound (δ : ℝ) : Prop := 0 < δ ∧ ∀ p, δ ≤ |S.ratio p|
 /-- A finite non-empty system has a positive lower bound for its contraction ratios. -/
 theorem exists_ratioLowerBound [Finite ι] [Nonempty ι] : ∃ δ, S.RatioLowerBound δ := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   obtain ⟨p, -, hp⟩ := Finset.exists_min_image Finset.univ (fun p => |S.ratio p|)
     Finset.univ_nonempty
   exact ⟨|S.ratio p|, abs_pos.2 (S.ratio_ne_zero p), fun q => hp q (Finset.mem_univ _)⟩

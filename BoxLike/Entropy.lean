@@ -1,3 +1,5 @@
+module
+
 /-
 The block entropies `H_μ(𝒫_0^{n-1})` of the canonical partition `𝒫` of `sec:entropies` and the
 Kolmogorov–Sinai entropy `lim_n H_μ(𝒫_0^{n-1}) / n` used in `sec:entropy_eq_state`, for a
@@ -25,14 +27,16 @@ partition is the finite sum `∑_w -μ[w] log μ[w]`.
 * `entropy_eq_of_blockEntropy_close`: measures whose block entropies differ by a bounded amount
   have the same entropy.
 -/
-import BoxLike.Orientation
-import Mathlib.Analysis.Convex.Jensen
-import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Analysis.Subadditive
-import Mathlib.Dynamics.Ergodic.MeasurePreserving
-import Mathlib.MeasureTheory.Measure.Real
-import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
+public import BoxLike.Orientation
+public import Mathlib.Analysis.Convex.Jensen
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Analysis.Subadditive
+public import Mathlib.Dynamics.Ergodic.MeasurePreserving
+public import Mathlib.MeasureTheory.Measure.Real
+public import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -113,7 +117,7 @@ theorem cylinder_eq_preimage (w : Fin n → α) : cylinder w = block n ⁻¹' {w
 theorem cylinder_append (w : Fin m → α) (w' : Fin n → α) :
     cylinder (Fin.append w w') = cylinder w ∩ shift m ⁻¹' cylinder w' := by
   ext x
-  simp only [cylinder, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage, shift_apply]
+  simp only [cylinder, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage, shift_apply]
   constructor
   · intro h
     refine ⟨fun k => ?_, fun k => ?_⟩
@@ -140,11 +144,11 @@ variable {α : Type*} [MeasurableSpace α] {n : ℕ}
 
 /-- Every iterate `σ^n`, `n ∈ ℤ`, of the shift is measurable. -/
 theorem measurable_shift (n : ℤ) : Measurable (shift n : (ℤ → α) → ℤ → α) :=
-  measurable_pi_lambda _ fun k => measurable_pi_apply (n + k)
+  Measurable.of_eval fun k => measurable_pi_apply (n + k)
 
 /-- The map `x ↦ x_0 ⋯ x_{n-1}` is measurable. -/
 theorem measurable_block (n : ℕ) : Measurable (block n : (ℤ → α) → Fin n → α) :=
-  measurable_pi_lambda _ fun k => measurable_pi_apply (k : ℤ)
+  Measurable.of_eval fun k => measurable_pi_apply (k : ℤ)
 
 /-- Cylinders are measurable. -/
 theorem measurableSet_cylinder [MeasurableSingletonClass α] (w : Fin n → α) :

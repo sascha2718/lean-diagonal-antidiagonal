@@ -1,3 +1,5 @@
+module
+
 /-
 `prop:ssc_no_overlap_not_pesc` of `sec:exponential_separation` and the paragraph after its
 proof (tex lines 1472 to 1595): a system `Φ = (φ_1, φ_2, φ_3, φ_4)` with three diagonal maps
@@ -40,13 +42,15 @@ The example, in the namespace `BoxLike.NoOverlap`:
   and from `BaranyKaenmakiTheorem`.
 * `planar_separation_not_pesc`: the paragraph after the proof.
 -/
-import BoxLike.Classification
-import BoxLike.NoOverlapExampleFree
-import BoxLike.Pressure
-import BoxLike.Proximal
-import BoxLike.SeparationConditions
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import BoxLike.Classification
+public import BoxLike.NoOverlapExampleFree
+public import BoxLike.Pressure
+public import BoxLike.Proximal
+public import BoxLike.SeparationConditions
+public import Mathlib.Analysis.SpecialFunctions.Exp
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -216,7 +220,7 @@ end System
 
 namespace NoOverlap
 
-open System
+open BoxLike.System
 
 /-! ### The theorem of Bárány and Käenmäki -/
 
@@ -813,7 +817,7 @@ theorem exists_params {lam t : ℝ} (hlam0 : 0 < lam) (hlam1 : lam < 1 / 3) (ht0
     (ht1 : t < lam / (1 - lam)) :
     ∃ P : Params, P.lam = lam ∧ P.t = t ∧
       AlgebraicIndependent (Subfield.closure ({lam, t} : Set ℝ)) P.θ := by
-  haveI : Countable (Subfield.closure ({lam, t} : Set ℝ)) :=
+  have : Countable (Subfield.closure ({lam, t} : Set ℝ)) :=
     countable_closure (Set.to_countable _)
   obtain ⟨x, hx, hmem⟩ := exists_algebraicIndependent_mem_Ioo
     (Subfield.closure ({lam, t} : Set ℝ)) 11 paramLo paramHi paramLo_lt_paramHi

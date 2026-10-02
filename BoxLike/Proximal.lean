@@ -1,3 +1,5 @@
+module
+
 /-
 Proximal matrices and proximal tuples of `sec:irreducibility`, and
 `thm:box_like_proximal`: a proximal box-like tuple `𝖠` has a diagonal matrix with diagonal
@@ -20,8 +22,10 @@ entries of distinct absolute values in `𝖠` or in `𝖠²`.
   the irreducibility of a box-like tuple with rotations containing a proximal diagonal
   generator.
 -/
-import BoxLike.SecondIterate
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
+public import BoxLike.SecondIterate
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -163,7 +167,7 @@ theorem abs_gDeriv_codeWord_eq (S : System ι) (h1 : ¬ S.HasProximalDiagonal)
     rcases zmod_two_cases (S.o i) with hi | hi <;> rcases zmod_two_cases c with rfl | rfl <;>
       simp [hi, hdiag i, hκanti i, show (1 : ZMod 2) + 1 = 0 from by decide]
   have h := S.abs_gDeriv_codeWord_mul (fun c => if c = 0 then κ else 1) hf 0 w
-  simp only [zero_add, hw, if_true] at h
+  simp only [zero_add, hw, ite_true] at h
   exact mul_right_cancel₀ hκ.ne' h
 
 /-- `thm:box_like_proximal`: if the box-like tuple `𝖠` is proximal, then `𝖠` or `𝖠²` contains

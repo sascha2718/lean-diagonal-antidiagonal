@@ -1,3 +1,5 @@
+module
+
 /-
 The one-dimensional entropy of the equilibrium state when its Kolmogorov–Sinai entropy is large:
 `thm:overline_h1_large` of `sec:average_gibbs_entropy` and `thm:eq_state_h1_large` of
@@ -27,17 +29,21 @@ For `thm:eq_state_h1_large`, Jordan–Rapaport and the scalar part of `thm:feng1
 * `System.overline_h1_large`: `thm:overline_h1_large`.
 * `System.eq_state_h1_large`: `thm:eq_state_h1_large`.
 -/
-import BoxLike.ConditionalTwoWays
-import BoxLike.FengEntropy
-import BoxLike.General
-import BoxLike.PastEntropy
-import Mathlib.Dynamics.Ergodic.Ergodic
-import Mathlib.Dynamics.Ergodic.MeasurePreserving
+public import BoxLike.ConditionalTwoWays
+public import BoxLike.FengEntropy
+public import BoxLike.General
+public import BoxLike.PastEntropy
+public import Mathlib.Dynamics.Ergodic.Ergodic
+public import Mathlib.Dynamics.Ergodic.MeasurePreserving
+
+@[expose] public section
 
 namespace BoxLike
 
 open MeasureTheory ProbabilityTheory Filter Topology Set
 open scoped ENNReal NNReal
+
+universe u
 
 /-! ### The average measure -/
 
@@ -52,7 +58,8 @@ theorem h1Large_measurePreserving_avgMeasure {f : Ω → Ω} {m₁ m₂ : Measur
     (h₁ : MeasurePreserving f m₁ m₁) (h₂ : MeasurePreserving f m₂ m₂) :
     MeasurePreserving f (avgMeasure m₁ m₂) (avgMeasure m₁ m₂) := by
   refine ⟨h₁.measurable, ?_⟩
-  rw [avgMeasure, Measure.map_smul, Measure.map_add _ _ h₁.measurable, h₁.map_eq, h₂.map_eq]
+  rw [avgMeasure, Measure.map_smul _ h₁.measurable.aemeasurable, Measure.map_add _ _ h₁.measurable,
+    h₁.map_eq, h₂.map_eq]
 
 /-- Proof of `thm:overline_h1_large`, "after discarding a `\overline{μ}`-null subset of `T(E)`":
 on a set `F` with `μ_2(F) = 0` the average `\overline{μ}` of `eq:average_gibbs` is `½ μ_1`, so a
@@ -72,7 +79,7 @@ end Average
 
 section Coding
 
-variable {ι : Type*} [MeasurableSpace ι]
+variable {ι : Type u} [MeasurableSpace ι]
 
 /-- Proof of `thm:overline_h1_large`, "the corresponding base points satisfy the entropy limit for
 `μ`": if `ν|_F = c T_*(μ|_E)`, as in `eq:orientation-restrictions`, and `\overline{T} ∘ T = id`,
@@ -114,7 +121,7 @@ end Coding
 
 namespace System
 
-variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   (S : System ι) {s : ℝ}
 
 variable {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)}
@@ -130,7 +137,8 @@ if `\overline{μ}|_{T(E)} = c T_*(μ|_E)`, `μ_2(T(E)) = 0`, and
 at every such point, hence holds as soon as `\overline{μ}(T(E)) > 0`.
 Depends on: `thm:feng_entropy_as_limit` (both parts), `eq:ergodic_entropy_constant`,
 `h1Large_map_cylinder_block`. -/
-theorem h1Large_aux (hrot : S.WithRotations) (hprox : S.Proximal) (μ : Measure (ℤ → ι))
+theorem h1Large_aux (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
+    (hrot : S.WithRotations) (hprox : S.Proximal) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (herg : Ergodic (shift 1) μ) (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ)
     [IsProbabilityMeasure μ₁] [IsProbabilityMeasure μ₂]
@@ -146,7 +154,7 @@ theorem h1Large_aux (hrot : S.WithRotations) (hprox : S.Proximal) (μ : Measure 
     ∀ᵐ y ∂avgMeasure μ₁ μ₂, y ∈ T '' E →
       S.dimEntropyBarAt (avgMeasure μ₁ μ₂) 1 y = S.dimEntropyBar μ₁ 1 ∧
       S.dimEntropyBar μ₁ 1 = S.dimEntropy μ 1 := by
-  haveI := isProbabilityMeasure_avgMeasure μ₁ μ₂
+  have := isProbabilityMeasure_avgMeasure μ₁ μ₂
   have hTm : Measurable T := by
     rcases hT with rfl | rfl
     exacts [measurable_tau S.o, measurable_omega S.o]
@@ -160,19 +168,19 @@ theorem h1Large_aux (hrot : S.WithRotations) (hprox : S.Proximal) (μ : Measure 
     simp [avgMeasure, hsupp₁, hsupp₂]
   -- The entropy limits of `thm:feng_entropy_as_limit` for `\overline{μ}`, `μ_1` and `μ`; the
   -- last two are constants by `eq:ergodic_entropy_constant`.
-  have l₀ := S.feng_entropy_as_limit_bar hrot hprox (avgMeasure μ₁ μ₂)
+  have l₀ := S.feng_entropy_as_limit_bar hfib hrot hprox (avgMeasure μ₁ μ₂)
     (h1Large_measurePreserving_avgMeasure herg₁.toMeasurePreserving hinv₂) hsupp 1
   have l₁ : ∀ᵐ y ∂μ₁, Tendsto
       (fun n : ℕ => -Real.log ((condMeas μ₁ (S.xiBar 1) y).real (cylinder (block n y))) / n)
       atTop (𝓝 (S.dimEntropyBar μ₁ 1)) := by
-    filter_upwards [S.feng_entropy_as_limit_bar hrot hprox μ₁ herg₁.toMeasurePreserving hsupp₁ 1,
-      localEntropy_ae_eq μ₁ herg₁ (S.xiBar 1)] with y hy hc
+    filter_upwards [S.feng_entropy_as_limit_bar hfib hrot hprox μ₁ herg₁.toMeasurePreserving
+        hsupp₁ 1, localEntropy_ae_eq μ₁ herg₁ (S.xiBar 1)] with y hy hc
     rw [dimEntropyBarAt, hc] at hy
     exact hy
   have l₂ : ∀ᵐ x ∂μ, Tendsto
       (fun n : ℕ => -Real.log ((condMeas μ (S.xi μ 1) x).real (cylinder (block n x))) / n)
       atTop (𝓝 (S.dimEntropy μ 1)) := by
-    filter_upwards [S.feng_entropy_as_limit μ hinv herg hlt 1,
+    filter_upwards [S.feng_entropy_as_limit hfi μ hinv herg hlt 1,
       localEntropy_ae_eq μ herg (S.xi μ 1)] with x hx hc
     rw [dimEntropyAt, hc] at hx
     exact hx
@@ -199,26 +207,27 @@ separation is not assumed. The equality of the constants `\overline{h}_1(μ_1)` 
 Depends on: `thm:gibbs_tau_omega_positive`, `eq:orientation-restrictions`,
 `thm:conditional_two_ways`, `thm:partition_tau_conj`, `thm:feng_entropy_as_limit` (both parts),
 `eq:ergodic_entropy_constant`. -/
-theorem overline_h1_large (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
-    (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
-    (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
-    (heq : S.IsEquilibriumState s μ) [IsProbabilityMeasure μ₁] [IsProbabilityMeasure μ₂]
-    (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
+theorem overline_h1_large (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+    (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) (hrot : S.WithRotations)
+    (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
+    [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+    (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) [IsProbabilityMeasure μ₁]
+    [IsProbabilityMeasure μ₂] (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
     S.dimEntropyBar μ₁ 1 = S.dimEntropy μ 1 ∧
       ∀ᵐ y ∂avgMeasure μ₁ μ₂, y ∈ S.fastPart μ →
         S.dimEntropyBarAt (avgMeasure μ₁ μ₂) 1 y = S.dimEntropyBar μ₁ 1 := by
-  have hlt := S.simple_lyapunov hrot hdiag.proximal hs0 hs2 μ hinv heq
+  have hlt := S.simple_lyapunov hms hrot hdiag.proximal hs0 hs2 μ hinv heq
   obtain ⟨-, ⟨z1, z2, -, -⟩, -⟩ :=
-    S.gibbs_tau_omega_positive hrot hdiag hs0 hs2 μ hinv herg heq hdec
-  obtain ⟨r1, -, p1⟩ := S.orientation_restrictions hrot hdiag hs0 hs2 μ hinv herg heq hdec
+    S.gibbs_tau_omega_positive hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
+  obtain ⟨r1, -, p1⟩ := S.orientation_restrictions hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
     (Or.inl rfl) (Or.inl rfl)
-  obtain ⟨r2, -, -⟩ := S.orientation_restrictions hrot hdiag hs0 hs2 μ hinv herg heq hdec
+  obtain ⟨r2, -, -⟩ := S.orientation_restrictions hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
     (Or.inr rfl) (Or.inr rfl)
-  have hc := S.conditional_two_ways hrot hdiag hs0 hs2 μ hinv herg heq hdec
-  have a1 := S.h1Large_aux hrot hdiag.proximal μ hinv herg hlt hdec.ergodic₁
+  have hc := S.conditional_two_ways hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
+  have a1 := S.h1Large_aux hfi hfib hrot hdiag.proximal μ hinv herg hlt hdec.ergodic₁
     hdec.ergodic₂.toMeasurePreserving hdec.supp₁ hdec.supp₂ (Or.inl rfl)
     (S.measurableSet_SigmaTau μ) _ r1 z1 (hc.mono fun y hy => hy.1)
-  have a2 := S.h1Large_aux hrot hdiag.proximal μ hinv herg hlt hdec.ergodic₁
+  have a2 := S.h1Large_aux hfi hfib hrot hdiag.proximal μ hinv herg hlt hdec.ergodic₁
     hdec.ergodic₂.toMeasurePreserving hdec.supp₁ hdec.supp₂ (Or.inr rfl)
     (S.measurableSet_SigmaOmega μ) _ r2 z2 (hc.mono fun y hy => hy.2.2.1)
   refine ⟨?_, ?_⟩
@@ -234,34 +243,34 @@ theorem overline_h1_large (hrot : S.WithRotations) (hdiag : S.HasProximalDiagona
 
 /-- `thm:eq_state_h1_large`: under projective exponential separation, if
 `h_0(μ) ≥ -λ_1(𝖠, μ)`, then `h_1(μ) = h_0(μ) + λ_1(𝖠, μ)`. Here `h_0(μ)` is `entropy μ`. The
-Gibbs measures are obtained inside the proof from `fengKaenmaki_gibbs` and
-`fraserJordanJurga_decomposition`. The two values of `dim \overline{π}_*μ_1` are those of
+Gibbs measures are obtained inside the proof from the Gibbs bounds of Feng–Käenmäki,
+`FengKaenmakiGibbs`, and the decomposition of Fraser–Jordan–Jurga,
+`FraserJordanJurgaDecomposition`. The two values of `dim \overline{π}_*μ_1` are those of
 `eq:eq_state_h1_large1` and `eq:eq_state_h1_large2`.
-Depends on: `jordanRapaport_dimension`, `thm:entropy_eq_gibbs`, `thm:eq_state_is_sum`,
-`thm:feng1` (scalar), `dimEntropyBar_zero_eq_entropy`, `thm:overline_h1_large`. -/
-theorem eq_state_h1_large (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
-    (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
-    [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
-    (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ)
-    (hent : -S.lyapunov₁ μ ≤ entropy μ) :
+Depends on: the dimension formula of Jordan–Rapaport, `JordanRapaportDimension`,
+`thm:entropy_eq_gibbs`, `thm:eq_state_is_sum`, `thm:feng1` (scalar),
+`dimEntropyBar_zero_eq_entropy`, `thm:overline_h1_large`. -/
+theorem eq_state_h1_large (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+    (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
+    (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) (hlyb : FengLedrappierYoungBar.{u})
+    (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hsep : S.ProjExpSeparation)
+    (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
+    (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
+    (heq : S.IsEquilibriumState s μ) (hent : -S.lyapunov₁ μ ≤ entropy μ) :
     S.dimEntropy μ 1 = entropy μ + S.lyapunov₁ μ := by
-  have hgibbs := fengKaenmaki_gibbs S (irreducible_of_hasProximalDiagonal hrot hdiag) hs0 hs2 μ
-    hinv heq
-  obtain ⟨μ₁, μ₂, hdec⟩ := fraserJordanJurga_decomposition S hrot hdiag hs0 hs2 μ hinv hgibbs
-  haveI := hdec.prob₁
-  haveI := hdec.prob₂
+  have hgibbs := hfk S (irreducible_of_hasProximalDiagonal hrot hdiag) hs0 hs2 μ hinv heq
+  obtain ⟨μ₁, μ₂, hdec⟩ := hfjj S hrot hdiag hs0 hs2 μ hinv hgibbs
+  have := hdec.prob₁
+  have := hdec.prob₂
   have hinv₁ := hdec.ergodic₁.toMeasurePreserving
   have hl1 := S.lyapunov₁_neg hinv
-  obtain ⟨r, M, hS⟩ := S.exists_bounds
-  have hne : μ₁.map S.projBar ≠ 0 := by
-    haveI := Measure.isProbabilityMeasure_map (μ := μ₁) hS.measurable_projBar.aemeasurable
-    exact IsProbabilityMeasure.ne_zero _
+  have hne : μ₁.map S.projBar ≠ 0 := IsProbabilityMeasure.ne_zero _
   -- `eq:eq_state_h1_large1` and `eq:eq_state_h1_large2` give the same dimension.
-  have hdim := (jordanRapaport_dimension S hsep μ₁ hdec.ergodic₁).unique hne
-    (S.feng1_bar hrot hdiag.proximal μ₁ hinv₁ hdec.ergodic₁ hdec.supp₁)
+  have hdim := (hjr S hsep μ₁ hdec.ergodic₁).unique hne
+    (hlyb S hrot hdiag.proximal μ₁ hinv₁ hdec.ergodic₁ hdec.supp₁)
   rw [S.dimEntropyBar_zero_eq_entropy hrot hdiag.proximal μ₁ hinv₁ hdec.ergodic₁ hdec.supp₁,
     hdec.entropy_eq₁, ← hdec.lyapunov₁_eq,
-    (S.overline_h1_large hrot hdiag hs0 hs2 μ hinv herg heq hdec).1,
+    (S.overline_h1_large hms hfk hfi hfib hrot hdiag hs0 hs2 μ hinv herg heq hdec).1,
     min_eq_left ((le_div_iff_of_neg hl1).2 (by linarith))] at hdim
   rw [eq_div_iff hl1.ne] at hdim
   linarith

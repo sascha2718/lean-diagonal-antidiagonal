@@ -1,3 +1,5 @@
+module
+
 /-
 Invariant measures of the iterated function system `Φ`, for the case `s ≥ 2` of
 `thm:main_extended` in `sec:dimension_result_proof` (tex lines 3718 to 3721): Hutchinson's
@@ -28,13 +30,15 @@ carry the product `σ`-algebra.
 * `System.map_proj_eq_of_isInvariantMeasure`: the projection of a Bernoulli measure is the only
   invariant probability measure with the weights of its symbols.
 -/
-import BoxLike.Attractor
-import BoxLike.Entropy
-import BoxLike.Measurable
-import BoxLike.SelfAffineMeasure
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
-import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
+public import BoxLike.Attractor
+public import BoxLike.Entropy
+public import BoxLike.Measurable
+public import BoxLike.SelfAffineMeasure
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
+public import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -131,8 +135,6 @@ theorem IsInvariantMeasure.integral_testOp {p : ι → ℝ≥0∞} (hp : ∑ i, 
     {ν : Measure (ℝ × ℝ)} [IsProbabilityMeasure ν] (h : S.IsInvariantMeasure p ν)
     (f : (ℝ × ℝ) →ᵇ ℝ) : ∫ z, f z ∂ν = ∫ z, S.testOp p f z ∂ν := by
   have hmi : ∀ i, Measurable (S.phi i) := fun i => (S.continuous_phi i).measurable
-  have hpm : ∀ i, IsProbabilityMeasure (ν.map (S.phi i)) := fun i =>
-    Measure.isProbabilityMeasure_map (hmi i).aemeasurable
   have hint : ∀ i ∈ (Finset.univ : Finset ι),
       Integrable (fun z => f z) (p i • ν.map (S.phi i)) := fun i _ =>
     (f.integrable _).smul_measure (weight_ne_top hp i)
@@ -352,11 +354,11 @@ variable [MeasurableSpace α]
 
 /-- The future `𝐢 ↦ 𝐢^+` is a measurable map. -/
 theorem measurable_futureSeq : Measurable (futureSeq : (ℤ → α) → ℕ → α) :=
-  measurable_pi_lambda _ fun _ => measurable_pi_apply _
+  Measurable.of_eval fun _ => measurable_pi_apply _
 
 /-- The extension of a one-sided sequence to a two-sided one is a measurable map. -/
 theorem measurable_extendFuture : Measurable (extendFuture : (ℕ → α) → ℤ → α) :=
-  measurable_pi_lambda _ fun _ => measurable_pi_apply _
+  Measurable.of_eval fun _ => measurable_pi_apply _
 
 variable [MeasurableSingletonClass α]
 
@@ -381,7 +383,7 @@ theorem generateFrom_futureCylinders [Countable α] :
     have : (fun y : ℕ → α => y k) ⁻¹' A =
         ⋃ w : {w : Fin (k + 1) → α // w (Fin.last k) ∈ A}, futureCylinder w.1 := by
       ext y
-      simp only [Set.mem_preimage, Set.mem_iUnion, futureCylinder, Set.mem_setOf_eq]
+      simp only [Set.mem_preimage, Set.mem_iUnion, futureCylinder, Set.mem_ofPred_eq]
       constructor
       · intro hy
         exact ⟨⟨fun j => y j, by simpa using hy⟩, fun _ => rfl⟩
@@ -517,11 +519,8 @@ theorem map_proj_eq_of_isInvariantMeasure {μ : Measure (ℤ → ι)} [IsProbabi
     (hinv : MeasurePreserving (shift 1) μ μ)
     (hprod : ∀ (n : ℕ) (w : Fin n → ι), μ.real (cylinder w) = ∏ k, μ.real (cylinder ![w k]))
     {ν : Measure (ℝ × ℝ)} [IsProbabilityMeasure ν]
-    (hν : S.IsInvariantMeasure (fun i => μ (cylinder ![i])) ν) : μ.map S.proj = ν := by
-  obtain ⟨r, M, hS⟩ := S.exists_bounds
-  haveI : IsProbabilityMeasure (μ.map S.proj) :=
-    Measure.isProbabilityMeasure_map hS.measurable_proj.aemeasurable
-  exact IsInvariantMeasure.unique hν.sum_eq_one (S.isInvariantMeasure_map_proj hinv hprod) hν
+    (hν : S.IsInvariantMeasure (fun i => μ (cylinder ![i])) ν) : μ.map S.proj = ν :=
+  IsInvariantMeasure.unique hν.sum_eq_one (S.isInvariantMeasure_map_proj hinv hprod) hν
 
 end System
 

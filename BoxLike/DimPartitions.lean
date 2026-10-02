@@ -1,3 +1,5 @@
+module
+
 /-
 The partitions and the entropies of a box-like system: the system-specific part of
 `sec:entropies`, the average measure of `sec:average_gibbs`, the ergodicity of the equilibrium
@@ -22,14 +24,18 @@ state of a tuple containing a proximal diagonal generator, and the first step of
   equilibrium state is ergodic, from `thm:eq_state_is_sum`.
 * `neg_lt_entropy_of_two_le`: for `s ≥ 2` the entropy of an equilibrium state exceeds `-λ_2`.
 -/
-import BoxLike.Conditional
-import BoxLike.Main
-import BoxLike.SlowAxis
+public import BoxLike.Conditional
+public import BoxLike.Main
+public import BoxLike.SlowAxis
+
+@[expose] public section
 
 namespace BoxLike
 
 open MeasureTheory Set
 open scoped NNReal
+
+universe u
 
 namespace System
 
@@ -37,7 +43,7 @@ namespace System
 
 section Planar
 
-variable {ι : Type*} [MeasurableSpace ι] (S : System ι)
+variable {ι : Type u} [MeasurableSpace ι] (S : System ι)
 
 /-- The partitions `ξ_0, ξ_1, ξ_2` of `Σ'` (`sec:entropies`, tex lines 1949 to 1954):
 `ξ_i(𝐢) = {𝐣 ∈ Σ' : 𝐣^- = 𝐢^-, π(𝐣) - π(𝐢) ∈ V_𝐢^i}`, extended to `Σ` by the atom `Σ ∖ Σ'`. -/
@@ -75,7 +81,7 @@ theorem xi_eq_of_mem (μ : Measure (ℤ → ι)) (i : ℕ) {x y : ℤ → ι} (h
     have hax : S.slowAxis μ y = S.slowAxis μ x := S.slowAxis_eq_of_samePast μ hp.symm
     rw [mem_oseledets_iff] at hv
     ext z
-    simp only [mem_inter_iff, mem_setOf_eq, mem_oseledets_iff, hax]
+    simp only [mem_inter_iff, mem_ofPred_eq, mem_oseledets_iff, hax]
     constructor
     · rintro ⟨⟨hzp, hzv⟩, hz⟩
       refine ⟨⟨hzp.trans hp, ?_⟩, hz⟩
@@ -147,7 +153,7 @@ end Planar
 
 section Projective
 
-variable {ι : Type*} (S : System ι)
+variable {ι : Type u} (S : System ι)
 
 /-- The partitions `\overline{ξ}_0`, `\overline{ξ}_1` of `Σ_Z` (`sec:entropies`, tex lines 2008
 to 2013), extended to `{1, …, 2N}^ℤ` by the atom `{1, …, 2N}^ℤ ∖ Σ_Z`. They do not depend on a
@@ -173,7 +179,7 @@ end Projective
 
 section Entropies
 
-variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   (S : System ι)
 
 /-- The `i`-dimensional entropy `h_i(μ) = H_μ(𝒫 | \widehat{ξ}_i)` (`sec:entropies`, tex lines
@@ -230,7 +236,7 @@ namespace System
 
 section Ergodicity
 
-variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   (S : System ι) {s : ℝ}
 
 variable {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)}
@@ -247,16 +253,16 @@ theorem ergodic_of_gibbsDecomposition {μ : Measure (ℤ → ι)}
   exact hmp.ergodic_of_ergodic_semiconj hdec.ergodic₁ (measurable_shift 1)
     (fun y => unCode_shift 1 y)
 
-/-- Proved from `fengKaenmaki_gibbs` and `fraserJordanJurga_decomposition`: for a tuple
-containing a proximal diagonal generator and `0 < s < 2`, every invariant `s`-equilibrium state
-is ergodic. -/
-theorem ergodic_of_hasProximalDiagonal (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
-    (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
-    (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState s μ) :
-    Ergodic (shift 1) μ := by
-  have hgibbs := fengKaenmaki_gibbs S (irreducible_of_hasProximalDiagonal hrot hdiag) hs0 hs2 μ
-    hinv heq
-  obtain ⟨μ₁, μ₂, h⟩ := fraserJordanJurga_decomposition S hrot hdiag hs0 hs2 μ hinv hgibbs
+/-- Proved from the Gibbs bounds of Feng–Käenmäki, `FengKaenmakiGibbs`, and the decomposition
+of Fraser–Jordan–Jurga, `FraserJordanJurgaDecomposition`: for a tuple containing a proximal
+diagonal generator and `0 < s < 2`, every invariant `s`-equilibrium state is ergodic. -/
+theorem ergodic_of_hasProximalDiagonal (hfk : FengKaenmakiGibbs.{u})
+    (hfjj : FraserJordanJurgaDecomposition.{u}) (hrot : S.WithRotations)
+    (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
+    [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+    (heq : S.IsEquilibriumState s μ) : Ergodic (shift 1) μ := by
+  have hgibbs := hfk S (irreducible_of_hasProximalDiagonal hrot hdiag) hs0 hs2 μ hinv heq
+  obtain ⟨μ₁, μ₂, h⟩ := hfjj S hrot hdiag hs0 hs2 μ hinv hgibbs
   exact S.ergodic_of_gibbsDecomposition h
 
 end Ergodicity

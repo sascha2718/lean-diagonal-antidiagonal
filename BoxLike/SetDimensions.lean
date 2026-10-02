@@ -1,3 +1,5 @@
+module
+
 /-
 The Minkowski (box-counting) and packing dimensions of subsets of a metric space, to which
 `sec:affinity_dim` (tex lines 2267 to 2268) refers through Falconer, Techniques in Fractal
@@ -39,10 +41,12 @@ defined through packing measures on a metric space.
 * `packingDim_eq_upperBoxDim`: a compact set whose relatively open pieces have full upper
   Minkowski dimension satisfies `\dim_P E = \overline{\dim}_M E`.
 -/
-import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
-import Mathlib.Topology.Baire.CompleteMetrizable
-import Mathlib.Topology.MetricSpace.CoveringNumbers
-import Mathlib.Topology.MetricSpace.HausdorffDimension
+public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+public import Mathlib.Topology.Baire.CompleteMetrizable
+public import Mathlib.Topology.MetricSpace.CoveringNumbers
+public import Mathlib.Topology.MetricSpace.HausdorffDimension
+
+@[expose] public section
 
 open Filter Topology Set Metric MeasureTheory
 open scoped ENNReal NNReal
@@ -983,8 +987,8 @@ theorem packingDim_eq_upperBoxDim {Y : Type*} [MetricSpace Y] {E : Set Y} (hE : 
     packingDim E = upperBoxDim E := by
   refine le_antisymm (packingDim_le_upperBoxDim E) ?_
   refine le_packingDim fun A hcov _ => ?_
-  haveI : Nonempty ↥E := hne.to_subtype
-  haveI : CompleteSpace ↥E := hE.isComplete.completeSpace_coe
+  have : Nonempty ↥E := hne.to_subtype
+  have : CompleteSpace ↥E := hE.isComplete.completeSpace_coe
   have hclosed : ∀ i, IsClosed ((Subtype.val : ↥E → Y) ⁻¹' closure (A i)) :=
     fun i => isClosed_closure.preimage continuous_subtype_val
   have hunion : (⋃ i, (Subtype.val : ↥E → Y) ⁻¹' closure (A i)) = Set.univ := by

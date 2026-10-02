@@ -1,3 +1,5 @@
+module
+
 /-
 Bounds for the pointwise dimensions of a finite Borel measure on `ℝ^d` and the Hausdorff half of
 `eq:dimension_measure_def`, from `sec:ledrappier_young_formula`.
@@ -31,10 +33,12 @@ Bounds for the pointwise dimensions of a finite Borel measure on `ℝ^d` and the
   `ofReal_lowerHausdorffDim_eq_iInf_dimH_of_finiteDimensional`,
   `lowerHausdorffDim_eq_toReal_iInf_dimH`: the second line of `eq:dimension_measure_def`.
 -/
-import BoxLike.MeasureDimBounds
-import BoxLike.MassDistribution
-import Mathlib.MeasureTheory.Covering.Vitali
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import BoxLike.MeasureDimBounds
+public import BoxLike.MassDistribution
+public import Mathlib.MeasureTheory.Covering.Vitali
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -114,7 +118,7 @@ theorem ae_forall_measure_closedBall_pos [SecondCountableTopology X] (μ : Measu
     ∀ᵐ x ∂μ, ∀ r : ℝ, 0 < r → 0 < μ (closedBall x r) := by
   rw [ae_iff]
   refine measure_null_of_locally_null _ fun x hx => ?_
-  simp only [mem_setOf_eq, not_forall, not_lt, nonpos_iff_eq_zero] at hx
+  simp only [mem_ofPred_eq, not_forall, not_lt, nonpos_iff_eq_zero] at hx
   obtain ⟨r, hr, h0⟩ := hx
   exact ⟨closedBall x r, mem_nhdsWithin_of_mem_nhds (closedBall_mem_nhds x hr), h0⟩
 
@@ -213,7 +217,7 @@ theorem upperPackingDim_le [IsFiniteMeasure μ] : upperPackingDim μ ≤ finrank
   rcases eq_or_ne μ 0 with rfl | hne
   · rw [upperPackingDim_zero]
     exact Nat.cast_nonneg _
-  · haveI : (ae μ).NeBot := ae_neBot.2 hne
+  · have : (ae μ).NeBot := ae_neBot.2 hne
     exact limsup_le_of_le (isBoundedUnder_of_eventually_ge
       (Eventually.of_forall upperLocalDim_nonneg)).isCoboundedUnder_le ae_upperLocalDim_le
 
@@ -221,7 +225,7 @@ theorem upperPackingDim_le [IsFiniteMeasure μ] : upperPackingDim μ ≤ finrank
 normed space `E` is at most `dim E`. -/
 theorem lowerHausdorffDim_le [IsFiniteMeasure μ] (hne : μ ≠ 0) :
     lowerHausdorffDim μ ≤ finrank ℝ E := by
-  haveI : (ae μ).NeBot := ae_neBot.2 hne
+  have : (ae μ).NeBot := ae_neBot.2 hne
   exact liminf_le_of_frequently_le ae_lowerLocalDim_le.frequently
     (isBoundedUnder_of_eventually_ge (Eventually.of_forall lowerLocalDim_nonneg))
 
@@ -254,7 +258,7 @@ positive measure lies in `[0, dim E]` by `mem_Icc_of_measure_hasLocalDim_pos`; a
 occurs on a null set is not constrained by the definition. -/
 theorem IsDoubleDim.dim_mem_Icc [IsFiniteMeasure μ] (h : IsDoubleDim μ d₁ d₂) (hne : μ ≠ 0) :
     d₁ ∈ Icc (0 : ℝ) (finrank ℝ E) ∨ d₂ ∈ Icc (0 : ℝ) (finrank ℝ E) := by
-  haveI : (ae μ).NeBot := ae_neBot.2 hne
+  have : (ae μ).NeBot := ae_neBot.2 hne
   obtain ⟨x, hx, hx'⟩ := (h.and (ae_upperLocalDim_le (μ := μ))).exists
   rcases hx with hx | hx
   · exact Or.inl ⟨hx.upperLocalDim_eq ▸ upperLocalDim_nonneg x, hx.upperLocalDim_eq ▸ hx'⟩
@@ -416,7 +420,7 @@ theorem hausdorffMeasure_heavyBallSet_le [IsFiniteMeasure μ] (ht : 0 ≤ t) :
   choose u hu_count hu_rad hu_cov hu_sum using fun n : ℕ =>
     exists_countable_cover_heavyBallSet (μ := μ) t
       (Nat.one_div_pos_of_nat (n := n) : (0 : ℝ) < 1 / ((n : ℝ) + 1))
-  haveI : ∀ n, Countable (u n) := fun n => (hu_count n).to_subtype
+  have : ∀ n, Countable (u n) := fun n => (hu_count n).to_subtype
   have hr : Tendsto (fun n : ℕ => ENNReal.ofReal (8 * (1 / ((n : ℝ) + 1)))) atTop (𝓝 0) := by
     have h := (tendsto_one_div_add_atTop_nhds_zero_nat (𝕜 := ℝ)).const_mul (8 : ℝ)
     rw [mul_zero] at h

@@ -1,3 +1,5 @@
+module
+
 /-
 The packing and Minkowski dimensions of a box-like self-affine set: `thm:fraser` (tex lines 469
 to 483), the chain `\dim_H X = \dim_P X = \dim_M X = dimaff(X)` and the squeeze of the modified
@@ -34,18 +36,22 @@ Minkowski dimension exists only under the rectangular open set condition.
   `\overline{\dim}_M X ≤ dimmaff(X)` and, under the rectangular open set condition,
   `dimmaff(X) ≤ \underline{\dim}_M X`.
 -/
-import BoxLike.MainTwo
-import BoxLike.ModifiedAffinity
-import Mathlib.Analysis.Normed.Lp.ProdLp
+public import BoxLike.MainTwo
+public import BoxLike.ModifiedAffinity
+public import Mathlib.Analysis.Normed.Lp.ProdLp
+
+@[expose] public section
 
 namespace BoxLike
 
 open MeasureTheory
 open scoped ENNReal NNReal
 
+universe u
+
 namespace System
 
-variable {ι : Type*} [Fintype ι] [Nonempty ι] (S : System ι)
+variable {ι : Type u} [Fintype ι] [Nonempty ι] (S : System ι)
 
 /-! ### The cited theorems -/
 
@@ -324,7 +330,10 @@ variable [MeasurableSpace ι] [MeasurableSingletonClass ι]
 box-like self-affine set with rotations satisfying the projective exponential separation
 condition with `dimaff(X) < 2`, and `dimaff(X) ≤ 2 - λ_1/λ_2` or the strong open set condition,
 `\dim_H X = \dim_P X = \dim_M X = dimaff(X)`. -/
-theorem dim_chain_main2 (hrot : S.WithRotations) (hprox : S.Proximal)
+theorem dim_chain_main2 (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+    (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
+    (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
+    (hlyb : FengLedrappierYoungBar.{u}) (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsep : S.ProjExpSeparation) (h2 : S.dimaff < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState S.dimaff μ)
@@ -333,17 +342,21 @@ theorem dim_chain_main2 (hrot : S.WithRotations) (hprox : S.Proximal)
       packingDim S.attractor = ENNReal.ofReal S.dimaff ∧
       lowerBoxDim S.attractor = ENNReal.ofReal S.dimaff ∧
       upperBoxDim S.attractor = ENNReal.ofReal S.dimaff :=
-  dim_chain (S.main2 hrot hprox hsep h2 μ hinv heq hor)
+  dim_chain (S.main2 hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox hsep h2 μ hinv heq hor)
 
 /-- The squeeze of tex lines 578 to 581 under the hypotheses of `thm:main2`:
 `dimmaff(X) = dimaff(X)`, from Falconer's bound and the first part of `thm:fraser`. -/
-theorem dimmaff_eq_dimaff_main2 (hB : S.FraserBound)
+theorem dimmaff_eq_dimaff_main2 (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+    (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
+    (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
+    (hlyb : FengLedrappierYoungBar.{u}) (hB : S.FraserBound)
     (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation)
     (h2 : S.dimaff < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
     (hor : S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∨ S.StrongOpenSet) :
     S.dimmaff = S.dimaff :=
-  dimmaff_eq_dimaff hB (S.main2 hrot hprox hsep h2 μ hinv heq hor)
+  dimmaff_eq_dimaff hB
+    (S.main2 hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox hsep h2 μ hinv heq hor)
 
 end MainTwo
 

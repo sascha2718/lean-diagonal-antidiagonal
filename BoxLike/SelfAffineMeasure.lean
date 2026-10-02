@@ -1,3 +1,5 @@
+module
+
 /-
 Invariant measures of the iterated function system `Φ`, used in the case `s ≥ 2` of
 `thm:main_extended` in `sec:dimension_result_proof`.
@@ -5,9 +7,11 @@ Invariant measures of the iterated function system `Φ`, used in the case `s ≥
 * `System.IsInvariantMeasure`: the measure `ν` on the plane satisfies
   `ν = ∑_i p_i (φ_i)_*ν` for the weights `p`.
 -/
-import BoxLike.System
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.MeasureTheory.Measure.Map
+public import BoxLike.System
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import Mathlib.MeasureTheory.Measure.Map
+
+@[expose] public section
 
 namespace BoxLike
 

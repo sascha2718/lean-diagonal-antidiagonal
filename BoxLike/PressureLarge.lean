@@ -1,3 +1,5 @@
+module
+
 /-
 The range `s ≥ 2` of `sec:normalisation`, tex lines 2471 to 2480, used in the case `s ≥ 2` of
 `thm:main_extended`. For `s ≥ 2` the singular value function is the multiplicative function
@@ -17,10 +19,12 @@ Lyapunov exponents is `∫ log |det A_{i_0}| dμ(𝐢)`.
 * `System.IsEquilibriumState.log_sum_eq`: the equilibrium equation for `s ≥ 2`,
   `log ∑_i |det A_i|^{s/2} = h_0(μ) + (s/2) ∑_i μ([i]) log |det A_i|`.
 -/
-import BoxLike.Variational
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import BoxLike.Variational
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -34,9 +38,9 @@ reads `α_1(A)^0 |det A|^1`. -/
 theorem svf_of_two_le {s : ℝ} (hs : 2 ≤ s) (A : Matrix (Fin 2) (Fin 2) ℝ) :
     svf s A = |A.det| ^ (s / 2) := by
   rcases hs.eq_or_lt with rfl | h
-  · rw [svf, if_neg (by norm_num), if_pos le_rfl]
+  · rw [svf, ite_eq_right (by norm_num), ite_eq_left le_rfl]
     norm_num
-  · rw [svf, if_neg (by linarith), if_neg (not_le.2 h)]
+  · rw [svf, ite_eq_right (by linarith), ite_eq_right (not_le.2 h)]
 
 /-- For `s ≥ 2` the potential is multiplicative, tex line 2471:
 `φ^s(AB) = φ^s(A) φ^s(B)`. -/
@@ -50,9 +54,9 @@ line `λ_1 + (s - 1) λ_2` of `eq:energy_def` has the same value. -/
 theorem energy_of_two_le {l1 l2 s : ℝ} (hs : 2 ≤ s) : energy l1 l2 s = s / 2 * (l1 + l2) := by
   unfold energy
   rcases hs.eq_or_lt with rfl | h
-  · rw [if_neg (by norm_num), if_pos le_rfl]
+  · rw [ite_eq_right (by norm_num), ite_eq_left le_rfl]
     ring
-  · rw [if_neg (by linarith), if_neg (not_le.2 h)]
+  · rw [ite_eq_right (by linarith), ite_eq_right (not_le.2 h)]
 
 /-! ### Functions of one symbol -/
 

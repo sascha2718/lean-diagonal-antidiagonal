@@ -1,3 +1,5 @@
+module
+
 /-
 The self-affine set `X = π(Σ)` of `sec:box_like_self_affine` and `sec:two_sided_shift_space`
 as the unique non-empty compact set with `X = ⋃_i φ_i(X)`, and the attractor part of
@@ -18,10 +20,12 @@ topology, and the sequence spaces `ℤ → ι` and `ℤ → ι × ZMod 2` carry 
   the only non-empty compact set with `X = ⋃_i φ_i(X)`.
 * `System.attractor_sq`: `Φ^(2)` has attractor `X`, from `thm:two-block-normalisation`.
 -/
-import BoxLike.Grouping
-import Mathlib.Analysis.Normed.Group.FunctionSeries
-import Mathlib.Topology.Instances.ZMod
-import Mathlib.Topology.MetricSpace.Thickening
+public import BoxLike.Grouping
+public import Mathlib.Analysis.Normed.Group.FunctionSeries
+public import Mathlib.Topology.Instances.ZMod
+public import Mathlib.Topology.MetricSpace.Thickening
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -104,8 +108,8 @@ end Continuity
 /-- The self-affine set `X = π(Σ)` of `sec:box_like_self_affine` is compact: it is the
 continuous image of the compact sequence space `Σ`. -/
 theorem isCompact_attractor [Finite ι] : IsCompact S.attractor := by
-  letI : TopologicalSpace ι := ⊥
-  haveI : DiscreteTopology ι := ⟨rfl⟩
+  let : TopologicalSpace ι := ⊥
+  have : DiscreteTopology ι := ⟨rfl⟩
   exact isCompact_range S.continuous_proj
 
 /-- The self-affine set `X = π(Σ)` is non-empty. -/
@@ -253,7 +257,7 @@ only non-empty compact set `K` with `K = ⋃_i φ_i(K)`. -/
 theorem eq_attractor [Finite ι] {K : Set (ℝ × ℝ)} (hK : IsCompact K) (hne : K.Nonempty)
     (h : K = ⋃ i, S.phi i '' K) : K = S.attractor := by
   obtain ⟨r, M, hS⟩ := S.exists_bounds
-  haveI : Nonempty ι := by
+  have : Nonempty ι := by
     obtain ⟨z, hz⟩ := hne
     rw [h] at hz
     obtain ⟨i, -⟩ := Set.mem_iUnion.1 hz

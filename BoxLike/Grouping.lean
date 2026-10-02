@@ -1,3 +1,5 @@
+module
+
 /-
 The grouping map `β : Σ → Σ^(2)` of `sec:normalisation` and the thermodynamic part of
 `thm:two-block-normalisation`: the passage from `Φ` and `μ` to the second iterate `Φ^(2)` and
@@ -23,13 +25,15 @@ canonical projection and the projected measures unchanged.
   `λ_k(𝖠², μ^(2)) = 2 λ_k(𝖠, μ)`.
 * `energy_two_mul`: the energy `Λ` is homogeneous in the Lyapunov exponents.
 -/
-import BoxLike.SecondIterate
-import BoxLike.Thermodynamic
-import Mathlib.Data.List.FinRange
-import Mathlib.Logic.Equiv.Fin.Basic
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Order.Filter.AtTopBot.Tendsto
-import Mathlib.Tactic.FieldSimp
+public import BoxLike.SecondIterate
+public import BoxLike.Thermodynamic
+public import Mathlib.Data.List.FinRange
+public import Mathlib.Logic.Equiv.Fin.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Order.Filter.AtTopBot.Tendsto
+public import Mathlib.Tactic.FieldSimp
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -121,7 +125,7 @@ variable {α : Type*} [MeasurableSpace α]
 
 /-- The grouping map `β` is measurable. -/
 theorem measurable_group : Measurable (group : (ℤ → α) → ℤ → α × α) :=
-  measurable_pi_lambda _ fun n =>
+  Measurable.of_eval fun n =>
     (measurable_pi_apply (2 * n)).prodMk (measurable_pi_apply (2 * n + 1))
 
 /-- The measure `μ^(2) = β_*μ` of `sec:normalisation` is invariant when `μ` is. -/
@@ -294,7 +298,7 @@ def cylinderList (l : List α) : Set (ℤ → α) := {x | futureWord x l.length 
 theorem cylinder_eq_cylinderList {n : ℕ} (w : Fin n → α) :
     cylinder w = cylinderList (List.ofFn w) := by
   ext x
-  rw [cylinder_eq_preimage, cylinderList, Set.mem_setOf_eq, List.length_ofFn,
+  rw [cylinder_eq_preimage, cylinderList, Set.mem_ofPred_eq, List.length_ofFn,
     futureWord_eq_ofFn, List.ofFn_injective.eq_iff]
   rfl
 
@@ -303,7 +307,7 @@ of the underlying word. -/
 theorem preimage_group_cylinderList (l : List (α × α)) :
     group ⁻¹' cylinderList l = cylinderList (flatWord l) := by
   ext x
-  rw [Set.mem_preimage, cylinderList, cylinderList, Set.mem_setOf_eq, Set.mem_setOf_eq,
+  rw [Set.mem_preimage, cylinderList, cylinderList, Set.mem_ofPred_eq, Set.mem_ofPred_eq,
     length_flatWord, ← flatWord_futureWord_group, flatWord_injective.eq_iff]
 
 end Entropy

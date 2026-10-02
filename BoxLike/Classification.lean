@@ -1,3 +1,5 @@
+module
+
 /-
 The classification of proximal tuples of `sec:irreducibility`: `thm:A_classification`. The
 article cites the lemma from Bárány–Käenmäki–Rossi and Bárány–Käenmäki–Yu; this module proves
@@ -30,14 +32,16 @@ origin is given by a non-zero vector spanning it.
   `System.not_tupleStronglyIrreducible`, `System.irreducible_and_not_stronglyIrreducible`: a
   proximal box-like tuple with rotations is in case (2).
 -/
-import BoxLike.BoxLikeMatrix
-import BoxLike.Proximal
-import Mathlib.Data.Fintype.Pigeonhole
-import Mathlib.LinearAlgebra.Matrix.Nondegenerate
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.LinearAlgebra.Matrix.ToLin
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Module
+public import BoxLike.BoxLikeMatrix
+public import BoxLike.Proximal
+public import Mathlib.Data.Fintype.Pigeonhole
+public import Mathlib.LinearAlgebra.Matrix.Nondegenerate
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import Mathlib.LinearAlgebra.Matrix.ToLin
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Module
+
+@[expose] public section
 
 namespace BoxLike
 

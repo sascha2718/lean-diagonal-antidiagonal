@@ -1,3 +1,5 @@
+module
+
 /-
 The natural extension of an invariant measure of the one-sided shift, `sec:two_sided_shift_space`
 (tex lines 883 to 897): every `μ^+ ∈ ℳ_σ(Σ^+)` is `η_*μ` for a unique `μ ∈ ℳ_σ(Σ)`, so that
@@ -25,8 +27,10 @@ article. The content is `σ`-additive since `Σ` is compact and the sets of the 
 * `mapEtaEquiv`, `ergodic_mapEtaEquiv_iff`, `ergodic_mapEtaEquiv_symm_iff`: the bijection
   `η_* : ℳ_σ(Σ) ≃ ℳ_σ(Σ^+)`.
 -/
-import BoxLike.CodingTopology
-import Mathlib.MeasureTheory.OuterMeasure.OfAddContent
+public import BoxLike.CodingTopology
+public import Mathlib.MeasureTheory.OuterMeasure.OfAddContent
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -80,7 +84,7 @@ theorem etaFrom_zero : (etaFrom 0 : (ℤ → α) → ℕ → α) = eta := by
 /-- The section `padFrom m` is measurable. -/
 theorem measurable_padFrom [MeasurableSpace α] (m : ℕ) :
     Measurable (padFrom m : (ℕ → α) → ℤ → α) :=
-  measurable_pi_lambda _ fun _ => measurable_pi_apply _
+  Measurable.of_eval fun _ => measurable_pi_apply _
 
 /-- The map `η ∘ σ^{-m}` is continuous. -/
 theorem continuous_etaFrom [TopologicalSpace α] (m : ℕ) :
@@ -275,8 +279,8 @@ theorem exists_isFiniteMeasure_map_eta_eq {ν : Measure (ℕ → ι)} [IsFiniteM
     (hν : MeasurePreserving shiftPlus ν ν) :
     ∃ μ : Measure (ℤ → ι), IsFiniteMeasure μ ∧ MeasurePreserving (shift 1) μ μ ∧
       μ.map eta = ν := by
-  letI : TopologicalSpace ι := ⊥
-  haveI : DiscreteTopology ι := ⟨rfl⟩
+  let : TopologicalSpace ι := ⊥
+  have : DiscreteTopology ι := ⟨rfl⟩
   have hC := (isSetAlgebra_clopenFutureSets (α := ι)).isSetRing
   set μ : Measure (ℤ → ι) := (futureContent hν).measure hC.isSetSemiring
     generateFrom_clopenFutureSets.ge (isSigmaSubadditive_futureContent hν) with hμdef
@@ -286,7 +290,7 @@ theorem exists_isFiniteMeasure_map_eta_eq {ν : Measure (ℕ → ι)} [IsFiniteM
       futureContent_apply hν m hB]
   have huniv : μ univ = ν univ := by
     simpa using hμ 0 isClopen_univ
-  haveI : IsFiniteMeasure μ := ⟨by rw [huniv]; exact measure_lt_top ν univ⟩
+  have : IsFiniteMeasure μ := ⟨by rw [huniv]; exact measure_lt_top ν univ⟩
   refine ⟨μ, inferInstance, ⟨measurable_shift 1, ?_⟩, ?_⟩
   · refine ext_of_generate_finite (clopenFutureSets ι) generateFrom_clopenFutureSets.symm
       (fun s hs t ht _ => isSetAlgebra_clopenFutureSets.inter_mem hs ht) ?_ ?_
@@ -354,14 +358,14 @@ noncomputable def mapEtaEquiv :
       {ν : Measure (ℕ → ι) // IsProbabilityMeasure ν ∧ MeasurePreserving shiftPlus ν ν} :=
   Equiv.ofBijective
     (fun μ => ⟨μ.1.map eta, by
-      haveI := μ.2.1
-      exact Measure.isProbabilityMeasure_map measurable_eta.aemeasurable,
+      have := μ.2.1
+      infer_instance,
       measurePreserving_shiftPlus_map_eta μ.2.2⟩)
     ⟨fun μ μ' h => by
-      haveI := μ.2.1
+      have := μ.2.1
       exact Subtype.ext (map_eta_injective μ.2.2 μ'.2.2 (congrArg Subtype.val h)),
     fun ν => by
-      haveI := ν.2.1
+      have := ν.2.1
       obtain ⟨μ, hμ, hinv, hmap⟩ := exists_map_eta_eq ν.2.2
       exact ⟨⟨μ, hμ, hinv⟩, Subtype.ext hmap⟩⟩
 
@@ -382,7 +386,7 @@ theorem ergodic_mapEtaEquiv_iff
     (μ : {μ : Measure (ℤ → ι) // IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ}) :
     Ergodic shiftPlus (mapEtaEquiv ι μ : Measure (ℕ → ι)) ↔
       Ergodic (shift 1) (μ : Measure (ℤ → ι)) := by
-  haveI := μ.2.1
+  have := μ.2.1
   exact ergodic_map_eta_iff μ.2.2
 
 /-- The measure `(η_*)^{-1}μ^+` is ergodic if and only if `μ^+` is ergodic (tex lines 894 to

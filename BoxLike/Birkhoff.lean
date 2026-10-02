@@ -1,3 +1,5 @@
+module
+
 /-
 Birkhoff's pointwise ergodic theorem for a measure-preserving map `T` of a probability space
 and an integrable function `f : X → ℝ`: the averages `n⁻¹ ∑_{k<n} f(T^k x)` converge for almost
@@ -35,11 +37,13 @@ the sums `S_n f - n E(f | ℐ) - n ε` are bounded above. The same for `-f`, and
   integrable function on a finite measure space and in general.
 * `birkhoff_ergodic`: the ergodic form.
 -/
-import Mathlib.Dynamics.BirkhoffSum.QuasiMeasurePreserving
-import Mathlib.Dynamics.Ergodic.Function
-import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
-import Mathlib.MeasureTheory.MeasurableSpace.Invariants
-import Mathlib.MeasureTheory.Order.Lattice
+public import Mathlib.Dynamics.BirkhoffSum.QuasiMeasurePreserving
+public import Mathlib.Dynamics.Ergodic.Function
+public import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
+public import Mathlib.MeasureTheory.MeasurableSpace.Invariants
+public import Mathlib.MeasureTheory.Order.Lattice
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -85,7 +89,7 @@ theorem birkhoffMax_le_add (T : X → X) (h : X → ℝ) (N : ℕ) {x : X}
   rcases k with _ | j
   · rw [hkeq, birkhoffSum_zero] at hx
     exact absurd hx (lt_irrefl _)
-  · rw [hkeq, birkhoffSum_succ']
+  · rw [hkeq, birkhoffSum_succ_apply']
     gcongr
     exact birkhoffSum_le_birkhoffMax T h (Nat.le_of_succ_le hk) (T x)
 
@@ -112,7 +116,7 @@ theorem preimage_birkhoffUnbounded (T : X → X) (h : X → ℝ) :
   · intro hx c
     obtain ⟨n, hn⟩ := hx (c - h x)
     refine ⟨n + 1, ?_⟩
-    rw [birkhoffSum_succ']
+    rw [birkhoffSum_succ_apply']
     linarith
   · intro hx c
     obtain ⟨n, hn⟩ := hx (max (c + h x) 0)
@@ -120,7 +124,7 @@ theorem preimage_birkhoffUnbounded (T : X → X) (h : X → ℝ) :
     · rw [birkhoffSum_zero] at hn
       exact absurd (le_max_right _ _) (not_le.2 hn)
     · refine ⟨m, ?_⟩
-      rw [birkhoffSum_succ'] at hn
+      rw [birkhoffSum_succ_apply'] at hn
       have := (le_max_left (c + h x) 0).trans_lt hn
       linarith
 
@@ -133,7 +137,7 @@ theorem birkhoffUnbounded_subset (T : X → X) (h : X → ℝ) :
 theorem birkhoffSum_sub_of_comp_eq {T : X → X} {f g : X → ℝ} (hg : g ∘ T = g) (n : ℕ)
     (x : X) : birkhoffSum T (fun y => f y - g y) n x = birkhoffSum T f n x - n * g x := by
   have : (fun y => f y - g y) = f - g := rfl
-  rw [this, birkhoffSum_sub, birkhoffSum_of_comp_eq hg]
+  rw [this, birkhoffSum_sub_apply, birkhoffSum_apply_of_comp_eq hg]
   simp
 
 /-- A real sequence `u` such that, for every `k`, both `u n - n (a + 1 / (k + 1))` and
@@ -200,7 +204,7 @@ theorem measurableSet_birkhoffUnbounded (hT : Measurable T) (hh : Measurable h) 
     MeasurableSet (birkhoffUnbounded T h) := by
   have : birkhoffUnbounded T h = ⋂ c : ℕ, ⋃ n : ℕ, {x | (c : ℝ) < birkhoffSum T h n x} := by
     ext x
-    simp only [birkhoffUnbounded, mem_setOf_eq, mem_iInter, mem_iUnion]
+    simp only [birkhoffUnbounded, mem_ofPred_eq, mem_iInter, mem_iUnion]
     refine ⟨fun hx c => hx c, fun hx c => ?_⟩
     obtain ⟨m, hm⟩ := exists_nat_gt c
     obtain ⟨n, hn⟩ := hx m
@@ -261,7 +265,7 @@ theorem maximal_ergodic (hT : MeasurePreserving T μ μ) (hh : Integrable h μ) 
     ae_all_iff.2 fun n => hT.quasiMeasurePreserving.birkhoffSum_ae_eq_of_ae_eq hh' n
   have hE : {x | ∃ n, 0 < birkhoffSum T h n x}
       =ᵐ[μ] {x | ∃ n, 0 < birkhoffSum T (hh.1.mk h) n x} :=
-    eventuallyEq_set.2 (hS.mono fun x hx => by simp only [mem_setOf_eq, hx])
+    eventuallyEqSet_iff.2 (hS.mono fun x hx => by simp only [mem_ofPred_eq, hx])
   rw [setIntegral_congr_set hE, integral_congr_ae (ae_restrict_of_ae hh')]
   exact maximal_ergodic_of_measurable hT (hh.congr hh') hh.1.stronglyMeasurable_mk.measurable
 
@@ -342,7 +346,7 @@ theorem birkhoff_ae_of_measurable [IsFiniteMeasure μ] (hT : MeasurePreserving T
     (a := g x) (fun k => ?_) (fun k => ?_)
   · simpa [birkhoffAverage] using key
   · have := hxu k
-    simp only [birkhoffUnbounded, mem_setOf_eq, not_forall, not_exists, not_lt] at this
+    simp only [birkhoffUnbounded, mem_ofPred_eq, not_forall, not_exists, not_lt] at this
     obtain ⟨c, hc⟩ := this
     refine ⟨c, fun n => ?_⟩
     have hgk : (fun y => g y + 1 / ((k : ℝ) + 1)) ∘ T = fun y => g y + 1 / ((k : ℝ) + 1) := by
@@ -351,7 +355,7 @@ theorem birkhoff_ae_of_measurable [IsFiniteMeasure μ] (hT : MeasurePreserving T
     have := hc n
     rwa [birkhoffSum_sub_of_comp_eq hgk] at this
   · have := hxl k
-    simp only [birkhoffUnbounded, mem_setOf_eq, not_forall, not_exists, not_lt] at this
+    simp only [birkhoffUnbounded, mem_ofPred_eq, not_forall, not_exists, not_lt] at this
     obtain ⟨c, hc⟩ := this
     refine ⟨c, fun n => ?_⟩
     have hgk : (fun y => (-g) y + 1 / ((k : ℝ) + 1)) ∘ T

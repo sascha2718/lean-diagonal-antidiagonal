@@ -1,3 +1,5 @@
+module
+
 /-
 `ex:projection_double_dimensional` of `sec:dimension_of_projections`: the system
 `φ_1(x, y) = (x/10, y/20 + 3/5)`, `φ_2(x, y) = (y/30 + 3/10, x/40 + 9/10)`, whose coordinate
@@ -47,18 +49,22 @@ The example, in the namespace `BoxLike.Example`:
 The explicit values of `λ_1`, `λ_2` through the Markov measure of tex lines 3111 to 3141 and
 the numerical values of tex lines 3148 to 3154 are out of scope.
 -/
-import BoxLike.MainTwo
-import Mathlib.Analysis.Normed.Algebra.Spectrum
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import BoxLike.MainTwo
+public import Mathlib.Analysis.Normed.Algebra.Spectrum
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+
+@[expose] public section
 
 namespace BoxLike
 
 open MeasureTheory Filter Topology
 open scoped ENNReal
 
+universe u
+
 namespace System
 
-variable {ι : Type*} (S : System ι)
+variable {ι : Type u} (S : System ι)
 
 /-! ### The common-prefix argument -/
 
@@ -333,7 +339,9 @@ the two pointwise dimensions of the coordinate marginals are `s` and
 sets of positive measure, and the marginal is not exact-dimensional. The threshold
 `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)` of `thm:main1` holds for every `s ≤ 1`, as the proof of
 `thm:main1` notes. -/
-theorem main1_of_le_one (hrot : S.WithRotations) (hprox : S.Proximal)
+theorem main1_of_le_one (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+    (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
+    (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (hs1 : s ≤ 1) (hP : S.pressure s = 0)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) (c : ZMod 2) :
@@ -346,14 +354,14 @@ theorem main1_of_le_one (hrot : S.WithRotations) (hprox : S.Proximal)
       ¬ ∃ d, IsExactDim (S.marginal c μ) d := by
   have hs2 : s < 2 := by linarith
   obtain ⟨ν₁, ν₂, hf₁, hf₂, hne₁, hne₂, hsum, hd₁, hd₂⟩ :=
-    S.marginal_decomposition hrot hprox hsep hs0 hs2 μ hinv heq c
-  have hl := S.simple_lyapunov hrot hprox hs0 hs2 μ hinv heq
+    S.marginal_decomposition hfk hfjj hjr hrot hprox hsep hs0 hs2 μ hinv heq c
+  have hl := S.simple_lyapunov hms hrot hprox hs0 hs2 μ hinv heq
   have hl1 := S.lyapunov₁_neg hinv
   have hl2 : S.lyapunov₂ μ < 0 := hl.trans hl1
   have henergy : entropy μ + energy (S.lyapunov₁ μ) (S.lyapunov₂ μ) s = 0 := by
     rw [← heq.pressure_eq hinv hs0.le, hP]
   have hh : entropy μ = -(s * S.lyapunov₁ μ) := by
-    rw [energy, if_pos hs1] at henergy
+    rw [energy, ite_eq_left hs1] at henergy
     linarith
   have hratio : S.lyapunov₁ μ / S.lyapunov₂ μ < 1 := by
     rw [div_lt_one_of_neg hl2]
@@ -376,17 +384,21 @@ theorem main1_of_le_one (hrot : S.WithRotations) (hprox : S.Proximal)
 /-- `thm:main2` for `dimaff(X) ≤ 1`: the alternative `dimaff(X) ≤ 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)` holds
 for every such `X`, because `λ_2(𝖠, μ) < λ_1(𝖠, μ) < 0` gives `λ_1(𝖠, μ)/λ_2(𝖠, μ) < 1`. Hence
 `\dim_H(X) = dimaff(X)` without a separation condition on the planar system. -/
-theorem main2_of_le_one [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
-    (hsep : S.ProjExpSeparation) (h1 : S.dimaff ≤ 1) (μ : Measure (ℤ → ι))
-    [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+theorem main2_of_le_one (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+    (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
+    (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
+    (hlyb : FengLedrappierYoungBar.{u}) [Nonempty ι] (hrot : S.WithRotations)
+    (hprox : S.Proximal) (hsep : S.ProjExpSeparation) (h1 : S.dimaff ≤ 1)
+    (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState S.dimaff μ) : dimH S.attractor = ENNReal.ofReal S.dimaff := by
-  haveI := S.nontrivial_of_withRotations hrot
-  have hl := S.simple_lyapunov hrot hprox S.dimaff_pos (by linarith) μ hinv heq
+  have := S.nontrivial_of_withRotations hrot
+  have hl := S.simple_lyapunov hms hrot hprox S.dimaff_pos (by linarith) μ hinv heq
   have hl2 : S.lyapunov₂ μ < 0 := hl.trans (S.lyapunov₁_neg hinv)
   have hratio : S.lyapunov₁ μ / S.lyapunov₂ μ < 1 := by
     rw [div_lt_one_of_neg hl2]
     exact hl
-  exact S.main2 hrot hprox hsep (by linarith) μ hinv heq (Or.inl (by linarith))
+  exact S.main2 hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox hsep (by linarith) μ hinv heq
+    (Or.inl (by linarith))
 
 end MainOne
 
@@ -416,7 +428,7 @@ end System
 
 namespace Example
 
-open System
+open BoxLike.System
 open scoped Matrix
 
 /-- The system `Φ = (φ_1, φ_2)` of `ex:projection_double_dimensional`, over the alphabet
@@ -675,7 +687,9 @@ theorem dimaff_pos_lt_one : 0 < sys.dimaff ∧ sys.dimaff < 1 := by
 with the two pointwise dimensions `s` and `s λ_1(𝖠, μ)/λ_2(𝖠, μ)`. These are distinct, the
 threshold `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)` of `thm:main1` holds, both values occur on sets of
 positive marginal measure, and the marginal is not exact-dimensional. -/
-theorem marginal_doubleDim (μ : Measure (ℤ → Fin 2)) [IsProbabilityMeasure μ]
+theorem marginal_doubleDim (hms : MorrisShmerkinLyapunov.{0}) (hfk : FengKaenmakiGibbs.{0})
+    (hfjj : FraserJordanJurgaDecomposition.{0}) (hjr : JordanRapaportDimension.{0})
+    (μ : Measure (ℤ → Fin 2)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : sys.IsEquilibriumState sys.dimaff μ)
     (c : ZMod 2) :
     IsDoubleDim (sys.marginal c μ) sys.dimaff
@@ -686,16 +700,20 @@ theorem marginal_doubleDim (μ : Measure (ℤ → Fin 2)) [IsProbabilityMeasure 
       0 < sys.marginal c μ {x | HasLocalDim (sys.marginal c μ) x
         (sys.dimaff * (sys.lyapunov₁ μ / sys.lyapunov₂ μ))} ∧
       ¬ ∃ d, IsExactDim (sys.marginal c μ) d :=
-  sys.main1_of_le_one withRotations proximal projExpSeparation dimaff_pos_lt_one.1
-    dimaff_pos_lt_one.2.le sys.pressure_dimaff μ hinv heq c
+  sys.main1_of_le_one hms hfk hfjj hjr withRotations proximal projExpSeparation
+    dimaff_pos_lt_one.1 dimaff_pos_lt_one.2.le sys.pressure_dimaff μ hinv heq c
 
 /-- `\dim_H(X) = dimaff(X)` for the self-affine set of `ex:projection_double_dimensional`, from
 `thm:main2`, given an invariant `s`-equilibrium state `μ` for `s = dimaff(X)`. The first
 alternative of `thm:main2` holds because `dimaff(X) < 1`. -/
-theorem dimH_attractor (μ : Measure (ℤ → Fin 2)) [IsProbabilityMeasure μ]
+theorem dimH_attractor (hms : MorrisShmerkinLyapunov.{0}) (hfk : FengKaenmakiGibbs.{0})
+    (hfjj : FraserJordanJurgaDecomposition.{0}) (hjr : JordanRapaportDimension.{0})
+    (hfi : FengInfoSum.{0}) (hfib : FengInfoSumBar.{0}) (hly : FengLedrappierYoung.{0})
+    (hlyb : FengLedrappierYoungBar.{0}) (μ : Measure (ℤ → Fin 2)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : sys.IsEquilibriumState sys.dimaff μ) :
     dimH sys.attractor = ENNReal.ofReal sys.dimaff :=
-  sys.main2_of_le_one withRotations proximal projExpSeparation dimaff_pos_lt_one.2.le μ hinv heq
+  sys.main2_of_le_one hms hfk hfjj hjr hfi hfib hly hlyb withRotations proximal
+    projExpSeparation dimaff_pos_lt_one.2.le μ hinv heq
 
 /-! ### The supports of the two marginals -/
 
@@ -856,10 +874,10 @@ theorem pressure_eq_log_perronRoot {t : ℝ} (ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
     · exact sub_pos.2 hp
   · rcases zmod_two_cases c with rfl | rfl
     · rw [transfer_zero]
-      simp only [if_true, if_neg (show (1 : ZMod 2) ≠ 0 by decide)]
+      simp only [ite_true, ite_eq_right (show (1 : ZMod 2) ≠ 0 by decide)]
       ring
     · rw [transfer_one]
-      simp only [if_true, if_neg (show (1 : ZMod 2) ≠ 0 by decide)]
+      simp only [ite_true, ite_eq_right (show (1 : ZMod 2) ≠ 0 by decide)]
       unfold perronRoot
       linear_combination -hchar
 
@@ -889,6 +907,7 @@ theorem spectralRadius_M (t : ℝ) : spectralRadius ℝ (M t) = ENNReal.ofReal (
   have hp0 : 0 < (10 : ℝ) ^ (-t) := by positivity
   have hq0 : 0 < (20 : ℝ) ^ (-t) := by positivity
   have hr : 0 < perronRoot t := perronRoot_pos t
+  rw [spectralRadius_eq_of_unital]
   refine le_antisymm (iSup₂_le fun k hk => ?_) ?_
   · rw [mem_spectrum_M] at hk
     have hfac : (k - perronRoot t) *

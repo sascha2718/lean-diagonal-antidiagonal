@@ -1,3 +1,5 @@
+module
+
 /-
 The existence of an `s`-equilibrium state, the half of the sub-additive variational principle
 that `thm:irred_eq_state` needs (tex lines 2318 to 2326; Käenmäki, Ann. Acad. Sci. Fenn. Math.
@@ -30,11 +32,13 @@ limits are `h_0(μ)` and `Λ(𝖠, μ, s)`.
   invariant probability measure with `P(𝖠, s) ≤ h_0(μ) + Λ(𝖠, μ, s)`.
 * `System.exists_isEquilibriumState`: an `s`-equilibrium state exists for every `s ≥ 0`.
 -/
-import BoxLike.BernoulliEquilibrium
-import BoxLike.CodingTopology
-import BoxLike.Variational
-import Mathlib.MeasureTheory.Measure.Portmanteau
-import Mathlib.MeasureTheory.Measure.Prokhorov
+public import BoxLike.BernoulliEquilibrium
+public import BoxLike.CodingTopology
+public import BoxLike.Variational
+public import Mathlib.MeasureTheory.Measure.Portmanteau
+public import Mathlib.MeasureTheory.Measure.Prokhorov
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -144,7 +148,7 @@ variable [MeasurableSpace α]
 /-- The concatenation of blocks is measurable. -/
 theorem measurable_concat (n : ℕ) [NeZero n] :
     Measurable (concat n : (ℤ → (Fin n → α)) → ℤ → α) :=
-  measurable_pi_lambda _ fun _ => (measurable_pi_apply _).comp (measurable_pi_apply _)
+  Measurable.of_eval fun _ => (measurable_pi_apply _).comp (measurable_pi_apply _)
 
 end Concat
 
@@ -303,7 +307,7 @@ theorem exists_blockBound [Nonempty ι] (hs : 0 ≤ s) :
       |blockEntropy μ l + S.blockEnergy s μ l| ≤ l * C := by
   obtain ⟨δ, hδ⟩ := S.exists_ratioLowerBound
   refine ⟨|Real.log (S.svfSum s 1)| + |s * Real.log δ|, by positivity, fun μ hμ l => ?_⟩
-  haveI := hμ
+  have := hμ
   have hl : (0 : ℝ) ≤ l := Nat.cast_nonneg l
   have hC1 : Real.log (S.svfSum s 1) ≤ |Real.log (S.svfSum s 1)| + |s * Real.log δ| :=
     (le_abs_self _).trans (le_add_of_nonneg_right (abs_nonneg _))
@@ -373,18 +377,19 @@ noncomputable def blockMeasure [NeZero n] : Measure (ℤ → ι) :=
 /-- The block measure is a probability measure. -/
 instance isProbabilityMeasure_blockMeasure [NeZero n] :
     IsProbabilityMeasure (S.blockMeasure s n) := by
-  haveI := S.isProbabilityMeasure_blockWeightMeasure s n
-  exact Measure.isProbabilityMeasure_map (measurable_concat n).aemeasurable
+  have := S.isProbabilityMeasure_blockWeightMeasure s n
+  rw [blockMeasure]
+  infer_instance
 
 /-- Every translate of the block measure is a probability measure. -/
 instance isProbabilityMeasure_map_shift_blockMeasure [NeZero n] (j : ℤ) :
     IsProbabilityMeasure ((S.blockMeasure s n).map (shift j)) :=
-  Measure.isProbabilityMeasure_map (measurable_shift j).aemeasurable
+  inferInstance
 
 /-- The cylinder `[𝐢]` of a word of length `n` has the weight `p_𝐢` for the block measure. -/
 theorem measureReal_blockMeasure_cylinder [NeZero n] (w : Fin n → ι) :
     (S.blockMeasure s n).real (cylinder w) = S.blockWeight s n w := by
-  haveI := S.isProbabilityMeasure_blockWeightMeasure s n
+  have := S.isProbabilityMeasure_blockWeightMeasure s n
   rw [blockMeasure, map_measureReal_apply (measurable_concat n) (measurableSet_cylinder w),
     preimage_concat_cylinder, measureReal_bernoulli_cylinder, Fin.prod_univ_one,
     Matrix.cons_val_zero, measureReal_weightMeasure_singleton (S.blockWeight_pos s n w).le]
@@ -393,7 +398,7 @@ omit [MeasurableSingletonClass ι] in
 /-- The block measure is invariant under `σ^n`. -/
 theorem map_shift_blockMeasure [NeZero n] :
     (S.blockMeasure s n).map (shift (n : ℤ)) = S.blockMeasure s n := by
-  haveI := S.isProbabilityMeasure_blockWeightMeasure s n
+  have := S.isProbabilityMeasure_blockWeightMeasure s n
   have hcomp : (shift (n : ℤ)) ∘ (concat n : (ℤ → (Fin n → ι)) → ℤ → ι) = concat n ∘ shift 1 :=
     funext fun y => (concat_shift n y).symm
   rw [blockMeasure, Measure.map_map (measurable_shift (n : ℤ)) (measurable_concat n), hcomp,
@@ -528,8 +533,6 @@ translate by `l₁`. -/
 theorem blockSum_add_le (hs : 0 ≤ s) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (j l₁ l₂ : ℕ) :
     S.blockSum s μ j (l₁ + l₂) ≤ S.blockSum s μ j l₁ + S.blockSum s μ (j + l₁) l₂ := by
-  haveI : IsProbabilityMeasure (μ.map (shift (j : ℤ))) :=
-    Measure.isProbabilityMeasure_map (measurable_shift _).aemeasurable
   have hmap : (μ.map (shift (j : ℤ))).map (shift (l₁ : ℤ))
       = μ.map (shift ((j + l₁ : ℕ) : ℤ)) := by
     rw [Measure.map_map (measurable_shift _) (measurable_shift _)]
@@ -550,7 +553,7 @@ theorem abs_blockSum_le {C : ℝ}
     (hCb : ∀ μ : Measure (ℤ → ι), IsProbabilityMeasure μ → ∀ l : ℕ,
       |blockEntropy μ l + S.blockEnergy s μ l| ≤ l * C)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (j l : ℕ) : |S.blockSum s μ j l| ≤ l * C :=
-  hCb _ (Measure.isProbabilityMeasure_map (measurable_shift _).aemeasurable) l
+  hCb _ inferInstance l
 
 /-- Iterating the sub-additivity of the block sums along the blocks of length `m`. -/
 theorem blockSum_chain_le (hs : 0 ≤ s) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (m : ℕ) :
@@ -731,12 +734,12 @@ theorem exists_invariant_pressure_le (hs : 0 ≤ s) :
   obtain ⟨C, hC, hCb⟩ := S.exists_blockBound hs
   obtain ⟨δ, hδ⟩ := S.exists_ratioLowerBound
   set μs : ℕ → Measure (ℤ → ι) := fun n => S.avgBlockMeasure s (n + 1) with hμs
-  haveI hprob : ∀ n, IsProbabilityMeasure (μs n) := fun n => inferInstance
+  have hprob : ∀ n, IsProbabilityMeasure (μs n) := fun n => inferInstance
   have hinvs : ∀ n, MeasurePreserving (shift 1) (μs n) (μs n) := fun n =>
     S.measurePreserving_shift_avgBlockMeasure s (n + 1)
-  letI : TopologicalSpace ι := ⊥
-  haveI : DiscreteTopology ι := ⟨rfl⟩
-  haveI : BorelSpace ι := ⟨le_antisymm
+  let : TopologicalSpace ι := ⊥
+  have : DiscreteTopology ι := ⟨rfl⟩
+  have : BorelSpace ι := ⟨le_antisymm
     (fun t _ => MeasurableSpace.measurableSet_generateFrom (isOpen_discrete t))
     (MeasurableSpace.generateFrom_le fun u _ => (Set.toFinite u).measurableSet)⟩
   set U : Ultrafilter ℕ := Ultrafilter.of atTop with hU
@@ -844,7 +847,7 @@ theorem exists_isEquilibriumState (hs : 0 ≤ s) :
     ∃ μ : Measure (ℤ → ι), IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ ∧
       S.IsEquilibriumState s μ := by
   obtain ⟨μ, hprob, hinv, h⟩ := S.exists_invariant_pressure_le hs
-  haveI := hprob
+  have := hprob
   exact ⟨μ, hprob, hinv, le_antisymm h (S.entropy_add_energyLim_le_pressure hinv hs)⟩
 
 end System

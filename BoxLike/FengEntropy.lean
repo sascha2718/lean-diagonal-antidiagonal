@@ -1,9 +1,11 @@
+module
+
 /-
 The pointwise entropies of `sec:entropies` as limits along cylinders and the criterion for their
 vanishing: `thm:feng_entropy_as_limit` and `thm:feng_entropy_zero`. Both are derived from the
-first identity of Feng, Lemma 4.6, (4.16), which is the axiom `System.feng_info_sum` for the
-planar partitions `ξ_i` and `System.feng_info_sum_bar` for the partitions `\overline{ξ}_i` of the
-projective system.
+first identity of Feng, Lemma 4.6, (4.16), which is the hypothesis `FengInfoSum` for the planar
+partitions `ξ_i` and `FengInfoSumBar` for the partitions `\overline{ξ}_i` of the projective
+system.
 
 The general part works on the full shift over a finite alphabet, for an invariant probability
 measure `μ` and a map `ξ` whose conditional measures satisfy the identity
@@ -41,21 +43,26 @@ cylinders `[x|_n]` of one point is the Dirac mass at a constant sequence. By
   `thm:feng_entropy_as_limit`.
 * `System.feng_entropy_zero`, `System.feng_entropy_zero_bar`: `thm:feng_entropy_zero`.
 -/
-import BoxLike.Birkhoff
-import BoxLike.ConditionalMeasures
-import BoxLike.LiteratureFeng
-import BoxLike.MeasurablePartitions
-import BoxLike.PartitionIdentities
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Dynamics.BirkhoffSum.Average
-import Mathlib.Dynamics.Ergodic.Ergodic
-import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.MeasureTheory.Measure.Dirac
+public import BoxLike.Birkhoff
+public import BoxLike.ConditionalMeasures
+public import BoxLike.LiteratureFeng
+public import BoxLike.MeasurablePartitions
+public import BoxLike.PartitionIdentities
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Dynamics.BirkhoffSum.Average
+public import Mathlib.Dynamics.Ergodic.Ergodic
+public import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import Mathlib.MeasureTheory.Measure.Dirac.Def
+public import Mathlib.MeasureTheory.Measure.Dirac.Basic
+
+@[expose] public section
 
 namespace BoxLike
 
 open MeasureTheory Filter Topology Set
+
+universe u
 
 /-! ### Conditional measures on a standard Borel space -/
 
@@ -206,7 +213,7 @@ theorem measure_singleton_const_of_cylinder {μ : Measure (ℤ → α)} [IsProba
   have hsub : ({fun _ => x 0} : Set (ℤ → α))ᶜ ⊆ ⋃ j : ℤ, {z : ℤ → α | z j = x 0}ᶜ := by
     intro z hz
     by_contra hcon
-    simp only [mem_iUnion, mem_compl_iff, mem_setOf_eq, not_exists, not_not] at hcon
+    simp only [mem_iUnion, mem_compl_iff, mem_ofPred_eq, not_exists, not_not] at hcon
     exact hz (funext hcon)
   have hnull : μ ({fun _ => x 0} : Set (ℤ → α))ᶜ = 0 :=
     measure_mono_null hsub
@@ -334,7 +341,7 @@ end General
 
 namespace System
 
-variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   (S : System ι)
 
 /-- The conditional measures of the planar partitions are carried by the points with the past of
@@ -394,50 +401,49 @@ theorem condMeas_xiBar_samePast (ν : Measure (ℤ → ι × ZMod 2)) [IsFiniteM
 (4.16): for ergodic `μ` with `λ_2 < λ_1` and `i ∈ {0, 1, 2}`,
 `h_i(μ, 𝐢) = -lim_n n⁻¹ log μ_𝐢^{ξ_i}(𝒫_0^{n-1}(𝐢))` for `μ`-almost every `𝐢`. The article states
 it for a planar self-affine set; here the system is box-like and `Σ'`, `V_𝐢^1` have their
-box-like form. It follows from the first identity `feng_info_sum` of (4.16) and Birkhoff's
+box-like form. It follows from the first identity `FengInfoSum` of (4.16) and Birkhoff's
 theorem `birkhoff_ae`. -/
-theorem feng_entropy_as_limit (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
-    (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
-    (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) (i : ℕ) :
+theorem feng_entropy_as_limit (hfi : FengInfoSum.{u}) (μ : Measure (ℤ → ι))
+    [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+    (herg : Ergodic (shift 1) μ) (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) (i : ℕ) :
     ∀ᵐ x ∂μ, Tendsto
       (fun n : ℕ => -Real.log ((condMeas μ (S.xi μ i) x).real (cylinder (block n x))) / n)
       atTop (𝓝 (S.dimEntropyAt μ i x)) :=
-  tendsto_neg_log_condMeas_cylinder hinv (S.feng_info_sum μ hinv herg hlt i)
+  tendsto_neg_log_condMeas_cylinder hinv (hfi S μ hinv herg hlt i)
 
 /-- `thm:feng_entropy_as_limit`, second part; Feng, Lemma 4.6, for the projective
 system: for every invariant `ν` on `Σ_Z` and `i ∈ {0, 1}`,
 `\overline{h}_i(ν, 𝐢) = -lim_n n⁻¹ log ν_𝐢^{\overline{ξ}_i}(\overline{𝒫}_0^{n-1}(𝐢))` for
-`ν`-almost every `𝐢`. Ergodicity is not assumed. It follows from `feng_info_sum_bar` and
+`ν`-almost every `𝐢`. Ergodicity is not assumed. It follows from `FengInfoSumBar` and
 `birkhoff_ae`. -/
-theorem feng_entropy_as_limit_bar (hrot : S.WithRotations) (hprox : S.Proximal)
-    (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν]
+theorem feng_entropy_as_limit_bar (hfib : FengInfoSumBar.{u}) (hrot : S.WithRotations)
+    (hprox : S.Proximal) (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν]
     (hinv : MeasurePreserving (shift 1) ν ν) (hsupp : ν (subshift S.o)ᶜ = 0) (i : ℕ) :
     ∀ᵐ y ∂ν, Tendsto
       (fun n : ℕ => -Real.log ((condMeas ν (S.xiBar i) y).real (cylinder (block n y))) / n)
       atTop (𝓝 (S.dimEntropyBarAt ν i y)) :=
-  tendsto_neg_log_condMeas_cylinder hinv (S.feng_info_sum_bar hrot hprox ν hinv hsupp i)
+  tendsto_neg_log_condMeas_cylinder hinv (hfib S hrot hprox ν hinv hsupp i)
 
 /-- `thm:feng_entropy_zero`, planar part: for ergodic `μ` with `λ_2 < λ_1` and
 `i ∈ {0, 1, 2}`, `h_i(μ, 𝐢) = 0 ↔ μ_𝐢^{ξ_i} = δ_𝐢` for `μ`-almost every `𝐢`.
-Depends on: `feng_info_sum`, `thm:feng_entropy_as_limit`, `condMeas_atom`. -/
-theorem feng_entropy_zero (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
+Depends on: `FengInfoSum`, `thm:feng_entropy_as_limit`, `condMeas_atom`. -/
+theorem feng_entropy_zero (hfi : FengInfoSum.{u}) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
     (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) (i : ℕ) :
     ∀ᵐ x ∂μ, S.dimEntropyAt μ i x = 0 ↔ condMeas μ (S.xi μ i) x = Measure.dirac x :=
-  localEntropy_eq_zero_iff_condMeas_eq_dirac hinv (S.feng_info_sum μ hinv herg hlt i)
+  localEntropy_eq_zero_iff_condMeas_eq_dirac hinv (hfi S μ hinv herg hlt i)
     (S.condMeas_xi_samePast μ hinv herg i)
 
 /-- `thm:feng_entropy_zero`, scalar part: for every invariant `ν` on `Σ_Z`, ergodic or
 not, and `i ∈ {0, 1}`, `\overline{h}_i(ν, 𝐢) = 0 ↔ ν_𝐢^{\overline{ξ}_i} = δ_𝐢` for `ν`-almost
 every `𝐢`.
-Depends on: `feng_info_sum_bar`, `thm:feng_entropy_as_limit`, `condMeas_atom`. -/
-theorem feng_entropy_zero_bar (hrot : S.WithRotations) (hprox : S.Proximal)
-    (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν]
+Depends on: `FengInfoSumBar`, `thm:feng_entropy_as_limit`, `condMeas_atom`. -/
+theorem feng_entropy_zero_bar (hfib : FengInfoSumBar.{u}) (hrot : S.WithRotations)
+    (hprox : S.Proximal) (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν]
     (hinv : MeasurePreserving (shift 1) ν ν) (hsupp : ν (subshift S.o)ᶜ = 0) (i : ℕ) :
     ∀ᵐ y ∂ν, S.dimEntropyBarAt ν i y = 0 ↔
       condMeas ν (S.xiBar i) y = Measure.dirac y :=
-  localEntropy_eq_zero_iff_condMeas_eq_dirac hinv
-    (S.feng_info_sum_bar hrot hprox ν hinv hsupp i)
+  localEntropy_eq_zero_iff_condMeas_eq_dirac hinv (hfib S hrot hprox ν hinv hsupp i)
     ((S.condMeas_xiBar_samePast ν hsupp i).mono fun _ hy _ => hy)
 
 end System

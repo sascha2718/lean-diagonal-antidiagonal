@@ -1,3 +1,5 @@
+module
+
 /-
 Fraser's modified singular value function and the modified affinity dimension `dimmaff(X)` of
 `sec:affinity_dim` (tex lines 2267 to 2282), after Fraser, "On the packing dimension of box-like
@@ -51,10 +53,12 @@ The modified pressure is defined as the `lim sup` of `n⁻¹ log ∑_{|𝐢| = n
   lies in `[1, 2]`, in particular when `s_1 = s_2 = 1` and `dimaff(X) ≤ 2`.
 * `System.modSvf_eq_norm_det`: `ψ^s(𝐢) = ‖A_𝐢‖^{2t-s} |det A_𝐢|^{s-t}` when `s_1 = s_2 = t`.
 -/
-import BoxLike.AffinityDim
-import BoxLike.Attractor
-import BoxLike.SetDimensions
-import Mathlib.Topology.Algebra.Order.LiminfLimsup
+public import BoxLike.AffinityDim
+public import BoxLike.Attractor
+public import BoxLike.SetDimensions
+public import Mathlib.Topology.Algebra.Order.LiminfLimsup
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -390,7 +394,7 @@ theorem upperBoxDim_coord_le_lowerBoxDim [Finite ι] [Nonempty ι] (c : ZMod 2) 
     · refine Real.toNNReal_le_toNNReal ?_
       calc κ / 4 * τ * σ = τ / 4 * (κ * σ) := by ring
         _ ≤ τ / 4 * 1 := mul_le_mul_of_nonneg_left
-            (mul_le_one₀ hκ1 hσ.le hσ1) hρ.le
+            ((mul_le_of_le_one_left hσ.le hκ1).trans hσ1) hρ.le
         _ = τ / 4 := mul_one _
     · intro y hy y' hy' hne
       rw [h4]
@@ -1122,7 +1126,7 @@ theorem upperBoxDim_coord_le_of_pressure_neg [Nonempty ι] (c : ZMod 2) {s : ℝ
   have hdist : ∀ x ∈ S.attractor, ∀ x' ∈ S.attractor, dist x x' ≤ max D₀ 1 :=
     fun x hx x' hx' => (hD₀ hx hx').trans (le_max_left _ _)
   obtain ⟨x₀, hx₀⟩ := S.attractor_nonempty
-  have hexp : svfExp (s : ℝ) = s := if_pos hs1
+  have hexp : svfExp (s : ℝ) = s := ite_eq_left hs1
   refine upperBoxDim_le_of_forall
     (C := (K * (δ₀ / max D₀ 1) ^ (-(s : ℝ))).toNNReal) (Real.toNNReal_pos.2 (by positivity)) ?_
   filter_upwards [eventually_mem_nhdsWithin,

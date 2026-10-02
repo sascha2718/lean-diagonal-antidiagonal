@@ -1,3 +1,5 @@
+module
+
 /-
 The measure of `Σ'`, `Σ^τ` and `Σ^ω`: the assertion `μ(Σ') = 1` of `sec:lyapunov_exponents` (tex
 lines 1675 to 1679), the almost sure limit `eq:lyapunov_exponent_gsystem`, and
@@ -34,15 +36,19 @@ Oseledets theorem is used.
   support, and `μ([i]) ≤ 2 μ(Σ^τ)`, `μ([i]) ≤ 2 μ(Σ^ω)` for an anti-diagonal `A_i`.
 * `System.sigma_tau_omega_positive`: `thm:sigma_tau_omega_positive_eq_measure`.
 -/
-import BoxLike.Birkhoff
-import BoxLike.General
-import BoxLike.PartitionIdentities
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import BoxLike.Birkhoff
+public import BoxLike.General
+public import BoxLike.PartitionIdentities
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+
+@[expose] public section
 
 namespace BoxLike
 
 open MeasureTheory Filter Topology Set
 open scoped Matrix.Norms.L2Operator
+
+universe u
 
 /-! ### The inverse shift -/
 
@@ -105,7 +111,7 @@ namespace System
 
 section BackRate
 
-variable {ι : Type*} (S : System ι)
+variable {ι : Type u} (S : System ι)
 
 /-- `log |g'_{j_{-n} ⋯ j_{-1}}| = ∑_{k<n} log |g'_{j_{-k-1}}|` is the Birkhoff sum of
 `𝐣 ↦ log |g'_{j_{-1}}|` under the inverse shift, as in `eq:lyapunov_exponent_gsystem`. -/
@@ -115,7 +121,7 @@ theorem log_abs_gDeriv_pastWord (y : ℤ → ι × ZMod 2) (n : ℕ) :
   induction n with
   | zero => simp
   | succ n ih =>
-    rw [birkhoffSum_succ, ← ih, pastWord_succ, gDeriv_cons, abs_mul,
+    rw [birkhoffSum_succ_apply, ← ih, pastWord_succ, gDeriv_cons, abs_mul,
       Real.log_mul (abs_ne_zero.2 (S.ratio_ne_zero _)) (abs_ne_zero.2 (S.gDeriv_ne_zero _)),
       iterate_shift_neg_one, shift_apply, add_comm]
     congr 5
@@ -134,7 +140,7 @@ end BackRate
 
 section Gsystem
 
-variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   (S : System ι)
 
 /-- The function `𝐣 ↦ log |g'_{j_{-1}}|` is integrable for every finite measure. -/
@@ -169,7 +175,7 @@ end System
 
 section Lift
 
-variable {ι : Type*}
+variable {ι : Type u}
 
 /-- `thm:tau_omega_sigma_commutative` for `n = 1` and `τ`: `σ(τ(𝐢)) = τ(σ(𝐢))` when `A_{i_0}` is
 diagonal and `σ(τ(𝐢)) = ω(σ(𝐢))` when it is anti-diagonal. -/
@@ -179,8 +185,8 @@ theorem shift_one_tau (o : ι → ZMod 2) (x : ℤ → ι) :
     have h := eps_add_one o x 0
     rwa [zero_add, eps_zero, zero_add] at h
   rcases zmod_two_cases (o (x 0)) with h | h
-  · rw [if_pos h, tau_shift_of_eps_eq_zero (he.trans h)]
-  · rw [if_neg (by rw [h]; decide), omega_shift_of_eps_eq_one (he.trans h)]
+  · rw [ite_eq_left h, tau_shift_of_eps_eq_zero (he.trans h)]
+  · rw [ite_eq_right (by rw [h]; decide), omega_shift_of_eps_eq_one (he.trans h)]
 
 /-- `thm:tau_omega_sigma_commutative` for `n = 1` and `ω`: `σ(ω(𝐢)) = ω(σ(𝐢))` when `A_{i_0}` is
 diagonal and `σ(ω(𝐢)) = τ(σ(𝐢))` when it is anti-diagonal. -/
@@ -190,8 +196,8 @@ theorem shift_one_omega (o : ι → ZMod 2) (x : ℤ → ι) :
     have h := eps_add_one o x 0
     rwa [zero_add, eps_zero, zero_add] at h
   rcases zmod_two_cases (o (x 0)) with h | h
-  · rw [if_pos h, omega_shift_of_eps_eq_zero (he.trans h)]
-  · rw [if_neg (by rw [h]; decide), tau_shift_of_eps_eq_one (he.trans h)]
+  · rw [ite_eq_left h, omega_shift_of_eps_eq_zero (he.trans h)]
+  · rw [ite_eq_right (by rw [h]; decide), tau_shift_of_eps_eq_one (he.trans h)]
 
 variable [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
 
@@ -217,27 +223,27 @@ theorem measurePreserving_shift_avgMeasure_coding (o : ι → ZMod 2) {μ : Meas
     have e1 : tau o ⁻¹' (shift 1 ⁻¹' B) ∩ {x | o (x 0) = 0} =
         shift 1 ⁻¹' (tau o ⁻¹' B) ∩ {x | o (x 0) = 0} := by
       ext x
-      simp only [mem_inter_iff, mem_preimage, mem_setOf_eq]
+      simp only [mem_inter_iff, mem_preimage, mem_ofPred_eq]
       refine and_congr_left fun h => ?_
-      rw [shift_one_tau, if_pos h]
+      rw [shift_one_tau, ite_eq_left h]
     have e2 : tau o ⁻¹' (shift 1 ⁻¹' B) \ {x | o (x 0) = 0} =
         shift 1 ⁻¹' (omega o ⁻¹' B) \ {x | o (x 0) = 0} := by
       ext x
-      simp only [Set.mem_sdiff, mem_preimage, mem_setOf_eq]
+      simp only [Set.mem_sdiff, mem_preimage, mem_ofPred_eq]
       refine and_congr_left fun h => ?_
-      rw [shift_one_tau, if_neg h]
+      rw [shift_one_tau, ite_eq_right h]
     have e3 : omega o ⁻¹' (shift 1 ⁻¹' B) ∩ {x | o (x 0) = 0} =
         shift 1 ⁻¹' (omega o ⁻¹' B) ∩ {x | o (x 0) = 0} := by
       ext x
-      simp only [mem_inter_iff, mem_preimage, mem_setOf_eq]
+      simp only [mem_inter_iff, mem_preimage, mem_ofPred_eq]
       refine and_congr_left fun h => ?_
-      rw [shift_one_omega, if_pos h]
+      rw [shift_one_omega, ite_eq_left h]
     have e4 : omega o ⁻¹' (shift 1 ⁻¹' B) \ {x | o (x 0) = 0} =
         shift 1 ⁻¹' (tau o ⁻¹' B) \ {x | o (x 0) = 0} := by
       ext x
-      simp only [Set.mem_sdiff, mem_preimage, mem_setOf_eq]
+      simp only [Set.mem_sdiff, mem_preimage, mem_ofPred_eq]
       refine and_congr_left fun h => ?_
-      rw [shift_one_omega, if_neg h]
+      rw [shift_one_omega, ite_eq_right h]
     rw [Measure.add_apply, Measure.add_apply, Measure.map_apply hσ hB, Measure.map_apply hσ hB,
       Measure.map_apply hτ (hσ hB), Measure.map_apply hω (hσ hB), Measure.map_apply hτ hB,
       Measure.map_apply hω hB, ← hinv.measure_preimage hP.nullMeasurableSet,
@@ -247,7 +253,7 @@ theorem measurePreserving_shift_avgMeasure_coding (o : ι → ZMod 2) {μ : Meas
       ← measure_inter_add_sdiff (shift 1 ⁻¹' (tau o ⁻¹' B)) hA,
       ← measure_inter_add_sdiff (shift 1 ⁻¹' (omega o ⁻¹' B)) hA, e1, e2, e3, e4]
     abel
-  rw [avgMeasure, Measure.map_smul, Measure.map_add _ _ hσ, key]
+  rw [avgMeasure, Measure.map_smul _ hσ.aemeasurable, Measure.map_add _ _ hσ, key]
 
 /-- A property that holds almost everywhere for the average `(μ_1 + μ_2) / 2` of
 `eq:average_gibbs` holds almost everywhere for `μ_1` and for `μ_2`. -/
@@ -316,7 +322,7 @@ namespace System
 
 section PastWord
 
-variable {ι : Type*} (S : System ι)
+variable {ι : Type u} (S : System ι)
 
 /-- `α_1(A_{i_{-n}} ⋯ A_{i_{-1}})` is the larger of the moduli `|g'|` along `τ(𝐢)` and `ω(𝐢)`, by
 `thm:matrix_products_g_derivatives`. -/
@@ -366,15 +372,17 @@ theorem max_min_backRate_shift {x : ℤ → ι} {a b a' b' : ℝ}
     (hb' : S.HasBackRate (omega S.o (shift 1 x)) b') :
     max a' b' = max a b ∧ min a' b' = min a b := by
   rcases zmod_two_cases (S.o (x 0)) with h | h
-  · have e1 : tau S.o (shift 1 x) = shift 1 (tau S.o x) := by rw [shift_one_tau, if_pos h]
-    have e2 : omega S.o (shift 1 x) = shift 1 (omega S.o x) := by rw [shift_one_omega, if_pos h]
+  · have e1 : tau S.o (shift 1 x) = shift 1 (tau S.o x) := by rw [shift_one_tau, ite_eq_left h]
+    have e2 : omega S.o (shift 1 x) = shift 1 (omega S.o x) := by
+      rw [shift_one_omega, ite_eq_left h]
     rw [e1, hasBackRate_shift_one] at ha'
     rw [e2, hasBackRate_shift_one] at hb'
     rw [tendsto_nhds_unique ha' ha, tendsto_nhds_unique hb' hb]
     exact ⟨rfl, rfl⟩
   · have h' : ¬ S.o (x 0) = 0 := by rw [h]; decide
-    have e1 : tau S.o (shift 1 x) = shift 1 (omega S.o x) := by rw [shift_one_omega, if_neg h']
-    have e2 : omega S.o (shift 1 x) = shift 1 (tau S.o x) := by rw [shift_one_tau, if_neg h']
+    have e1 : tau S.o (shift 1 x) = shift 1 (omega S.o x) := by
+      rw [shift_one_omega, ite_eq_right h']
+    have e2 : omega S.o (shift 1 x) = shift 1 (tau S.o x) := by rw [shift_one_tau, ite_eq_right h']
     rw [e1, hasBackRate_shift_one] at ha'
     rw [e2, hasBackRate_shift_one] at hb'
     rw [tendsto_nhds_unique ha' hb, tendsto_nhds_unique hb' ha]
@@ -408,7 +416,7 @@ end PastWord
 
 section SigmaPrime
 
-variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   (S : System ι)
 
 /-- For an invariant probability measure `μ` on `Σ` the backward rates of
@@ -420,12 +428,8 @@ theorem exists_backRate (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     ∃ r : (ℤ → ι × ZMod 2) → ℝ, Measurable r ∧
       (∀ᵐ x ∂μ, S.HasBackRate (tau S.o x) (r (tau S.o x))) ∧
       ∀ᵐ x ∂μ, S.HasBackRate (omega S.o x) (r (omega S.o x)) := by
-  haveI : IsProbabilityMeasure (μ.map (tau S.o)) :=
-    Measure.isProbabilityMeasure_map (measurable_tau S.o).aemeasurable
-  haveI : IsProbabilityMeasure (μ.map (omega S.o)) :=
-    Measure.isProbabilityMeasure_map (measurable_omega S.o).aemeasurable
   obtain ⟨ν, hν⟩ : ∃ ν, ν = avgMeasure (μ.map (tau S.o)) (μ.map (omega S.o)) := ⟨_, rfl⟩
-  haveI : IsProbabilityMeasure ν := hν ▸ isProbabilityMeasure_avgMeasure _ _
+  have : IsProbabilityMeasure ν := hν ▸ isProbabilityMeasure_avgMeasure _ _
   have hνinv : MeasurePreserving (shift 1) ν ν :=
     hν ▸ measurePreserving_shift_avgMeasure_coding S.o hinv
   have hrate : ∀ᵐ y ∂ν, S.HasBackRate y ((ν[fun z : ℤ → ι × ZMod 2 =>
@@ -450,7 +454,7 @@ Depends on: `thm:tau_omega_sigma_commutative`, `thm:matrix_products_g_derivative
 theorem measure_SigmaPrime_compl (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ) :
     μ (S.SigmaPrime μ)ᶜ = 0 := by
-  haveI : Nonempty ι := nonempty_of_measure μ
+  have : Nonempty ι := nonempty_of_measure μ
   obtain ⟨r, hrm, hτ, hω⟩ := S.exists_backRate μ hinv
   -- Their maximum and their minimum are invariant, hence constant.
   have hshift : ∀ᵐ x ∂μ,
@@ -502,7 +506,7 @@ end SigmaPrime
 
 section Irreducible
 
-variable {ι : Type*} (S : System ι)
+variable {ι : Type u} (S : System ι)
 
 /-- A proximal box-like tuple with rotations is irreducible: by `thm:box_like_proximal` the tuple
 `𝖠` or `𝖠²` contains a proximal diagonal generator, and a common invariant line of `𝖠` is one of
@@ -521,7 +525,7 @@ end Irreducible
 
 section Positive
 
-variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   (S : System ι) {s : ℝ}
 
 omit [MeasurableSingletonClass ι] in
@@ -578,13 +582,13 @@ integrated against the invariant measure, which gives `μ([i]) ≤ 2 μ(Σ^τ)` 
 `μ([i]) ≤ 2 μ(Σ^ω)` for an anti-diagonal `A_i`; Birkhoff's theorem and `eq:simple_lyapunov` are
 not used.
 Depends on: `shift_mem_SigmaTau_iff`, `measure_SigmaPrime_compl`, `thm:irred_eq_state` (full
-support, through `fengKaenmaki_gibbs`). -/
-theorem sigma_tau_omega_positive (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 < s)
-    (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
-    (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
+support, from the Gibbs bounds of Feng–Käenmäki, `FengKaenmakiGibbs`). -/
+theorem sigma_tau_omega_positive (hfk : FengKaenmakiGibbs.{u}) (hrot : S.WithRotations)
+    (hprox : S.Proximal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
+    [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
     (heq : S.IsEquilibriumState s μ) : 0 < μ (S.SigmaTau μ) ∧ 0 < μ (S.SigmaOmega μ) := by
   obtain ⟨i, hi⟩ := hrot.2
-  have hpos := (fengKaenmaki_gibbs S (S.irreducible_of_proximal hrot hprox) hs0 hs2 μ hinv
+  have hpos := (hfk S (S.irreducible_of_proximal hrot hprox) hs0 hs2 μ hinv
     heq).measure_cylinder_pos i
   obtain ⟨hτ, hω⟩ := S.measure_cylinder_le_two_mul μ hinv (S.measure_SigmaPrime_compl μ hinv herg)
     hi

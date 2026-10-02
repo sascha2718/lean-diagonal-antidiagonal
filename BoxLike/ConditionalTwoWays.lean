@@ -1,3 +1,5 @@
+module
+
 /-
 The conditional measures of the average Gibbs measure: `thm:conditional_two_ways` of
 `sec:average_gibbs`. On each of the four sets `τ(Σ^τ)`, `ω(Σ^τ)`, `ω(Σ^ω)`, `τ(Σ^ω)` the
@@ -24,17 +26,21 @@ image `T(E)` is Borel by the Lusin–Souslin theorem.
 * `System.conditional_two_ways_aux`: one of the four cases of `thm:conditional_two_ways`.
 * `System.conditional_two_ways`: `thm:conditional_two_ways`.
 -/
-import BoxLike.ConditionalLemmas
-import BoxLike.GibbsOrientation
-import BoxLike.MeasurablePartitions
-import BoxLike.PartitionIdentities
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
-import Mathlib.MeasureTheory.Integral.Lebesgue.Map
+public import BoxLike.ConditionalLemmas
+public import BoxLike.GibbsOrientation
+public import BoxLike.MeasurablePartitions
+public import BoxLike.PartitionIdentities
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Map
+
+@[expose] public section
 
 namespace BoxLike
 
 open MeasureTheory ProbabilityTheory Set
 open scoped ENNReal NNReal
+
+universe u
 
 /-! ### Maps that are constant on atoms -/
 
@@ -125,8 +131,8 @@ theorem condMeas_transport {R : Type*} [SMul R ℝ≥0∞] [IsScalarTower R ℝ�
   -- The kernel `K` of the proof of `thm:conditional_two_ways`, equal to `ν_y^η` off `F`.
   set K : Y → Measure Y := fun y =>
     if y ∈ T '' E then (condMeas μ ξ (g y)).map T else condMeas ν η y
-  have hKF : ∀ y ∈ T '' E, K y = (condMeas μ ξ (g y)).map T := fun y hy => if_pos hy
-  have hKF' : ∀ y ∉ T '' E, K y = condMeas ν η y := fun y hy => if_neg hy
+  have hKF : ∀ y ∈ T '' E, K y = (condMeas μ ξ (g y)).map T := fun y hy => ite_eq_left hy
+  have hKF' : ∀ y ∉ T '' E, K y = condMeas ν η y := fun y hy => ite_eq_right hy
   -- `K` is constant on the atoms of `η`, since `T` identifies the atoms of `ξ` in `E` with
   -- those of `η` in `F`.
   have hKconst : ∀ y y', y' ∈ η y → K y = K y' := by
@@ -152,8 +158,8 @@ theorem condMeas_transport {R : Type*} [SMul R ℝ≥0∞] [IsScalarTower R ℝ�
         if y ∈ T '' E then (condMeas μ ξ (g y)).map T A else condMeas ν η y A := by
       funext y
       by_cases hy : y ∈ T '' E
-      · rw [hKF y hy, if_pos hy]
-      · rw [hKF' y hy, if_neg hy]
+      · rw [hKF y hy, ite_eq_left hy]
+      · rw [hKF' y hy, ite_eq_right hy]
     rw [h3]
     exact Measurable.ite hF h1 h2
   -- The defining identity `∫_B K_y(A) dν(y) = ν(A ∩ B)`, split along `F`.
@@ -212,7 +218,7 @@ namespace System
 
 section AverageGibbs
 
-variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   (S : System ι) {s : ℝ}
 
 omit [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] in
@@ -294,11 +300,11 @@ measure `\overline{μ}_𝐣^{\overline{ξ}_1}` equals `(μ_1)_𝐣^{\overline{ξ
 at `\overline{τ}(𝐣)`, respectively `\overline{ω}(𝐣)`, which is `unCode 𝐣`.
 Depends on: `eq:normalised-orientation-restrictions`, `thm:gibbs_tau_omega_positive`,
 `thm:partitions_xi1`, `thm:conditional_measures_of_a_conditional_measure`, `condMeas_unique`. -/
-theorem conditional_two_ways (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
-    (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
-    (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
-    (heq : S.IsEquilibriumState s μ) [IsProbabilityMeasure μ₁] [IsProbabilityMeasure μ₂]
-    (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
+theorem conditional_two_ways (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+    (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2)
+    (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+    (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) [IsProbabilityMeasure μ₁]
+    [IsProbabilityMeasure μ₂] (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
     ∀ᵐ y ∂avgMeasure μ₁ μ₂,
       (y ∈ tau S.o '' S.SigmaTau μ →
         condMeas (avgMeasure μ₁ μ₂) (S.xiBar 1) y = condMeas μ₁ (S.xiBar 1) y ∧
@@ -312,15 +318,15 @@ theorem conditional_two_ways (hrot : S.WithRotations) (hdiag : S.HasProximalDiag
       (y ∈ tau S.o '' S.SigmaOmega μ →
         condMeas (avgMeasure μ₁ μ₂) (S.xiBar 1) y = condMeas μ₂ (S.xiBar 1) y ∧
         condMeas μ₂ (S.xiBar 1) y = (condMeas μ (S.xiPerp μ) (unCode y)).map (tau S.o)) := by
-  have hlt := S.simple_lyapunov hrot hdiag.proximal hs0 hs2 μ hinv heq
+  have hlt := S.simple_lyapunov hms hrot hdiag.proximal hs0 hs2 μ hinv heq
   have hmτ := S.measurableSet_SigmaTau μ
   have hmω := S.measurableSet_SigmaOmega μ
   obtain ⟨-, ⟨z1, z2, z3, z4⟩, -⟩ :=
-    S.gibbs_tau_omega_positive hrot hdiag hs0 hs2 μ hinv herg heq hdec
+    S.gibbs_tau_omega_positive hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
   -- `eq:orientation-restrictions` for `\overline{μ}`.
   have hor := fun {T : (ℤ → ι) → ℤ → ι × ZMod 2} (hT : T = tau S.o ∨ T = omega S.o)
       {E : Set (ℤ → ι)} (hE : E = S.SigmaTau μ ∨ E = S.SigmaOmega μ) =>
-    (S.orientation_restrictions hrot hdiag hs0 hs2 μ hinv herg heq hdec hT hE).1
+    (S.orientation_restrictions hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec hT hE).1
   -- The restriction of the Gibbs measure that charges `T(E)`.
   have hk₁ : ∀ {F : Set (ℤ → ι × ZMod 2)}, μ₂ F = 0 →
       (μ₁ + μ₂).restrict F = μ₁.restrict F := fun h => by

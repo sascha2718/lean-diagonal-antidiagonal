@@ -1,3 +1,5 @@
+module
+
 /-
 The behaviour of `Σ^τ`, `Σ^ω` and `Σ'` under the shift (`sec:lyapunov_exponents`, tex lines 1678
 to 1679, and `eq:sigma_tau_omega_positive_eq_measure1` in the proof of
@@ -25,8 +27,10 @@ planar partitions `ξ_1`, `ξ_1^⊥` with the scalar partition `\overline{ξ}_1`
   `thm:partition_tau_conj`.
 * `System.partition_tau_conj`: `thm:partition_tau_conj`.
 -/
-import BoxLike.DimPartitions
-import Mathlib.Analysis.SpecificLimits.Basic
+public import BoxLike.DimPartitions
+public import Mathlib.Analysis.SpecificLimits.Basic
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -119,11 +123,11 @@ theorem shift_mem_SigmaTau_iff (μ : Measure (ℤ → ι)) (x : ℤ → ι) :
   have h01 : (0 : ZMod 2) ≠ 1 := by decide
   rcases zmod_two_cases (S.o (x 0)) with h | h
   · rw [h] at he
-    simp only [SigmaTau, SigmaOmega, mem_setOf_eq, tau_shift_of_eps_eq_zero he,
+    simp only [SigmaTau, SigmaOmega, mem_ofPred_eq, tau_shift_of_eps_eq_zero he,
       omega_shift_of_eps_eq_zero he, hasBackRate_shift_one, h, h01, true_and, false_and,
       or_false, and_self]
   · rw [h] at he
-    simp only [SigmaTau, SigmaOmega, mem_setOf_eq, tau_shift_of_eps_eq_one he,
+    simp only [SigmaTau, SigmaOmega, mem_ofPred_eq, tau_shift_of_eps_eq_one he,
       omega_shift_of_eps_eq_one he, hasBackRate_shift_one, h, h01.symm, true_and, false_and,
       false_or]
     exact ⟨and_comm, and_comm⟩
@@ -259,7 +263,7 @@ theorem image_unCode_xiBar_tau (x : ℤ → ι) :
     unCode '' S.xiBar 1 (tau S.o x) =
       {y | SamePast y x ∧ S.projBar (tau S.o y) = S.projBar (tau S.o x)} := by
   ext y
-  simp only [xiBar, atomsOn_of_mem (tau_mem_subshift x), mem_image, mem_inter_iff, mem_setOf_eq]
+  simp only [xiBar, atomsOn_of_mem (tau_mem_subshift x), mem_image, mem_inter_iff, mem_ofPred_eq]
   constructor
   · rintro ⟨z, ⟨⟨hp, hπ⟩, hz⟩, rfl⟩
     refine ⟨samePast_unCode hp, ?_⟩
@@ -276,7 +280,7 @@ theorem image_unCode_xiBar_omega (x : ℤ → ι) :
       {y | SamePast y x ∧ S.projBar (omega S.o y) = S.projBar (omega S.o x)} := by
   ext y
   simp only [xiBar, atomsOn_of_mem (omega_mem_subshift x), mem_image, mem_inter_iff,
-    mem_setOf_eq]
+    mem_ofPred_eq]
   constructor
   · rintro ⟨z, ⟨⟨hp, hπ⟩, hz⟩, rfl⟩
     refine ⟨samePast_unCode hp, ?_⟩
@@ -345,7 +349,7 @@ theorem xi_one_eq (μ : Measure (ℤ → ι)) {x : ℤ → ι} (hx : x ∈ S.Sig
     S.xi μ 1 x = {y | SamePast y x ∧
       coord (S.slowAxis μ x + 1) (S.proj y) = coord (S.slowAxis μ x + 1) (S.proj x)} := by
   ext y
-  simp only [xi, atomsOn_of_mem hx, mem_inter_iff, mem_setOf_eq]
+  simp only [xi, atomsOn_of_mem hx, mem_inter_iff, mem_ofPred_eq]
   rw [mem_oseledets_iff]
   constructor
   · rintro ⟨⟨hp, h0 | ⟨-, h1⟩ | ⟨h2, -⟩⟩, -⟩
@@ -361,7 +365,7 @@ theorem xiPerp_eq (μ : Measure (ℤ → ι)) {x : ℤ → ι} (hx : x ∈ S.Sig
     S.xiPerp μ x = {y | SamePast y x ∧
       coord (S.slowAxis μ x) (S.proj y) = coord (S.slowAxis μ x) (S.proj x)} := by
   ext y
-  simp only [xiPerp, atomsOn_of_mem hx, mem_inter_iff, mem_setOf_eq, coord_sub, sub_eq_zero]
+  simp only [xiPerp, atomsOn_of_mem hx, mem_inter_iff, mem_ofPred_eq, coord_sub, sub_eq_zero]
   exact ⟨fun h => h.1, fun h => ⟨h, S.mem_SigmaPrime_of_samePast μ h.1.symm hx⟩⟩
 
 /-- `thm:partitions_xi1`, the first identity on `Σ^τ`: `V_𝐢^1` is the `y`-axis, so membership in

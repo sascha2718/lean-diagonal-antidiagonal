@@ -1,3 +1,5 @@
+module
+
 /-
 Unlabelled claims of the article about the equilibrium state and the two Gibbs measures: the
 comment on the method in the introduction (tex lines 552 to 560), `sec:affinity_dim` (tex lines
@@ -23,7 +25,8 @@ comment on the method in the introduction (tex lines 552 to 560), `sec:affinity_
   quasi-Bernoulli nor Bernoulli.
 * `System.IsEquilibriumState.submultiplicative`, `System.IsEquilibriumState.cylinder_bounds_dimaff`,
   `System.IsEquilibriumState.not_quasiBernoulli`, `System.IsEquilibriumState.not_isBernoulli`:
-  the same for the equilibrium state, from `fengKaenmaki_gibbs`.
+  the same for the equilibrium state, from the Gibbs bounds of Feng–Käenmäki,
+  `FengKaenmakiGibbs`.
 * `IsGibbsWith.measureReal_cylinder_le_succ`, `IsGibbsWith.doubling`, `IsGibbs.doubling`:
   `ν[𝐢|_n] ≤ C² exp(P + ‖f‖_∞) ν[𝐢|_{n+1}]`;
   `IsGibbsWith.measureReal_preimage_shift_cylinder_le` is the companion for an extension to the
@@ -44,13 +47,17 @@ comment on the method in the introduction (tex lines 552 to 560), `sec:affinity_
   `\overline{τ}_*μ_2 = \overline{ω}_*μ_1`, positivity, and absolute continuity with respect to
   `μ`.
 -/
-import BoxLike.GibbsOrientation
-import Mathlib.Dynamics.Ergodic.Extreme
+public import BoxLike.GibbsOrientation
+public import Mathlib.Dynamics.Ergodic.Extreme
+
+@[expose] public section
 
 namespace BoxLike
 
 open MeasureTheory Set
 open scoped Matrix.Norms.L2Operator
+
+universe u
 
 /-! ### Sub-multiplicative, quasi-Bernoulli and Bernoulli measures -/
 
@@ -139,9 +146,9 @@ theorem svf_eq_norm_rpow_mul_abs_det_rpow {s : ℝ} (hs2 : s ≤ 2)
     svf s A = ‖A‖ ^ gapExp s * |A.det| ^ ((s - gapExp s) / 2) := by
   unfold svf gapExp
   rcases lt_trichotomy s 1 with h | rfl | h
-  · rw [if_pos h.le, if_pos h, sub_self, zero_div, Real.rpow_zero, mul_one]
+  · rw [ite_eq_left h.le, ite_eq_left h, sub_self, zero_div, Real.rpow_zero, mul_one]
   · norm_num
-  · rw [if_neg (not_le.2 h), if_pos hs2, if_neg (not_lt.2 h.le)]
+  · rw [ite_eq_right (not_le.2 h), ite_eq_left hs2, ite_eq_right (not_lt.2 h.le)]
     congr 2
     ring
 
@@ -210,7 +217,7 @@ theorem mul_norm_boxMat_mul_le {a b c d : ℝ} (ha : a ≠ 0) (hb : b ≠ 0) (hc
     have e2 : |b ^ n * (d * a ^ n)| = |d| * (max |a| |b| * min |a| |b|) ^ n := by
       rw [← hab, abs_mul, abs_mul, abs_pow, abs_pow, mul_pow]
       ring
-    rw [boxMat_mul, if_pos rfl, if_pos rfl, norm_boxMat, e1, e2]
+    rw [boxMat_mul, ite_eq_left rfl, ite_eq_left rfl, norm_boxMat, e1, e2]
     exact max_le (mul_le_mul_of_nonneg_right (le_max_left _ _) hpow)
       (mul_le_mul_of_nonneg_right (le_max_right _ _) hpow)
 
@@ -220,7 +227,7 @@ namespace System
 
 section Words
 
-variable {ι : Type*} (S : System ι)
+variable {ι : Type u} (S : System ι)
 
 /-- `A_𝐮^n = diag(a^n, b^n)` for a word `𝐮` with `A_𝐮 = diag(a, b)`. -/
 theorem matWord_flatten_replicate {u : List ι} {a b : ℝ} (hu : S.matWord u = boxMat 0 a b)
@@ -239,8 +246,8 @@ theorem matWord_cons_flatten_replicate {u : List ι} {a b : ℝ}
     (hu : S.matWord u = boxMat 0 a b) {j : ι} (hj : S.o j = 1) (n : ℕ) :
     S.matWord (j :: (List.replicate n u).flatten) =
       boxMat 1 (S.a j * b ^ n) (S.b j * a ^ n) := by
-  rw [matWord_cons, S.matWord_flatten_replicate hu, mat, hj, boxMat_mul, if_neg (by decide),
-    if_neg (by decide), add_zero]
+  rw [matWord_cons, S.matWord_flatten_replicate hu, mat, hj, boxMat_mul, ite_eq_right (by decide),
+    ite_eq_right (by decide), add_zero]
 
 /-- A proximal box-like tuple has a non-empty word `𝐮` whose product is a diagonal matrix
 `diag(a, b)` with `|a| ≠ |b|`: a proximal product `A_𝐮` is not anti-diagonal. -/
@@ -294,7 +301,7 @@ end Words
 
 section GibbsBounds
 
-variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] (S : System ι) {s C : ℝ}
+variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] (S : System ι) {s C : ℝ}
   {μ : Measure (ℤ → ι)}
 
 /-- The Gibbs bounds of `thm:irred_eq_state` with the constant `C ≥ 1` made explicit. -/
@@ -497,42 +504,46 @@ theorem not_isBernoulli (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 <
 /-! ### The equilibrium state -/
 
 /-- Tex lines 2333 to 2339: for an irreducible tuple and `0 < s < 2` every invariant
-`s`-equilibrium state is sub-multiplicative. Proved from `fengKaenmaki_gibbs`. -/
-theorem IsEquilibriumState.submultiplicative [MeasurableSingletonClass ι] (hirr : S.Irreducible)
-    (hs0 : 0 < s) (hs2 : s < 2) [IsProbabilityMeasure μ]
-    (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState s μ) :
-    IsSubmultiplicative μ :=
-  (fengKaenmaki_gibbs S hirr hs0 hs2 μ hinv heq).submultiplicative hs0.le
+`s`-equilibrium state is sub-multiplicative. Proved from the Gibbs bounds of Feng–Käenmäki,
+`FengKaenmakiGibbs`. -/
+theorem IsEquilibriumState.submultiplicative (hfk : FengKaenmakiGibbs.{u})
+    [MeasurableSingletonClass ι] (hirr : S.Irreducible) (hs0 : 0 < s) (hs2 : s < 2)
+    [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+    (heq : S.IsEquilibriumState s μ) : IsSubmultiplicative μ :=
+  (hfk S hirr hs0 hs2 μ hinv heq).submultiplicative hs0.le
 
 /-- Tex lines 2339 to 2345: for an irreducible tuple with `0 < dimaff(𝖠) < 2` every invariant
 equilibrium state `μ` at `s = dimaff(𝖠)` satisfies `C⁻¹ φ^s(A_𝐢) ≤ μ[𝐢] ≤ C φ^s(A_𝐢)` for all
-`𝐢 ∈ Σ_*^+`. Proved from `fengKaenmaki_gibbs`. -/
-theorem IsEquilibriumState.cylinder_bounds_dimaff [Nonempty ι] [MeasurableSingletonClass ι]
-    (hirr : S.Irreducible) (hs0 : 0 < S.dimaff) (hs2 : S.dimaff < 2) [IsProbabilityMeasure μ]
-    (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ) :
+`𝐢 ∈ Σ_*^+`. Proved from the Gibbs bounds of Feng–Käenmäki, `FengKaenmakiGibbs`. -/
+theorem IsEquilibriumState.cylinder_bounds_dimaff (hfk : FengKaenmakiGibbs.{u}) [Nonempty ι]
+    [MeasurableSingletonClass ι] (hirr : S.Irreducible) (hs0 : 0 < S.dimaff)
+    (hs2 : S.dimaff < 2) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+    (heq : S.IsEquilibriumState S.dimaff μ) :
     ∃ C : ℝ, 1 ≤ C ∧ ∀ n : ℕ, 0 < n → ∀ w : Fin n → ι,
       C⁻¹ * svf S.dimaff (S.matWord (List.ofFn w)) ≤ μ.real (cylinder w) ∧
         μ.real (cylinder w) ≤ C * svf S.dimaff (S.matWord (List.ofFn w)) :=
-  (fengKaenmaki_gibbs S hirr hs0 hs2 μ hinv heq).cylinder_bounds_dimaff
+  (hfk S hirr hs0 hs2 μ hinv heq).cylinder_bounds_dimaff
 
 /-- Tex lines 555 to 559: the `s`-equilibrium state of a proximal box-like tuple with rotations
-is not quasi-Bernoulli for `0 < s < 2`. Proved from `fengKaenmaki_gibbs`. -/
-theorem IsEquilibriumState.not_quasiBernoulli [MeasurableSingletonClass ι]
-    (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 < s) (hs2 : s < 2)
-    [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+is not quasi-Bernoulli for `0 < s < 2`. Proved from the Gibbs bounds of Feng–Käenmäki,
+`FengKaenmakiGibbs`. -/
+theorem IsEquilibriumState.not_quasiBernoulli (hfk : FengKaenmakiGibbs.{u})
+    [MeasurableSingletonClass ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 < s)
+    (hs2 : s < 2) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) : ¬ IsQuasiBernoulli μ :=
   System.not_quasiBernoulli hrot hprox hs0 hs2
-    (fengKaenmaki_gibbs S (S.irreducible_of_proximal hrot hprox) hs0 hs2 μ hinv heq)
+    (hfk S (S.irreducible_of_proximal hrot hprox) hs0 hs2 μ hinv heq)
 
 /-- Tex lines 559 to 560 and 2457 to 2463: the `s`-equilibrium state of a proximal box-like tuple
-with rotations is not a Bernoulli measure for `0 < s < 2`. Proved from `fengKaenmaki_gibbs`; the
-second iterates of `thm:two-block-normalisation` are not needed. -/
-theorem IsEquilibriumState.not_isBernoulli [MeasurableSingletonClass ι]
-    (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 < s) (hs2 : s < 2)
-    [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+with rotations is not a Bernoulli measure for `0 < s < 2`. Proved from the Gibbs bounds of
+Feng–Käenmäki, `FengKaenmakiGibbs`; the second iterates of `thm:two-block-normalisation` are not
+needed. -/
+theorem IsEquilibriumState.not_isBernoulli (hfk : FengKaenmakiGibbs.{u})
+    [MeasurableSingletonClass ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 < s)
+    (hs2 : s < 2) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) : ¬ IsBernoulli μ :=
   System.not_isBernoulli hrot hprox hs0 hs2
-    (fengKaenmaki_gibbs S (S.irreducible_of_proximal hrot hprox) hs0 hs2 μ hinv heq)
+    (hfk S (S.irreducible_of_proximal hrot hprox) hs0 hs2 μ hinv heq)
 
 end GibbsBounds
 
@@ -551,7 +562,7 @@ theorem exists_mem_subshift_zero_eq {ι : Type*} (o : ι → ZMod 2) (p : ι × 
 
 section Gibbs
 
-variable {ι : Type*} [MeasurableSpace ι] {o : ι → ZMod 2} {φ φ' : ι × ZMod 2 → ℝ}
+variable {ι : Type u} [MeasurableSpace ι] {o : ι → ZMod 2} {φ φ' : ι × ZMod 2 → ℝ}
   {ν : Measure (ℤ → ι × ZMod 2)} {P C P' C' : ℝ} {y : ℤ → ι × ZMod 2}
 
 /-- The Gibbs property of `sec:gibbs_measures` with the constants `P = P_Z(φ)` and `C` made
@@ -702,7 +713,7 @@ end Gibbs
 
 section TauCylinder
 
-variable {ι : Type*} {o : ι → ZMod 2}
+variable {ι : Type u} {o : ι → ZMod 2}
 
 /-- `eq:tau_cylinder`: `[τ(𝐢)|_n] = τ([𝐢|_n])` as subsets of `Σ_Z`, for `n ≥ 1`. -/
 theorem cylinder_tau_inter_subshift (o : ι → ZMod 2) (x : ℤ → ι) {n : ℕ} (hn : 0 < n) :
@@ -780,7 +791,7 @@ namespace System
 
 section Potentials
 
-variable {ι : Type*} (S : System ι) {s : ℝ}
+variable {ι : Type u} (S : System ι) {s : ℝ}
 
 /-- `f_{1,s}(τ(𝐢)) = f_{2,s}(ω(𝐢))`, tex lines 2659 to 2660. The identity
 `f_{2,s}(τ(𝐢)) = f_{1,s}(ω(𝐢))` is `System.potential₂_tau`. -/
@@ -863,8 +874,8 @@ theorem GibbsDecomposition.ne (hprox : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2
 are distinct ergodic measures. -/
 theorem GibbsDecomposition.mutuallySingular (hprox : S.HasProximalDiagonal) (hs0 : 0 < s)
     (hs2 : s < 2) (hdec : S.GibbsDecomposition s μ μ₁ μ₂) : μ₁ ⟂ₘ μ₂ := by
-  haveI := hdec.prob₁
-  haveI := hdec.prob₂
+  have := hdec.prob₁
+  have := hdec.prob₂
   exact mutuallySingular_of_ergodic_of_ne hdec.ergodic₁ hdec.ergodic₂ (hdec.ne hprox hs0 hs2)
 
 /-! ### The four restrictions of the Gibbs measures -/
@@ -877,8 +888,8 @@ theorem GibbsDecomposition.map_tau_eq_map_omega (hdec : S.GibbsDecomposition s �
         (μ₂.restrict (range (omega S.o))).map unCode ∧
       (μ₂.restrict (range (tau S.o))).map unCode =
         (μ₁.restrict (range (omega S.o))).map unCode := by
-  haveI := hdec.prob₁
-  haveI := hdec.prob₂
+  have := hdec.prob₁
+  have := hdec.prob₂
   constructor
   · have h := hdec.eq_tau.symm.trans hdec.eq₂
     rwa [add_comm, Measure.add_right_inj] at h
@@ -904,9 +915,9 @@ theorem GibbsDecomposition.map_tau_cylinder [MeasurableSingletonClass ι]
 theorem GibbsDecomposition.map_tau_univ_pos (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
     0 < (μ₁.restrict (range (tau S.o))).map unCode univ ∧
       0 < (μ₂.restrict (range (tau S.o))).map unCode univ := by
-  haveI := hdec.prob₁
+  have := hdec.prob₁
   obtain ⟨y⟩ := nonempty_of_isProbabilityMeasure μ₁
-  haveI : Nonempty ι := ⟨(y 0).1⟩
+  have : Nonempty ι := ⟨(y 0).1⟩
   simp only [Measure.map_apply measurable_unCode MeasurableSet.univ, preimage_univ,
     Measure.restrict_apply_univ]
   exact ⟨hdec.gibbs₁.measure_range_tau_pos hdec.supp₁,

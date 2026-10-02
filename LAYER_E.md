@@ -1,26 +1,25 @@
 Status: every statement of this layer is proved in the library, under the same name, except
 three literature statements of section 2.1 that no proof needs (`shannonMcMillanBreiman`,
-`feng_entropy_kolmogorov_sinai`, `…_bar`) and the four that are axioms, which are in
-`BoxLike/LiteratureFeng.lean`. Birkhoff's theorem, the Rokhlin properties, Feng's Lemma 4.2 and
-`thm:feng_entropy_as_limit` are proved. `System.main_extended_ge_two` and
-`System.main_extended` are in `BoxLike/MainExtended.lean`. `tools/LayerE.lean` is superseded by
-the library and holds no declaration the library lacks. This document remains the design
-record of the definitions of sections 3.2 to 3.4 of the article (`sec:lyapunov_exponents`,
-`sec:conditional`, `sec:entropies`); sections 2 to 4 below describe the statement layer
-`tools/LayerE.lean`. `PLAN.md`, section 3, has the state of each result and section 5 the
+`feng_entropy_kolmogorov_sinai`, `…_bar`) and the four results of Feng that are `Prop`-valued
+definitions of `BoxLike/LiteratureFeng.lean`, taken as hypotheses by the results that use them:
+`FengInfoSum`, `FengInfoSumBar`, `FengLedrappierYoung` and `FengLedrappierYoungBar`. Birkhoff's
+theorem, the Rokhlin properties, Feng's Lemma 4.2 and `thm:feng_entropy_as_limit` are proved.
+`System.main_extended_ge_two` and `System.main_extended` are in `BoxLike/MainExtended.lean`. The
+file of the statement layer is `Archive/tools/LayerE.lean`, outside git and never built; the
+library supersedes it, and it holds no declaration the library lacks. This document is the
+design record of the definitions of sections 3.2 to 3.4 of the article
+(`sec:lyapunov_exponents`, `sec:conditional`, `sec:entropies`); sections 2 to 4 below describe
+the statement layer. `PLAN.md`, section 3, has the state of each result and section 5 the
 findings.
 
 # Layer E: statement layer for the entropy part of `diagonal-antidiagonal.tex`
 
-`tools/LayerE.lean` states, in Lean 4 over the built `BoxLike` library and Mathlib, the
-definitions and results of `sec:lyapunov_exponents`, `sec:conditional`, `sec:entropies`, the
-second half of `sec:normalisation`, `thm:feng1`, `sec:average_gibbs`,
-`sec:average_gibbs_entropy`, `sec:higher_dimensional_entropies` and
-`sec:dimension_result_proof`. The file lies outside the library glob and is never built. It
-elaborates under `lake env lean tools/LayerE.lean` with 45 warnings "declaration uses `sorry`"
-and nothing else: 18 LITERATURE statements and 27 PAPER statements carry `sorry`. The file has
-24 definitions and 42 proved theorems, among them the assembly of `thm:main_extended` and
-`thm:main2`.
+The statement layer states, in Lean 4 over the `BoxLike` library and Mathlib, the definitions
+and results of `sec:lyapunov_exponents`, `sec:conditional`, `sec:entropies`, the second half of
+`sec:normalisation`, `thm:feng1`, `sec:average_gibbs`, `sec:average_gibbs_entropy`,
+`sec:higher_dimensional_entropies` and `sec:dimension_result_proof`. Each statement is marked
+LITERATURE, for a theorem the article cites without proof, or PAPER, for a result of the
+article.
 Tex line numbers refer to `diagonal-antidiagonal.tex` as of 2026-09-20.
 
 ## 1. Definitions
@@ -82,10 +81,11 @@ library's standing instances are `[Fintype ι] [MeasurableSpace ι] [MeasurableS
 They give `DiscreteMeasurableSpace ι` (`MeasurableSingletonClass.toDiscreteMeasurableSpace`),
 hence `StandardBorelSpace ι` (`standardBorelSpace_of_discreteMeasurableSpace`), hence
 `StandardBorelSpace (ℤ → ι)` and `StandardBorelSpace (ℤ → ι × ZMod 2)`
-(`StandardBorelSpace.pi_countable`, `StandardBorelSpace.prod`). Two `example`s in the file
-check both by `inferInstance`. Finite measures: `condMeas μ ξ x` is a probability measure (an
-instance in the file), `μ[|Ξ]` is finite by Mathlib, and `avgMeasure μ₁ μ₂` is finite (an
-instance in the file) and a probability measure (`isProbabilityMeasure_avgMeasure`, proved).
+(`StandardBorelSpace.pi_countable`, `StandardBorelSpace.prod`). Two `example`s in
+`BoxLike/Conditional.lean` check both by `inferInstance`. Finite measures: `condMeas μ ξ x` is a
+probability measure (an instance in `BoxLike/Conditional.lean`), `μ[|Ξ]` is finite by Mathlib,
+and `avgMeasure μ₁ μ₂` is finite (an instance in `BoxLike/DimPartitions.lean`) and a
+probability measure (`isProbabilityMeasure_avgMeasure`, proved).
 
 ### 1.4 Conditional measures
 
@@ -155,13 +155,13 @@ By `thm:matrix_products_g_derivatives` the rate along `τ(𝐢)` is the growth r
 is needed. The measure enters through the two numbers `λ_1`, `λ_2` only. When `λ_1 = λ_2` the
 sets `Σ^τ` and `Σ^ω` coincide.
 
-Proved in the file: `Σ^τ`, `Σ^ω`, `Σ'` are Borel (`measurableSet_SigmaTau`,
+Proved in `BoxLike/SlowAxis.lean`: `Σ^τ`, `Σ^ω`, `Σ'` are Borel (`measurableSet_SigmaTau`,
 `measurableSet_SigmaOmega`, `measurableSet_SigmaPrime`); they are saturated with respect to the
 past (`mem_SigmaTau_of_samePast`, `mem_SigmaOmega_of_samePast`, tex 1680 to 1681); they are
-disjoint when `λ_2 < λ_1` (`disjoint_SigmaTau_SigmaOmega`, `eq:tau_omega_partition2`). Stated:
-`μ(Σ') = 1` for ergodic `μ` (`measure_SigmaPrime_compl`) and the behaviour under the shift
-(`shift_mem_SigmaTau_iff`, which is `eq:sigma_tau_omega_positive_eq_measure1` and gives
-`σ(Σ') = Σ'`).
+disjoint when `λ_2 < λ_1` (`disjoint_SigmaTau_SigmaOmega`, `eq:tau_omega_partition2`). Proved in
+`BoxLike/SigmaMeasure.lean` and `BoxLike/PartitionIdentities.lean`: `μ(Σ') = 1` for ergodic `μ`
+(`measure_SigmaPrime_compl`) and the behaviour under the shift (`shift_mem_SigmaTau_iff`, which
+is `eq:sigma_tau_omega_positive_eq_measure1` and gives `σ(Σ') = Σ'`).
 
 ### 1.7 The slow axis and `V_𝐢^i`
 
@@ -213,7 +213,9 @@ article assumes the normalised tuple, `S.HasProximalDiagonal`; `S.ProjExpSeparat
 equilibrium state is the hypothesis `herg : Ergodic (shift 1) μ`, which the article takes from
 `thm:irred_eq_state`. The statements hold for every invariant equilibrium state; uniqueness is
 not used. `S.lyapunov₂ μ < S.lyapunov₁ μ` is a hypothesis `hlt` where the article assumes it
-and is derived from `morrisShmerkin_lyapunov_lt` or `System.simple_lyapunov` in the assembly.
+and is derived from the hypothesis `MorrisShmerkinLyapunov` through `System.simple_lyapunov` in
+the assembly. The cited theorems enter as the hypotheses `hms`, `hfk`, `hfjj`, `hjr`, `hfi`,
+`hfib`, `hly`, `hlyb` of `PLAN.md`, section 6.
 
 For the three proved statements of `sec:lyapunov_exponents` the hypotheses are the minimal ones,
 which are weaker than the article's. `thm:lyapunov_exponents_via_g_system` holds by definition
@@ -222,7 +224,8 @@ of the box-like `Σ'`, for every measure and every `𝐢 ∈ Σ'`.
 ## 2. Statements
 
 Difficulty: S under 100 lines, M 100 to 400, L more, X needs theory missing from Mathlib.
-"proved" means the declaration has a complete proof in `tools/LayerE.lean`.
+"proved" marks a statement that the layer proved from the others; the difficulty of every
+other statement is the estimate on which the order of proof of section 3 rests.
 
 ### 2.1 LITERATURE
 
@@ -238,11 +241,11 @@ Difficulty: S under 100 lines, M 100 to 400, L more, X needs theory missing from
 | `System.isMeasurablePartition_xi` | Feng, Lemma 4.2; tex 1959 to 1960 | `measurableSet_SigmaTau`, `System.Bounds.measurable_proj`, `embeddingReal` | M |
 | `System.isMeasurablePartition_xiPerp` | tex 1960 | same | M |
 | `System.isMeasurablePartition_xiBar` | Feng, Lemma 4.2 for `Ψ` | `measurableSet_subshift`, `System.Bounds.measurable_projBar` | M |
-| `System.feng_info_sum`, `System.feng_info_sum_bar` | Feng, Lemma 4.6, first identity of (4.16); used in the proof of `thm:feng_entropy_zero` | Feng, Lemma 4.4(1), Lemma 2.1(ii),(iii) | X: conditional information calculus (chain rule, behaviour under `σ`) is missing; L |
-| `System.feng_entropy_as_limit`, `System.feng_entropy_as_limit_bar` | `thm:feng_entropy_as_limit`; Feng, Lemma 4.6 | `feng_info_sum`, `birkhoff_ae`, `integrable_condInfo` | M given its inputs |
+| `FengInfoSum`, `FengInfoSumBar` | Feng, Lemma 4.6, first identity of (4.16); used in the proof of `thm:feng_entropy_zero` | Feng, Lemma 4.4(1), Lemma 2.1(ii),(iii) | X: conditional information calculus (chain rule, behaviour under `σ`) is missing; L. A hypothesis |
+| `System.feng_entropy_as_limit`, `System.feng_entropy_as_limit_bar` | `thm:feng_entropy_as_limit`; Feng, Lemma 4.6 | `FengInfoSum`, `birkhoff_ae`, `integrable_condInfo` | M given its inputs |
 | `System.feng_entropy_kolmogorov_sinai`, `System.feng_entropy_kolmogorov_sinai_bar` | `thm:feng_entropy_kolmogorov_sinai`; Feng (4.17) | Shannon–McMillan–Breiman for `σ` and `σ⁻¹` in its non-ergodic form | X, L |
-| `System.feng1_planar` | `thm:feng1`, `eq:feng1_1`; Feng, Theorems 1.2 and 1.3 | Feng's article | X: stays an axiom |
-| `System.feng1_bar` | `thm:feng1`, second display; Feng, Theorems 1.2 and 1.3 for `Ψ` | Feng's article | X: stays an axiom |
+| `FengLedrappierYoung` | `thm:feng1`, `eq:feng1_1`; Feng, Theorems 1.2 and 1.3 | Feng's article | X: a hypothesis |
+| `FengLedrappierYoungBar` | `thm:feng1`, second display; Feng, Theorems 1.2 and 1.3 for `Ψ` | Feng's article | X: a hypothesis |
 
 ### 2.2 PAPER and INFRASTRUCTURE
 
@@ -265,32 +268,33 @@ Difficulty: S under 100 lines, M 100 to 400, L more, X needs theory missing from
 | `localEntropy_ae_eq` | `eq:ergodic_entropy_constant` | Mathlib `Ergodic.ae_eq_const_of_ae_eq_comp₀`, `integral_condExp` | S |
 | `System.dimEntropy_zero_eq_entropy` | tex 2087 to 2090 | `feng_entropy_kolmogorov_sinai`, `shannonMcMillanBreiman`, `localEntropy_ae_eq` | S |
 | `System.dimEntropyBar_zero_eq_entropy` | tex 2091 | `feng_entropy_kolmogorov_sinai_bar`, `shannonMcMillanBreiman`, `localEntropy_ae_eq` | S |
-| `System.feng_entropy_zero`, `System.feng_entropy_zero_bar` | `thm:feng_entropy_zero` | `feng_info_sum`, `feng_entropy_as_limit`, `condMeas_atom`, `isMeasurablePartition_*` | M each |
+| `System.feng_entropy_zero`, `System.feng_entropy_zero_bar` | `thm:feng_entropy_zero` | `FengInfoSum`, `feng_entropy_as_limit`, `condMeas_atom`, `isMeasurablePartition_*` | M each |
 | `System.partitions_xi1` | `thm:partitions_xi1` | `eq:commutative_diagram`, `range_tau`, `range_omega`, past saturation, disjointness | M |
 | `System.partition_tau_conj` | `thm:partition_tau_conj` | `partitions_xi1`, `eps_congr` | S to M |
-| `System.sigma_tau_omega_positive` | `thm:sigma_tau_omega_positive_eq_measure` | `System.simple_lyapunov`, `shift_mem_SigmaTau_iff`, `measure_SigmaPrime_compl`, `fengKaenmaki_gibbs`, `birkhoff_ergodic` | M |
-| `System.ergodic_of_gibbsDecomposition`, `System.ergodic_of_hasProximalDiagonal` | INFRASTRUCTURE | `MeasurePreserving.ergodic_of_ergodic_semiconj`; the second also `fengKaenmaki_gibbs`, `fraserJordanJurga_decomposition` | proved |
+| `System.sigma_tau_omega_positive` | `thm:sigma_tau_omega_positive_eq_measure` | `System.simple_lyapunov`, `shift_mem_SigmaTau_iff`, `measure_SigmaPrime_compl`, `FengKaenmakiGibbs`, `birkhoff_ergodic` | M |
+| `System.ergodic_of_gibbsDecomposition`, `System.ergodic_of_hasProximalDiagonal` | INFRASTRUCTURE | `MeasurePreserving.ergodic_of_ergodic_semiconj`; the second also `FengKaenmakiGibbs`, `FraserJordanJurgaDecomposition` | proved |
 | `System.gibbs_tau_omega_positive` | `thm:gibbs_tau_omega_positive` | `lyapunov_exponent_gsystem`, `lyapunov_exponents_via_g_system`, `measure_SigmaPrime_compl`, `sigma_tau_omega_positive`, `System.simple_lyapunov` | M |
 | `System.orientation_restrictions` | `eq:orientation-restrictions` | `GibbsDecomposition.eq_tau`, `eq_omega`, `gibbs_tau_omega_positive`, `sigma_tau_omega_positive` | M |
 | `System.conditional_two_ways` | `thm:conditional_two_ways` | `orientation_restrictions`, `gibbs_tau_omega_positive`, `partitions_xi1`, `condMeas_cond_of_saturated`, `condMeas_unique`, Lusin–Souslin (`MeasurableSet.image_of_measurable_injOn`) | L |
-| `System.overline_h1_zero` | `thm:overline_h1_zero` | `jordanRapaport_dimension`, `GibbsDecomposition.entropy_eq₁`, `entropy_eq₂`, `feng1_bar`, `dimEntropyBar_zero_eq_entropy`, `feng_entropy_as_limit_bar`, `localEntropy_ae_eq`, `conditional_two_ways`, `gibbs_tau_omega_positive` | M |
+| `System.overline_h1_zero` | `thm:overline_h1_zero` | `JordanRapaportDimension`, `GibbsDecomposition.entropy_eq₁`, `entropy_eq₂`, `FengLedrappierYoungBar`, `dimEntropyBar_zero_eq_entropy`, `feng_entropy_as_limit_bar`, `localEntropy_ae_eq`, `conditional_two_ways`, `gibbs_tau_omega_positive` | M |
 | `System.overline_h1_zero_large` | `thm:overline_h1_zero_large` | as above with `feng_entropy_zero_bar` | M |
 | `System.overline_h1_large` | `thm:overline_h1_large` | `gibbs_tau_omega_positive`, `orientation_restrictions`, `conditional_two_ways`, `partition_tau_conj`, `feng_entropy_as_limit`, `feng_entropy_as_limit_bar`, `localEntropy_ae_eq` | M to L |
-| `System.eq_state_h1_zero` | `thm:eq_state_h1_zero` | `overline_h1_zero`, `feng_entropy_zero`, `feng_entropy_zero_bar`, `conditional_two_ways`, `orientation_restrictions`, `measure_SigmaPrime_compl`, `localEntropy_ae_eq`, the two Gibbs axioms | M |
-| `System.eq_state_h1_large` | `thm:eq_state_h1_large` | `jordanRapaport_dimension`, `feng1_bar`, `dimEntropyBar_zero_eq_entropy`, `overline_h1_large`, `IsExactDim.unique` | S to M |
+| `System.eq_state_h1_zero` | `thm:eq_state_h1_zero` | `overline_h1_zero`, `feng_entropy_zero`, `feng_entropy_zero_bar`, `conditional_two_ways`, `orientation_restrictions`, `measure_SigmaPrime_compl`, `localEntropy_ae_eq`, the hypotheses `FengKaenmakiGibbs` and `FraserJordanJurgaDecomposition` | M |
+| `System.eq_state_h1_large` | `thm:eq_state_h1_large` | `JordanRapaportDimension`, `FengLedrappierYoungBar`, `dimEntropyBar_zero_eq_entropy`, `overline_h1_large`, `IsExactDim.unique` | S to M |
 | `System.eq_state_h2_zero` | `thm:eq_state_h2_zero` | `eq_state_h1_zero`, `finer_partition_dirac_mass`, `feng_entropy_zero`, `isMeasurablePartition_xi`, `xi_succ_subset` | S |
 | `System.orto_partition_dirac` | `thm:orto_partition_dirac` | `overline_h1_zero_large`, `conditional_two_ways`, `orientation_restrictions`, `finer_partition_dirac_mass`, `feng_entropy_zero`, `xi_two_subset_xiPerp` | M |
-| `System.SOSC_h2_zero` | `thm:SOSC_h2_zero` | `fengKaenmaki_gibbs` (full support), `System.simple_lyapunov`, `measure_SigmaPrime_compl`, recurrence (`birkhoff_ergodic`, or Poincaré recurrence of `Mathlib/Dynamics/Ergodic/Conservative.lean` with ergodicity), `System.Bounds.proj_eq`, `condMeas_atom`, `feng_entropy_zero` | L |
+| `System.SOSC_h2_zero` | `thm:SOSC_h2_zero` | `FengKaenmakiGibbs` (full support), `System.simple_lyapunov`, `measure_SigmaPrime_compl`, recurrence (`birkhoff_ergodic`, or Poincaré recurrence of `Mathlib/Dynamics/Ergodic/Conservative.lean` with ergodicity), `System.Bounds.proj_eq`, `condMeas_atom`, `feng_entropy_zero` | L |
 | `System.main_extended_ge_two` | `thm:main_extended`, case `s ≥ 2` | Bernoulli equilibrium state for `s ≥ 2` (tex 2471 to 2480), strict monotonicity of the pressure, Hutchinson's uniqueness of the invariant measure, `addHaar_image_linearMap` | L, X for Hutchinson's measure (template `LeanLibraries/FractalGeometry/Hutchinson.lean`) |
 | `neg_lt_entropy_of_two_le` | first step of the proof of `thm:main_extended` | none | proved |
-| `System.main_extended_normalised` | `thm:main_extended`, `0 < s < 2`, normalised | `morrisShmerkin_lyapunov_lt`, `feng1_planar`, `dimEntropy_zero_eq_entropy`, `eq_state_h1_zero`, `eq_state_h2_zero`, `eq_state_h1_large`, `orto_partition_dirac`, `SOSC_h2_zero`, `ledrappierYoung_small`, `ledrappierYoung_large`, `entropy_lt_of_lt_two`, `lyapDim_eq`, `IsEquilibriumState.pressure_eq` | proved |
+| `System.main_extended_normalised` | `thm:main_extended`, `0 < s < 2`, normalised | `MorrisShmerkinLyapunov`, `FengLedrappierYoung`, `dimEntropy_zero_eq_entropy`, `eq_state_h1_zero`, `eq_state_h2_zero`, `eq_state_h1_large`, `orto_partition_dirac`, `SOSC_h2_zero`, `ledrappierYoung_small`, `ledrappierYoung_large`, `entropy_lt_of_lt_two`, `lyapDim_eq`, `IsEquilibriumState.pressure_eq` | proved |
 | `System.main_extended_lt_two_aux`, `System.main_extended_lt_two`, `System.main_extended_lt_two'` | `thm:main_extended`, `0 < s < 2` | `main_extended_normalised`, `Proximal.hasProximalDiagonal_or_sq`, `IsEquilibriumState.map_group`, `pressure_sq`, `entropy_map_group`, `lyapunov₂_sq_map_group`, `ProjExpSeparation.sq`, `StrongOpenSet.sq`, `proj_sq_group`; the primed version also `ergodic_of_hasProximalDiagonal` | proved |
 | `System.main_extended` | `thm:main_extended` | `main_extended_lt_two`, `main_extended_ge_two`, `neg_lt_entropy_of_two_le` | proved |
-| `System.main2`, `System.main2'` | `thm:main2` | `System.simple_lyapunov`, `entropy_le_iff`, `main_extended_lt_two`, respectively `main_extended_lt_two'`, and the hypotheses `hupper`, `hlower` | proved |
+| `System.main2_of_bounds`, `System.main2` | `thm:main2` | `System.simple_lyapunov`, `entropy_le_iff`, `main_extended_lt_two'` and the hypotheses `hupper`, `hlower`; `main2` discharges them by `System.dimH_attractor_le` and `System.le_dimH_attractor` | proved |
 
-The assembly theorems are fully proved from the statements above. `main2'` has exactly the
-hypotheses of `thm:main2` together with `hupper` (Falconer) and `hlower`; it needs no
-ergodicity hypothesis. `hlower` is `System.le_dimH_attractor` of `BoxLike/AffinityMain.lean`.
+The assembly theorems are fully proved from the statements above. `main2_of_bounds` has
+exactly the hypotheses of `thm:main2` together with `hupper` (Falconer) and `hlower`; it needs
+no ergodicity hypothesis. `hupper` is `System.dimH_attractor_le` of `BoxLike/FalconerBound.lean`
+and `hlower` is `System.le_dimH_attractor` of `BoxLike/AffinityMain.lean`.
 
 ## 3. Order of proof
 
@@ -307,32 +311,32 @@ Each line lists the literature inputs it needs beyond the lines before it.
 6. `partitions_xi1`, then `partition_tau_conj`: library only.
 7. `measure_SigmaPrime_compl`: `birkhoff_ae`.
 8. `lyapunov_exponent_gsystem`: `birkhoff_ergodic`.
-9. `sigma_tau_omega_positive`: `birkhoff_ergodic`, `fengKaenmaki_gibbs`,
-   `morrisShmerkin_lyapunov_lt`; uses 4 and 7.
-10. `gibbs_tau_omega_positive`: `fraserJordanJurga_decomposition` through `hdec`; uses 7, 8, 9.
+9. `sigma_tau_omega_positive`: `birkhoff_ergodic`, `FengKaenmakiGibbs`,
+   `MorrisShmerkinLyapunov`; uses 4 and 7.
+10. `gibbs_tau_omega_positive`: `FraserJordanJurgaDecomposition` through `hdec`; uses 7, 8, 9.
 11. `orientation_restrictions`: uses 9, 10.
 12. `conditional_two_ways`: uses 1, 2, 5, 6, 10, 11.
-13. `feng_entropy_zero`, `feng_entropy_zero_bar`: `feng_info_sum`, `feng_info_sum_bar`,
+13. `feng_entropy_zero`, `feng_entropy_zero_bar`: `FengInfoSum`, `FengInfoSumBar`,
     `feng_entropy_as_limit`, `feng_entropy_as_limit_bar`; uses 1, 5.
 14. `dimEntropy_zero_eq_entropy`, `dimEntropyBar_zero_eq_entropy`:
     `feng_entropy_kolmogorov_sinai`, `feng_entropy_kolmogorov_sinai_bar`,
     `shannonMcMillanBreiman`; uses 3.
-15. `overline_h1_zero`, `overline_h1_zero_large`: `jordanRapaport_dimension`, `feng1_bar`,
-    `feng_entropy_as_limit_bar`; uses 3, 10, 12, 13, 14.
+15. `overline_h1_zero`, `overline_h1_zero_large`: `JordanRapaportDimension`,
+    `FengLedrappierYoungBar`, `feng_entropy_as_limit_bar`; uses 3, 10, 12, 13, 14.
 16. `overline_h1_large`: `feng_entropy_as_limit`, `feng_entropy_as_limit_bar`; uses 3, 6, 10,
     11, 12.
-17. `eq_state_h1_zero`: `fengKaenmaki_gibbs`, `fraserJordanJurga_decomposition`; uses 7, 11,
+17. `eq_state_h1_zero`: `FengKaenmakiGibbs`, `FraserJordanJurgaDecomposition`; uses 7, 11,
     12, 13, 15.
-18. `eq_state_h1_large`: `jordanRapaport_dimension`, `feng1_bar`; uses 14, 16.
+18. `eq_state_h1_large`: `JordanRapaportDimension`, `FengLedrappierYoungBar`; uses 14, 16.
 19. `eq_state_h2_zero`: uses 2, 5, 13, 17.
 20. `orto_partition_dirac`: uses 2, 5, 11, 12, 13, 15.
-21. `SOSC_h2_zero`: `fengKaenmaki_gibbs`, `birkhoff_ergodic` or Poincaré recurrence; uses 1, 5,
+21. `SOSC_h2_zero`: `FengKaenmakiGibbs`, `birkhoff_ergodic` or Poincaré recurrence; uses 1, 5,
     7, 13.
-22. `main_extended_normalised` (proved): `feng1_planar`, `morrisShmerkin_lyapunov_lt`; uses 14,
-    17 to 21.
+22. `main_extended_normalised` (proved): `FengLedrappierYoung`, `MorrisShmerkinLyapunov`; uses
+    14, 17 to 21.
 23. `main_extended_lt_two`, `main_extended_lt_two'` (proved): uses 22.
 24. `main_extended_ge_two`: independent of 1 to 23.
-25. `main_extended`, `main2`, `main2'` (proved): uses 23, 24.
+25. `main_extended`, `main2_of_bounds`, `main2` (proved): uses 23, 24.
 
 `SOSC_h2_zero` and `sigma_tau_omega_positive` are stated for every proximal tuple, as in the
 article. The assembly uses them for a tuple containing a proximal diagonal generator only. In
@@ -340,25 +344,28 @@ the general case their proofs need `S.Irreducible` for a proximal tuple with rot
 follows from `Proximal.hasProximalDiagonal_or_sq` and `irreducible_of_hasProximalDiagonal`
 applied to `S.sq`, since a common invariant line of `𝖠` is one of `𝖠²`.
 
-## 4. Literature inputs that become axioms
+## 4. Literature inputs that become hypotheses
 
-Under the rules of `PLAN.md`, section 6, new axioms need explicit authorisation. The inputs of
+Under the rules of `PLAN.md`, section 6, a cited theorem is a `Prop`-valued definition that the
+results using it take as a hypothesis, and new ones need explicit authorisation. The inputs of
 layer E fall into three groups.
 
-Axioms with no realistic alternative.
+Literature statements with no realistic alternative, the `Prop`s of
+`BoxLike/LiteratureFeng.lean`.
 
-- `System.feng1_planar`, `System.feng1_bar`. D.-J. Feng, *Dimension of invariant measures for
+- `FengLedrappierYoung`, `FengLedrappierYoungBar`. D.-J. Feng, *Dimension of invariant measures for
   affine iterated function systems*, Duke Math. J. 172 (2023), Theorems 1.2 and 1.3
   (arXiv:1901.01691; the local PDF is the arXiv version of June 2020). The planar statement is
   the case `d = 2`, `s = 2`, `k_1 = k_2 = 1`; the scalar statement is the case `d = 1` for `Ψ`.
   The article cites Feng–Hu, Comm. Pure Appl. Math. 62 (2009), Theorem 2.8, for the
   exact-dimensionality in the scalar case (tex 2977, 3351); whether its entropy term equals
   `\overline{h}_0 - \overline{h}_1` was not compared.
-- `System.feng_info_sum`, `System.feng_info_sum_bar`, `System.feng_entropy_as_limit`,
-  `System.feng_entropy_as_limit_bar`, `System.feng_entropy_kolmogorov_sinai`,
-  `System.feng_entropy_kolmogorov_sinai_bar`. Feng, Lemma 4.6, (4.16) and (4.17). They can be
-  proved from Birkhoff, Shannon–McMillan–Breiman and Feng's Lemmas 2.1 and 4.4, which is a
-  development of conditional information that Mathlib lacks.
+- `FengInfoSum`, `FengInfoSumBar`. Feng, Lemma 4.6, first identity of (4.16). They can be
+  proved from Birkhoff and Feng's Lemmas 2.1 and 4.4, which is a development of conditional
+  information that Mathlib lacks. `System.feng_entropy_as_limit` and
+  `System.feng_entropy_as_limit_bar` are proved from them with Birkhoff. Feng's (4.17),
+  `feng_entropy_kolmogorov_sinai` and `…_bar`, is not needed: `PastEntropy` proves
+  `h_0(μ) = h(μ)` and `\overline{h}_0(ν) = h(ν)` directly.
 
 The Lean statements specialise Feng's results in two ways that a comparison with the source
 must accept. First, Feng's `Σ'` is any invariant Borel set of full measure on which the
@@ -370,7 +377,7 @@ full measure (tex 2014 to 2017). Degenerate instance checked by hand for both pa
 `|a| ≠ |b|` gives `h_i = 0`, the formula gives `0`, and the projected measure is a Dirac mass
 of pointwise dimension `0`. For `λ_1 = λ_2` the planar statement is silent through `hlt`.
 
-Standard theorems that can be proved.
+Standard theorems, proved in the library except Shannon–McMillan–Breiman, which no proof needs.
 
 - Birkhoff's pointwise ergodic theorem (`birkhoff_ae`, `birkhoff_ergodic`). Mathlib at this pin
   has `birkhoffSum`, `birkhoffAverage` and the von Neumann mean ergodic theorem
@@ -393,20 +400,22 @@ Inputs of the same sections that need no new statement.
 
 - Oseledets' theorem and Froyland–Lloyd–Quas, Theorem 4.1 (tex 1642 to 1664): not needed,
   because `Σ'` has its box-like form. Mathlib has neither Oseledets' nor Kingman's theorem.
-- Morris–Shmerkin, Fraser–Jordan–Jurga, Feng–Käenmäki, Jordan–Rapaport: the four axioms of
-  `BoxLike/Literature.lean`.
+- Morris–Shmerkin, Fraser–Jordan–Jurga, Feng–Käenmäki, Jordan–Rapaport: the four `Prop`s of
+  `BoxLike/Literature.lean`, `MorrisShmerkinLyapunov`, `FraserJordanJurgaDecomposition`,
+  `FengKaenmakiGibbs` and `JordanRapaportDimension`.
 - The Kolmogorov–Sinai generator theorem (Bowen, tex 2063 to 2070): not needed, since
   `entropy` is defined through the generator `𝒫`.
-- Feng–Hu, Theorem 2.8 (tex 3351): contained in `jordanRapaport_dimension`, whose conclusion
+- Feng–Hu, Theorem 2.8 (tex 3351): contained in `JordanRapaportDimension`, whose conclusion
   is exact-dimensionality with the value.
 - Rossi, Theorem 2.2 (`eq:hausdorff_ergodic_lyapunov`): not used, see section 5.
-- Falconer, Theorem 5.4 (`eq:hausdorff_affinity_upper_bound`): the hypothesis `hupper`.
+- Falconer, Theorem 5.4 (`eq:hausdorff_affinity_upper_bound`): the hypothesis `hupper` of
+  `System.main2_of_bounds`, proved as `System.dimH_attractor_le`.
 - `eq:dimension_measure_def` (Falconer, *Techniques*, §10): the hypothesis `hlower`, proved as
   `System.le_dimH_attractor`.
 - For `s ≥ 2`: Hutchinson's uniqueness of the invariant measure (not in Mathlib),
   Käenmäki–Vilppolainen, Lemma 2.1 (strict monotonicity of the pressure), the change of
   variables for Lebesgue measure (Mathlib: `MeasureTheory.Measure.addHaar_image_linearMap`).
-- `thm:irred_eq_state`, uniqueness and ergodicity: not needed as an axiom, see section 5.
+- `thm:irred_eq_state`, uniqueness and ergodicity: not needed as a hypothesis, see section 5.
 
 ## 5. Findings about the article
 
@@ -424,11 +433,11 @@ the proof, with no Lean proof behind it.
    and equal `λ_1` and `λ_1 + λ_2` by bounded convergence and invariance. This argument is
    read, not checked. Borel measurability and saturation with respect to the past are checked.
 
-2. Ergodicity of the equilibrium state. Checked relative to the literature axioms. In the
+2. Ergodicity of the equilibrium state. Checked relative to the literature hypotheses. In the
    normalised case `μ = q_*μ_1` is a factor of the ergodic Gibbs measure `μ_1`, so
    `thm:eq_state_is_sum` alone gives ergodicity (`ergodic_of_gibbsDecomposition`,
    `ergodic_of_hasProximalDiagonal`). The same applies to `μ^(2)` for `𝖠²`. The assembled
-   `main2'` therefore uses `thm:irred_eq_state` through its Gibbs bounds only; its uniqueness
+   `main2_of_bounds` therefore uses `thm:irred_eq_state` through its Gibbs bounds only; its uniqueness
    and ergodicity assertions are not inputs of `thm:main2`.
 
 3. Proof of `thm:main_extended`, tex 3730 to 3732. Checked. The sentence "Since

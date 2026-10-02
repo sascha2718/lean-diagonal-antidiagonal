@@ -1,3 +1,5 @@
+module
+
 /-
 The second iterate `Φ^(2) = (φ_i ∘ φ_j)` of `sec:irreducibility` and the algebraic part of
 `thm:two-block-normalisation`.
@@ -12,8 +14,10 @@ The second iterate `Φ^(2) = (φ_i ∘ φ_j)` of `sec:irreducibility` and the al
   the projective exponential separation condition in its `∃ᶠ` form.
 * `System.ProjExpSeparation.sq`: the condition passes from `Φ` to `Φ^(2)`.
 -/
-import BoxLike.Separation
-import Mathlib.Order.Filter.AtTopBot.Basic
+public import BoxLike.Separation
+public import Mathlib.Order.Filter.AtTopBot.Basic
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -34,12 +38,12 @@ def sq : System (ι × ι) where
   b_ne_zero p := mul_ne_zero (S.b_ne_zero _) (S.ratio_ne_zero _)
   abs_a_lt_one p := by
     rw [abs_mul]
-    exact mul_lt_one_of_nonneg_of_lt_one_left (abs_nonneg _) (S.abs_a_lt_one _)
-      (S.abs_ratio_lt_one _).le
+    exact (mul_le_of_le_one_right (abs_nonneg _) (S.abs_ratio_lt_one _).le).trans_lt
+      (S.abs_a_lt_one _)
   abs_b_lt_one p := by
     rw [abs_mul]
-    exact mul_lt_one_of_nonneg_of_lt_one_left (abs_nonneg _) (S.abs_b_lt_one _)
-      (S.abs_ratio_lt_one _).le
+    exact (mul_le_of_le_one_right (abs_nonneg _) (S.abs_ratio_lt_one _).le).trans_lt
+      (S.abs_b_lt_one _)
 
 /-- The linear parts of `Φ^(2)` are the products `A_i A_j`. -/
 theorem sq_mat (p : ι × ι) : S.sq.mat p = S.mat p.1 * S.mat p.2 := by

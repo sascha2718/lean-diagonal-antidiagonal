@@ -1,3 +1,5 @@
+module
+
 /-
 The upper and lower pointwise dimensions, the upper packing dimension and the lower Hausdorff
 dimension of a measure, and `eq:haus_dim_sum`, from `sec:ledrappier_young_formula`.
@@ -21,9 +23,11 @@ dimension of a measure, and `eq:haus_dim_sum`, from `sec:ledrappier_young_formul
 * `IsExactDim.upperPackingDim_add`, `IsExactDim.lowerHausdorffDim_add`: `eq:haus_dim_sum` for
   two nonzero exact-dimensional measures, as used in the proof of `thm:eq_state_proj_dim`.
 -/
-import BoxLike.MeasureDim
-import Mathlib.MeasureTheory.Function.EssSup
-import Mathlib.Topology.Order.LiminfLimsup
+public import BoxLike.MeasureDim
+public import Mathlib.MeasureTheory.Function.EssSup
+public import Mathlib.Topology.Order.LiminfLimsup
+
+@[expose] public section
 
 namespace BoxLike
 
@@ -74,7 +78,7 @@ theorem liminf_eq_neg_limsup_neg (f : Filter α) (u : α → ℝ) :
   rw [liminf_eq, limsup_eq, ← Real.sSup_neg]
   congr 1
   ext a
-  simp only [Set.mem_neg, Set.mem_setOf_eq, neg_le_neg_iff]
+  simp only [Set.mem_neg, Set.mem_ofPred_eq, neg_le_neg_iff]
 
 /-- Two real functions whose difference tends to `0` along a filter have the same `liminf`
 along it. No boundedness is assumed. -/
@@ -145,7 +149,7 @@ variable {X : Type*} [MeasurableSpace X] {μ : Measure X}
 /-- A real function is not almost everywhere larger than every constant, when the measure is
 nonzero. -/
 theorem exists_frequently_ae_le (hne : μ ≠ 0) (g : X → ℝ) : ∃ a, ∃ᵐ x ∂μ, g x ≤ a := by
-  haveI : (ae μ).NeBot := ae_neBot.2 hne
+  have : (ae μ).NeBot := ae_neBot.2 hne
   by_contra h
   have h' : ∀ n : ℕ, ∀ᵐ x ∂μ, ¬g x ≤ n := fun n =>
     not_frequently.1 fun hn => h ⟨n, hn⟩
@@ -240,7 +244,7 @@ theorem IsDoubleDim.lowerHausdorffDim_eq (h : IsDoubleDim μ d₁ d₂) (hle : d
 equals `dim μ` has positive outer measure. -/
 theorem IsExactDim.measure_hasLocalDim_pos (h : IsExactDim μ d) (hne : μ ≠ 0) :
     0 < μ {x | HasLocalDim μ x d} := by
-  haveI : (ae μ).NeBot := ae_neBot.2 hne
+  have : (ae μ).NeBot := ae_neBot.2 hne
   exact pos_iff_ne_zero.2 (frequently_ae_iff.1 h.frequently)
 
 /-- For a nonzero exact-dimensional measure, `\overline{dim}_p(μ) = dim μ`. -/
@@ -306,7 +310,7 @@ of `thm:exact-dimensional-mixture`, without any assumption on the pointwise dime
 theorem ae_tendsto_log_div_log_sub_of_le [IsFiniteMeasure ν] (h : ν' ≤ ν) :
     ∀ᵐ x ∂ν', Tendsto (fun r : ℝ => Real.log (ν'.real (closedBall x r)) / Real.log r
       - Real.log (ν.real (closedBall x r)) / Real.log r) (𝓝[>] 0) (𝓝 0) := by
-  haveI : IsFiniteMeasure ν' := isFiniteMeasure_of_le ν h
+  have : IsFiniteMeasure ν' := isFiniteMeasure_of_le ν h
   have hac : ν' ≪ ν := Measure.absolutelyContinuous_of_le h
   filter_upwards [hac.ae_le (Besicovitch.ae_tendsto_rnDeriv ν' ν), Measure.rnDeriv_pos hac,
     hac.ae_le (Measure.rnDeriv_ne_top ν' ν)] with x hx hpos htop

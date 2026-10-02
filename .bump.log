@@ -1,0 +1,419 @@
+info: mathlib: fetching revision 'v4.35.0-rc2' from https://github.com/leanprover-community/mathlib4
+info: toolchain not updated; already up-to-date
+info: mathlib: running post-update hooks
+Current branch: HEAD
+Using cache from origin: (some leanprover-community/mathlib4)
+No files to download
+Already decompressed 8915 file(s)
+Current branch: HEAD
+Using cache from origin: (some leanprover-community/mathlib4)
+No files to download
+Already decompressed 8915 file(s)
+✔ [3181/3258] Built BoxLike.Orientation (1.5s)
+⚠ [3182/3258] Built BoxLike.LyapunovDim (2.1s)
+warning: BoxLike/LyapunovDim.lean:20:0: 'Mathlib.Data.Real.Basic' has been deprecated: please replace this import by
+
+import Mathlib.Basic.Real.Basic
+warning: BoxLike/LyapunovDim.lean:49:8: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: BoxLike/LyapunovDim.lean:59:8: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: BoxLike/LyapunovDim.lean:59:19: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: BoxLike/LyapunovDim.lean:69:8: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: BoxLike/LyapunovDim.lean:69:20: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: BoxLike/LyapunovDim.lean:187:15: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: BoxLike/LyapunovDim.lean:193:15: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: BoxLike/LyapunovDim.lean:193:38: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+⚠ [3183/3258] Built BoxLike.MeasureDim (2.5s)
+warning: BoxLike/MeasureDim.lean:60:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: BoxLike/MeasureDim.lean:116:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: BoxLike/MeasureDim.lean:167:4: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: BoxLike/MeasureDim.lean:182:4: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: BoxLike/MeasureDim.lean:196:4: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: BoxLike/MeasureDim.lean:197:4: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+✔ [3184/3258] Built BoxLike.Coding (1.6s)
+✖ [3185/3258] Building BoxLike.Birkhoff (3.1s)
+trace: .> LEAN_PATH=/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/Cli/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/batteries/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/Qq/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/aesop/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/proofwidgets/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/importGraph/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/plausible/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/mathlib/.lake/build/lib/lean:/Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/lib/lean /Users/sascha/.elan/toolchains/leanprover--lean4---v4.35.0-rc2/bin/lean /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/BoxLike/Birkhoff.lean -o /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/lib/lean/BoxLike/Birkhoff.olean -i /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/lib/lean/BoxLike/Birkhoff.ilean -c /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/ir/BoxLike/Birkhoff.c --setup /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/ir/BoxLike/Birkhoff.setup.json --json
+error: BoxLike/Birkhoff.lean:89:4: `gcongr` did not make progress.
+
+case succ
+X : Type u_1
+T : X → X
+h : X → ℝ
+N : ℕ
+x : X
+hx : 0 < birkhoffMax T h N x
+j : ℕ
+hk : j + 1 ≤ N
+hkeq : birkhoffMax T h N x = birkhoffSum T h (j + 1) x
+⊢ (h + birkhoffSum T h j ∘ T) x ≤ h x + birkhoffMax T h N (T x)
+error: BoxLike/Birkhoff.lean:116:4: linarith failed to find a contradiction
+case mp
+X : Type u_1
+T : X → X
+h : X → ℝ
+x : X
+hx : x ∈ T ⁻¹' birkhoffUnbounded T h
+c : ℝ
+n : ℕ
+hn : c - h x < birkhoffSum T h n (T x)
+a✝ : (h + birkhoffSum T h n ∘ T) x ≤ c
+⊢ False
+failed
+error: BoxLike/Birkhoff.lean:125:6: linarith failed to find a contradiction
+case mpr.succ
+X : Type u_1
+T : X → X
+h : X → ℝ
+x : X
+hx : x ∈ birkhoffUnbounded T h
+c : ℝ
+m : ℕ
+hn : max (c + h x) 0 < (h + birkhoffSum T h m ∘ T) x
+this : c + h x < (h + birkhoffSum T h m ∘ T) x
+a✝ : birkhoffSum T h m (T x) ≤ c
+⊢ False
+failed
+error: BoxLike/Birkhoff.lean:136:29: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  birkhoffSum T g ?n
+in the target expression
+  (birkhoffSum T f - birkhoffSum T g) n x = birkhoffSum T f n x - ↑n * g x
+
+X : Type u_1
+T : X → X
+f g : X → ℝ
+hg : g ∘ T = g
+n : ℕ
+x : X
+this : (fun y => f y - g y) = f - g
+⊢ (birkhoffSum T f - birkhoffSum T g) n x = birkhoffSum T f n x - ↑n * g x
+warning: BoxLike/Birkhoff.lean:203:34: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+warning: BoxLike/Birkhoff.lean:264:4: `Filter.eventuallyEq_set` has been deprecated: Use `Filter.eventuallyEqSet_iff` instead
+
+Hint: Replace the deprecated name:
+  e̵v̵e̵n̵t̵u̵a̵l̵l̵y̵E̵q̵_̵s̵e̵t̵e̲v̲e̲n̲t̲u̲a̲l̲l̲y̲E̲q̲S̲e̲t̲_̲i̲f̲f̲
+warning: BoxLike/Birkhoff.lean:264:58: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+warning: BoxLike/Birkhoff.lean:345:34: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+warning: BoxLike/Birkhoff.lean:354:34: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+⚠ [3186/3258] Built BoxLike.SetDimensions (3.2s)
+warning: BoxLike/SetDimensions.lean:986:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: BoxLike/SetDimensions.lean:987:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+✖ [3187/3258] Building BoxLike.Entropy (2.3s)
+trace: .> LEAN_PATH=/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/Cli/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/batteries/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/Qq/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/aesop/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/proofwidgets/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/importGraph/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/plausible/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/mathlib/.lake/build/lib/lean:/Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/lib/lean /Users/sascha/.elan/toolchains/leanprover--lean4---v4.35.0-rc2/bin/lean /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/BoxLike/Entropy.lean -o /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/lib/lean/BoxLike/Entropy.olean -i /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/lib/lean/BoxLike/Entropy.ilean -c /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/ir/BoxLike/Entropy.c --setup /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/ir/BoxLike/Entropy.setup.json --json
+warning: BoxLike/Entropy.lean:116:23: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵S̲e̲t̲.̲m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+warning: BoxLike/Entropy.lean:143:2: `measurable_pi_lambda` has been deprecated: Use `Measurable.of_eval` instead
+
+Hint: Replace the deprecated name:
+  m̵e̵a̵s̵u̵r̵a̵b̵l̵e̵_̵p̵i̵_̵l̵a̵m̵b̵d̵a̵M̲e̲a̲s̲u̲r̲a̲b̲l̲e̲.̲o̲f̲_̲e̲v̲a̲l̲
+error: BoxLike/Entropy.lean:143:25: Application type mismatch: The argument
+  fun k => measurable_pi_apply (n + k)
+has type
+  ∀ (k : ℤ), Measurable fun f => f (n + k)
+but is expected to have type
+  MeasurableSet ?m.13
+in the application
+  measurable_pi_lambda ?m.12 fun k => measurable_pi_apply (n + k)
+warning: BoxLike/Entropy.lean:147:2: `measurable_pi_lambda` has been deprecated: Use `Measurable.of_eval` instead
+
+Hint: Replace the deprecated name:
+  m̵e̵a̵s̵u̵r̵a̵b̵l̵e̵_̵p̵i̵_̵l̵a̵m̵b̵d̵a̵M̲e̲a̲s̲u̲r̲a̲b̲l̲e̲.̲o̲f̲_̲e̲v̲a̲l̲
+error: BoxLike/Entropy.lean:147:25: Application type mismatch: The argument
+  fun k => measurable_pi_apply k
+has type
+  ∀ (k : ℤ), Measurable fun f => f k
+but is expected to have type
+  MeasurableSet ?m.13
+in the application
+  measurable_pi_lambda ?m.12 fun k => measurable_pi_apply k
+⚠ [3190/3258] Built BoxLike.Conditional (2.3s)
+warning: BoxLike/Conditional.lean:92:2: Try this: 
+  letI̵
+
+The goal is a proposition, so `let` is preferred over `letI`.
+The difference between `let` and `letI` is that `letI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+⚠ [3191/3258] Built BoxLike.System (1.8s)
+warning: BoxLike/System.lean:26:0: 'Mathlib.Data.Real.Basic' has been deprecated: please replace this import by
+
+import Mathlib.Basic.Real.Basic
+✔ [3192/3258] Built BoxLike.MassDistribution (2.2s)
+⚠ [3193/3258] Built BoxLike.MeasureDimBounds (2.2s)
+warning: BoxLike/MeasureDimBounds.lean:77:26: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  S̵e̵t̵.̵m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵S̲e̲t̲.̲m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+warning: BoxLike/MeasureDimBounds.lean:148:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: BoxLike/MeasureDimBounds.lean:243:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: BoxLike/MeasureDimBounds.lean:309:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+✖ [3194/3258] Building BoxLike.ConditionalMeasures (1.9s)
+trace: .> LEAN_PATH=/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/Cli/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/batteries/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/Qq/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/aesop/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/proofwidgets/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/importGraph/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/plausible/.lake/build/lib/lean:/Users/sascha/Documents/lean/mathematics_in_lean/.lake/packages/mathlib/.lake/build/lib/lean:/Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/lib/lean /Users/sascha/.elan/toolchains/leanprover--lean4---v4.35.0-rc2/bin/lean /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/BoxLike/ConditionalMeasures.lean -o /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/lib/lean/BoxLike/ConditionalMeasures.olean -i /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/lib/lean/BoxLike/ConditionalMeasures.ilean -c /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/ir/BoxLike/ConditionalMeasures.c --setup /Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean/.lake/build/ir/BoxLike/ConditionalMeasures.setup.json --json
+error: BoxLike/ConditionalMeasures.lean:94:4: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ∫⁻ (a : Ω × Ω), h a.1 * g a.2 ∂Measure.map (fun ω => (id ω, id ω)) μ
+in the target expression
+  ∫⁻ (x : Ω × Ω), h x.1 * g x.2 ∂Measure.map Function.diag μ =
+    ∫⁻ (a : Ω), ∫⁻ (b : Ω), h (a, b).1 * g (a, b).2 ∂(condExpKernel μ (saturated ξ)) a ∂μ.trim hm
+
+Ω : Type u_1
+mΩ : MeasurableSpace Ω
+inst✝¹ : StandardBorelSpace Ω
+μ : Measure Ω
+inst✝ : IsFiniteMeasure μ
+ξ : Ω → Set Ω
+h g : Ω → ℝ≥0∞
+hh : Measurable h
+hg : Measurable g
+hm : saturated ξ ≤ mΩ
+hF : Measurable fun p => h p.1 * g p.2
+hd : Measurable fun ω => (id ω, id ω)
+h1 :
+  ∫⁻ (x : Ω × Ω), h x.1 * g x.2 ∂Measure.map Function.diag μ =
+    ∫⁻ (a : Ω), ∫⁻ (b : Ω), h (a, b).1 * g (a, b).2 ∂(condExpKernel μ (saturated ξ)) a ∂μ.trim hm
+⊢ ∫⁻ (x : Ω), h x * ∫⁻ (y : Ω), g y ∂condMeas μ ξ x ∂μ = ∫⁻ (x : Ω), h x * g x ∂μ
+⚠ [3196/3258] Built BoxLike.Separation (1.9s)
+warning: BoxLike/Separation.lean:17:0: 'Mathlib.Data.ENNReal.Real' has been deprecated: please replace this import by
+
+import Mathlib.Basic.ENNReal.Real
+✔ [3197/3258] Built BoxLike.SelfAffineMeasure (1.0s)
+⚠ [3198/3258] Built BoxLike.SingularValue (2.5s)
+warning: BoxLike/SingularValue.lean:78:17: `if_true` has been deprecated: Use `ite_true` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵t̵r̵u̵e̵i̲t̲e̲_̲t̲r̲u̲e̲
+warning: BoxLike/SingularValue.lean:79:10: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: BoxLike/SingularValue.lean:99:11: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: BoxLike/SingularValue.lean:107:11: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: BoxLike/SingularValue.lean:107:34: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: BoxLike/SingularValue.lean:115:11: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: BoxLike/SingularValue.lean:115:33: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+⚠ [3199/3258] Built BoxLike.NoOverlapExampleFree (2.5s)
+warning: BoxLike/NoOverlapExampleFree.lean:471:4: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+⚠ [3200/3258] Built BoxLike.LocalDimBounds (2.9s)
+warning: BoxLike/LocalDimBounds.lean:117:13: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+
+Hint: Replace the deprecated name:
+  m̵e̵m̵_̵s̵e̵t̵O̵f̵_̵e̵q̵m̲e̲m̲_̲o̲f̲P̲r̲e̲d̲_̲e̲q̲
+warning: BoxLike/LocalDimBounds.lean:216:4: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: BoxLike/LocalDimBounds.lean:224:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: BoxLike/LocalDimBounds.lean:257:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: BoxLike/LocalDimBounds.lean:419:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+⚠ [3201/3258] Built BoxLike.SecondIterate (1.8s)
+warning: BoxLike/SecondIterate.lean:37:10: `mul_lt_one_of_nonneg_of_lt_one_left` has been deprecated: No replacement, use constituent lemmas from proof.
+warning: BoxLike/SecondIterate.lean:41:10: `mul_lt_one_of_nonneg_of_lt_one_left` has been deprecated: No replacement, use constituent lemmas from proof.
+⚠ [3202/3258] Built BoxLike.Projection (2.2s)
+warning: BoxLike/Projection.lean:72:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+warning: BoxLike/Projection.lean:284:15: `if_true` has been deprecated: Use `ite_true` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵t̵r̵u̵e̵i̲t̲e̲_̲t̲r̲u̲e̲
+⚠ [3203/3258] Built BoxLike.Pressure (2.0s)
+warning: BoxLike/Pressure.lean:46:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+⚠ [3204/3258] Built BoxLike.BoxLikeMatrix (3.3s)
+warning: BoxLike/BoxLikeMatrix.lean:235:8: `if_true` has been deprecated: Use `ite_true` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵t̵r̵u̵e̵i̲t̲e̲_̲t̲r̲u̲e̲
+⚠ [3205/3258] Built BoxLike.Proximal (2.7s)
+warning: BoxLike/Proximal.lean:166:27: `if_true` has been deprecated: Use `ite_true` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵t̵r̵u̵e̵i̲t̲e̲_̲t̲r̲u̲e̲
+✔ [3206/3258] Built BoxLike.Measurable (2.3s)
+⚠ [3223/3258] Built BoxLike.PackingDimMeasure (3.9s)
+warning: BoxLike/PackingDimMeasure.lean:229:2: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+✔ [3224/3258] Built BoxLike.AffinityDim (1.9s)
+✔ [3253/3258] Built BoxLike.Classification (1.0s)
+Some required targets logged failures:
+- BoxLike.Birkhoff
+- BoxLike.Entropy
+- BoxLike.ConditionalMeasures
+error: build failed
