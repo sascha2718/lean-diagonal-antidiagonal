@@ -13,7 +13,7 @@ globs = ["BoxLike", "BoxLike.*"]
 
 # Comparator audit modules (not part of the library, not default targets):
 # `Challenge` restates the headline theorems with `sorry`, `Solution` proves them
-# by the library declarations. See comparator.json.
+# by the library declarations. See comparator-config.json.
 [[lean_lib]]
 name = "Challenge"
 

@@ -5,7 +5,7 @@ The sets `Σ^τ`, `Σ^ω`, `Σ'` and the Oseledets filtration of `sec:lyapunov_e
 box-like form of tex lines 1675 to 1689: `Σ'` is the set of sequences for which the two backward
 coordinate growth rates exist and equal `λ_1(𝖠, μ)` and `λ_2(𝖠, μ)` in either order, and the
 slow subspace `V_𝐢^1` is a coordinate axis. The measure enters through the two exponents only.
-`LAYER_E.md` records the choices made.
+`docs/layer-e.md` records the choices made.
 
 * `SamePast`, `pastWord_congr`, `pastWord_eq_futureWord`: the relation `𝐢^- = 𝐣^-` of
   `sec:two_sided_shift_space` and the word `i_{-n} ⋯ i_{-1}`.

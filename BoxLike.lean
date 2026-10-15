@@ -9,8 +9,8 @@ constant depends on `propext`, `Classical.choice` and `Quot.sound` only. Literat
 cited by the article without proof are `Prop`-valued definitions of the modules
 `BoxLike/Literature.lean`, `BoxLike/LiteratureFeng.lean` and `BoxLike/LiteratureRemarks.lean`,
 and every result that uses one takes it as a hypothesis; the last module holds the ones that no
-main result depends on. `PLAN.md` records the representation, the state of every labelled
-result, the remaining work and the fidelity boundary.
+main result depends on. `docs/correspondence.md` records the state of every numbered result,
+the remaining work and the fidelity boundary, and `docs/mathlib-gaps.md` the representation.
 
 * `Orientation`: the two-sided shift `σ^n` and the orientation cocycle `ε_n` of
   `eq:def_of_eps_mod2`, with the cocycle identity `eq:tau_omega_sigma_commutative1`.

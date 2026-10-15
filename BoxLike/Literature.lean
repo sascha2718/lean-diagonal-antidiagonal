@@ -4,7 +4,7 @@ module
 The literature theorems of the main line that the article cites without proof, as `Prop`-valued
 definitions. A result that uses one of them takes it as a hypothesis. `BoxLike/LiteratureFeng.lean`
 holds the results of Feng, and `BoxLike/LiteratureRemarks.lean` the citations that no main result
-depends on. `PLAN.md`, "Fidelity boundary", states the rules: every citation is a statement about
+depends on. `docs/correspondence.md`, "Fidelity boundary", states the rules: every citation is a statement about
 defined objects and carries the hypotheses under which the article uses the cited result.
 
 Standing conventions: `μ` is a Borel probability measure on `Σ = ℤ → ι`, invariant under the
@@ -25,7 +25,7 @@ left shift `shift 1`; the alphabet `ι` is finite with the discrete `σ`-algebra
 Falconer's bound `eq:hausdorff_affinity_upper_bound`, which the article cites, is a theorem of
 the library (`System.dimH_attractor_le` in `BoxLike/FalconerBound.lean`).
 
-The statements were compared with the sources on 2026-09-20; `PLAN.md`, "Fidelity boundary",
+The statements were compared with the sources on 2026-09-20; `docs/correspondence.md`, "Fidelity boundary",
 records the reductions between each source and its statement.
 
 Each statement quantifies over every finite alphabet `ι : Type u` with the discrete

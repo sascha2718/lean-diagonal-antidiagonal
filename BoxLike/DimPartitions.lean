@@ -6,7 +6,7 @@ The partitions and the entropies of a box-like system: the system-specific part 
 state of a tuple containing a proximal diagonal generator, and the first step of the proof of
 `thm:main_extended` for `s ≥ 2`. The partitions are atom maps in the sense of
 `BoxLike/Conditional.lean`, and `Σ'`, `V_𝐢^i` have the box-like form of `BoxLike/SlowAxis.lean`.
-`LAYER_E.md` records the choices made.
+`docs/layer-e.md` records the choices made.
 
 * `System.xi`, `System.xiPerp`: the partitions `ξ_0, ξ_1, ξ_2` and `ξ_1^⊥` of `Σ'`, extended to
   `Σ` by the atom `Σ ∖ Σ'`.

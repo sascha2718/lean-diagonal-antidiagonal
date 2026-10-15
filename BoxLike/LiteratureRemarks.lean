@@ -4,7 +4,7 @@ module
 Literature theorems behind results off the main line of the article, as `Prop`-valued
 definitions; a result that uses one of them takes it as a hypothesis. The four main results
 `thm:main1`, `thm:main2`, `thm:eq_state_proj_dim` and `thm:main_extended` do not depend on this
-module. The rules of `PLAN.md`, "Fidelity boundary", apply.
+module. The rules of `docs/correspondence.md`, "Fidelity boundary", apply.
 
 Standing conventions: measures on `Σ = ℤ → ι` and on `Σ_Z ⊆ (ι × ZMod 2)^ℤ` are Borel
 probability measures, invariant under the left shift `shift 1`; the alphabet `ι` is finite with
@@ -18,7 +18,7 @@ the discrete `σ`-algebra.
   `0 < s ≤ 1` and to a rescaled tuple with `q = 2 - s` for `1 < s < 2`.
 
 The statements were compared with the sources on 2026-09-21 (arXiv:1002.2036v1 and the journal
-version of Feng–Hu, arXiv:1009.3129v1 and the journal version of Feng–Käenmäki); `PLAN.md`,
+version of Feng–Hu, arXiv:1009.3129v1 and the journal version of Feng–Käenmäki); `docs/correspondence.md`,
 "Fidelity boundary", records the reductions.
 
 Each statement quantifies over every finite alphabet `ι : Type u` with the discrete

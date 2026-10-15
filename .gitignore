@@ -4,6 +4,7 @@ build/
 *.ilean
 *.trace
 .DS_Store
+NOTES.local.md
 
 # Agent experiments and axiom printouts
 tools/scratch/

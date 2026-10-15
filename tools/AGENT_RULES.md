@@ -1,10 +1,10 @@
 # Rules for worker agents
 
 The project is the Lean 4 formalisation of the article `../diagonal-antidiagonal.tex`
-("Hausdorff dimension of planar box-like self-affine sets with rotations"). Lean `v4.32.2`,
-Mathlib `v4.32.2`. Work in `/Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean`.
+("Hausdorff dimension of planar box-like self-affine sets with rotations"). Lean `v4.35.0-rc2`,
+Mathlib `v4.35.0-rc2`. Work in `/Users/sascha/Documents/ActiveResearch/DA-AK-ST/lean`.
 
-Read first: `PLAN.md` sections 0, 1, 6 and 8, `README.md`, and one existing module for the house
+Read first: `README.md`, `docs/correspondence.md` (statement layer, fidelity boundary), `docs/mathlib-gaps.md` (representation), `NOTES.local.md` (build setup, technique notes), and one existing module for the house
 style (for example `BoxLike/AffinityDim.lean`). Read the modules you build on before you state
 anything about their objects.
 
@@ -17,7 +17,7 @@ anything about their objects.
   or a `def … : Prop`), and report the exact statement and its source. The project owner decides
   about axioms.
 * Create only the files named in your task. Do not edit existing modules, `BoxLike.lean`,
-  `BoxLike/AxCheck.lean`, `PLAN.md` or `README.md`. If an existing lemma is missing, prove it in
+  `BoxLike/AxCheck.lean`, the files under `docs/`, `paper-correspondence.yaml` or `README.md`. If an existing lemma is missing, prove it in
   your file and report it.
 * Other agents work in this directory at the same time. Do not build, edit or delete their files.
 * Check your file with `lake env lean BoxLike/<File>.lean`; it writes nothing. When the file is

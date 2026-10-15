@@ -47,7 +47,7 @@ sources:
     relationship: "formalizes"
     note: >-
       The paper whose main results are formalised here. Theorem numbers in this file refer to
-      the manuscript diagonal-antidiagonal.tex. paper-correspondence.yaml records the
+      the manuscript diagonal-antidiagonal.tex. paper-correspondence.yaml records, with a fingerprint of the LaTeX source of every numbered statement, the
       statement-by-statement correspondence with the Lean declarations, for the static check
       described in the README. No novelty is claimed here beyond what the paper itself claims.
     license: ""  # TODO(authors): the licence under which the paper is posted.
@@ -190,7 +190,7 @@ related_formalizations: []
 
 status:
   scope: >-
-    Formalised and audited: the seven theorems listed in comparator.json. They are Theorem 1.2
+    Formalised and audited: the seven theorems listed in comparator-config.json. They are Theorem 1.2
     (for s = dimaff(X) < 2 the coordinate projections of the s-equilibrium state are
     double-dimensional, fail to be exact-dimensional precisely when s < 2 - λ_1/λ_2, and are
     exact-dimensional of dimension one at and above this threshold), Theorem 4.4 (for 0 < s < 2
@@ -217,7 +217,7 @@ status:
     without separation rest on further cited theorems taken as hypotheses (Fraser;
     Bárány–Käenmäki; Feng–Käenmäki; Feng–Hu). Not formalised: Lemma 3.6, which the paper uses
     only for the identity h_0(μ) = h(μ), proved directly; the explicit Lyapunov exponents and
-    the numerical values of Example 4.5; Question 1.4.
+    the numerical values of Example 4.5; Question 1.4. paper-correspondence.yaml assesses all 40 numbered statements of the manuscript.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: ["propext", "Classical.choice", "Quot.sound"]
@@ -226,7 +226,7 @@ status:
       file: "Solution.lean"
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "comparator.json"
+      comparator_config: "comparator-config.json"
       literature_dependencies:
         - statement: "MorrisShmerkinLyapunov: the Lyapunov exponents of the equilibrium state are distinct"
           source: "On equality of Hausdorff and affinity dimensions, via self-affine measures on positive subsystems"
@@ -240,7 +240,7 @@ status:
       file: "Solution.lean"
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "comparator.json"
+      comparator_config: "comparator-config.json"
       literature_dependencies:
         - statement: "MorrisShmerkinLyapunov: the Lyapunov exponents of the equilibrium state are distinct"
           source: "On equality of Hausdorff and affinity dimensions, via self-affine measures on positive subsystems"
@@ -254,7 +254,7 @@ status:
       file: "Solution.lean"
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "comparator.json"
+      comparator_config: "comparator-config.json"
       literature_dependencies: &main_line
         - statement: "MorrisShmerkinLyapunov: the Lyapunov exponents of the equilibrium state are distinct"
           source: "On equality of Hausdorff and affinity dimensions, via self-affine measures on positive subsystems"
@@ -276,25 +276,25 @@ status:
       file: "Solution.lean"
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "comparator.json"
+      comparator_config: "comparator-config.json"
       literature_dependencies: *main_line
     - declaration: "Challenge.audit_main_extended_ge_two"
       file: "Solution.lean"
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "comparator.json"
+      comparator_config: "comparator-config.json"
       literature_dependencies: []
     - declaration: "Challenge.audit_dimH_eq_min"
       file: "Solution.lean"
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "comparator.json"
+      comparator_config: "comparator-config.json"
       literature_dependencies: *main_line
     - declaration: "Challenge.audit_dimH_of_two_le"
       file: "Solution.lean"
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "comparator.json"
+      comparator_config: "comparator-config.json"
       literature_dependencies: []
 
 automation:
@@ -355,7 +355,7 @@ fidelity:
     use Proposition 3.10 only through its Gibbs bounds. Off the main line, Fraser's
     Theorem 2.3 bounds the upper Minkowski dimension where Theorem 1.1 of the paper writes
     dim_M X. The library declares no axiom. Challenge.lean contains one sorry per audited
-    theorem, which Solution.lean supplies; comparator.json declares no definition_names, so no
+    theorem, which Solution.lean supplies; comparator-config.json declares no definition_names, so no
     part of the statement vocabulary is left open for the solution to instantiate.
 
 review:
@@ -367,7 +367,7 @@ review:
     Solution.lean proves the statements of Challenge.lean from propext, Classical.choice and
     Quot.sound alone. It does not check that these statements, or the literature hypotheses
     they take, are faithful formalisations of the paper and of the cited sources; the doc
-    comments of the literature modules, PLAN.md and paper-correspondence.yaml record that
+    comments of the literature modules, docs/correspondence.md and paper-correspondence.yaml record that
     correspondence.
   # TODO(authors): record any manual review of Challenge.lean and of the literature hypotheses
   # against the paper and the sources.

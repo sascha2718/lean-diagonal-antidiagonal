@@ -1,49 +1,77 @@
 #!/usr/bin/env python3
 """Static consistency checks for the paper--Lean correspondence manifest.
 
-This script deliberately does not invoke Lean or LaTeX.  It catches stale labels,
-misspelled Lean declaration names, literature hypotheses that are not `Prop`-valued
-definitions, and drift between the challenge, solution, comparator and
-formalization.yaml sources.  A successful run is not a substitute for elaboration
-by Lean.
+The manifest `paper-correspondence.yaml` records, for every numbered statement of the
+manuscript and for selected unnumbered prose, a fingerprint of its LaTeX source, its printed
+number, its status in the formalisation and the Lean declarations that correspond to it. This
+script checks that the manifest agrees with the manuscript, the Lean sources,
+`comparator-config.json`, `formalization.yaml` and `docs/correspondence.md`:
+
+* every numbered statement environment of the manuscript has exactly one entry, with the
+  environment kind and the printed number the manuscript gives it;
+* the fingerprint of every statement, of every prose span and of the whole manuscript is
+  unchanged since the correspondence was last reviewed, so that an edit of the manuscript is
+  reported until its Lean side has been checked;
+* every Lean name the manifest mentions is declared in the sources, every literature hypothesis
+  is a `Prop`-valued definition, the sources declare no axiom and contain no `sorry` outside
+  `Challenge.lean`;
+* the headline entries, `comparator-config.json`, `Challenge.lean`, `Solution.lean` and the
+  alignment section of `formalization.yaml` name the same audited theorems;
+* `docs/correspondence.md` mentions every numbered statement and every audited theorem.
+
+Fingerprints hash the TeX tokens of a span, ignoring comments and layout whitespace. After a
+manuscript change has been reviewed against the Lean side, `--write-fingerprints` records the
+new fingerprints in place; `--print-fingerprints` only prints them.
+
+This script deliberately does not invoke Lean or LaTeX. A successful run is not a substitute
+for elaboration by Lean, and it does not establish mathematical equivalence.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
+import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 
-STATEMENT_ENVIRONMENTS = {
+# The theorem-like environments of the manuscript that share the theorem counter, which is
+# numbered within sections. `claim` is starred in the preamble and so unnumbered.
+NUMBERED_ENVIRONMENTS = {
     "theorem",
     "proposition",
     "lemma",
     "corollary",
-    "definition",
+    "conjecture",
+    "remark",
+    "remarks",
     "example",
+    "definition",
+    "question",
 }
 # Label prefixes the manuscript uses for statement environments.
-LABEL_PREFIX = r"(?:thm|lem|prop|cor|def|ex)"
-LABEL_RE = re.compile(r"\\label\{(" + LABEL_PREFIX + r":[^}]+)\}")
-SOURCE_LABEL_RE = re.compile(r"^" + LABEL_PREFIX + r":")
-BEGIN_RE = re.compile(
-    r"\\begin\{(" + "|".join(sorted(STATEMENT_ENVIRONMENTS)) + r")\}"
+LABEL_PREFIXES = ("thm", "lem", "prop", "cor", "def", "rem", "ex", "q", "conj")
+LABEL_RE = re.compile(r"\\label\{((?:" + "|".join(LABEL_PREFIXES) + r"):[^}]+)\}")
+SOURCE_LABEL_RE = re.compile(r"^(?:" + "|".join(LABEL_PREFIXES) + r"):")
+BEGIN_RE = re.compile(r"\\begin\{(" + "|".join(sorted(NUMBERED_ENVIRONMENTS)) + r")\}")
+NEWTHEOREM_RE = re.compile(r"\\newtheorem\{([A-Za-z]+)\}")
+NUMBERING_RE = re.compile(
+    r"\\section\*?\{|\\appendix\b|\\begin\{(" + "|".join(sorted(NUMBERED_ENVIRONMENTS)) + r")\}"
 )
-# Unnumbered material: `structure` for definitions made in running text, `claim` for
-# statements made in running text.  Their sources are synthetic identifiers `kind:...`.
-SYNTHETIC_KINDS = {"structure", "claim"}
-ALLOWED_STATUSES = {"formalized", "cited", "intentionally_unformalized"}
+ALLOWED_STATUSES = {"formalized", "partially_formalized", "cited", "intentionally_unformalized"}
+MAPPED_STATUSES = {"formalized", "partially_formalized"}
 ALLOWED_RELATIONS = {
     "exact",
     "split",
     "representation",
     "specialization",
     "generalization",
+    "stronger",
     "partial",
 }
 STANDARD_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
@@ -56,6 +84,7 @@ DECL_RE = re.compile(
     r"(theorem|lemma|def|abbrev|structure|class|inductive|axiom|opaque|instance)\s+"
     r"([^\s\(\{\[:]+)"
 )
+SHA_RE = re.compile(r"[0-9a-f]{64}")
 
 
 class ManifestError(ValueError):
@@ -64,10 +93,12 @@ class ManifestError(ValueError):
 
 @dataclass(frozen=True)
 class PaperDeclaration:
-    label: str
+    label: str | None
     kind: str
+    number: str
     file: Path
     line: int
+    text: str
 
 
 @dataclass(frozen=True)
@@ -77,6 +108,10 @@ class LeanDeclaration:
     file: Path
     line: int
     span: str
+
+
+# ---------------------------------------------------------------------------------------------
+# Manifest loading: a dependency-free YAML subset.
 
 
 def _scalar(raw: str, path: Path, line: int) -> Any:
@@ -117,11 +152,11 @@ def _key_value(text: str, path: Path, line: int) -> tuple[str, Any]:
 
 
 def load_manifest(path: Path) -> dict[str, Any]:
-    """Load the documented, dependency-free YAML subset used by the manifest.
+    """Load the documented YAML subset used by the manifest.
 
-    JSON is accepted as well because it is a YAML subset.  The YAML form supports
-    top-level scalars, top-level scalar lists, and a top-level ``entries`` list of
-    mappings whose values are scalars or scalar lists.
+    JSON is accepted as well because it is a YAML subset. The YAML form supports top-level
+    scalars and inline JSON values, a top-level ``manuscript_files`` list, and a top-level
+    ``entries`` list of mappings whose values are scalars, inline JSON values or scalar lists.
     """
 
     text = path.read_text(encoding="utf-8")
@@ -151,7 +186,7 @@ def load_manifest(path: Path) -> dict[str, Any]:
             key, scalar = _key_value(stripped, path, line_no)
             if key in result:
                 raise ManifestError(f"{path}:{line_no}: duplicate top-level key {key!r}")
-            if scalar is None and key in {"manuscript_files", "paper_files", "entries"}:
+            if scalar is None and key in {"manuscript_files", "entries"}:
                 result[key] = []
                 top_list = key
             else:
@@ -161,7 +196,7 @@ def load_manifest(path: Path) -> dict[str, Any]:
             entry_list = None
             continue
 
-        if top_list in {"manuscript_files", "paper_files"}:
+        if top_list == "manuscript_files":
             if indent != 2 or not stripped.startswith("- "):
                 raise ManifestError(f"{path}:{line_no}: expected a two-space-indented list item")
             result[top_list].append(_scalar(stripped[2:], path, line_no))
@@ -211,19 +246,26 @@ def _name_list(entry: dict[str, Any], key: str, where: str) -> list[str]:
 
 
 def validate_manifest(data: dict[str, Any], path: Path) -> tuple[list[str], list[dict[str, Any]]]:
-    manuscript_files = data.get("manuscript_files", data.get("paper_files"))
+    manuscript_files = data.get("manuscript_files")
     entries = data.get("entries")
-    if not isinstance(manuscript_files, list) or not all(
+    if not isinstance(manuscript_files, list) or not manuscript_files or not all(
         isinstance(item, str) and item for item in manuscript_files
     ):
         raise ManifestError(f"{path}: manuscript_files must be a nonempty list of paths")
-    if not manuscript_files:
-        raise ManifestError(f"{path}: manuscript_files must not be empty")
     if not isinstance(entries, list) or not entries:
         raise ManifestError(f"{path}: entries must be a nonempty list")
+    snapshots = data.get("manuscript_sha256")
+    if not isinstance(snapshots, dict) or set(snapshots) != set(manuscript_files):
+        raise ManifestError(f"{path}: manuscript_sha256 must cover every manuscript file")
+    for digest in snapshots.values():
+        if not isinstance(digest, str) or not SHA_RE.fullmatch(digest):
+            raise ManifestError(f"{path}: invalid manuscript SHA-256 fingerprint")
+    revision = data.get("manuscript_revision")
+    if revision is not None and not (isinstance(revision, str) and re.fullmatch(r"[0-9a-f]{40}", revision)):
+        raise ManifestError(f"{path}: manuscript_revision must be a full git commit hash")
 
-    allowed_kinds = STATEMENT_ENVIRONMENTS | SYNTHETIC_KINDS
     seen_sources: set[str] = set()
+    seen_labels: set[str] = set()
     for index, entry in enumerate(entries, 1):
         where = f"{path}: entry {index}"
         if not isinstance(entry, dict):
@@ -237,24 +279,51 @@ def validate_manifest(data: dict[str, Any], path: Path) -> tuple[list[str], list
         if source in seen_sources:
             raise ManifestError(f"{where}: duplicate source")
         seen_sources.add(source)
-        if kind not in allowed_kinds:
-            raise ManifestError(f"{where}: kind must be one of {sorted(allowed_kinds)}")
+        if kind not in NUMBERED_ENVIRONMENTS | {"prose"}:
+            raise ManifestError(f"{where}: kind must be a numbered environment or 'prose'")
+        digest = entry.get("sha256")
+        if not isinstance(digest, str) or not SHA_RE.fullmatch(digest):
+            raise ManifestError(f"{where}: a reviewed sha256 fingerprint is required")
+        if kind == "prose":
+            if entry.get("file") not in manuscript_files:
+                raise ManifestError(f"{where}: prose needs a manuscript file")
+            if not all(isinstance(entry.get(k), str) and entry[k] for k in ("start", "end")):
+                raise ManifestError(f"{where}: prose needs nonempty start and end anchors")
+            for key in ("label", "match", "number"):
+                if key in entry:
+                    raise ManifestError(f"{where}: prose carries no {key}")
+        else:
+            # A labelled statement uses `label`; an unlabelled one uses a unique text `match`.
+            if ("label" in entry) == ("match" in entry):
+                raise ManifestError(f"{where}: provide exactly one of label or match")
+            if "label" in entry:
+                label = entry["label"]
+                if not isinstance(label, str) or not SOURCE_LABEL_RE.match(label):
+                    raise ManifestError(f"{where}: label must be a paper statement label")
+                if label in seen_labels:
+                    raise ManifestError(f"{where}: duplicate label {label}")
+                seen_labels.add(label)
+            elif not isinstance(entry["match"], str) or not entry["match"].strip():
+                raise ManifestError(f"{where}: an unlabelled entry needs a unique text match")
+            number = entry.get("number")
+            if not isinstance(number, str) or not re.fullmatch(r"[A-Z0-9]+\.\d+", number):
+                raise ManifestError(f"{where}: number must be the printed number, such as \"3.10\"")
         if status not in ALLOWED_STATUSES:
             raise ManifestError(f"{where}: status must be one of {sorted(ALLOWED_STATUSES)}")
         lean = _name_list(entry, "lean", where)
         library = _name_list(entry, "library", where)
         hypotheses = _name_list(entry, "hypotheses", where)
-        if status == "formalized" and not lean:
+        if status in MAPPED_STATUSES and not lean:
             raise ManifestError(f"{where}: a formalized entry needs at least one Lean declaration")
         if status == "cited" and not hypotheses:
             raise ManifestError(
                 f"{where}: a cited entry needs the Prop-valued definitions stating it"
             )
-        if status == "intentionally_unformalized":
-            if lean or library or hypotheses:
-                raise ManifestError(f"{where}: an intentionally unformalized entry must have no Lean names")
+        if status == "intentionally_unformalized" and (lean or library or hypotheses):
+            raise ManifestError(f"{where}: an intentionally unformalized entry must have no Lean names")
+        if status in {"intentionally_unformalized", "partially_formalized"}:
             if not isinstance(entry.get("reason"), str) or not entry["reason"]:
-                raise ManifestError(f"{where}: an intentionally unformalized entry needs a reason")
+                raise ManifestError(f"{where}: an unformalized or partially formalized entry needs a reason")
         if "headline" in entry and not isinstance(entry["headline"], bool):
             raise ManifestError(f"{where}: headline must be true or false")
         if library and not entry.get("headline"):
@@ -262,73 +331,202 @@ def validate_manifest(data: dict[str, Any], path: Path) -> tuple[list[str], list
         relation = entry.get("relation")
         if relation is not None and relation not in ALLOWED_RELATIONS:
             raise ManifestError(f"{where}: relation must be one of {sorted(ALLOWED_RELATIONS)}")
-        if kind in SYNTHETIC_KINDS:
-            if not source.startswith(f"{kind}:"):
-                raise ManifestError(f"{where}: a {kind} needs a synthetic source '{kind}:...'")
-        elif not SOURCE_LABEL_RE.match(source):
-            raise ManifestError(
-                f"{where}: a labelled declaration source must carry a statement label prefix"
-            )
+        if status in MAPPED_STATUSES and relation is None:
+            raise ManifestError(f"{where}: a formalized entry needs a relation")
     return manuscript_files, entries
+
+
+# ---------------------------------------------------------------------------------------------
+# The manuscript.
 
 
 def strip_tex_comments(text: str) -> str:
     lines: list[str] = []
     for line in text.splitlines(keepends=True):
-        cut = len(line)
-        for index, char in enumerate(line):
-            if char == "%" and (index == 0 or line[index - 1] != "\\"):
+        body = line.rstrip("\r\n")
+        cut = len(body)
+        for index, char in enumerate(body):
+            if char == "%" and (index == 0 or body[index - 1] != "\\"):
                 cut = index
                 break
-        ending = "\n" if line.endswith("\n") else ""
-        lines.append(line[:cut] + ending)
+        ending = "\n" if line.endswith(("\n", "\r")) else ""
+        lines.append(body[:cut] + ending)
     return "".join(lines)
 
 
-def scan_paper_file(path: Path) -> list[PaperDeclaration]:
+def source_fingerprint(text: str) -> str:
+    """Hash TeX tokens, ignoring comments and layout whitespace, but retaining word boundaries."""
+    tokens = re.findall(r"\\[A-Za-z@]+|\\.|[A-Za-z0-9]+|[^\s]", strip_tex_comments(text))
+    return hashlib.sha256("\x1f".join(tokens).encode("utf-8")).hexdigest()
+
+
+def normalized_text(text: str) -> str:
+    return " ".join(strip_tex_comments(text).split())
+
+
+def _appendix_letter(index: int) -> str:
+    letters = ""
+    while index > 0:
+        index, rem = divmod(index - 1, 26)
+        letters = chr(ord("A") + rem) + letters
+    return letters
+
+
+def scan_paper_file(path: Path) -> tuple[list[PaperDeclaration], list[str]]:
+    """Return the numbered statements of a manuscript file with their printed numbers.
+
+    The theorem counter is shared by every numbered environment and reset by every numbered
+    `\\section`; after `\\appendix` the sections are lettered. Only the document body is
+    scanned. The second component lists numbered environments that the preamble declares and
+    the body uses but that this script does not know.
+    """
+
     text = strip_tex_comments(path.read_text(encoding="utf-8"))
+    body_start = text.find(r"\begin{document}")
+    preamble = text[: body_start if body_start >= 0 else 0]
+    body_offset = body_start if body_start >= 0 else 0
+    unknown: list[str] = []
+    for name in NEWTHEOREM_RE.findall(preamble):
+        if name not in NUMBERED_ENVIRONMENTS and re.search(r"\\begin\{" + name + r"\}", text[body_offset:]):
+            unknown.append(name)
+
     declarations: list[PaperDeclaration] = []
-    for begin in BEGIN_RE.finditer(text):
-        kind = begin.group(1)
-        end_marker = rf"\\end\{{{kind}\}}"
-        end = re.search(end_marker, text[begin.end() :])
+    section = 0
+    appendix = False
+    counter = 0
+    for match in NUMBERING_RE.finditer(text, body_offset):
+        token = match.group(0)
+        if token.startswith(r"\section*"):
+            continue
+        if token.startswith(r"\section"):
+            section += 1
+            counter = 0
+            continue
+        if token.startswith(r"\appendix"):
+            appendix = True
+            section = 0
+            counter = 0
+            continue
+        kind = match.group(1)
+        counter += 1
+        prefix = _appendix_letter(section) if appendix else str(section)
+        end = re.search(rf"\\end\{{{kind}\}}", text[match.end() :])
+        line = text.count("\n", 0, match.start()) + 1
         if end is None:
-            line = text.count("\n", 0, begin.start()) + 1
             raise ManifestError(f"{path}:{line}: missing \\end{{{kind}}}")
-        body_end = begin.end() + end.start()
-        labels = LABEL_RE.findall(text[begin.end() : body_end])
-        line = text.count("\n", 0, begin.start()) + 1
-        if not labels:
-            raise ManifestError(f"{path}:{line}: {kind} environment has no primary statement label")
-        if len(labels) != 1:
-            raise ManifestError(
-                f"{path}:{line}: {kind} environment has multiple primary labels: {labels}"
+        labels = LABEL_RE.findall(text[match.end() : match.end() + end.start()])
+        if len(labels) > 1:
+            raise ManifestError(f"{path}:{line}: {kind} environment has multiple primary labels: {labels}")
+        statement = text[match.start() : match.end() + end.end()]
+        declarations.append(
+            PaperDeclaration(labels[0] if labels else None, kind, f"{prefix}.{counter}", path, line, statement)
+        )
+    return declarations, unknown
+
+
+def prose_span(text: str, start: str, end: str) -> str:
+    text, start, end = map(normalized_text, (text, start, end))
+    for name, anchor in (("start", start), ("end", end)):
+        count = text.count(anchor)
+        if count != 1:
+            raise ManifestError(f"the {name} anchor occurs {count} times; it must occur exactly once")
+    first = text.index(start)
+    last = text.index(end)
+    if last < first:
+        raise ManifestError("the end anchor precedes the start anchor")
+    return text[first : last + len(end)]
+
+
+def check_paper_coverage(
+    repo_root: Path,
+    manuscript_files: list[str],
+    entries: list[dict[str, Any]],
+    snapshots: dict[str, str],
+    fingerprints: dict[str, str],
+) -> tuple[list[str], list[PaperDeclaration]]:
+    """Check the manifest against the manuscript; record every current fingerprint."""
+
+    errors: list[str] = []
+    declarations: list[PaperDeclaration] = []
+    texts: dict[str, str] = {}
+    for relative in manuscript_files:
+        path = repo_root / relative
+        try:
+            texts[relative] = path.read_text(encoding="utf-8")
+            found, unknown = scan_paper_file(path)
+        except (OSError, ManifestError) as exc:
+            errors.append(str(exc))
+            continue
+        declarations.extend(found)
+        for name in unknown:
+            errors.append(
+                f"{relative}: the numbered environment {name!r} is used but unknown to this script; "
+                "add it to NUMBERED_ENVIRONMENTS"
             )
-        declarations.append(PaperDeclaration(labels[0], kind, path, line))
-    return declarations
+        current = source_fingerprint(texts[relative])
+        fingerprints[f"manuscript:{relative}"] = current
+        if current != snapshots[relative]:
+            errors.append(
+                f"{relative}: manuscript content changed; review the correspondence, including "
+                "unmapped prose and proofs, before updating manuscript_sha256"
+            )
+
+    covered: set[tuple[Path, int]] = set()
+    for entry in entries:
+        source = entry["source"]
+        if entry["kind"] == "prose":
+            if entry["file"] not in texts:
+                continue
+            try:
+                body = prose_span(texts[entry["file"]], entry["start"], entry["end"])
+            except ManifestError as exc:
+                errors.append(f"{source}: {exc}")
+                continue
+        else:
+            if "match" in entry:
+                candidates = [
+                    d
+                    for d in declarations
+                    if d.label is None
+                    and d.kind == entry["kind"]
+                    and normalized_text(entry["match"]) in normalized_text(d.text)
+                ]
+            else:
+                candidates = [d for d in declarations if d.label == entry["label"]]
+            if len(candidates) != 1:
+                errors.append(f"{source}: expected exactly one matching statement, found {len(candidates)}")
+                continue
+            declaration = candidates[0]
+            key = (declaration.file, declaration.line)
+            if key in covered:
+                errors.append(f"{source}: statement already covered by another entry")
+            covered.add(key)
+            if declaration.kind != entry["kind"]:
+                errors.append(
+                    f"{source}: manifest kind {entry['kind']!r} does not match the environment "
+                    f"{declaration.kind!r} at {declaration.file.name}:{declaration.line}"
+                )
+            if declaration.number != entry["number"]:
+                errors.append(
+                    f"{source}: manifest number {entry['number']} differs from the printed number "
+                    f"{declaration.number}; renumber the manifest, docs/correspondence.md and the "
+                    "Lean doc comments"
+                )
+            body = declaration.text
+        current = source_fingerprint(body)
+        fingerprints[source] = current
+        if current != entry["sha256"]:
+            errors.append(f"{source}: content changed; review its Lean correspondence before updating sha256")
+
+    for d in declarations:
+        if (d.file, d.line) not in covered:
+            what = d.label or f"unlabelled {d.kind}"
+            errors.append(f"{d.file.name}:{d.line}: {d.kind} {d.number} ({what}) is missing from the manifest")
+    return errors, declarations
 
 
-def appendix_section(path: Path, label: str) -> str:
-    text = strip_tex_comments(path.read_text(encoding="utf-8"))
-    heading = re.search(r"\\section\{[^{}]*\}\s*\\label\{" + re.escape(label) + r"\}", text)
-    if heading is None:
-        raise ManifestError(f"{path}: cannot find the section labelled {label}")
-    following = re.search(r"\\section\{", text[heading.end() :])
-    end = heading.end() + following.start() if following else len(text)
-    return text[heading.start() : end].replace(r"\_", "_")
-
-
-def appendix_code_identifiers(text: str) -> set[str]:
-    contents = re.findall(r"\\(?:texttt|leanname)\{([^{}]*)\}", text)
-    identifiers: set[str] = set()
-    for content in contents:
-        identifiers.update(re.findall(r"[A-Za-z_][A-Za-z0-9_'.]*", content))
-    return identifiers
-
-
-def contains_lean_terminal(identifiers: set[str], name: str) -> bool:
-    terminal = name.rsplit(".", 1)[-1]
-    return any(identifier == name or identifier.rsplit(".", 1)[-1] == terminal for identifier in identifiers)
+# ---------------------------------------------------------------------------------------------
+# The Lean sources.
 
 
 def strip_lean_comments(text: str) -> str:
@@ -374,8 +572,8 @@ def strip_lean_comments(text: str) -> str:
 def scan_lean_file(path: Path) -> list[LeanDeclaration]:
     """Return the declarations of a Lean file, each with its comment-free source span.
 
-    A span runs from the declaration to the next declaration or scope command.  A
-    module-level ``public section`` is never closed and so opens no scope.
+    A span runs from the declaration to the next declaration or scope command. A module-level
+    ``public section`` is never closed and so opens no scope.
     """
 
     lines = strip_lean_comments(path.read_text(encoding="utf-8")).splitlines()
@@ -429,10 +627,54 @@ def is_prop_definition(declaration: LeanDeclaration) -> bool:
     ) is not None
 
 
+# ---------------------------------------------------------------------------------------------
+# Fingerprint maintenance.
+
+
+def write_fingerprints(manifest_path: Path, entries: list[dict[str, Any]], fingerprints: dict[str, str]) -> int:
+    """Rewrite the sha256 lines of the manifest in place; return the number of lines changed."""
+
+    lines = manifest_path.read_text(encoding="utf-8").splitlines(keepends=True)
+    changed = 0
+    current_source: str | None = None
+    for index, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped.startswith("- source:"):
+            _, value = _key_value(stripped[2:], manifest_path, index + 1)
+            current_source = value
+            continue
+        if line.startswith("manuscript_sha256:"):
+            prefix, _ = line.split(":", 1)
+            digests = {
+                key.removeprefix("manuscript:"): value
+                for key, value in fingerprints.items()
+                if key.startswith("manuscript:")
+            }
+            new_line = f"{prefix}: {json.dumps(digests)}\n"
+            if new_line != line:
+                lines[index] = new_line
+                changed += 1
+            continue
+        if current_source is not None and stripped.startswith("sha256:"):
+            digest = fingerprints.get(current_source)
+            if digest is None:
+                continue
+            indent = line[: len(line) - len(line.lstrip())]
+            new_line = f'{indent}sha256: "{digest}"\n'
+            if new_line != line:
+                lines[index] = new_line
+                changed += 1
+    manifest_path.write_text("".join(lines), encoding="utf-8")
+    return changed
+
+
+# ---------------------------------------------------------------------------------------------
+
+
 def main() -> int:
     script = Path(__file__).resolve()
     default_lean_root = script.parent.parent
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         "--manifest",
         type=Path,
@@ -444,6 +686,16 @@ def main() -> int:
         type=Path,
         default=default_lean_root,
         help="Lean project root (default: inferred from this script)",
+    )
+    parser.add_argument(
+        "--print-fingerprints",
+        action="store_true",
+        help="print the current fingerprint of every entry and manuscript file",
+    )
+    parser.add_argument(
+        "--write-fingerprints",
+        action="store_true",
+        help="record the current fingerprints in the manifest; only after reviewing the changes",
     )
     args = parser.parse_args()
     manifest_path = args.manifest.resolve()
@@ -459,70 +711,52 @@ def main() -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
 
-    # Paper labels against manifest entries.
-    paper_declarations: dict[str, PaperDeclaration] = {}
-    for relative in manuscript_files:
-        path = repo_root / relative
-        if not path.is_file():
-            errors.append(f"manifest manuscript file does not exist: {relative}")
-            continue
+    # The manuscript.
+    fingerprints: dict[str, str] = {}
+    coverage_errors, paper_declarations = check_paper_coverage(
+        repo_root, manuscript_files, entries, data["manuscript_sha256"], fingerprints
+    )
+    errors.extend(coverage_errors)
+    labelled = [d for d in paper_declarations if d.label is not None]
+    unlabelled = [d for d in paper_declarations if d.label is None]
+
+    revision = data.get("manuscript_revision")
+    if revision:
         try:
-            found = scan_paper_file(path)
-        except ManifestError as exc:
-            errors.append(str(exc))
-            continue
-        for declaration in found:
-            previous = paper_declarations.get(declaration.label)
-            if previous:
-                errors.append(
-                    f"duplicate paper label {declaration.label!r}: "
-                    f"{previous.file}:{previous.line} and {declaration.file}:{declaration.line}"
+            head = subprocess.run(
+                ["git", "-C", str(repo_root), "rev-parse", "HEAD"],
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
+            if head != revision:
+                warnings.append(
+                    f"the manuscript repository is at {head[:12]}, the manifest was reviewed at "
+                    f"{revision[:12]}; the fingerprints decide whether the statements changed"
                 )
-            else:
-                paper_declarations[declaration.label] = declaration
+        except (OSError, subprocess.CalledProcessError):
+            warnings.append("cannot read the manuscript repository's HEAD; manuscript_revision not compared")
 
-    manifest_labels = {
-        entry["source"]: entry for entry in entries if entry["kind"] not in SYNTHETIC_KINDS
-    }
-    missing = sorted(set(paper_declarations) - set(manifest_labels))
-    extra = sorted(set(manifest_labels) - set(paper_declarations))
-    if missing:
-        errors.append("paper declarations missing from manifest: " + ", ".join(missing))
-    if extra:
-        errors.append("manifest labels not found in statement environments: " + ", ".join(extra))
-    for label in sorted(set(paper_declarations) & set(manifest_labels)):
-        paper_kind = paper_declarations[label].kind
-        manifest_kind = manifest_labels[label]["kind"]
-        if paper_kind != manifest_kind:
-            errors.append(
-                f"{label}: manifest kind {manifest_kind!r} does not match paper environment "
-                f"{paper_kind!r}"
+    if args.print_fingerprints or args.write_fingerprints:
+        stale = {
+            source: digest
+            for source, digest in fingerprints.items()
+            if digest
+            != (
+                data["manuscript_sha256"].get(source.removeprefix("manuscript:"))
+                if source.startswith("manuscript:")
+                else next(entry["sha256"] for entry in entries if entry["source"] == source)
             )
+        }
+        for source, digest in sorted(fingerprints.items()):
+            marker = " (changed)" if source in stale else ""
+            print(f"{source}: {digest}{marker}")
+        if args.write_fingerprints:
+            changed = write_fingerprints(manifest_path, entries, fingerprints)
+            print(f"Recorded {changed} fingerprint(s) in {manifest_path.name}.")
+            return 0
 
-    # Optional: a correspondence appendix in the manuscript, named by the manifest keys
-    # `appendix_file` and `appendix_label`.
-    appendix_file = data.get("appendix_file")
-    appendix_label = data.get("appendix_label")
-    if appendix_file or appendix_label:
-        try:
-            if not (isinstance(appendix_file, str) and isinstance(appendix_label, str)):
-                raise ManifestError("appendix_file and appendix_label must be given together")
-            appendix_text = appendix_section(repo_root / appendix_file, appendix_label)
-            appendix_identifiers = appendix_code_identifiers(appendix_text)
-            for entry in entries:
-                source = entry["source"]
-                if entry["kind"] not in SYNTHETIC_KINDS and source not in appendix_text:
-                    errors.append(f"the appendix does not mention manifest source label: {source}")
-                for name in entry["lean"]:
-                    if not contains_lean_terminal(appendix_identifiers, name):
-                        errors.append(
-                            "the appendix does not mention mapped Lean declaration "
-                            f"{name} (terminal name {name.rsplit('.', 1)[-1]!r})"
-                        )
-        except (OSError, ManifestError) as exc:
-            errors.append(str(exc))
-
-    # Lean sources.
+    # The Lean sources.
     lean_declarations: dict[str, list[LeanDeclaration]] = {}
     library_sorries = 0
     library_axioms: list[LeanDeclaration] = []
@@ -554,8 +788,8 @@ def main() -> int:
         if not any(is_prop_definition(declaration) for declaration in lean_declarations[name]):
             errors.append(f"literature hypothesis {name} is not a Prop-valued definition")
 
-    # Comparator configuration.
-    comparator_path = lean_root / "comparator.json"
+    # The comparator configuration.
+    comparator_path = lean_root / "comparator-config.json"
     comparator: dict[str, Any] = {}
     try:
         comparator = json.loads(comparator_path.read_text(encoding="utf-8"))
@@ -563,9 +797,7 @@ def main() -> int:
     except (OSError, json.JSONDecodeError, KeyError) as exc:
         errors.append(f"cannot read comparator theorem names from {comparator_path}: {exc}")
         comparator_names = []
-    if not isinstance(comparator_names, list) or not all(
-        isinstance(name, str) for name in comparator_names
-    ):
+    if not isinstance(comparator_names, list) or not all(isinstance(name, str) for name in comparator_names):
         errors.append("comparator theorem_names must be a list of strings")
         comparator_names = []
     endpoint_count = len(comparator_names)
@@ -578,12 +810,16 @@ def main() -> int:
     permitted_axioms = comparator.get("permitted_axioms")
     if not isinstance(permitted_axioms, list) or not set(permitted_axioms) <= STANDARD_AXIOMS:
         errors.append(
-            "comparator permitted_axioms must be a list drawn from "
-            + ", ".join(sorted(STANDARD_AXIOMS))
+            "comparator permitted_axioms must be a list drawn from " + ", ".join(sorted(STANDARD_AXIOMS))
         )
         permitted_axioms = []
     comparator_set = set(comparator_names)
-    manifest_headlines = {name for entry in entries if entry.get("headline") for name in entry["lean"]}
+    manifest_headlines = {
+        name
+        for entry in entries
+        if entry.get("headline") and entry["status"] in MAPPED_STATUSES
+        for name in entry["lean"]
+    }
     if manifest_headlines != comparator_set:
         errors.append(
             "manifest headline declarations differ from comparator theorem_names; "
@@ -591,14 +827,16 @@ def main() -> int:
             f"only in comparator={sorted(comparator_set - manifest_headlines)}"
         )
 
-    # Challenge and solution modules.
+    # The challenge and solution modules.
     solution_path = lean_root / "Solution.lean"
     for role, path in (("Challenge", challenge_path), ("Solution", solution_path)):
         if not path.is_file():
             errors.append(f"{role} module is missing: {path.relative_to(lean_root)}")
             continue
         declarations = scan_lean_file(path)
-        endpoints = {d.name: d for d in declarations if d.kind in {"theorem", "lemma"} and d.name in comparator_set}
+        endpoints = {
+            d.name: d for d in declarations if d.kind in {"theorem", "lemma"} and d.name in comparator_set
+        }
         names = set(endpoints)
         if names != comparator_set:
             errors.append(
@@ -655,26 +893,40 @@ def main() -> int:
                 f"formalization.yaml sorry_count is {sorry_match.group(1)}, but the Lean sources "
                 f"outside Challenge.lean contain {library_sorries} sorry"
             )
+        for value in re.findall(r'^\s+comparator_config:\s*["\']([^"\']+)["\']\s*$', formalization_text, re.M):
+            if value != comparator_path.name:
+                errors.append(f"formalization.yaml names the comparator configuration {value!r}; it is {comparator_path.name}")
     except (OSError, json.JSONDecodeError) as exc:
         errors.append(f"cannot read {formalization_path}: {exc}")
 
-    synthetic_entries = [entry for entry in entries if entry["kind"] in SYNTHETIC_KINDS]
-    if not any(entry["kind"] == "structure" for entry in synthetic_entries):
-        warnings.append("manifest contains no unnumbered structure entries")
+    # docs/correspondence.md must assess every numbered statement and name every endpoint.
+    correspondence_path = lean_root / "docs" / "correspondence.md"
+    try:
+        correspondence_text = correspondence_path.read_text(encoding="utf-8")
+        for entry in entries:
+            if entry["kind"] == "prose":
+                continue
+            key = entry.get("label") or entry["source"]
+            if key not in correspondence_text:
+                errors.append(f"docs/correspondence.md does not mention the numbered statement {key}")
+        for name in sorted(comparator_set):
+            if name.rsplit(".", 1)[-1] not in correspondence_text:
+                errors.append(f"docs/correspondence.md does not mention the audited endpoint {name}")
+    except OSError as exc:
+        errors.append(f"cannot read {correspondence_path}: {exc}")
 
+    counts = {status: sum(entry["status"] == status for entry in entries) for status in sorted(ALLOWED_STATUSES)}
+    prose_entries = [entry for entry in entries if entry["kind"] == "prose"]
     print(
-        "STATIC CHECK ONLY: declaration lookup scans source text; it does not elaborate Lean "
-        "or compile LaTeX."
+        "STATIC CHECK ONLY: declarations are found by scanning source text; the script does not "
+        "elaborate Lean or compile LaTeX, and agreement of fingerprints is not mathematical equivalence."
     )
     print(
-        f"Scanned {len(paper_declarations)} labelled paper declarations, "
-        f"{len(synthetic_entries)} manifest entries for unnumbered material, "
-        f"{len(hypothesis_names)} literature hypotheses, and "
-        f"{len(lean_declarations)} distinct Lean source declarations."
-    )
-    print(
-        "NOTE: static source inspection cannot establish that Challenge definitions are "
-        "dependency-minimal; that requires semantic review with Lean's elaborated environment."
+        f"Scanned {len(labelled)} labelled and {len(unlabelled)} unlabelled numbered statements, "
+        f"{len(prose_entries)} fingerprinted prose spans, {len(hypothesis_names)} literature "
+        f"hypotheses and {len(lean_declarations)} distinct Lean source declarations. Manifest status: "
+        + ", ".join(f"{count} {status}" for status, count in counts.items() if count)
+        + f"; {endpoint_count} audited endpoint(s)."
     )
     for warning in warnings:
         print(f"WARNING: {warning}", file=sys.stderr)
@@ -684,8 +936,10 @@ def main() -> int:
         print(f"FAILED with {len(errors)} error(s).", file=sys.stderr)
         return 1
     print(
-        f"OK: all {len(paper_declarations)} labelled declarations have exactly one manifest "
-        f"entry, all mapped Lean names were found, and the {endpoint_count} audit endpoints agree."
+        f"OK: every numbered statement has one entry with its printed number and an unchanged "
+        f"fingerprint, every mapped Lean name exists, and the {endpoint_count} audited endpoints agree "
+        "across the manifest, the comparator configuration, Challenge, Solution, formalization.yaml "
+        "and docs/correspondence.md."
     )
     return 0
 

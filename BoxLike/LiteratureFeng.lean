@@ -7,7 +7,7 @@ systems*, Duke Math. J. 172 (2023), arXiv:1901.01691, which the article cites wi
 uses one of them takes it as a hypothesis. `BoxLike/Literature.lean` holds the citations that
 need only the symbolic and thermodynamic vocabulary; the ones here need the partitions `ξ_i`,
 `\overline{ξ}_i`, the conditional measures and the entropies `h_i`, `\overline{h}_i` of
-`BoxLike/DimPartitions.lean`. `PLAN.md`, "Fidelity boundary", states the rules.
+`BoxLike/DimPartitions.lean`. `docs/correspondence.md`, "Fidelity boundary", states the rules.
 
 Feng's set `Σ'` is an invariant Borel set of full measure on which his properties (4.1) to
 (4.4) hold, some of which concern forward time; it can be taken inside the article's box-like

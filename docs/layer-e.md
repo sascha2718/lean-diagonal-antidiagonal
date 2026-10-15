@@ -9,7 +9,7 @@ file of the statement layer is `Archive/tools/LayerE.lean`, outside git and neve
 library supersedes it, and it holds no declaration the library lacks. This document is the
 design record of the definitions of sections 3.2 to 3.4 of the article
 (`sec:lyapunov_exponents`, `sec:conditional`, `sec:entropies`); sections 2 to 4 below describe
-the statement layer. `PLAN.md`, section 3, has the state of each result and section 5 the
+the statement layer. `docs/correspondence.md` has the state of each result and `docs/findings.md` the
 findings.
 
 # Layer E: statement layer for the entropy part of `diagonal-antidiagonal.tex`
@@ -215,7 +215,7 @@ equilibrium state is the hypothesis `herg : Ergodic (shift 1) μ`, which the art
 not used. `S.lyapunov₂ μ < S.lyapunov₁ μ` is a hypothesis `hlt` where the article assumes it
 and is derived from the hypothesis `MorrisShmerkinLyapunov` through `System.simple_lyapunov` in
 the assembly. The cited theorems enter as the hypotheses `hms`, `hfk`, `hfjj`, `hjr`, `hfi`,
-`hfib`, `hly`, `hlyb` of `PLAN.md`, section 6.
+`hfib`, `hly`, `hlyb` of `docs/correspondence.md`, "Fidelity boundary".
 
 For the three proved statements of `sec:lyapunov_exponents` the hypotheses are the minimal ones,
 which are weaker than the article's. `thm:lyapunov_exponents_via_g_system` holds by definition
@@ -346,7 +346,7 @@ applied to `S.sq`, since a common invariant line of `𝖠` is one of `𝖠²`.
 
 ## 4. Literature inputs that become hypotheses
 
-Under the rules of `PLAN.md`, section 6, a cited theorem is a `Prop`-valued definition that the
+Under the rules of `docs/correspondence.md`, "Fidelity boundary", a cited theorem is a `Prop`-valued definition that the
 results using it take as a hypothesis, and new ones need explicit authorisation. The inputs of
 layer E fall into three groups.
 

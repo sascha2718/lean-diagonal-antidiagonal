@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this formalisation, please cite the paper and this repository."
+title: "Lean formalisation of: Hausdorff dimension of planar box-like self-affine sets with rotations"
+authors:
+  - family-names: Troscheit
+    given-names: Sascha
+    affiliation: Uppsala University
+repository-code: "https://github.com/sascha2718/lean-diagonal-antidiagonal"
+license: Apache-2.0
+date-released: "2026-10-02"
+preferred-citation:
+  type: article
+  title: "Hausdorff dimension of planar box-like self-affine sets with rotations"
+  authors:
+    - family-names: Allen
+      given-names: Demi
+    - family-names: Käenmäki
+      given-names: Antti
+    - family-names: Prokaj
+      given-names: R. Dániel
+    - family-names: Simon
+      given-names: Károly
+    - family-names: Troscheit
+      given-names: Sascha
+  year: 2026
+  notes: "Preprint; the arXiv identifier is added when the paper is posted."
