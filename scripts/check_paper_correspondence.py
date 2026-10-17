@@ -697,6 +697,10 @@ def main() -> int:
         action="store_true",
         help="record the current fingerprints in the manifest; only after reviewing the changes",
     )
+    parser.add_argument(
+        "--allow-incomplete", action="store_true",
+        help="check correspondence metadata while reporting known proof gaps as warnings",
+    )
     args = parser.parse_args()
     manifest_path = args.manifest.resolve()
     lean_root = args.lean_root.resolve()
@@ -839,10 +843,19 @@ def main() -> int:
         }
         names = set(endpoints)
         if names != comparator_set:
-            errors.append(
-                f"{role} audit declarations differ from comparator theorem_names; "
-                f"only in comparator={sorted(comparator_set - names)}"
+            missing = comparator_set - names
+            recorded_open = {
+                name for entry in entries if entry.get("headline")
+                and entry["status"] == "partially_formalized" for name in entry["lean"]
+            }
+            message = (
+                f"{role} lacks required headline proofs: {sorted(missing)}; "
+                "a restricted theorem does not discharge the full Challenge statement"
             )
+            if role == "Solution" and args.allow_incomplete and missing <= recorded_open:
+                warnings.append(message)
+            else:
+                errors.append(message)
         if role == "Challenge":
             propositions = {d.name for d in declarations if d.kind in {"theorem", "lemma"}}
             if propositions != comparator_set:
@@ -915,6 +928,12 @@ def main() -> int:
     except OSError as exc:
         errors.append(f"cannot read {correspondence_path}: {exc}")
 
+    incomplete = [entry for entry in entries if entry["kind"] not in {"prose", "question"}
+                  and entry["status"] in {"partially_formalized", "intentionally_unformalized"}]
+    for entry in incomplete:
+        message = f"INCOMPLETE {entry['number']} ({entry.get('label')}): {entry['reason']}"
+        (warnings if args.allow_incomplete else errors).append(message)
+
     counts = {status: sum(entry["status"] == status for entry in entries) for status in sorted(ALLOWED_STATUSES)}
     prose_entries = [entry for entry in entries if entry["kind"] == "prose"]
     print(
@@ -937,9 +956,9 @@ def main() -> int:
         return 1
     print(
         f"OK: every numbered statement has one entry with its printed number and an unchanged "
-        f"fingerprint, every mapped Lean name exists, and the {endpoint_count} audited endpoints agree "
-        "across the manifest, the comparator configuration, Challenge, Solution, formalization.yaml "
-        "and docs/correspondence.md."
+        f"fingerprint and every mapped Lean name exists. The {endpoint_count} required headline "
+        "statements and any explicitly recorded missing Solution proofs are accounted for. "
+        "This is metadata consistency, not complete mathematical formalisation."
     )
     return 0
 

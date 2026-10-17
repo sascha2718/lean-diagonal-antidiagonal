@@ -10,19 +10,14 @@ version: "v0.4"
 project:
   name: "Hausdorff dimension of planar box-like self-affine sets with rotations: Lean formalisation"
   description: >-
-    Lean 4 formalisation of the main results of the paper "Hausdorff dimension of planar
-    box-like self-affine sets with rotations" by Demi Allen, Antti Käenmäki, R. Dániel Prokaj,
-    Károly Simon and Sascha Troscheit (arXiv:XXXX.XXXXX). For a proximal planar box-like
-    self-affine set X with rotations satisfying the projective exponential separation
-    condition, the audited statements are: the coordinate projections of the equilibrium state
-    at the affinity dimension are double-dimensional, and exact-dimensional precisely at and
-    above an explicit threshold (Theorem 1.2); the upper packing and lower Hausdorff dimensions
-    of these projections (Theorem 4.4); dim_H X = dimaff(X) at or below the threshold or under
-    the strong open set condition (Theorem 1.3); the projected equilibrium state is
-    exact-dimensional of dimension min{2, dimaff(X)} (Theorem 4.16), with its case s ≥ 2; and
-    dim_H X = min{2, dimaff(X)}, with its case dimaff(X) ≥ 2. The statements are made in
-    Challenge.lean over Mathlib alone and discharged by Solution.lean from the library BoxLike.
-    Eight theorems that the paper cites without proof are hypotheses of the audited statements.
+    Lean formalisation and source review of the manuscript, with an entry for every numbered
+    statement in Solution.lean. Challenge.lean contains only the three headline results
+    (Theorems 1.2, 1.3 and 4.16), their explicit literature hypotheses and the 78 definitions
+    their statements need. All three are proved for their full ranges. The manuscript is not
+    completely formalised: Proposition 3.10 for general irreducible tuples, the planar clause of
+    Theorem 4.2 for general planar self-affine sets and the existence of ergodic Gibbs measures for
+    general Hölder potentials rest on proposed premises that await authorisation, and Question 1.4
+    is open; docs/review.json records every entry.
   authors:
     - "Sascha Troscheit"
   license: "Apache-2.0"
@@ -50,6 +45,8 @@ sources:
       the manuscript diagonal-antidiagonal.tex. paper-correspondence.yaml records, with a fingerprint of the LaTeX source of every numbered statement, the
       statement-by-statement correspondence with the Lean declarations, for the static check
       described in the README. No novelty is claimed here beyond what the paper itself claims.
+      The three headline results are proved for their full ranges; docs/review.json records the
+      entries that rest on proposed premises.
     license: ""  # TODO(authors): the licence under which the paper is posted.
     author_endorsement: "participated"  # TODO(authors): confirm.
   - title: "On equality of Hausdorff and affinity dimensions, via self-affine measures on positive subsystems"
@@ -79,7 +76,9 @@ sources:
       Proposition 3.10, a hypothesis of the audited Theorems 1.2, 1.3, 4.4 and 4.16 and of the
       dimension formula; and FengKaenmakiUnique (BoxLike/LiteratureRemarks.lean), uniqueness of
       the s-equilibrium state, which no audited theorem takes. For 1 < s < 2 both apply the
-      source to the rescaled tuple |det A_i|^((s-1)/(2-s)) A_i with q = 2 - s.
+      source to the rescaled tuple |det A_i|^((s-1)/(2-s)) A_i with q = 2 - s. The transcription
+      for general irreducible tuples, FengKaenmakiNormEquilibrium
+      (BoxLike/Proposals/EFengKaenmakiTuple.lean), is a proposal awaiting authorisation.
   - title: "Dimensions of equilibrium measures on a class of planar self-affine sets"
     authors:
       - "Jonathan M. Fraser"
@@ -91,7 +90,7 @@ sources:
     relationship: "other"
     note: >-
       Assumed, not proved. Stated as FraserJordanJurgaDecomposition (BoxLike/Literature.lean):
-      the decomposition of Proposition 3.13 of an invariant measure with the Gibbs bounds into
+      the decomposition of Proposition 3.14 of an invariant measure with the Gibbs bounds into
       the push-forwards of two ergodic Gibbs measures on the sub-shift of finite type, including
       the existence of these Gibbs measures. No separation condition is assumed. A hypothesis of
       the audited Theorems 1.2, 1.3, 4.4 and 4.16 and of the dimension formula.
@@ -108,7 +107,8 @@ sources:
       the projective exponential separation condition, which is their exponential separation
       for the projective system, the projection of an ergodic measure on the sub-shift is
       exact-dimensional with the entropy-to-exponent ratio, capped at one, as its dimension. A
-      hypothesis of the audited Theorems 1.2, 1.3, 4.4 and 4.16 and of the dimension formula.
+      hypothesis of the audited Theorems 1.2, 4.4 and 4.16 and of the dimension formula; the
+      proof of Theorem 1.3 does not use it.
   - title: "Dimension of invariant measures for affine iterated function systems"
     authors:
       - "De-Jun Feng"
@@ -117,11 +117,31 @@ sources:
     location: "Duke Math. J. 172 (2023), Lemma 4.6 and Theorems 1.2 and 1.3 (numbering of arXiv:1901.01691v2)"
     relationship: "other"
     note: >-
-      Assumed, not proved. Stated as four Prop-valued definitions (BoxLike/LiteratureFeng.lean):
-      FengInfoSum and FengInfoSumBar, the first identity of (4.16) in Lemma 4.6 for the planar
-      and the projective partitions; FengLedrappierYoung and FengLedrappierYoungBar, the
-      Ledrappier–Young formula of Theorem 4.2 for the plane and for the projective system.
-      Hypotheses of the audited Theorems 1.3 and 4.16 and of the dimension formula.
+      Theorems 1.2 and 1.3 are assumed, not proved: FengLedrappierYoung and
+      FengLedrappierYoungBar (BoxLike/LiteratureFeng.lean), the Ledrappier–Young formula for the
+      plane and for the projective system, for box-like systems. FengLedrappierYoung is a
+      hypothesis of the audited Theorems 1.3 and 4.16, FengLedrappierYoungBar of Theorem 4.16 and
+      of the dimension formula. The transcription for every planar self-affine set,
+      PlanarFengLedrappierYoung (BoxLike/Proposals/CPlanarFeng.lean), is a proposal awaiting
+      authorisation. Lemma 4.6, first identity of (4.16), is proved along Feng's Lemmas 4.4 and
+      4.5: the Prop-valued definitions FengInfoSum and FengInfoSumBar hold
+      (fengInfoSum_holds, fengInfoSumBar_holds) and are hypotheses of no audited theorem; so are
+      his (4.17) (thm:feng_entropy_kolmogorov_sinai) and the planar identity.
+  - title: "The exact overlaps conjecture for self-similar measures on the real line"
+    authors:
+      - "Samuel Kittle"
+      - "Constantin Kogler"
+    type: "preprint"
+    id: "arXiv:2610.10511"
+    location: "arXiv:2610.10511 (7 October 2026), Theorem 1.1"
+    relationship: "other"
+    note: >-
+      Assumed, not proved. Stated as KittleKoglerDimension (BoxLike/Literature.lean): a
+      self-similar measure on the line for finitely many contracting similarities with positive
+      weights whose maps generate a free semigroup is exact-dimensional of dimension
+      min{1, H(p)/|χ|}. The source states the theorem with the random walk entropy, which equals
+      H(p) in the absence of exact overlaps, as the source notes. A hypothesis of the audited
+      Theorem 1.3.
   - title: "Dimension theory of iterated function systems"
     authors:
       - "De-Jun Feng"
@@ -180,9 +200,10 @@ sources:
     relationship: "independently-proves"
     note: >-
       The upper bound min{2, dimaff(X)} for the upper Minkowski dimension, and with it for the
-      Hausdorff dimension, is proved for every box-like self-affine set by a covering argument
-      for box-like maps in the supremum metric (System.upperBoxDim_attractor_le,
-      System.dimH_attractor_le).
+      Hausdorff dimension, is proved for every planar self-affine set by the Euclidean ellipse
+      cover (PlanarSystem.upperBoxDim_attractor_le, PlanarSystem.dimH_attractor_le), and for every
+      box-like self-affine set also by a covering in the supremum metric
+      (System.upperBoxDim_attractor_le, System.dimH_attractor_le).
 
 # No earlier formalisation of these results, in Lean or another system, is known to the authors.
 # TODO(authors): confirm.
@@ -190,34 +211,14 @@ related_formalizations: []
 
 status:
   scope: >-
-    Formalised and audited: the seven theorems listed in comparator-config.json. They are Theorem 1.2
-    (for s = dimaff(X) < 2 the coordinate projections of the s-equilibrium state are
-    double-dimensional, fail to be exact-dimensional precisely when s < 2 - λ_1/λ_2, and are
-    exact-dimensional of dimension one at and above this threshold), Theorem 4.4 (for 0 < s < 2
-    the upper packing and lower Hausdorff dimensions of these projections), Theorem 1.3
-    (dim_H X = dimaff(X) when dimaff(X) < 2 and either dimaff(X) ≤ 2 - λ_1/λ_2 or the strong
-    open set condition holds), Theorem 4.16 (the projected equilibrium state is
-    exact-dimensional of dimension min{2, dimaff(X)}) with its case s ≥ 2 as a separate
-    statement, and the formula dim_H X = min{2, dimaff(X)} of Section 4.1 under the hypotheses
-    of Theorem 4.16, with its case dimaff(X) ≥ 2 under the strong open set condition as a
-    separate statement. The audited statements take as hypotheses eight theorems that the paper
-    cites without proof, stated as Prop-valued definitions and restated in Challenge.lean:
-    Morris–Shmerkin, Theorem 3.1; Feng–Käenmäki, Proposition 1.2, the Gibbs bounds;
-    Fraser–Jordan–Jurga, Lemma 1.3 and Corollaries 1.5 and 1.6; Jordan–Rapaport, Theorem 1.1;
-    and Feng, Lemma 4.6 and Theorems 1.2 and 1.3, each for the plane and for the projective
-    system. Theorems 1.2 and 4.4 take the first four, Theorems 1.3 and 4.16 and the dimension
-    formula take all eight, and the cases s ≥ 2 and dimaff(X) ≥ 2 take none. The headline
-    results are therefore proved conditionally on these cited theorems. Beyond these endpoints
-    the library machine-checks every other labelled lemma and proposition of the paper except
-    the cited Propositions 3.10 and 3.13, whose content enters as hypotheses, and Lemma 3.6. It
-    also proves Falconer's upper bound, the existence of equilibrium states for every s ≥ 0,
-    their uniqueness and ergodicity for s ≥ 2, Example 4.5 and the chain
-    dim_H X = dim_P X = dim_M X = dimaff(X) of the introduction. Theorem 1.1, Proposition 2.7,
-    the uniqueness part of Proposition 3.10 and the double-dimensionality of the projections
-    without separation rest on further cited theorems taken as hypotheses (Fraser;
-    Bárány–Käenmäki; Feng–Käenmäki; Feng–Hu). Not formalised: Lemma 3.6, which the paper uses
-    only for the identity h_0(μ) = h(μ), proved directly; the explicit Lyapunov exponents and
-    the numerical values of Example 4.5; Question 1.4. paper-correspondence.yaml assesses all 40 numbered statements of the manuscript.
+    All 41 numbered entries assessed: 36 formalized, 2 cited, 2 partially formalized
+    (Proposition 3.10 and Theorem 4.2) and 1 open question (Question 1.4, recorded as a
+    proposition with no answer). With the 45 prose spans the manifest reads 78 formalized,
+    4 cited, 3 partially formalized and 1 intentionally unformalized. The three headline proofs
+    are complete. The library and Solution have no sorry and no declared axiom. Cited literature
+    predicates are explicit hypotheses, not kernel axioms. The partial entries rest on the
+    proposed premises FengKaenmakiNormEquilibrium, PlanarFengLedrappierYoung and
+    BowenGibbsExistence in BoxLike/Proposals/, which await authorisation.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: ["propext", "Classical.choice", "Quot.sound"]
@@ -236,7 +237,7 @@ status:
           source: "Dimensions of equilibrium measures on a class of planar self-affine sets"
         - statement: "JordanRapaportDimension: the dimension of projected ergodic measures under exponential separation"
           source: "Dimension of ergodic measures projected onto self-similar sets with overlaps"
-    - declaration: "Challenge.audit_eq_state_proj_dim"
+    - declaration: "Challenge.audit_main2"
       file: "Solution.lean"
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
@@ -248,9 +249,11 @@ status:
           source: "Equilibrium states of the pressure function for products of matrices"
         - statement: "FraserJordanJurgaDecomposition: the decomposition of the equilibrium state into two Gibbs measures"
           source: "Dimensions of equilibrium measures on a class of planar self-affine sets"
-        - statement: "JordanRapaportDimension: the dimension of projected ergodic measures under exponential separation"
-          source: "Dimension of ergodic measures projected onto self-similar sets with overlaps"
-    - declaration: "Challenge.audit_main2"
+        - statement: "FengLedrappierYoung: the Ledrappier–Young formula for planar ergodic measures (Theorems 1.2 and 1.3)"
+          source: "Dimension of invariant measures for affine iterated function systems"
+        - statement: "KittleKoglerDimension: the dimension of a self-similar measure on the line without exact overlaps (Theorem 1.1)"
+          source: "The exact overlaps conjecture for self-similar measures on the real line"
+    - declaration: "Challenge.audit_main_extended"
       file: "Solution.lean"
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
@@ -264,48 +267,23 @@ status:
           source: "Dimensions of equilibrium measures on a class of planar self-affine sets"
         - statement: "JordanRapaportDimension: the dimension of projected ergodic measures under exponential separation"
           source: "Dimension of ergodic measures projected onto self-similar sets with overlaps"
-        - statement: "FengInfoSum: the first identity of (4.16) in Lemma 4.6, for the planar partitions"
-          source: "Dimension of invariant measures for affine iterated function systems"
-        - statement: "FengInfoSumBar: the first identity of (4.16) in Lemma 4.6, for the projective partitions"
-          source: "Dimension of invariant measures for affine iterated function systems"
         - statement: "FengLedrappierYoung: the Ledrappier–Young formula for planar ergodic measures (Theorems 1.2 and 1.3)"
           source: "Dimension of invariant measures for affine iterated function systems"
         - statement: "FengLedrappierYoungBar: the Ledrappier–Young formula for the projective system (Theorems 1.2 and 1.3)"
           source: "Dimension of invariant measures for affine iterated function systems"
-    - declaration: "Challenge.audit_main_extended"
-      file: "Solution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "comparator-config.json"
-      literature_dependencies: *main_line
-    - declaration: "Challenge.audit_main_extended_ge_two"
-      file: "Solution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "comparator-config.json"
-      literature_dependencies: []
-    - declaration: "Challenge.audit_dimH_eq_min"
-      file: "Solution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "comparator-config.json"
-      literature_dependencies: *main_line
-    - declaration: "Challenge.audit_dimH_of_two_le"
-      file: "Solution.lean"
-      sorry_count: 0
-      axioms: ["propext", "Classical.choice", "Quot.sound"]
-      comparator_config: "comparator-config.json"
-      literature_dependencies: []
 
 automation:
   methods:
     - method: "agent"
-      models: ["Claude Opus (Anthropic)"]  # TODO(authors): list the models used.
+      models: ["Claude Opus 5.5 (claude-opus-5-5, Anthropic)"]
       framework: "Claude Code (Anthropic)"
       tool_setup: >-
-        Agentic Lean development in Claude Code, including multi-agent sessions with one worker
-        agent per module under the rules of tools/AGENT_RULES.md, used to state, prove,
-        refactor and repair the library, the literature hypotheses and the audit modules.
+        Agentic Lean development in Claude Code: a coordinator agent integrating the work of
+        parallel worker agents, one per task, under the rules of tools/AGENT_RULES.md and
+        tools/WORKER_RULES.md, all running Claude Opus 5.5 (claude-opus-5-5). The agents
+        stated, proved, refactored and repaired the library, the literature hypotheses, the
+        proposed premises of BoxLike/Proposals/ and the audit modules, and maintained the
+        records of docs/.
       cost:
         wall_time: "not tracked"  # TODO(authors): confirm.
         spend_usd: "subscription-based"  # TODO(authors): confirm.
@@ -326,9 +304,10 @@ automation:
       prompting_notes: "n/a"
   spend_usd: "not tracked"  # TODO(authors): confirm.
   notes: >-
-    AI tools were used extensively during the Lean formalisation. The library carries no sorry
-    and declares no axiom; the comparator audit of the seven headline theorems permits only
-    propext, Classical.choice and Quot.sound.
+    AI tools carried out the Lean formalisation. The library carries no sorry and declares no
+    axiom; the comparator audit of the three headline statements permits only propext,
+    Classical.choice and Quot.sound, and passes for all three in a local run without the Linux
+    sandbox.
   # TODO(authors): add the statements on manual review and on responsibility for the contents,
   # as in the JA-ST formalisation, once they hold.
 
@@ -342,20 +321,23 @@ fidelity:
     Where the paper speaks of the unique s-equilibrium state, the audited statements hold for
     every shift-invariant s-equilibrium state and assume neither uniqueness nor ergodicity.
     Theorem 4.16 is stated as exact-dimensionality of the projected equilibrium state with
-    dimension min{2, dimaff(X)}. The eight cited theorems of the main line are Prop-valued
-    definitions, restated in Challenge.lean, and the audited theorems take them as hypotheses;
-    the headline results are thus proved conditionally on them. Each quantifies over every
+    dimension min{2, dimaff(X)}. The seven cited theorems of the headline results are Prop-valued
+    definitions, restated in Challenge.lean, and the audited theorems take them as hypotheses and
+    are proved conditionally on them. Each quantifies over every
     finite alphabet and every box-like system, carries the hypotheses of the cited theorem and
     is stated about defined objects only. Their statements reduce the sources as follows: the
     sources work on the one-sided shift; Morris–Shmerkin's theorem applies to the transposed
     tuple; Fraser–Jordan–Jurga's non-negative entries become moduli, and three of the four
     decompositions follow from the symmetry exchanging the axes; Feng–Käenmäki's proposition
     applies for 1 < s < 2 to a rescaled tuple with q = 2 - s; Feng's set Σ' lies inside the
-    box-like Σ' of the paper, where the partitions agree modulo null sets. The audited theorems
+    box-like Σ' of the paper, with almost everywhere equal conditional measures; Kittle–Kogler's
+    theorem is taken in the form with the Shannon entropy of the weights, which the source
+    identifies with the random walk entropy in the absence of exact overlaps. The audited theorems
     use Proposition 3.10 only through its Gibbs bounds. Off the main line, Fraser's
-    Theorem 2.3 bounds the upper Minkowski dimension where Theorem 1.1 of the paper writes
-    dim_M X. The library declares no axiom. Challenge.lean contains one sorry per audited
-    theorem, which Solution.lean supplies; comparator-config.json declares no definition_names, so no
+    Theorem 2.3 bounds the upper Minkowski dimension, as the manuscript states. The library
+    declares no axiom. Challenge.lean contains one sorry per audited theorem. Solution.lean
+    supplies the three complete headline proofs; comparator-config.json declares no
+    definition_names, so no
     part of the statement vocabulary is left open for the solution to instantiate.
 
 review:
@@ -363,9 +345,12 @@ review:
   reviewers:
     - "Sascha Troscheit"  # TODO(authors): list the authors who assessed the formalisation.
   notes: >-
-    No independent human review of the Lean development. The comparator checks that
-    Solution.lean proves the statements of Challenge.lean from propext, Classical.choice and
-    Quot.sound alone. It does not check that these statements, or the literature hypotheses
+    The numbered-entry source assessments are made with Codex and with Claude Opus 5.5 agents
+    in Claude Code, followed by Lean builds; no LaTeX is changed. Exact scope and proof
+    deviations are recorded in docs/review.json. There is no independent human review of the
+    Lean development. The comparator checks that the Solution proofs of the three headlines
+    agree with Challenge from the permitted axioms, and passes in a local run without the Linux
+    sandbox. It does not check that these statements, or the literature hypotheses
     they take, are faithful formalisations of the paper and of the cited sources; the doc
     comments of the literature modules, docs/correspondence.md and paper-correspondence.yaml record that
     correspondence.
@@ -380,52 +365,30 @@ alignment:
       module: "Challenge"
       status: "literature-dependency"
       note: >-
-        Proved in Solution from BoxLike.System.main1_dimaff (BoxLike.AffinityMain), with the
-        hypotheses MorrisShmerkinLyapunov, FengKaenmakiGibbs, FraserJordanJurgaDecomposition and
-        JordanRapaportDimension.
-    - source: "Theorem 4.4 (thm:eq_state_proj_dim)"
-      lean: "Challenge.audit_eq_state_proj_dim"
-      module: "Challenge"
-      status: "literature-dependency"
-      note: >-
-        Proved in Solution from BoxLike.System.eq_state_proj_dim (BoxLike.General), with the
-        same four hypotheses as Theorem 1.2.
+        Full parameter range, from System.main1_dimaff_all: below two by the Gibbs
+        decomposition, from two on by the orientation lift of Theorem 4.4. Its four explicit
+        literature inputs are MorrisShmerkinLyapunov, FengKaenmakiGibbs,
+        FraserJordanJurgaDecomposition and JordanRapaportDimension; for s >= 2 only
+        JordanRapaportDimension is used.
     - source: "Theorem 1.3 (thm:main2)"
       lean: "Challenge.audit_main2"
       module: "Challenge"
       status: "literature-dependency"
       note: >-
-        Proved in Solution from BoxLike.System.main2 (BoxLike.MainTwo), with the eight literature
-        hypotheses of the main line. The upper bound is Falconer's, proved in the library.
+        Full parameter range, from System.main2_prose, along the proof of the manuscript, with
+        the Shannon–McMillan–Breiman theorem proved in the library. Its five explicit literature
+        inputs are MorrisShmerkinLyapunov, FengKaenmakiGibbs, FraserJordanJurgaDecomposition,
+        FengLedrappierYoung and KittleKoglerDimension.
     - source: "Theorem 4.16 (thm:main_extended)"
       lean: "Challenge.audit_main_extended"
       module: "Challenge"
       status: "literature-dependency"
       note: >-
-        Proved in Solution from BoxLike.System.main_extended_min (BoxLike.MainExtended), with the
-        eight literature hypotheses of the main line.
-    - source: "Theorem 4.16 (thm:main_extended), the case s ≥ 2"
-      lean: "Challenge.audit_main_extended_ge_two"
-      module: "Challenge"
-      status: "proved"
-      note: >-
-        Proved in Solution from BoxLike.System.main_extended_ge_two (BoxLike.MainExtended), with
-        no literature hypothesis. Under the strong open set condition the projected equilibrium
-        state is normalised Lebesgue measure on an open set.
-    - source: "Section 4.1, dim_H X = min{2, dimaff(X)} under the hypotheses of Theorem 4.16"
-      lean: "Challenge.audit_dimH_eq_min"
-      module: "Challenge"
-      status: "literature-dependency"
-      note: >-
-        Proved in Solution from BoxLike.System.dimH_attractor_eq_min (BoxLike.DimensionFormula),
-        with the eight literature hypotheses of the main line.
-    - source: "Section 4.1, dim_H X = 2 when dimaff(X) ≥ 2 under the strong open set condition"
-      lean: "Challenge.audit_dimH_of_two_le"
-      module: "Challenge"
-      status: "proved"
-      note: >-
-        Proved in Solution from BoxLike.System.dimH_attractor_of_two_le
-        (BoxLike.DimensionFormula), with no literature hypothesis and no measure assumed.
+        Full parameter range, from System.main_extended_min. Its six explicit literature inputs
+        are MorrisShmerkinLyapunov, FengKaenmakiGibbs, FraserJordanJurgaDecomposition,
+        JordanRapaportDimension, FengLedrappierYoung and FengLedrappierYoungBar; Feng's
+        information-sum identity enters as the theorems fengInfoSum_holds and
+        fengInfoSumBar_holds. The s>=2 branch uses none of these inputs.
 
 acknowledgements: >-
   Lean 4 and Mathlib (leanprover-community), the leanprover comparator with the kernels bundled

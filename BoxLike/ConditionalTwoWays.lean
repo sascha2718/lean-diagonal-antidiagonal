@@ -298,8 +298,14 @@ measure `\overline{μ}_𝐣^{\overline{ξ}_1}` equals `(μ_1)_𝐣^{\overline{ξ
 `(μ_1)_𝐣^{\overline{ξ}_1} = ω_*μ^{ξ_1}` on `ω(Σ^ω)` and
 `(μ_2)_𝐣^{\overline{ξ}_1} = τ_*μ^{ξ_1^⊥}` on `τ(Σ^ω)`, the planar conditional measures being taken
 at `\overline{τ}(𝐣)`, respectively `\overline{ω}(𝐣)`, which is `unCode 𝐣`.
-Depends on: `eq:normalised-orientation-restrictions`, `thm:gibbs_tau_omega_positive`,
-`thm:partitions_xi1`, `thm:conditional_measures_of_a_conditional_measure`, `condMeas_unique`. -/
+This proof transports the unnormalised restrictions with one application of `condMeas_unique`
+and does not use `thm:conditional_measures_of_a_conditional_measure`; the proof of the prose,
+which normalises on the positive pieces and removes the restrictions by that lemma, is
+`System.conditional_two_ways_normalised` of `BoxLike/Aligned/ConditionalTwoWays.lean`, the form
+the later results use.
+Depends on: `eq:orientation-restrictions` (`orientation_restrictions`),
+`thm:gibbs_tau_omega_positive`, `thm:partitions_xi1`, `conditional_two_ways_aux`
+(`condMeas_transport`, `condMeas_unique`). -/
 theorem conditional_two_ways (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)

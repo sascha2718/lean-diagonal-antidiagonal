@@ -168,7 +168,7 @@ theorem eq_state_h1_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiG
           hdec.ergodic₂.toMeasurePreserving) (avgMeasure_eq_zero hdec.supp₁ hdec.supp₂) 1]
       with y h0 hiff
     exact hiff.1 h0
-  have hc := S.conditional_two_ways hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
+  have hc := S.conditional_two_ways_normalised hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
   -- `T_*μ_𝐢^{ξ_1} = δ_{T(𝐢)}` on `Σ^τ` for `T = τ` and on `Σ^ω` for `T = ω`.
   have hτ : ∀ᵐ x ∂μ, x ∈ S.SigmaTau μ → condMeas μ (S.xi μ 1) x = Measure.dirac x := by
     refine S.condMeas_eq_dirac_of_avgMeasure hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
@@ -209,7 +209,7 @@ theorem eq_state_h2_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiG
   exact S.dimEntropy_eq_zero_of_condMeas_eq_dirac hfi μ hinv herg hlt 2 h2
 
 /-- `thm:orto_partition_dirac`: under projective exponential separation, if
-`-λ_1(𝖠, μ) ≤ h_0(μ) ≤ -λ_2(𝖠, μ)`, then `h_2(μ) = 0`.
+`h_0(μ) ≤ -λ_2(𝖠, μ)`, then `h_2(μ) = 0`.
 Depends on: `thm:overline_h1_zero_large`, `thm:conditional_two_ways`,
 `eq:orientation-restrictions`, `thm:finer_partition_dirac_mass`, `thm:feng_entropy_zero`,
 `isMeasurablePartition_xi`, `isMeasurablePartition_xiPerp`, `eq:ergodic_entropy_constant`. -/
@@ -219,7 +219,7 @@ theorem orto_partition_dirac (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenm
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hsep : S.ProjExpSeparation)
     (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
-    (heq : S.IsEquilibriumState s μ) (hent₁ : -S.lyapunov₁ μ ≤ entropy μ)
+    (heq : S.IsEquilibriumState s μ)
     (hent₂ : entropy μ ≤ -S.lyapunov₂ μ) : S.dimEntropy μ 2 = 0 := by
   have hlt := S.simple_lyapunov hms hrot hdiag.proximal hs0 hs2 μ hinv heq
   have hgibbs := hfk S (irreducible_of_hasProximalDiagonal hrot hdiag) hs0 hs2 μ hinv heq
@@ -229,8 +229,8 @@ theorem orto_partition_dirac (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenm
   -- `\overline{μ}_𝐣^{\overline{ξ}_1} = δ_𝐣` for `\overline{μ}`-almost every
   -- `𝐣 ∈ ω(Σ^τ) ∪ τ(Σ^ω)`.
   have hbar := (S.overline_h1_zero_large hms hfk hjr hfib hlyb hrot hdiag hsep hs0 hs2 μ hinv
-    herg heq hent₁ hent₂ hdec).2
-  have hc := S.conditional_two_ways hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
+    herg heq hent₂ hdec).2
+  have hc := S.conditional_two_ways_normalised hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
   -- `T_*μ_𝐢^{ξ_1^⊥} = δ_{T(𝐢)}` on `Σ^τ` for `T = ω` and on `Σ^ω` for `T = τ`.
   have hτ : ∀ᵐ x ∂μ, x ∈ S.SigmaTau μ → condMeas μ (S.xiPerp μ) x = Measure.dirac x := by
     refine S.condMeas_eq_dirac_of_avgMeasure hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec

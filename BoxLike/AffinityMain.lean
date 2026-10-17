@@ -57,7 +57,7 @@ theorem IsEquilibriumState.lyapDim_eq_dimaff [Nonempty ι] {μ : Measure (ℤ �
   lyapDim_eq (S.lyapunov₂_le_lyapunov₁ hinv) (S.lyapunov₁_neg hinv)
     ((heq.pressure_eq hinv S.dimaff_nonneg).symm.trans S.pressure_dimaff)
 
-/-- `thm:main1`. Let `X` be a proximal box-like self-affine set with rotations satisfying the
+/-- The case `0 < s < 2` of `thm:main1`. Let `X` be a proximal box-like self-affine set with rotations satisfying the
 projective exponential separation condition such that `dimaff(X) < 2`, and let `μ` be the
 `s`-equilibrium state for `s = dimaff(X)`. Then the coordinate projections of `μ` are
 double-dimensional. Both projections fail to be exact-dimensional precisely when

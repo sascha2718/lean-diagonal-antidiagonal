@@ -37,6 +37,7 @@ conditional measures of `\overline{μ}`.
 * `System.overline_h1_zero`: `thm:overline_h1_zero`.
 * `System.overline_h1_zero_large`: `thm:overline_h1_zero_large`.
 -/
+public import BoxLike.Aligned.ConditionalTwoWays
 public import BoxLike.ConditionalTwoWays
 public import BoxLike.FengEntropy
 public import BoxLike.General
@@ -231,7 +232,7 @@ theorem dimEntropyBarAt_avgMeasure_fast (hms : MorrisShmerkinLyapunov.{u})
       S.dimEntropyBarAt (avgMeasure μ₁ μ₂) 1 y = S.dimEntropyBar μ₁ 1 := by
   have := isProbabilityMeasure_avgMeasure μ₁ μ₂
   have hc := (ae_of_ae_avgMeasure
-    (S.conditional_two_ways hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec)).1
+    (S.conditional_two_ways_normalised hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec)).1
   have hlim := S.dimEntropyBarAt_eq_of_condMeas_eq hfib hrot hdiag.proximal (avgMeasure μ₁ μ₂) μ₁
     (measurePreserving_shift_avgMeasure hdec.ergodic₁.toMeasurePreserving
       hdec.ergodic₂.toMeasurePreserving) (avgMeasure_eq_zero hdec.supp₁ hdec.supp₂)
@@ -259,7 +260,7 @@ theorem dimEntropyBarAt_avgMeasure_slow (hms : MorrisShmerkinLyapunov.{u})
       S.dimEntropyBarAt (avgMeasure μ₁ μ₂) 1 y = S.dimEntropyBar μ₂ 1 := by
   have := isProbabilityMeasure_avgMeasure μ₁ μ₂
   have hc := (ae_of_ae_avgMeasure
-    (S.conditional_two_ways hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec)).2
+    (S.conditional_two_ways_normalised hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec)).2
   have hlim := S.dimEntropyBarAt_eq_of_condMeas_eq hfib hrot hdiag.proximal (avgMeasure μ₁ μ₂) μ₂
     (measurePreserving_shift_avgMeasure hdec.ergodic₁.toMeasurePreserving
       hdec.ergodic₂.toMeasurePreserving) (avgMeasure_eq_zero hdec.supp₁ hdec.supp₂)
@@ -286,7 +287,7 @@ theorem condMeas_avgMeasure_eq_dirac_slow (hms : MorrisShmerkinLyapunov.{u})
     ∀ᵐ y ∂avgMeasure μ₁ μ₂, y ∈ S.slowPart μ →
       condMeas (avgMeasure μ₁ μ₂) (S.xiBar 1) y = Measure.dirac y := by
   have hc := (ae_of_ae_avgMeasure
-    (S.conditional_two_ways hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec)).2
+    (S.conditional_two_ways_normalised hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec)).2
   refine ae_avgMeasure_iff.2 ⟨?_, ?_⟩
   · filter_upwards [measure_eq_zero_iff_ae_notMem.1
       (S.measure_slowPart_eq_zero hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec)] with y hy hy'
@@ -340,7 +341,7 @@ theorem overline_h1_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiG
   · rw [hs h, h₂]
 
 /-- `thm:overline_h1_zero_large`: under projective exponential separation, if
-`-λ_1(𝖠, μ) ≤ h_0(μ) ≤ -λ_2(𝖠, μ)`, then `\overline{h}_1(μ_2) = 0` and
+`h_0(μ) ≤ -λ_2(𝖠, μ)`, then `\overline{h}_1(μ_2) = 0` and
 `\overline{μ}_𝐢^{\overline{ξ}_1} = δ_𝐢` for `\overline{μ}`-almost every
 `𝐢 ∈ ω(Σ^τ) ∪ τ(Σ^ω)`. The article writes the second assertion as an equality of measures of
 sets.
@@ -353,7 +354,7 @@ theorem overline_h1_zero_large (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKae
     (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ)
-    (_hent₁ : -S.lyapunov₁ μ ≤ entropy μ) (hent₂ : entropy μ ≤ -S.lyapunov₂ μ)
+    (hent₂ : entropy μ ≤ -S.lyapunov₂ μ)
     [IsProbabilityMeasure μ₁] [IsProbabilityMeasure μ₂]
     (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
     S.dimEntropyBar μ₂ 1 = 0 ∧

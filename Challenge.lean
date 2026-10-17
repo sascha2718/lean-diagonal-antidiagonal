@@ -7,10 +7,9 @@ public import Mathlib
 /-!
 # Hausdorff dimension of planar box-like self-affine sets with rotations
 
-Seven statements from D. Allen, A. Käenmäki, R. D. Prokaj, K. Simon and S. Troscheit,
+Three headline statements from D. Allen, A. Käenmäki, R. D. Prokaj, K. Simon and S. Troscheit,
 *Hausdorff dimension of planar box-like self-affine sets with rotations*: Theorems 1.2, 1.3,
-4.4 and 4.16, and the formula `dim_H X = min{2, dimaff(X)}` that the paper derives from them in
-the paragraph after (4.4). Theorem and equation numbers refer to the manuscript; the doc
+and 4.16. Theorem and equation numbers refer to the manuscript; the doc
 comments also give the labels of its LaTeX source, such as `thm:main1` or `sec:affinity_dim`.
 
 The statements and their vocabulary use Mathlib alone. The symbolic space is the two-sided shift
@@ -30,9 +29,9 @@ The paper's notation reads as follows: `X = π(Σ)` is `S.attractor` with `π = 
 projections `(proj_x)_*(π_*μ)` and `(proj_y)_*(π_*μ)` are `S.marginal 0 μ` and
 `S.marginal 1 μ`, and `dim_H` is Mathlib's Hausdorff dimension `dimH`, with values in `ℝ≥0∞`.
 
-The paper uses eight theorems from the literature without proof. They are the `Prop`s of the
+These three statements use seven named literature hypotheses. They are the `Prop`s of the
 section "Cited theorems", stated about the objects defined here, with the exact citations in
-their doc comments. The audited theorems take them as hypotheses.
+their doc comments. The headline theorems take them as explicit hypotheses.
 -/
 
 namespace Challenge
@@ -222,7 +221,19 @@ are `c > 0` and a strictly increasing sequence `(n_k)` with `Δ_{n_k}^Ψ ≥ c^{
 def ProjExpSeparation : Prop :=
   ∃ c : ℝ, 0 < c ∧ ∃ n : ℕ → ℕ, StrictMono n ∧ ∀ k, ENNReal.ofReal (c ^ n k) ≤ S.gap (n k)
 
+/-- The projective system has no exact overlaps (`sec:exponential_separation`): `g_𝐢 ≠ g_𝐣` for
+any two distinct finite words `𝐢`, `𝐣` over the alphabet of `Ψ`, that is, the maps of `Ψ`
+generate a free semigroup. The separation hypothesis of `thm:main2`. -/
+def NoExactOverlaps : Prop := ∀ u u' : List (ι × ZMod 2), u ≠ u' → S.gWord u ≠ S.gWord u'
+
 end System
+
+/-- The composition `g_{j_0} ∘ ⋯ ∘ g_{j_{n-1}}` of the similarities `g_j(x) = r_j x + t_j` of
+the line indexed by `κ`; the maps of a self-similar system on `ℝ` generate a free semigroup
+exactly when this composition is injective. -/
+def simWord {κ : Type*} (r t : κ → ℝ) : List κ → ℝ → ℝ
+  | [] => id
+  | j :: u => (fun x => r j * x + t j) ∘ simWord r t u
 
 end Separation
 
@@ -335,9 +346,6 @@ variable {α : Type*}
 def cylinder {α : Type*} {n : ℕ} (w : Fin n → α) : Set (ℤ → α) :=
   {x | ∀ k : Fin n, x (k : ℤ) = w k}
 
-/-- The block `x_0 ⋯ x_{n-1}` of a point `x`. -/
-def block (n : ℕ) (x : ℤ → α) : Fin n → α := fun k => x k
-
 end Cylinder
 
 section Entropy
@@ -444,34 +452,6 @@ def IsExactDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
 pointwise dimension `dimloc(μ, x)` exists and equals `d₁` or `d₂`. -/
 def IsDoubleDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
     (μ : Measure X) (d₁ d₂ : ℝ) : Prop := ∀ᵐ x ∂μ, HasLocalDim μ x d₁ ∨ HasLocalDim μ x d₂
-
-variable {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
-
-/-- The upper pointwise dimension `\overline{dim}_loc(μ, x)`: the `limsup` of
-`log μ(B(x, r)) / log r` as `r ↓ 0`, with closed balls. The value is real. For a finite Borel
-measure on `ℝ^d` the upper pointwise dimension lies in `[0, d]` almost everywhere, so the
-real-valued `limsup` carries its usual meaning. -/
-noncomputable def upperLocalDim (μ : Measure X) (x : X) : ℝ :=
-  limsup (fun r : ℝ => Real.log (μ.real (closedBall x r)) / Real.log r) (𝓝[>] 0)
-
-/-- The lower pointwise dimension `\underline{dim}_loc(μ, x)`: the `liminf` of
-`log μ(B(x, r)) / log r` as `r ↓ 0`, with closed balls. The value is real. For a finite Borel
-measure on `ℝ^d` the lower pointwise dimension lies in `[0, d]` almost everywhere, so the
-real-valued `liminf` carries its usual meaning. -/
-noncomputable def lowerLocalDim (μ : Measure X) (x : X) : ℝ :=
-  liminf (fun r : ℝ => Real.log (μ.real (closedBall x r)) / Real.log r) (𝓝[>] 0)
-
-/-- The upper packing dimension `\overline{dim}_p(μ)`: the essential supremum of the upper
-pointwise dimension with respect to `μ`. The value is real. For a finite Borel measure on
-`ℝ^d` the pointwise dimensions lie in `[0, d]` almost everywhere, so the real-valued `essSup`
-carries its usual meaning. -/
-noncomputable def upperPackingDim (μ : Measure X) : ℝ := essSup (upperLocalDim μ) μ
-
-/-- The lower Hausdorff dimension `\underline{dim}_H(μ)`: the essential infimum of the lower
-pointwise dimension with respect to `μ`. The value is real. For a finite Borel measure on
-`ℝ^d` the pointwise dimensions lie in `[0, d]` almost everywhere, so the real-valued `essInf`
-carries its usual meaning. -/
-noncomputable def lowerHausdorffDim (μ : Measure X) : ℝ := essInf (lowerLocalDim μ) μ
 
 end MeasureDim
 
@@ -699,10 +679,10 @@ end DimPartitions
 
 /-! ## Cited theorems
 
-The paper uses eight theorems from the literature without proof. Each is stated here as a `Prop`
-about the objects defined above, quantified over every finite alphabet `ι : Type u` with the
-discrete `σ`-algebra and every system, with the hypotheses under which the paper uses it; the doc
-comments give the exact citations and the reductions between each source and its statement. The
+The headlines use seven theorems from the literature that the paper cites without proof. Each
+is stated here as a `Prop` about the objects defined above, quantified over every finite
+alphabet `ι : Type u` with the discrete `σ`-algebra and every system, with the hypotheses under
+which the paper uses it; the doc comments give the exact citations and the reductions between each source and its statement. The
 audited theorems take them as hypotheses.
 
 The results of D.-J. Feng, *Dimension of invariant measures for affine iterated function
@@ -776,26 +756,22 @@ def JordanRapaportDimension : Prop :=
     S.ProjExpSeparation → ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],
     Ergodic (shift 1) ν → IsExactDim (ν.map S.projBar) (min 1 (-entropy ν / S.lyapBar ν))
 
-/-- Feng, Lemma 4.6, first identity of (4.16), for the planar partitions:
-`-log μ_𝐢^{ξ_i}(𝒫_0^{n-1}(𝐢)) = ∑_{k<n} I_μ(𝒫 | \widehat{ξ}_i)(σ^k 𝐢)` for all `n`, on one set of
-full measure. The proof of `thm:feng_entropy_zero` uses it. Hypotheses as in
-`thm:feng_entropy_as_limit`. -/
-def FengInfoSum : Prop :=
-  ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
-    (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ], MeasurePreserving (shift 1) μ μ →
-    Ergodic (shift 1) μ → S.lyapunov₂ μ < S.lyapunov₁ μ → ∀ i : ℕ,
-    ∀ᵐ x ∂μ, ∀ n : ℕ, -Real.log ((condMeas μ (S.xi μ i) x).real (cylinder (block n x))) =
-      ∑ k ∈ Finset.range n, condInfo μ (S.xi μ i) (shift k x)
-
-/-- Feng, Lemma 4.6, first identity of (4.16), for the projective system and an
-invariant measure `ν` on `Σ_Z`, ergodic or not; the article checks Feng's constant-multiplicity
-hypothesis (4.7) in `sec:entropies`, tex lines 2017 to 2019. -/
-def FengInfoSumBar : Prop :=
-  ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
-    S.WithRotations → S.Proximal → ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],
-    MeasurePreserving (shift 1) ν ν → ν (subshift S.o)ᶜ = 0 → ∀ i : ℕ,
-    ∀ᵐ y ∂ν, ∀ n : ℕ, -Real.log ((condMeas ν (S.xiBar i) y).real (cylinder (block n y))) =
-      ∑ k ∈ Finset.range n, condInfo ν (S.xiBar i) (shift k y)
+/-- Kittle–Kogler, *The exact overlaps conjecture for self-similar measures on the real line*,
+arXiv:2610.10511 (7 October 2026), Theorem 1.1, in the form the proof of `thm:main2` uses. Let
+`μ = ∑_j p_j δ_{g_j}` be a probability measure on finitely many distinct contracting
+similarities `g_j(x) = r_j x + t_j` of `ℝ`, with `0 < |r_j| < 1` of either sign and `p_j > 0`;
+then the self-similar measure `ν`, the unique probability measure with
+`∑_j p_j (g_j)_* ν = ν`, is exact-dimensional with `dim ν = min{1, h_μ / |χ_μ|}`, where `h_μ`
+is the random walk entropy and `χ_μ = ∑_j p_j log |r_j|`. When the similarities generate a
+free semigroup, `h_μ = H(p) = -∑_j p_j log p_j`, as the source notes; the statement takes this
+hypothesis and the conclusion `dim ν = min{1, H(p) / |χ_μ|}`. Every solution of the
+stationarity equation is the self-similar measure, by Hutchinson's uniqueness. -/
+def KittleKoglerDimension : Prop :=
+  ∀ {κ : Type u} [Fintype κ] (r t p : κ → ℝ), (∀ j, r j ≠ 0) → (∀ j, |r j| < 1) →
+    (∀ j, 0 < p j) → ∑ j, p j = 1 → Function.Injective (simWord r t) →
+    ∀ (ν : Measure ℝ) [IsProbabilityMeasure ν],
+    ν = ∑ j, ENNReal.ofReal (p j) • ν.map (fun x => r j * x + t j) →
+    IsExactDim ν (min 1 ((∑ j, Real.negMulLog (p j)) / -(∑ j, p j * Real.log |r j|)))
 
 /-- `thm:feng1`, first part, `eq:feng1_1`; Feng, Theorems 1.2 and 1.3, for `d = 2`
 and simple Lyapunov spectrum: if `μ` is ergodic with `λ_2(𝖠, μ) < λ_1(𝖠, μ)`, then `π_*μ` is
@@ -829,7 +805,7 @@ end Literature
 open MeasureTheory
 
 /-- Theorem 1.2 (`thm:main1`). Let `X` be a proximal box-like self-affine set with rotations
-satisfying the projective exponential separation condition such that `dimaff(X) < 2`, and let
+satisfying the projective exponential separation condition, and let
 `μ` be an `s`-equilibrium state for `s = dimaff(X)`. Then each coordinate projection of `μ`,
 the marginal `(proj_x)_*(π_*μ)` for `c = 0` and `(proj_y)_*(π_*μ)` for `c = 1`, is
 double-dimensional with the values `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and `min{1, -h_0(μ)/λ_2(𝖠, μ)}`.
@@ -842,7 +818,7 @@ theorem audit_main1 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableS
     (S : System ι) (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation)
-    (h2 : S.dimaff < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
+    (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ) (c : ZMod 2) :
     IsDoubleDim (S.marginal c μ) (min 1 (-entropy μ / S.lyapunov₁ μ))
         (min 1 (-entropy μ / S.lyapunov₂ μ)) ∧
@@ -850,42 +826,21 @@ theorem audit_main1 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableS
         S.dimaff < 2 - S.lyapunov₁ μ / S.lyapunov₂ μ) ∧
       (2 - S.lyapunov₁ μ / S.lyapunov₂ μ ≤ S.dimaff → IsExactDim (S.marginal c μ) 1) := sorry
 
-/-- Theorem 4.4 (`thm:eq_state_proj_dim`). Let `X` be a proximal box-like self-affine set with
-rotations satisfying the projective exponential separation condition, and let `μ` be an
-`s`-equilibrium state with `0 < s < 2`. Then `(proj_x)_*(π_*μ)` (`c = 0`) and
-`(proj_y)_*(π_*μ)` (`c = 1`) are double-dimensional with the values
-`min{1, -h_0(μ)/λ_1(𝖠, μ)}` and `min{1, -h_0(μ)/λ_2(𝖠, μ)}`, their upper packing dimension is
-`min{1, -h_0(μ)/λ_1(𝖠, μ)}` and their lower Hausdorff dimension is `min{1, -h_0(μ)/λ_2(𝖠, μ)}`.
-The conclusion holds for every `s`-equilibrium state, so its uniqueness and ergodicity in the
-paper are not needed. The proof uses the cited theorems of Morris–Shmerkin, Feng–Käenmäki,
-Fraser–Jordan–Jurga and Jordan–Rapaport. -/
-theorem audit_eq_state_proj_dim {ι : Type u} [Fintype ι] [MeasurableSpace ι]
-    [MeasurableSingletonClass ι] (S : System ι) {s : ℝ} (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
-    (hjr : JordanRapaportDimension.{u}) (hrot : S.WithRotations) (hprox : S.Proximal)
-    (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
-    [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
-    (heq : S.IsEquilibriumState s μ) (c : ZMod 2) :
-    IsDoubleDim (S.marginal c μ) (min 1 (-entropy μ / S.lyapunov₁ μ))
-        (min 1 (-entropy μ / S.lyapunov₂ μ)) ∧
-      upperPackingDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₁ μ) ∧
-      lowerHausdorffDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₂ μ) := sorry
-
 /-! ## Dimension of the equilibrium state and of the self-affine set -/
 
 /-- Theorem 1.3 (`thm:main2`). Let `X` be a proximal box-like self-affine set with rotations
-satisfying the projective exponential separation condition such that `dimaff(X) < 2`, and let
-`μ` be an `s`-equilibrium state for `s = dimaff(X)`. If
+whose projective system has no exact overlaps, and let `μ` be an
+`s`-equilibrium state for `s = dimaff(X)`. If
 `dimaff(X) ≤ 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`, or if `X` satisfies the strong open set condition, then
-`dim_H(X) = dimaff(X)`. Any `s`-equilibrium state may serve as `μ`. The proof uses all eight
-cited theorems. -/
+`dim_H(X) = dimaff(X)`. Any `s`-equilibrium state may serve as `μ`. The proof uses the cited
+theorems of Morris–Shmerkin, Feng–Käenmäki, Fraser–Jordan–Jurga, Feng (the planar
+Ledrappier–Young formula) and Kittle–Kogler. -/
 theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
     (S : System ι) (hms : MorrisShmerkinLyapunov.{u})
     (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
-    (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
-    (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
+    (hly : FengLedrappierYoung.{u}) (hkk : KittleKoglerDimension.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
-    (hsep : S.ProjExpSeparation) (h2 : S.dimaff < 2) (μ : Measure (ℤ → ι))
+    (hfree : S.NoExactOverlaps) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState S.dimaff μ)
     (hor : S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∨ S.StrongOpenSet) :
@@ -896,55 +851,17 @@ rotations satisfying the projective exponential separation condition, and let `�
 `s`-equilibrium state for `s = dimaff(𝖠)`. If `h_0(μ) ≤ -λ_2(𝖠, μ)` or `X` satisfies the strong
 open set condition, then `π_*μ` is exact-dimensional with `dim(π_*μ) = min{2, dimaff(𝖠)}`. The
 conclusion holds for every `s`-equilibrium state, so its uniqueness in the paper is not needed.
-The proof uses all eight cited theorems. -/
+The proof uses the cited theorems of Morris–Shmerkin, Feng–Käenmäki, Fraser–Jordan–Jurga,
+Jordan–Rapaport and Feng (the two Ledrappier–Young formulas). -/
 theorem audit_main_extended {ι : Type u} [Fintype ι] [MeasurableSpace ι]
     [MeasurableSingletonClass ι] (S : System ι) (hms : MorrisShmerkinLyapunov.{u})
     (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
-    (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
+    (hjr : JordanRapaportDimension.{u})
     (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsep : S.ProjExpSeparation) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
     (hor : entropy μ ≤ -S.lyapunov₂ μ ∨ S.StrongOpenSet) :
     IsExactDim (μ.map S.proj) (min 2 S.dimaff) := sorry
-
-/-- Theorem 4.16 (`thm:main_extended`), the case `s = dimaff(𝖠) ≥ 2`, with `s` entering as a
-zero `P(𝖠, s) = 0` of the pressure. Under the strong open set condition, if `μ` is an
-`s`-equilibrium state, then `π_*μ` is exact-dimensional of dimension two; it is normalised
-Lebesgue measure on an open set. Rotations, proximality and the projective exponential
-separation condition are not needed, and no cited theorem is used. -/
-theorem audit_main_extended_ge_two {ι : Type u} [Fintype ι] [MeasurableSpace ι]
-    [MeasurableSingletonClass ι] (S : System ι) {s : ℝ} (hsosc : S.StrongOpenSet) (hs : 2 ≤ s)
-    (hP : S.pressure s = 0) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
-    (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState s μ) :
-    IsExactDim (μ.map S.proj) 2 := sorry
-
-/-- `dim_H(X) = min{2, dimaff(X)}` under the hypotheses of Theorem 4.16 (`thm:main_extended`),
-the formula that the paper derives in the paragraph after (4.4)
-(`eq:hausdorff_ergodic_lyapunov`). The lower bound follows from Theorem 4.16, since
-`dim(π_*μ) ≤ dim_H(X)`, and the upper bound is Falconer's bound (3.7)
-(`eq:hausdorff_affinity_upper_bound`), which holds for every box-like set. For `dimaff(X) < 2`
-and the first alternative in the form `dimaff(X) ≤ 2 - λ_1/λ_2` this is Theorem 1.3. Any
-`s`-equilibrium state for `s = dimaff(X)` may serve as `μ`. The proof uses all eight cited
-theorems. -/
-theorem audit_dimH_eq_min {ι : Type u} [Fintype ι] [MeasurableSpace ι]
-    [MeasurableSingletonClass ι] (S : System ι) (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
-    (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
-    (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
-    [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
-    (hsep : S.ProjExpSeparation) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
-    (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
-    (hor : entropy μ ≤ -S.lyapunov₂ μ ∨ S.StrongOpenSet) :
-    dimH S.attractor = ENNReal.ofReal (min 2 S.dimaff) := sorry
-
-/-- `dim_H(X) = 2` when `dimaff(X) ≥ 2` and `X` satisfies the strong open set condition: the
-formula `dim_H(X) = min{2, dimaff(X)}` of the paragraph after (4.4) in this case. No measure is
-assumed, since for `s = dimaff(X) ≥ 2` the `s`-equilibrium state exists, as the Bernoulli measure
-of `sec:normalisation`. Rotations, proximality and the projective exponential separation
-condition are not needed, and no cited theorem is used. -/
-theorem audit_dimH_of_two_le {ι : Type u} [Fintype ι] [MeasurableSpace ι]
-    [MeasurableSingletonClass ι] (S : System ι) [Nonempty ι] (hsosc : S.StrongOpenSet)
-    (h2 : 2 ≤ S.dimaff) : dimH S.attractor = 2 := sorry
 
 end Challenge

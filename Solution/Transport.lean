@@ -1,6 +1,6 @@
 module
 
-public import Solution.Definitions
+public import Solution.Extras
 public import BoxLike
 
 @[expose] public section
@@ -9,7 +9,7 @@ public import BoxLike
 # Transport between the challenge vocabulary and the library
 
 `toLib` and `ofLib` identify a `Challenge.System` with the `BoxLike.System` carrying the same
-data. Every challenge notion that the seven audited statements use agrees with its library
+data. Every challenge notion that the three headline statements and the internal supporting statements use agrees with its library
 namesake on the identified system. Most agreements hold by `rfl`. The structurally recursive
 `pastWord` and `gWord` agree by induction, since the elaborator does not unfold their recursors
 at a variable, and the notions built on them (`HasBackRate`, `Σ'`, `ξ_i`, `h_i`, the projective
@@ -67,6 +67,13 @@ theorem upperPackingDim_eq {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
 theorem lowerHausdorffDim_eq {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
     (μ : Measure X) : Challenge.lowerHausdorffDim μ = BoxLike.lowerHausdorffDim μ := rfl
 
+/-- The composition of similarities, by induction on the word. -/
+theorem simWord_eq {κ : Type*} (r t : κ → ℝ) : Challenge.simWord r t = BoxLike.simWord r t := by
+  funext u
+  induction u with
+  | nil => rfl
+  | cons j u ih => exact congrArg ((fun x => r j * x + t j) ∘ ·) ih
+
 /-- `pastWord`, by induction on the length. -/
 theorem pastWord_eq {α : Type*} (x : ℤ → α) : Challenge.pastWord x = BoxLike.pastWord x := by
   funext n
@@ -96,6 +103,14 @@ theorem gap_eq (n : ℕ) : S.gap n = (toLib S).gap n := by
 theorem projExpSeparation_iff : S.ProjExpSeparation ↔ (toLib S).ProjExpSeparation := by
   simp only [Challenge.System.ProjExpSeparation, gap_eq]
   rfl
+
+theorem noExactOverlaps_iff : S.NoExactOverlaps ↔ (toLib S).NoExactOverlaps := by
+  simp only [Challenge.System.NoExactOverlaps, BoxLike.System.NoExactOverlaps]
+  constructor
+  · intro h u u' hne heq
+    exact h u u' hne (by funext t; rw [gWord_eq, gWord_eq, heq])
+  · intro h u u' hne heq
+    exact h u u' hne (by funext t; rw [← gWord_eq, ← gWord_eq, heq])
 
 theorem strongOpenSet_iff : S.StrongOpenSet ↔ (toLib S).StrongOpenSet := Iff.rfl
 
@@ -211,17 +226,11 @@ theorem jordanRapaportDimension (h : Challenge.JordanRapaportDimension.{u}) :
   intro ι _ _ _ S hsep ν _ herg
   exact h (ofLib S) ((projExpSeparation_iff _).2 hsep) ν herg
 
-/-- Feng, Lemma 4.6, for the planar partitions `ξ_i`. -/
-theorem fengInfoSum (h : Challenge.FengInfoSum.{u}) : BoxLike.FengInfoSum.{u} := by
-  intro ι _ _ _ S μ _ hinv herg hl i
-  have key := h (ofLib S) μ hinv herg hl i
-  rw [xi_eq] at key
-  exact key
-
-/-- Feng, Lemma 4.6, for the projective partitions `\overline{ξ}_i`. -/
-theorem fengInfoSumBar (h : Challenge.FengInfoSumBar.{u}) : BoxLike.FengInfoSumBar.{u} := by
-  intro ι _ _ _ S hrot hprox ν _ hinv hsupp i
-  exact h (ofLib S) hrot hprox ν hinv hsupp i
+/-- Kittle–Kogler, the dimension of self-similar measures without exact overlaps. -/
+theorem kittleKoglerDimension (h : Challenge.KittleKoglerDimension.{u}) :
+    BoxLike.KittleKoglerDimension.{u} := by
+  intro κ _ r t p hr hr1 hp hsum hfree ν _ hν
+  exact h r t p hr hr1 hp hsum (by rwa [simWord_eq]) ν hν
 
 /-- Feng, the Ledrappier–Young formula `eq:feng1_1` for `π_*μ`. -/
 theorem fengLedrappierYoung (h : Challenge.FengLedrappierYoung.{u}) :

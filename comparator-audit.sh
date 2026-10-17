@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Audit the seven headline statements using this project's Lean toolchain: the statements
+# Audit the three headline statements using this project's Lean toolchain: the statements
 # frozen in Challenge.lean, proved in Solution.lean, with the audited names listed in
 # comparator-config.json. Linux uses Comparator's bubblewrap sandbox. The explicit
 # --local-unsandboxed option supports development on macOS; it is not a Palomar
@@ -27,6 +27,24 @@ for required_command in lake lean python3; do
     exit 2
   fi
 done
+
+# Fail clearly before leanexport if a required full headline has no proof. In
+# particular, a separately named restricted theorem does not fill that endpoint.
+PYTHONDONTWRITEBYTECODE=1 python3 - <<'PY'
+import json
+from pathlib import Path
+import sys
+sys.path.insert(0, "scripts")
+from check_paper_correspondence import scan_lean_file
+required = set(json.loads(Path("comparator-config.json").read_text())["theorem_names"])
+proved = {d.name for d in scan_lean_file(Path("Solution.lean"))
+          if d.kind in {"theorem", "lemma"}}
+missing = sorted(required - proved)
+if missing:
+    raise SystemExit("Incomplete headline proofs: " + ", ".join(missing) +
+                     ". See docs/correspondence.md; restricted proofs are not substitutes.")
+PY
+
 if [ "${1:-}" != --local-unsandboxed ] && ! command -v bwrap >/dev/null 2>&1; then
   echo "error: bwrap is required for the sandboxed Linux audit" >&2
   exit 2

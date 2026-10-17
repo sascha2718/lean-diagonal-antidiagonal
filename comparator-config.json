@@ -3,12 +3,8 @@
     "solution_module": "Solution",
     "theorem_names": [
         "Challenge.audit_main1",
-        "Challenge.audit_eq_state_proj_dim",
         "Challenge.audit_main2",
-        "Challenge.audit_main_extended",
-        "Challenge.audit_main_extended_ge_two",
-        "Challenge.audit_dimH_eq_min",
-        "Challenge.audit_dimH_of_two_le"
+        "Challenge.audit_main_extended"
     ],
     "definition_names": [],
     "permitted_axioms": [

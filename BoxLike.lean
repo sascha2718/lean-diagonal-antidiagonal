@@ -9,8 +9,10 @@ constant depends on `propext`, `Classical.choice` and `Quot.sound` only. Literat
 cited by the article without proof are `Prop`-valued definitions of the modules
 `BoxLike/Literature.lean`, `BoxLike/LiteratureFeng.lean` and `BoxLike/LiteratureRemarks.lean`,
 and every result that uses one takes it as a hypothesis; the last module holds the ones that no
-main result depends on. `docs/correspondence.md` records the state of every numbered result,
-the remaining work and the fidelity boundary, and `docs/mathlib-gaps.md` the representation.
+main result depends on. Proposed premises that await the owner's authorisation are in
+`BoxLike/Proposals/`, which this module does not import. `docs/correspondence.md` records the
+state of every numbered result, the remaining work and the fidelity boundary, and
+`docs/mathlib-gaps.md` the representation.
 
 * `Orientation`: the two-sided shift `σ^n` and the orientation cocycle `ε_n` of
   `eq:def_of_eps_mod2`, with the cocycle identity `eq:tau_omega_sigma_commutative1`.
@@ -18,8 +20,8 @@ the remaining work and the fidelity boundary, and `docs/mathlib-gaps.md` the rep
   `eq:tau_omega_partition` and `thm:tau_omega_sigma_commutative`.
 * `System`: box-like systems, the matrices `A_i`, the maps `φ_i`, the projective system `Ψ` of
   `eq:def_of_g_system`, `eq:phi_def_by_g` and `thm:matrix_products_g_derivatives`.
-* `Separation`: the projective gap `Δ_n^Ψ`, the projective exponential separation condition
-  and `lem:proj_gap_dominated`.
+* `Separation`: the projective gap `Δ_n^Ψ`, the projective exponential separation condition,
+  the absence of exact overlaps, compositions of similarities and `lem:proj_gap_dominated`.
 * `Projection`: the canonical projections `\overline{π}` and `π`, `eq:canonical_projection`,
   `eq:commutative_diagram` and `eq:self_affine_set_def` for `X = π(Σ)`.
 * `SingularValue`: the singular value function `φ^s` of `sec:Singular_value_function`, its
@@ -41,7 +43,7 @@ the remaining work and the fidelity boundary, and `docs/mathlib-gaps.md` the rep
 * `Thermodynamic`: Lyapunov exponents, `eq:eq_state_def`, the potentials `f_{1,s}`, `f_{2,s}`,
   Gibbs measures on `Σ_Z`, the conclusion of `thm:eq_state_is_sum`, the coordinate marginals.
 * `Literature`: the literature theorems of the main line as `Prop`s: Morris–Shmerkin,
-  Feng–Käenmäki (the Gibbs bounds), Fraser–Jordan–Jurga, Jordan–Rapaport.
+  Feng–Käenmäki (the Gibbs bounds), Fraser–Jordan–Jurga, Jordan–Rapaport, Kittle–Kogler.
 * `Main`: `thm:entropy_eq_gibbs` and the decomposition `eq:proj_eq_is_sum`, `eq:gibbs_proj_dim`
   of the coordinate marginals, for a tuple containing a proximal diagonal generator.
 * `Proximal`: proximal matrices and tuples, `thm:box_like_proximal`.
@@ -81,7 +83,8 @@ the remaining work and the fidelity boundary, and `docs/mathlib-gaps.md` the rep
 * `GibbsOrientation`: `thm:gibbs_tau_omega_positive`, `eq:orientation-restrictions`.
 * `PastEntropy`: `h_0(μ) = h(μ)` and `\overline{h}_0(ν) = h(ν)`, by the chain rule and
   martingale convergence.
-* `LiteratureFeng`: the results of Feng as `Prop`s.
+* `LiteratureFeng`: the results of Feng as `Prop`s; `FengInfoSum` and `FengInfoSumBar` are
+  theorems of the library (`FengIdentity`, `FengIdentityBar`).
 * `FengEntropy`: `thm:feng_entropy_as_limit`, `thm:feng_entropy_zero`.
 * `ConditionalTwoWays`: transport of conditional measures, `thm:conditional_two_ways`.
 * `StrongOpenSetEntropy`: `thm:SOSC_h2_zero`.
@@ -89,7 +92,8 @@ the remaining work and the fidelity boundary, and `docs/mathlib-gaps.md` the rep
 * `EquilibriumEntropySmall`: `thm:eq_state_h1_zero`, `thm:eq_state_h2_zero`,
   `thm:orto_partition_dirac`.
 * `EquilibriumEntropyLarge`: `thm:overline_h1_large`, `thm:eq_state_h1_large`.
-* `MainTwo`: `thm:main_extended` for `0 < s < 2` and `thm:main2`.
+* `MainTwo`: `thm:main_extended` for `0 < s < 2` and the projectively exponentially separated
+  case of `thm:main2`.
 * `SelfAffineMeasure`: invariant measures `ν = ∑_i p_i (φ_i)_*ν` of the iterated function
   system, for the case `s ≥ 2` of `thm:main_extended`.
 * `PressureLarge`: the range `s ≥ 2` of `sec:normalisation`: `φ^s = |det|^{s/2}`,
@@ -128,8 +132,9 @@ the remaining work and the fidelity boundary, and `docs/mathlib-gaps.md` the rep
 * `InvariantMeasures`: the invariant measures form a compact set in the weak-star topology and
   `h_0 + Λ(𝖠, ·, s)` is upper semicontinuous on it, so it attains its maximum (tex lines 2322
   to 2323, Käenmäki).
-* `Example`: `ex:projection_double_dimensional`, with `thm:main1` and `thm:main2` for
-  `0 < s ≤ 1`.
+* `Example`: a separate rational two-map system accompanying `sec:dimension_of_projections`,
+  whose coordinate marginals have two distinct pointwise dimensions, with `thm:main1` and
+  `thm:main2` for `0 < s ≤ 1`; `ex:projection_double_dimensional` is `PrescribedExample`.
 * `Classification`: `thm:A_classification`, proved for arbitrary planar tuples.
 * `PressureZ`: the pressure `P_Z(f)` of `sec:gibbs_measures`,
   `P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s})`, `μ_2 = flip_*μ_1` and the integral formulas of
@@ -146,7 +151,7 @@ the remaining work and the fidelity boundary, and `docs/mathlib-gaps.md` the rep
   `ℝ^d`, through the packing dimension of `SetDimensions`.
 * `ModifiedAffinity`: Fraser's modified singular value function, the modified pressure and the
   modified affinity dimension `dimmaff(X)` of `sec:affinity_dim`, with
-  `dimmaff(X) ≤ dimaff(X)` when `dimaff(X) ≥ 1`.
+  `dimmaff(X) ≤ dimaff(X)` for every box-like set.
 * `FalconerBound`: Falconer's bound `\overline{\dim}_M X ≤ min{2, dimaff(X)}` for every box-like
   self-affine set, and with it `eq:hausdorff_affinity_upper_bound`.
 * `FraserChain`: `thm:fraser`, with Fraser's theorem as a hypothesis and
@@ -157,6 +162,82 @@ the remaining work and the fidelity boundary, and `docs/mathlib-gaps.md` the rep
   independent parameters and the freeness of the semigroup generated by the projective system.
 * `NoOverlapExample`: `prop:ssc_no_overlap_not_pesc` and the paragraph after its proof, with the
   theorem of Bárány and Käenmäki as a hypothesis.
+* `Subsystem`: finite subsystems `(φ_{w_k})_k` of a box-like system, the absence of exact
+  overlaps of their coordinate maps, and their unique coding inside a feasible open set.
+* `TypicalWords`: the families `W_n` of diagonal words of the proof of `thm:main2`, with
+  `log #W_n / n → h_0(μ)` and the coordinate contraction rates `λ_1`, `λ_2`.
+* `HomogeneousSubsystem`: the Bernoulli measure `ν_n` of a subsystem with a common diagonal
+  linear part, its Lyapunov exponents, entropy, coded measures and coordinate marginals.
+* `SubsystemEntropy`: the entropies `h_i(ν_n)` through Kittle–Kogler and Feng's formulas, and
+  the exact dimension of `ν_n`.
+* `MainTwoFree`: `thm:main2` under no projective exact overlaps, the dimension chain under its
+  hypotheses, and the application to the example of `prop:ssc_no_overlap_not_pesc`.
+* `MainTwoEndpoint`: `thm:main2` for the full parameter range by the counting route, with the
+  determinant argument at affinity dimension two.
+* `EntropyEqualityEndpoint`: the literal conditional-entropy statement of
+  `thm:entropy_eq_gibbs`.
+* `MatrixTuple`: pressure, Lyapunov exponents, energy, equilibrium states and Gibbs bounds of
+  an arbitrary tuple of real `2 × 2` matrices; the box-like objects are those of `S.mat`.
+* `SMBStatement`: the statement of the Shannon–McMillan–Breiman theorem for the two-sided shift.
+* `OpenQuestion`: `q:coincident-projection-dimensions` recorded as a proposition.
+* `OrientationLift`: the lift `(τ_*μ + ω_*μ)/2` of a Bernoulli measure as a stationary Markov
+  measure, its mixing and ergodicity, and mixing on cylinders implies ergodicity.
+* `ProjectionLarge`: `thm:eq_state_proj_dim` for `s ≥ 2` through the lift, and for every `s > 0`.
+* `MainOneFull`: `thm:main1` for every value of the affinity dimension.
+* `OseledetsFiltration`, `OseledetsBridge`: the article's Oseledets set `Σ'` and filtration for a
+  tuple, its existence for box-like tuples, `thm:lyapunov_exponents_via_g_system` for every
+  choice, and the agreement of the partitions and entropies with the rate-defined ones.
+* `PrescribedExample`: `ex:projection_double_dimensional`: the parameters, the pressure and the
+  affinity dimension, the translation cube, strong separation, the volume argument for
+  projective exponential separation, the Markov measure, the entropy and the exponents, and the
+  assembled example (`PrescribedExample.projection_double_dimensional`).
+* `Aligned`: `thm:box_like_sa` as one tuple-level statement; proofs along the prose route of
+  `thm:box_like_proximal`,
+  `prop:ssc_no_overlap_not_pesc`, `thm:sigma_tau_omega_positive_eq_measure`,
+  `thm:conditional_two_ways` and `eq:haus_dim_sum`, and the all-anti-diagonal example of
+  `sec:irreducibility`.
+* `SMB`, `ShannonMcMillanBreiman`: Maker's generalised ergodic theorem, the informations of the
+  finite pasts with Chung's maximal inequality, and the Shannon–McMillan–Breiman theorem by
+  Breiman's argument, with an interface for typical words.
+* `KolmogorovSinai`: the entropy of finite partitions, the Kolmogorov–Sinai entropy as a supremum
+  over finite Borel partitions, and the generator theorem for the two-sided shift.
+* `CylinderEntropy`: `thm:feng_entropy_kolmogorov_sinai` for box-like systems.
+* `TupleEquilibrium`, `TupleEquilibriumLarge`, `TupleEquilibriumNorm`,
+  `TupleEquilibriumExistence`: equilibrium states of arbitrary tuples of invertible matrices: the
+  variational inequality, existence, the case `s ≥ 2`, the norm and rescaled potentials, the
+  reduction to the one-sided shift, and ergodicity of a unique equilibrium state.
+* `TupleErgodicEquilibrium`: existence of an ergodic equilibrium state for every tuple of
+  invertible matrices and every `s ≥ 0`: the set of equilibrium states is compact, and a maximiser
+  of a strictly convex functional of the cylinder masses is extreme, hence ergodic.
+* `IrreducibleEquilibrium`: `thm:irred_eq_state` for irreducible box-like systems.
+* `BernoulliGrouping`, `TwoBlockNormalisation`: grouping a Bernoulli measure into pairs, and
+  `thm:two-block-normalisation` in one endpoint with its consequences.
+* `FengIdentity`, `FengIdentityBar`: Feng's information-sum identity (Lemma 4.6, (4.16)) for
+  the planar and the projective partitions, proved along Feng's Lemmas 4.4 and 4.5; the
+  predicates `FengInfoSum` and `FengInfoSumBar` hold.
+* `Kingman`, `FurstenbergKesten`: Kingman's subadditive ergodic theorem, proved from Birkhoff's
+  theorem, and the Furstenberg–Kesten limits along the backward products of an invertible tuple.
+* `Planar`: arbitrary planar self-affine systems: the backward rates, the regular set `Σ'` and
+  the filtration, the partitions `ξ_i` and entropies `h_i`, the Lyapunov limits, the box-like
+  specialisation, `thm:feng_entropy_as_limit` and `thm:feng_entropy_zero` from Feng's identity,
+  `thm:feng_entropy_kolmogorov_sinai` given `μ(Σ') = 1`, the comparison with Feng's partitions,
+  the affinity dimension and Falconer's bound `eq:hausdorff_affinity_upper_bound` for every
+  planar self-affine set, Oseledets' theorem for invertible planar cocycles (`OseledetsTheorem`),
+  and `thm:feng_entropy_as_limit`, `thm:feng_entropy_kolmogorov_sinai` and `thm:feng_entropy_zero`
+  for every planar self-affine set (`FengGeneral`), and the invariance of the pressure, the
+  exponents, the equilibrium states, the separation conditions and the dimensions of sets and
+  measures under linear changes of coordinates (`ChangeOfBasis`).
+* `Support`: supporting claims of the prose: topological mixing of `Σ_Z`, the one-sided
+  canonical projection `π^+` of a contracting affine system and `(π^+)_*μ^+ = π_*μ`, convexity
+  and continuity of the pressure of a general tuple, metric doubling of Gibbs measures,
+  information and entropy for countable partitions and sub-`σ`-algebras, the pressure of Hölder
+  potentials on `Σ_Z` and the uniqueness of ergodic Gibbs measures, and the projection of a
+  general planar system; the threshold remarks of the introduction (`IntroductionClaims`) and the
+  coincidence of the potentials at `s = 2` (`PotentialsAtTwo`).
+* `MainTwoProse`: `thm:main2` along the prose proof: typical words by the
+  Shannon–McMillan–Breiman theorem and returns to horizontal orientation, the pigeonhole over
+  count vectors, the diagonal subsystem, the entropy threshold by conditional-entropy
+  monotonicity, strong separation in the open-set branch, and the endpoint.
 -/
 public import BoxLike.Orientation
 public import BoxLike.Coding
@@ -232,3 +313,89 @@ public import BoxLike.FalconerBound
 public import BoxLike.FraserChain
 public import BoxLike.NoOverlapExampleFree
 public import BoxLike.NoOverlapExample
+public import BoxLike.Subsystem
+public import BoxLike.TypicalWords
+public import BoxLike.HomogeneousSubsystem
+public import BoxLike.SubsystemEntropy
+public import BoxLike.MainTwoFree
+
+public import BoxLike.MainTwoEndpoint
+public import BoxLike.EntropyEqualityEndpoint
+public import BoxLike.MatrixTuple
+public import BoxLike.SMBStatement
+public import BoxLike.OpenQuestion
+public import BoxLike.OrientationLift
+public import BoxLike.ProjectionLarge
+public import BoxLike.MainOneFull
+public import BoxLike.OseledetsFiltration
+public import BoxLike.OseledetsBridge
+public import BoxLike.PrescribedExample.Defs
+public import BoxLike.PrescribedExample.Parameters
+public import BoxLike.PrescribedExample.Pressure
+public import BoxLike.PrescribedExample.Translations
+public import BoxLike.PrescribedExample.Separation
+public import BoxLike.PrescribedExample.Geometry
+public import BoxLike.PrescribedExample.Measure
+public import BoxLike.PrescribedExample.Dimensions
+public import BoxLike.PrescribedExample.Main
+public import BoxLike.Aligned.SigmaTauOmega
+public import BoxLike.Aligned.ConditionalTwoWays
+public import BoxLike.Aligned.MeasureDimSets
+public import BoxLike.Aligned.BoxLikeProximal
+public import BoxLike.Aligned.NoOverlapPESCParams
+public import BoxLike.Aligned.NoOverlapPESCFree
+public import BoxLike.Aligned.NoOverlapPESC
+public import BoxLike.Aligned.NoOverlapPESCDim
+public import BoxLike.SMB.Maker
+public import BoxLike.SMB.PastInformation
+public import BoxLike.ShannonMcMillanBreiman
+public import BoxLike.KolmogorovSinai
+public import BoxLike.CylinderEntropy
+public import BoxLike.TupleEquilibrium
+public import BoxLike.TupleEquilibriumLarge
+public import BoxLike.TupleEquilibriumNorm
+public import BoxLike.TupleEquilibriumExistence
+public import BoxLike.TupleErgodicEquilibrium
+public import BoxLike.FengIdentity
+public import BoxLike.FengIdentityBar
+public import BoxLike.Planar.FengIdentity
+public import BoxLike.Planar.AffinityDim
+public import BoxLike.Planar.FalconerBound
+public import BoxLike.Kingman
+public import BoxLike.FurstenbergKesten
+public import BoxLike.Planar.OseledetsTheoremDirection
+public import BoxLike.Planar.OseledetsTheorem
+public import BoxLike.Planar.FengGeneral
+public import BoxLike.Aligned.BoxLikeSA
+public import BoxLike.Planar.ChangeOfBasis
+public import BoxLike.Support.PotentialsAtTwo
+public import BoxLike.Support.IntroductionClaims
+public import BoxLike.IrreducibleEquilibrium
+public import BoxLike.BernoulliGrouping
+public import BoxLike.TwoBlockNormalisation
+public import BoxLike.Planar.System
+public import BoxLike.Planar.Oseledets
+public import BoxLike.Planar.Partitions
+public import BoxLike.Planar.Specialisation
+public import BoxLike.Planar.Lyapunov
+public import BoxLike.Planar.FengEntropy
+public import BoxLike.Planar.OseledetsChoice
+public import BoxLike.Planar.CylinderEntropy
+public import BoxLike.Planar.FengPartitions
+public import BoxLike.MainTwoProse.Pigeonhole
+public import BoxLike.MainTwoProse.TypicalWordsSMB
+public import BoxLike.MainTwoProse.DiagonalSubsystem
+public import BoxLike.MainTwoProse.ScalarFeng
+public import BoxLike.MainTwoProse.EntropyThreshold
+public import BoxLike.MainTwoProse.OpenSetBranch
+public import BoxLike.MainTwoProse.PastIndependence
+public import BoxLike.MainTwoProse.SubsystemEntropies
+public import BoxLike.MainTwoProse.Endpoint
+public import BoxLike.Support.SubshiftMixing
+public import BoxLike.Support.OneSidedProjection
+public import BoxLike.Support.PressureConvexity
+public import BoxLike.Support.GibbsDoubling
+public import BoxLike.Support.ConditionalInformation
+public import BoxLike.Support.HolderPressure
+public import BoxLike.Support.GibbsUniqueness
+public import BoxLike.Support.PlanarProjection

@@ -1,0 +1,558 @@
+{
+  "schema_version": 1,
+  "review_date": "2026-10-17",
+  "reviewer_scope": "Section 4 of the manuscript, all 16 numbered results, source-level semantic and proof-route assessment.",
+  "manuscript": "../../diagonal-antidiagonal.tex",
+  "manuscript_sha256": "7e3b4a3ffd64a77a4a6db6e4032c7224d4e9319a1a567ad4e560b3cbb1ba9bab",
+  "method": "Read the LaTeX statements and proofs, the records of docs/, and the Lean signatures and relevant proof bodies. Literature statements below are the local Prop hypotheses with their recorded citations. The review edits and compiles no LaTeX.",
+  "dependency_convention": "direct_literature_hypotheses lists the named cited Prop binders on the primary library declaration of the entry. hfi and hfib are theorems of the library (fengInfoSum_holds, fengInfoSumBar_holds) that Solution supplies. paper_level_literature_hypotheses lists the cited predicates needed from the manuscript's hypotheses, including those needed to construct an internal GibbsDecomposition (hfk and hfjj); it omits hfi and hfib. A GibbsDecomposition is never itself a literature hypothesis. Lists do not include Lean's standard axioms or Mathlib results.",
+  "literature_hypotheses": {
+    "hms": {
+      "lean": "BoxLike.MorrisShmerkinLyapunov",
+      "citation": "Morris–Shmerkin, Theorem 3.1 (arXiv:1602.08789v3; Trans. Amer. Math. Soc. 371 (2019))",
+      "statement": "Every invariant probability s-equilibrium state of a box-like tuple with rotations and a proximal diagonal generator has λ₂<λ₁ for 0<s<2.",
+      "file": "BoxLike/Literature.lean:57"
+    },
+    "hfk": {
+      "lean": "BoxLike.FengKaenmakiGibbs",
+      "citation": "Feng–Käenmäki, Proposition 1.2 (arXiv:1009.3129; Discrete Contin. Dyn. Syst. 30 (2011))",
+      "statement": "For an irreducible box-like tuple and 0<s<2, every invariant probability s-equilibrium state has the two-sided singular-value Gibbs bounds. For 1<s<2 the cited norm-potential result is applied to A'_i=|det A_i|^((s−1)/(2−s)) A_i with q=2−s.",
+      "file": "BoxLike/Literature.lean:73"
+    },
+    "hfjj": {
+      "lean": "BoxLike.FraserJordanJurgaDecomposition",
+      "citation": "Fraser–Jordan–Jurga, Lemma 1.3 and Corollaries 1.5, 1.6 (arXiv:1706.06833; J. Fractal Geom. 7 (2020))",
+      "statement": "For a box-like tuple with rotations and a proximal diagonal generator, 0<s<2, and an invariant probability μ with the singular-value Gibbs bounds, there exist ergodic scalar Gibbs measures μ₁,μ₂ with the four restricted-coding decompositions and λ₁(μ)=barλ(μ₁), λ₂(μ)=barλ(μ₂). No separation condition.",
+      "file": "BoxLike/Literature.lean:90"
+    },
+    "hjr": {
+      "lean": "BoxLike.JordanRapaportDimension",
+      "citation": "Jordan–Rapaport, Theorem 1.1 (arXiv:1908.00271; Proc. Lond. Math. Soc. 122 (2021))",
+      "statement": "Under projective exponential separation, every ergodic invariant probability ν on the scalar full shift projects to an exact-dimensional measure of dimension min(1,−entropy ν/lyapBar ν). Both signs of nonzero contraction ratio are allowed.",
+      "file": "BoxLike/Literature.lean:103"
+    },
+    "hfi": {
+      "lean": "BoxLike.FengInfoSum",
+      "citation": "Feng, Lemma 4.6, first identity of (4.16) (arXiv:1901.01691v2; Duke Math. J. 172 (2023))",
+      "statement": "For an invariant ergodic probability μ with λ₂<λ₁, the negative logarithm of each conditional n-cylinder mass for ξ_i is the n-term information sum, for every n on one conull set. A theorem of the library: fengInfoSum_holds (BoxLike/FengIdentity.lean), proved along Feng's Lemmas 4.4 and 4.5. Library statements that take it as a hypothesis receive this proof in Solution; no headline takes it.",
+      "file": "BoxLike/LiteratureFeng.lean:45"
+    },
+    "hfib": {
+      "lean": "BoxLike.FengInfoSumBar",
+      "citation": "Feng, Lemma 4.6, first identity of (4.16) (arXiv:1901.01691v2; Duke Math. J. 172 (2023))",
+      "statement": "For a proximal box-like system with rotations and any invariant probability ν supported on Σ_Z, including nonergodic ν, the scalar conditional n-cylinder information identity holds for every n on one conull set. A theorem of the library: fengInfoSumBar_holds (BoxLike/FengIdentityBar.lean), proved along Feng's Lemmas 4.4 and 4.5 without the constant-multiplicity hypothesis, rotations or proximality. Library statements that take it as a hypothesis receive this proof in Solution; no headline takes it.",
+      "file": "BoxLike/LiteratureFeng.lean:57"
+    },
+    "hly": {
+      "lean": "BoxLike.FengLedrappierYoung",
+      "citation": "Feng, Theorems 1.2 and 1.3 (arXiv:1901.01691v2; Duke Math. J. 172 (2023))",
+      "statement": "For an invariant ergodic probability μ on a box-like System with λ₂<λ₁, π_*μ is exact-dimensional of dimension (h₁−h₀)/λ₁+(h₂−h₁)/λ₂. This Lean hypothesis represents the box-like specialisation of the manuscript's first clause, which concerns every planar self-affine set; the general transcription is the unauthorised proposal PlanarFengLedrappierYoung.",
+      "file": "BoxLike/LiteratureFeng.lean:70"
+    },
+    "hlyb": {
+      "lean": "BoxLike.FengLedrappierYoungBar",
+      "citation": "Feng, Theorems 1.2 and 1.3 (arXiv:1901.01691v2; Duke Math. J. 172 (2023))",
+      "statement": "For a proximal box-like system with rotations and an invariant ergodic probability ν supported on Σ_Z, barπ_*ν is exact-dimensional of dimension (barh₁−barh₀)/barλ.",
+      "file": "BoxLike/LiteratureFeng.lean:82"
+    },
+    "hfh": {
+      "lean": "BoxLike.FengHuExactDim",
+      "citation": "Feng–Hu, Theorem 2.8 (arXiv:1002.2036v1; Comm. Pure Appl. Math. 62 (2009))",
+      "statement": "Every scalar self-similar projection of an ergodic invariant probability measure is exact-dimensional without separation. Used by the unnumbered no-separation remark; unnecessary for the separated numbered theorems because Jordan–Rapaport already includes exact-dimensionality.",
+      "file": "BoxLike/LiteratureRemarks.lean:47"
+    }
+  },
+  "repairs": [],
+  "projection_ge_two_feasibility": {
+    "existing": [
+      "OrientationLift: the lift (tau_* mu + omega_* mu)/2 of a Bernoulli measure, its Markov form, mixing, ergodicity and entropy",
+      "ProjectionLarge: lambda_1 = lambda_2 for s >= 2, the dimension of both coordinate projections, eq_state_proj_dim_all",
+      "MainOneFull: main1_of_two_le, main1_all, main1_dimaff_all",
+      "JordanRapaportDimension: dimension of the ergodic projected lift"
+    ],
+    "missing": [],
+    "assessment": "The case s >= 2 of Theorems 1.2 and 4.4 is proved along the prose; Jordan-Rapaport is its only literature input, and rotations and projective exponential separation its only geometric hypotheses."
+  },
+  "entries": [
+    {
+      "number": "4.1",
+      "line": 2744,
+      "label": "thm:exact-dimensional-mixture",
+      "kind": "lemma",
+      "lean_declarations": [
+        "BoxLike.IsExactDim.ae_hasLocalDim_add_left",
+        "BoxLike.IsExactDim.ae_hasLocalDim_add_right",
+        "BoxLike.IsExactDim.isDoubleDim_add",
+        "BoxLike.IsExactDim.measure_hasLocalDim_add_left_pos",
+        "BoxLike.IsExactDim.measure_hasLocalDim_add_right_pos",
+        "BoxLike.isExactDim_add_iff"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [],
+      "paper_level_literature_hypotheses": [],
+      "other_hypotheses": "Finite Borel measures on a metric space with the Besicovitch covering property; nonzero assumptions only where positive occurrence/uniqueness needs them. Finite-dimensional real normed spaces satisfy the required type classes.",
+      "fidelity": "All four conclusions, including positive occurrence of each distinct value, are represented. The real-space specialization of the generic lemmas matches the manuscript.",
+      "proof_deviations": [
+        "The manuscript omits the proof. Lean supplies the Radon–Nikodym/Besicovitch differentiation proof, which proves the asserted componentwise local dimensions."
+      ],
+      "required_action": "None."
+    },
+    {
+      "number": "4.2",
+      "line": 2762,
+      "label": "thm:feng1",
+      "kind": "theorem",
+      "lean_declarations": [
+        "BoxLike.FengLedrappierYoung",
+        "BoxLike.FengLedrappierYoungBar"
+      ],
+      "status": "partially_formalized",
+      "direct_literature_hypotheses": [],
+      "paper_level_literature_hypotheses": [
+        "hly",
+        "hlyb"
+      ],
+      "other_hypotheses": "Planar branch: invariant ergodic probability and λ₂<λ₁ on a box-like System. Scalar branch: proximal box-like System with rotations, invariant ergodic probability supported on Σ_Z.",
+      "fidelity": "The scalar clause matches. The first clause concerns every planar self-affine set; the authorised `FengLedrappierYoung` quantifies over box-like systems, which is the scope of every result that uses it. Gap: The scalar clause matches. The first clause concerns any planar self-affine set; the general planar objects exist (`PlanarSystem`, BoxLike/Planar/), and the general transcription is the unauthorised proposal `PlanarFengLedrappierYoung` (BoxLike/Proposals/CPlanarFeng.lean), which implies the authorised box-like `FengLedrappierYoung`; its conditional endpoint is `planar_feng1`.",
+      "proof_deviations": [
+        "Cited result, no manuscript proof. Lean uses closed sup-norm balls; equivalence with Euclidean local dimension is mathematical background in the transcription, not a separate source axiom.",
+        "Feng's partitions on his admissible set have almost everywhere the same conditional measures as the partitions of the library (`System.condMeas_fengXi_ae_eq`, `PlanarSystem.condMeas_fengXi_ae_eq`), so the entropies agree."
+      ],
+      "required_action": "Authorise the proposal PlanarFengLedrappierYoung (BoxLike/Proposals/CPlanarFeng.lean) after review against Feng, Theorems 1.2 and 1.3, to complete the planar clause at the general scope; until then the entry is partially formalised."
+    },
+    {
+      "number": "4.3",
+      "line": 2813,
+      "label": "thm:entropy_eq_gibbs",
+      "kind": "proposition",
+      "lean_declarations": [
+        "BoxLike.System.GibbsDecomposition.dimEntropy_zero_eq_gibbs",
+        "BoxLike.System.GibbsDecomposition.dimEntropy_zero_eq_gibbs",
+        "BoxLike.System.GibbsDecomposition.zero_entropy_identities",
+        "BoxLike.System.GibbsDecomposition.entropy_eq₁",
+        "BoxLike.System.GibbsDecomposition.entropy_eq₂",
+        "BoxLike.entropy_map_unCode",
+        "BoxLike.System.dimEntropy_zero_eq_entropy'",
+        "BoxLike.System.dimEntropyBar_zero_eq_entropy'"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [],
+      "paper_level_literature_hypotheses": [
+        "hfk",
+        "hfjj"
+      ],
+      "other_hypotheses": "The entropy-rate helpers take hdec : S.GibbsDecomposition s μ μ₁ μ₂. The paper has rotations, a proximal diagonal generator, 0<s<2, and the equilibrium state. hdec supplies the two Gibbs measures, ergodicity and factor decompositions. To derive hdec from the equilibrium-state hypotheses use hfk and hfjj.",
+      "fidelity": "The existing named helpers conclude equality of entropy rates, while the printed result uses conditional-past entropies. PastEntropy contains both bridges; the planar conull-set condition follows from ergodicity, which follows from hdec. No hms is necessary if the primed bridge is used. The literal endpoint dimEntropy_zero_eq_gibbs assembles both conditional-entropy identities.",
+      "proof_deviations": [
+        "The proof follows the two-to-one coding argument of the prose: block entropies differ by at most log 2 and division by n removes this difference. The final equality with conditional-past entropy is separately proved by chain rule, Lévy upward convergence and Cesàro in PastEntropy."
+      ],
+      "required_action": "None."
+    },
+    {
+      "number": "4.4",
+      "line": 2892,
+      "label": "thm:eq_state_proj_dim",
+      "kind": "theorem",
+      "lean_declarations": [
+        "BoxLike.System.eq_state_proj_dim_all",
+        "BoxLike.System.eq_state_proj_dim_of_two_le",
+        "BoxLike.System.isExactDim_marginal_of_two_le",
+        "BoxLike.System.IsEquilibriumState.lyapunov_eq_of_two_le",
+        "BoxLike.System.IsEquilibriumState.ergodic_orientationLift_of_two_le",
+        "BoxLike.ergodic_orientationLift_bernoulli",
+        "BoxLike.tendsto_orientationLift_bernoulli_cylinder_inter",
+        "BoxLike.orientationLift_bernoulli_cylinder",
+        "BoxLike.entropy_orientationLift",
+        "BoxLike.System.lyapunov_eq_of_ergodic_orientationLift",
+        "BoxLike.System.map_projBar_orientationLift",
+        "BoxLike.System.eq_state_proj_dim",
+        "BoxLike.System.marginal_decomposition",
+        "BoxLike.System.marginal_decomposition_normalised"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr"
+      ],
+      "paper_level_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr"
+      ],
+      "other_hypotheses": "WithRotations, Proximal, ProjExpSeparation, invariant probability s-equilibrium μ for every s>0, and an arbitrary coordinate c∈ZMod 2. For s >= 2 only WithRotations, ProjExpSeparation and Jordan-Rapaport are used.",
+      "fidelity": "Exact double-dimensionality and the upper packing and lower Hausdorff dimension values are proved for every s>0 (eq_state_proj_dim_all), for every s-equilibrium state.",
+      "proof_deviations": [
+        "For 0<s<2 the proof follows the normalized Gibbs decomposition and exact- dimensional mixture argument. Feng–Hu is unnecessary under separation because hjr already gives exact-dimensionality."
+      ],
+      "required_action": "None."
+    },
+    {
+      "number": "4.5",
+      "line": 2986,
+      "label": "ex:projection_double_dimensional",
+      "kind": "example",
+      "lean_declarations": [
+        "BoxLike.PrescribedExample.projection_double_dimensional",
+        "BoxLike.PrescribedExample.projection_double_dimensional_of_geometry",
+        "BoxLike.PrescribedExample.equilibrium_spec",
+        "BoxLike.PrescribedExample.Gibbs.isEquilibriumState_spec",
+        "BoxLike.PrescribedExample.Gibbs.isEquilibriumState_ratios",
+        "BoxLike.PrescribedExample.Gibbs.marginal_spec",
+        "BoxLike.PrescribedExample.Gibbs.GibbsDecomposition.eq_markov",
+        "BoxLike.PrescribedExample.Gibbs.markov_cylinder_eq_Q",
+        "BoxLike.PrescribedExample.exists_geometry",
+        "BoxLike.PrescribedExample.existsUnique_p",
+        "BoxLike.PrescribedExample.pressure_eq",
+        "BoxLike.PrescribedExample.exists_translation",
+        "BoxLike.PrescribedExample.volume_badSet_le"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [],
+      "paper_level_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr"
+      ],
+      "other_hypotheses": "0<s₂<s₁≤1 only. The unique p∈(1/2,1), the translation t, the four-map System (Fin 4), its geometry (rotations, proximality, strong separation, projective exponential separation, no exact overlaps), P(A,u)=log(2a^u+2b^u) for 0≤u≤1, dimaff=s₁, and the existence and uniqueness of the s₁-equilibrium state are proved; FengKaenmakiUnique is not used.",
+      "fidelity": "full statement for every 0<s₂<s₁≤1, for every invariant s₁-equilibrium state; also records h₀=log 2+H(p), both exponents in both displayed forms, both ratios, the upper packing and lower Hausdorff dimensions of both projections, and that each pointwise value occurs on a set of positive measure in each projection.",
+      "proof_deviations": [
+        "μ₁ is identified with the Markov measure by a Bernoulli construction and a Gibbs-uniqueness argument (cylinder comparability plus ergodicity of μ₁); the prose states the identification. The entropy of the Markov measure is obtained by comparing block entropies with a Bernoulli measure rather than by the Markov-chain entropy formula. Both are added detail."
+      ],
+      "required_action": "None."
+    },
+    {
+      "number": "4.6",
+      "line": 3140,
+      "label": "thm:gibbs_tau_omega_positive",
+      "kind": "lemma",
+      "lean_declarations": [
+        "BoxLike.System.gibbs_tau_omega_positive"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [
+        "hms",
+        "hfk"
+      ],
+      "paper_level_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj"
+      ],
+      "other_hypotheses": "WithRotations, HasProximalDiagonal, 0<s<2, invariant ergodic probability equilibrium μ, and hdec : GibbsDecomposition s μ μ₁ μ₂.",
+      "fidelity": "Both sums equal one, the four zero terms and all four strict positivity assertions match. The implicit dependence of Σ^τ and Σ^ω on μ is explicit in Lean. hdec is an internal constructed object; its external source is hfjj after applying hfk.",
+      "proof_deviations": [
+        "Proof: as in the prose: backward Lyapunov rates identify the full and zero pieces; the factor decompositions and the positivity of 3.13 (`sigma_tau_omega_positive_eq_measure`, by the counting argument and Birkhoff's theorem) give the four positive terms."
+      ],
+      "required_action": "None."
+    },
+    {
+      "number": "4.7",
+      "line": 3209,
+      "label": "thm:conditional_two_ways",
+      "kind": "lemma",
+      "lean_declarations": [
+        "BoxLike.System.conditional_two_ways",
+        "BoxLike.System.conditional_two_ways_aux",
+        "BoxLike.condMeas_transport"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [
+        "hms",
+        "hfk"
+      ],
+      "paper_level_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj"
+      ],
+      "other_hypotheses": "Same normalized equilibrium/Gibbs hypotheses as 4.6, with μ₁ and μ₂ probability instances and hdec.",
+      "fidelity": "All four conditional-measure identities agree with the manuscript. Lean uses unCode at the point instead of the inverses restricted to their respective orientation images; these are equal there.",
+      "proof_deviations": [
+        "Proof: as in the prose (`System.conditional_two_ways_normalised`, BoxLike/Aligned/ConditionalTwoWays.lean, the form used by 4.8 to 4.14): normalise on the positive pieces E, F, transport the conditional measures, and remove the restrictions by 3.2. The transport of the unnormalised restrictions with one application of conditional-measure uniqueness (`System.conditional_two_ways`, `condMeas_transport`) is a shorter alternative proof, which needs no positivity."
+      ],
+      "required_action": "None."
+    },
+    {
+      "number": "4.8",
+      "line": 3268,
+      "label": "thm:overline_h1_zero",
+      "kind": "lemma",
+      "lean_declarations": [
+        "BoxLike.System.overline_h1_zero"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hjr",
+        "hfib",
+        "hlyb"
+      ],
+      "paper_level_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr",
+        "hlyb"
+      ],
+      "other_hypotheses": "Normalized proximal box-like system with rotations, projective exponential separation, 0<s<2, invariant ergodic equilibrium μ, entropy μ≤−λ₁, and hdec. Proved inputs: BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5; the library statements take them as hypotheses and Solution discharges them.",
+      "fidelity": "The almost-everywhere zero pointwise entropy of the average is exactly represented. The non-strict comparison of the prose is correct.",
+      "proof_deviations": [
+        "The prose and Lean compare Jordan–Rapaport with scalar Feng, then transfer conditional information limits across the fast/slow pieces. The separate initial invocation of Feng–Hu in the prose is unused: Jordan–Rapaport already gives exact-dimensionality."
+      ],
+      "required_action": "None."
+    },
+    {
+      "number": "4.9",
+      "line": 3333,
+      "label": "thm:overline_h1_zero_large",
+      "kind": "lemma",
+      "lean_declarations": [
+        "BoxLike.System.overline_h1_zero_large"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hjr",
+        "hfib",
+        "hlyb"
+      ],
+      "paper_level_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr",
+        "hlyb"
+      ],
+      "other_hypotheses": "As 4.8, but only entropy μ≤−λ₂; no lower entropy bound. hdec supplies Gibbs data. Proved inputs: BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5; the library statements take them as hypotheses and Solution discharges them.",
+      "fidelity": "The Lean signature assumes entropy μ≤−λ₂ only, as the prose does. The scalar entropy-zero conclusion and the almost-everywhere Dirac conclusion on slowPart have the full scope of the manuscript. The latter is the manuscript's measure-equality statement in equivalent ae form.",
+      "proof_deviations": [
+        "The proof follows the scalar dimension comparison of the prose, Feng entropy-zero criterion and conditional transport. No substantive route difference."
+      ],
+      "required_action": "None."
+    },
+    {
+      "number": "4.10",
+      "line": 3379,
+      "label": "thm:overline_h1_large",
+      "kind": "lemma",
+      "lean_declarations": [
+        "BoxLike.System.overline_h1_large"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfi",
+        "hfib"
+      ],
+      "paper_level_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj"
+      ],
+      "other_hypotheses": "Normalized system with rotations and proximal diagonal generator, 0<s<2, invariant ergodic equilibrium μ and hdec; no separation or entropy-range condition. Proved inputs: BoxLike.FengInfoSum (fengInfoSum_holds) and BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5; the library statements take them as hypotheses and Solution discharges them.",
+      "fidelity": "Lean states equality barh₁(μ₁)=h₁(μ) together with the ae equality for the average on fastPart. These two conclusions are equivalent to the displayed three-term equality.",
+      "proof_deviations": [
+        "Same cylinder-preimage and information-limit proof. Lean explicitly uses positivity of just τ(Σ^τ) to identify the two constants, whereas the prose obtains the equality pointwise on each positive part."
+      ],
+      "required_action": "None."
+    },
+    {
+      "number": "4.11",
+      "line": 3433,
+      "label": "thm:eq_state_h1_zero",
+      "kind": "proposition",
+      "lean_declarations": [
+        "BoxLike.System.eq_state_h1_zero"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr",
+        "hfi",
+        "hfib",
+        "hlyb"
+      ],
+      "paper_level_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr",
+        "hlyb"
+      ],
+      "other_hypotheses": "WithRotations, HasProximalDiagonal, ProjExpSeparation, 0<s<2, invariant ergodic probability equilibrium μ, entropy μ≤−λ₁. Proved inputs: BoxLike.FengInfoSum (fengInfoSum_holds) and BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5; the library statements take them as hypotheses and Solution discharges them.",
+      "fidelity": "Both h₁=0 and the ae Dirac conditional-measure assertion are proved. The manuscript restricts the full-measure set to Σ'; Lean's assertion is on all sequences but is equivalent because Σ' is conull.",
+      "proof_deviations": [
+        "Same proof: transport Dirac measures from the average through injective orientation codings, cover Σ' by its two orientation parts, and use Feng's zero-entropy equivalence."
+      ],
+      "required_action": "None."
+    },
+    {
+      "number": "4.12",
+      "line": 3460,
+      "label": "thm:eq_state_h1_large",
+      "kind": "proposition",
+      "lean_declarations": [
+        "BoxLike.System.eq_state_h1_large"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr",
+        "hfi",
+        "hfib",
+        "hlyb"
+      ],
+      "paper_level_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr",
+        "hlyb"
+      ],
+      "other_hypotheses": "WithRotations, HasProximalDiagonal, ProjExpSeparation, 0<s<2, invariant ergodic probability equilibrium μ, −λ₁≤entropy μ; no upper entropy bound. Proved inputs: BoxLike.FengInfoSum (fengInfoSum_holds) and BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5; the library statements take them as hypotheses and Solution discharges them.",
+      "fidelity": "The formula h₁=entropy μ+λ₁ agrees with h₁=h₀+λ₁ after the conditional-past bridge. The lower boundary is included exactly as in the statement of the manuscript.",
+      "proof_deviations": [
+        "Same Jordan–Rapaport/Feng comparison and 4.10 substitution; Lean uses uniqueness of exact dimension to equate the two expressions."
+      ],
+      "required_action": "None."
+    },
+    {
+      "number": "4.13",
+      "line": 3494,
+      "label": "thm:eq_state_h2_zero",
+      "kind": "proposition",
+      "lean_declarations": [
+        "BoxLike.System.eq_state_h2_zero"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr",
+        "hfi",
+        "hfib",
+        "hlyb"
+      ],
+      "paper_level_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr",
+        "hlyb"
+      ],
+      "other_hypotheses": "Same hypotheses as 4.11, including entropy μ≤−λ₁. Proved inputs: BoxLike.FengInfoSum (fengInfoSum_holds) and BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5; the library statements take them as hypotheses and Solution discharges them.",
+      "fidelity": "The h₂=0 endpoint matches. It is implied by the stronger 4.14 and keeps its own proof and its own numbered entry.",
+      "proof_deviations": [
+        "The Lean proof follows the prose exactly: 4.11 gives Dirac ξ₁-conditionals, refinement gives Dirac ξ₂-conditionals, then Feng's zero-entropy criterion."
+      ],
+      "required_action": "None."
+    },
+    {
+      "number": "4.14",
+      "line": 3514,
+      "label": "thm:orto_partition_dirac",
+      "kind": "proposition",
+      "lean_declarations": [
+        "BoxLike.System.orto_partition_dirac"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr",
+        "hfi",
+        "hfib",
+        "hlyb"
+      ],
+      "paper_level_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr",
+        "hlyb"
+      ],
+      "other_hypotheses": "Normalized system with rotations, projective exponential separation, 0<s<2, invariant ergodic probability equilibrium μ, entropy μ≤−λ₂ only. Proved inputs: BoxLike.FengInfoSum (fengInfoSum_holds) and BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5; the library statements take them as hypotheses and Solution discharges them.",
+      "fidelity": "The signature assumes entropy μ≤−λ₂ only; the full entropy range of the manuscript is proved.",
+      "proof_deviations": [
+        "The proof follows the prose: slow-part Dirac conditionals transfer to ξ₁-perp; ξ₂ refines ξ₁-perp; Feng's criterion gives h₂=0."
+      ],
+      "required_action": "None."
+    },
+    {
+      "number": "4.15",
+      "line": 3542,
+      "label": "thm:SOSC_h2_zero",
+      "kind": "proposition",
+      "lean_declarations": [
+        "BoxLike.System.SOSC_h2_zero"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfi"
+      ],
+      "paper_level_literature_hypotheses": [
+        "hms",
+        "hfk"
+      ],
+      "other_hypotheses": "WithRotations, Proximal, StrongOpenSet, 0<s<2, invariant ergodic probability equilibrium μ. No projective separation and no proximal diagonal generator required. Proved inputs: BoxLike.FengInfoSum (fengInfoSum_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5; the library statements take them as hypotheses and Solution discharges them.",
+      "fidelity": "The printed endpoint h₂=0 matches. The manuscript's equilibrium state is already declared ergodic in the surrounding setup. The existing lemma explicitly takes ergodicity; removing that input in a new wrapper requires hfk+hfjj via normalization (and would enlarge the wrapper's literature dependency set).",
+      "proof_deviations": [
+        "Proof: the open-set and unique-future-address argument of the prose. The recurrence of the word w (tex 3554 to 3555) comes from ergodicity through Poincaré recurrence (`ae_frequently_iterate_mem`), as the prose invokes it."
+      ],
+      "required_action": "None."
+    },
+    {
+      "number": "4.16",
+      "line": 3584,
+      "label": "thm:main_extended",
+      "kind": "theorem",
+      "lean_declarations": [
+        "BoxLike.System.main_extended_min",
+        "BoxLike.System.main_extended",
+        "BoxLike.System.main_extended_normalised",
+        "BoxLike.System.main_extended_ge_two"
+      ],
+      "status": "formalized",
+      "direct_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr",
+        "hfi",
+        "hfib",
+        "hly",
+        "hlyb"
+      ],
+      "paper_level_literature_hypotheses": [
+        "hms",
+        "hfk",
+        "hfjj",
+        "hjr",
+        "hly",
+        "hlyb"
+      ],
+      "other_hypotheses": "WithRotations, Proximal, ProjExpSeparation, invariant probability equilibrium μ at s=dimaff, and entropy μ≤−λ₂ or StrongOpenSet. There is no s<2 restriction in the assembled endpoint. Proved inputs: BoxLike.FengInfoSum (fengInfoSum_holds) and BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5; the library statements take them as hypotheses and Solution discharges them.",
+      "fidelity": "The full all-s exact-dimensionality statement is represented. Positivity of s follows from rotations. For s≥2 the entropy alternative is impossible and the SOSC volume argument yields exact dimension 2. The ge-two helper needs no external literature hypotheses, rotations, proximality or projective separation. Rossi's bound occurs only in the background before the theorem; the proof does not use it.",
+      "proof_deviations": [
+        "For s<2, the Lean proof follows normalization, the two entropy regimes, the SOSC case and evaluation of Feng's formula.",
+        "For s≥2, Lean identifies the equilibrium state as Bernoulli directly from equality in entropy/Gibbs inequalities, rather than citing 3.12. It proves stationarity uniqueness internally rather than assuming Hutchinson's theorem. The mathematical argument otherwise agrees."
+      ],
+      "required_action": "None."
+    }
+  ]
+}

@@ -9,7 +9,7 @@ public import Mathlib
 
 This file repeats the definitions of `Challenge.lean`, with the same names, types and values,
 so that the solution does not import the challenge. Comparator checks that the definitions used
-by the seven theorems agree between the two modules. Theorem, equation and section references
+by the three headline theorems agree between the two modules. Theorem, equation and section references
 are to D. Allen, A. Käenmäki, R. D. Prokaj, K. Simon and S. Troscheit, *Hausdorff dimension of
 planar box-like self-affine sets with rotations*.
 -/
@@ -201,7 +201,19 @@ are `c > 0` and a strictly increasing sequence `(n_k)` with `Δ_{n_k}^Ψ ≥ c^{
 def ProjExpSeparation : Prop :=
   ∃ c : ℝ, 0 < c ∧ ∃ n : ℕ → ℕ, StrictMono n ∧ ∀ k, ENNReal.ofReal (c ^ n k) ≤ S.gap (n k)
 
+/-- The projective system has no exact overlaps (`sec:exponential_separation`): `g_𝐢 ≠ g_𝐣` for
+any two distinct finite words `𝐢`, `𝐣` over the alphabet of `Ψ`, that is, the maps of `Ψ`
+generate a free semigroup. The separation hypothesis of `thm:main2`. -/
+def NoExactOverlaps : Prop := ∀ u u' : List (ι × ZMod 2), u ≠ u' → S.gWord u ≠ S.gWord u'
+
 end System
+
+/-- The composition `g_{j_0} ∘ ⋯ ∘ g_{j_{n-1}}` of the similarities `g_j(x) = r_j x + t_j` of
+the line indexed by `κ`; the maps of a self-similar system on `ℝ` generate a free semigroup
+exactly when this composition is injective. -/
+def simWord {κ : Type*} (r t : κ → ℝ) : List κ → ℝ → ℝ
+  | [] => id
+  | j :: u => (fun x => r j * x + t j) ∘ simWord r t u
 
 end Separation
 
@@ -314,9 +326,6 @@ variable {α : Type*}
 def cylinder {α : Type*} {n : ℕ} (w : Fin n → α) : Set (ℤ → α) :=
   {x | ∀ k : Fin n, x (k : ℤ) = w k}
 
-/-- The block `x_0 ⋯ x_{n-1}` of a point `x`. -/
-def block (n : ℕ) (x : ℤ → α) : Fin n → α := fun k => x k
-
 end Cylinder
 
 section Entropy
@@ -423,34 +432,6 @@ def IsExactDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
 pointwise dimension `dimloc(μ, x)` exists and equals `d₁` or `d₂`. -/
 def IsDoubleDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
     (μ : Measure X) (d₁ d₂ : ℝ) : Prop := ∀ᵐ x ∂μ, HasLocalDim μ x d₁ ∨ HasLocalDim μ x d₂
-
-variable {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
-
-/-- The upper pointwise dimension `\overline{dim}_loc(μ, x)`: the `limsup` of
-`log μ(B(x, r)) / log r` as `r ↓ 0`, with closed balls. The value is real. For a finite Borel
-measure on `ℝ^d` the upper pointwise dimension lies in `[0, d]` almost everywhere, so the
-real-valued `limsup` carries its usual meaning. -/
-noncomputable def upperLocalDim (μ : Measure X) (x : X) : ℝ :=
-  limsup (fun r : ℝ => Real.log (μ.real (closedBall x r)) / Real.log r) (𝓝[>] 0)
-
-/-- The lower pointwise dimension `\underline{dim}_loc(μ, x)`: the `liminf` of
-`log μ(B(x, r)) / log r` as `r ↓ 0`, with closed balls. The value is real. For a finite Borel
-measure on `ℝ^d` the lower pointwise dimension lies in `[0, d]` almost everywhere, so the
-real-valued `liminf` carries its usual meaning. -/
-noncomputable def lowerLocalDim (μ : Measure X) (x : X) : ℝ :=
-  liminf (fun r : ℝ => Real.log (μ.real (closedBall x r)) / Real.log r) (𝓝[>] 0)
-
-/-- The upper packing dimension `\overline{dim}_p(μ)`: the essential supremum of the upper
-pointwise dimension with respect to `μ`. The value is real. For a finite Borel measure on
-`ℝ^d` the pointwise dimensions lie in `[0, d]` almost everywhere, so the real-valued `essSup`
-carries its usual meaning. -/
-noncomputable def upperPackingDim (μ : Measure X) : ℝ := essSup (upperLocalDim μ) μ
-
-/-- The lower Hausdorff dimension `\underline{dim}_H(μ)`: the essential infimum of the lower
-pointwise dimension with respect to `μ`. The value is real. For a finite Borel measure on
-`ℝ^d` the pointwise dimensions lie in `[0, d]` almost everywhere, so the real-valued `essInf`
-carries its usual meaning. -/
-noncomputable def lowerHausdorffDim (μ : Measure X) : ℝ := essInf (lowerLocalDim μ) μ
 
 end MeasureDim
 
@@ -678,10 +659,10 @@ end DimPartitions
 
 /-! ## Cited theorems
 
-The paper uses eight theorems from the literature without proof. Each is stated here as a `Prop`
-about the objects defined above, quantified over every finite alphabet `ι : Type u` with the
-discrete `σ`-algebra and every system, with the hypotheses under which the paper uses it; the doc
-comments give the exact citations and the reductions between each source and its statement. The
+The headlines use seven theorems from the literature that the paper cites without proof. Each
+is stated here as a `Prop` about the objects defined above, quantified over every finite
+alphabet `ι : Type u` with the discrete `σ`-algebra and every system, with the hypotheses under
+which the paper uses it; the doc comments give the exact citations and the reductions between each source and its statement. The
 audited theorems take them as hypotheses.
 
 The results of D.-J. Feng, *Dimension of invariant measures for affine iterated function
@@ -755,26 +736,22 @@ def JordanRapaportDimension : Prop :=
     S.ProjExpSeparation → ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],
     Ergodic (shift 1) ν → IsExactDim (ν.map S.projBar) (min 1 (-entropy ν / S.lyapBar ν))
 
-/-- Feng, Lemma 4.6, first identity of (4.16), for the planar partitions:
-`-log μ_𝐢^{ξ_i}(𝒫_0^{n-1}(𝐢)) = ∑_{k<n} I_μ(𝒫 | \widehat{ξ}_i)(σ^k 𝐢)` for all `n`, on one set of
-full measure. The proof of `thm:feng_entropy_zero` uses it. Hypotheses as in
-`thm:feng_entropy_as_limit`. -/
-def FengInfoSum : Prop :=
-  ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
-    (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ], MeasurePreserving (shift 1) μ μ →
-    Ergodic (shift 1) μ → S.lyapunov₂ μ < S.lyapunov₁ μ → ∀ i : ℕ,
-    ∀ᵐ x ∂μ, ∀ n : ℕ, -Real.log ((condMeas μ (S.xi μ i) x).real (cylinder (block n x))) =
-      ∑ k ∈ Finset.range n, condInfo μ (S.xi μ i) (shift k x)
-
-/-- Feng, Lemma 4.6, first identity of (4.16), for the projective system and an
-invariant measure `ν` on `Σ_Z`, ergodic or not; the article checks Feng's constant-multiplicity
-hypothesis (4.7) in `sec:entropies`, tex lines 2017 to 2019. -/
-def FengInfoSumBar : Prop :=
-  ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
-    S.WithRotations → S.Proximal → ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],
-    MeasurePreserving (shift 1) ν ν → ν (subshift S.o)ᶜ = 0 → ∀ i : ℕ,
-    ∀ᵐ y ∂ν, ∀ n : ℕ, -Real.log ((condMeas ν (S.xiBar i) y).real (cylinder (block n y))) =
-      ∑ k ∈ Finset.range n, condInfo ν (S.xiBar i) (shift k y)
+/-- Kittle–Kogler, *The exact overlaps conjecture for self-similar measures on the real line*,
+arXiv:2610.10511 (7 October 2026), Theorem 1.1, in the form the proof of `thm:main2` uses. Let
+`μ = ∑_j p_j δ_{g_j}` be a probability measure on finitely many distinct contracting
+similarities `g_j(x) = r_j x + t_j` of `ℝ`, with `0 < |r_j| < 1` of either sign and `p_j > 0`;
+then the self-similar measure `ν`, the unique probability measure with
+`∑_j p_j (g_j)_* ν = ν`, is exact-dimensional with `dim ν = min{1, h_μ / |χ_μ|}`, where `h_μ`
+is the random walk entropy and `χ_μ = ∑_j p_j log |r_j|`. When the similarities generate a
+free semigroup, `h_μ = H(p) = -∑_j p_j log p_j`, as the source notes; the statement takes this
+hypothesis and the conclusion `dim ν = min{1, H(p) / |χ_μ|}`. Every solution of the
+stationarity equation is the self-similar measure, by Hutchinson's uniqueness. -/
+def KittleKoglerDimension : Prop :=
+  ∀ {κ : Type u} [Fintype κ] (r t p : κ → ℝ), (∀ j, r j ≠ 0) → (∀ j, |r j| < 1) →
+    (∀ j, 0 < p j) → ∑ j, p j = 1 → Function.Injective (simWord r t) →
+    ∀ (ν : Measure ℝ) [IsProbabilityMeasure ν],
+    ν = ∑ j, ENNReal.ofReal (p j) • ν.map (fun x => r j * x + t j) →
+    IsExactDim ν (min 1 ((∑ j, Real.negMulLog (p j)) / -(∑ j, p j * Real.log |r j|)))
 
 /-- `thm:feng1`, first part, `eq:feng1_1`; Feng, Theorems 1.2 and 1.3, for `d = 2`
 and simple Lyapunov spectrum: if `μ` is ergodic with `λ_2(𝖠, μ) < λ_1(𝖠, μ)`, then `π_*μ` is

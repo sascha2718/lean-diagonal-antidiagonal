@@ -23,6 +23,7 @@ everywhere for `μ_2`, and on the four sets it is `λ_1`, `λ_1`, `λ_2`, `λ_2`
 * `System.gibbs_tau_omega_positive`: `thm:gibbs_tau_omega_positive`.
 * `System.orientation_restrictions`: `eq:orientation-restrictions`.
 -/
+public import BoxLike.Aligned.SigmaTauOmega
 public import BoxLike.SigmaMeasure
 
 @[expose] public section
@@ -248,7 +249,7 @@ theorem gibbs_tau_omega_positive (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengK
     S.measure_eq_zero_of_hasBackRate hlt.ne' hr₁ (by rintro _ ⟨x, hx, rfl⟩; exact hx.2)
   have z4 : μ₁ (tau S.o '' S.SigmaOmega μ) = 0 :=
     S.measure_eq_zero_of_hasBackRate hlt.ne' hr₁ (by rintro _ ⟨x, hx, rfl⟩; exact hx.1)
-  obtain ⟨pτ, pω⟩ := S.sigma_tau_omega_positive hfk hrot hdiag.proximal hs0 hs2 μ hinv herg heq
+  obtain ⟨pτ, pω⟩ := S.sigma_tau_omega_positive_eq_measure hfk hrot hdiag.proximal hs0 hs2 μ hinv herg heq
   refine ⟨⟨?_, ?_⟩, ⟨z1, z2, z3, z4⟩, ?_, ?_, ?_, ?_⟩
   · exact S.measure_tau_image_add_measure_omega_image hdec.supp₁
       (map_unCode_of_decomposition hdec.supp₁ hdec.eq₁) hmτ hmω hfull hlt.ne' hr₁
@@ -283,7 +284,7 @@ theorem orientation_restrictions (hfk : FengKaenmakiGibbs.{u}) (hrot : S.WithRot
     (hE : E = S.SigmaTau μ ∨ E = S.SigmaOmega μ) :
     (avgMeasure μ₁ μ₂).restrict (T '' E) = (2⁻¹ : ℝ≥0) • (μ.restrict E).map T ∧
       avgMeasure μ₁ μ₂ (T '' E) = 2⁻¹ * μ E ∧ 0 < avgMeasure μ₁ μ₂ (T '' E) := by
-  obtain ⟨pτ, pω⟩ := S.sigma_tau_omega_positive hfk hrot hdiag.proximal hs0 hs2 μ hinv herg heq
+  obtain ⟨pτ, pω⟩ := S.sigma_tau_omega_positive_eq_measure hfk hrot hdiag.proximal hs0 hs2 μ hinv herg heq
   have hEm : MeasurableSet E := by
     rcases hE with rfl | rfl
     exacts [S.measurableSet_SigmaTau μ, S.measurableSet_SigmaOmega μ]

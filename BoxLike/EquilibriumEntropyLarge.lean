@@ -29,6 +29,7 @@ For `thm:eq_state_h1_large`, Jordan–Rapaport and the scalar part of `thm:feng1
 * `System.overline_h1_large`: `thm:overline_h1_large`.
 * `System.eq_state_h1_large`: `thm:eq_state_h1_large`.
 -/
+public import BoxLike.Aligned.ConditionalTwoWays
 public import BoxLike.ConditionalTwoWays
 public import BoxLike.FengEntropy
 public import BoxLike.General
@@ -223,7 +224,7 @@ theorem overline_h1_large (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmaki
     (Or.inl rfl) (Or.inl rfl)
   obtain ⟨r2, -, -⟩ := S.orientation_restrictions hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
     (Or.inr rfl) (Or.inr rfl)
-  have hc := S.conditional_two_ways hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
+  have hc := S.conditional_two_ways_normalised hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
   have a1 := S.h1Large_aux hfi hfib hrot hdiag.proximal μ hinv herg hlt hdec.ergodic₁
     hdec.ergodic₂.toMeasurePreserving hdec.supp₁ hdec.supp₂ (Or.inl rfl)
     (S.measurableSet_SigmaTau μ) _ r1 z1 (hc.mono fun y hy => hy.1)

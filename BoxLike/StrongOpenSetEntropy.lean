@@ -237,7 +237,8 @@ end System
 /-- An ergodic map of a probability space returns to a set of positive measure infinitely often
 from almost every point. By Poincaré recurrence almost every point of `s` returns to `s`
 infinitely often, and the set of points that visit `s` infinitely often is invariant, so it has
-full measure. The proof of `thm:SOSC_h2_zero` obtains this from Birkhoff's ergodic theorem. -/
+full measure. The proof of `thm:SOSC_h2_zero` uses this recurrence for a word of positive
+measure (tex lines 3554 to 3555), which it attributes to ergodicity. -/
 theorem ae_frequently_iterate_mem {X : Type*} [MeasurableSpace X] {μ : Measure X}
     [IsProbabilityMeasure μ] {T : X → X} (hT : Ergodic T μ) {s : Set X} (hs : MeasurableSet s)
     (hpos : μ s ≠ 0) : ∀ᵐ x ∂μ, ∃ᶠ n in atTop, T^[n] x ∈ s := by
@@ -330,7 +331,7 @@ theorem HasGibbsBounds.measure_cylinder_pos_of_pos {S : System ι} {μ : Measure
 projective exponential separation nor a proximal diagonal generator is assumed.
 Depends on: `thm:irred_eq_state` (ergodicity as `herg`; full support through the Gibbs bounds
 of Feng–Käenmäki, `FengKaenmakiGibbs`), `eq:simple_lyapunov`, `measure_SigmaPrime_compl`,
-`ae_frequently_shift_mem` (the article uses Birkhoff's ergodic theorem for this recurrence),
+`ae_frequently_shift_mem` (the recurrence that the article attributes to ergodicity),
 `System.Bounds.proj_eq`, `condMeas_atom`, `thm:feng_entropy_zero`,
 `eq:ergodic_entropy_constant`. -/
 theorem SOSC_h2_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})

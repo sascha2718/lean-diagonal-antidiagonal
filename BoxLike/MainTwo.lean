@@ -2,7 +2,8 @@ module
 
 /-
 The Hausdorff dimension of a box-like self-affine set with rotations:
-`sec:dimension_result_proof`, `thm:main_extended` for `0 < s < 2` and `thm:main2`.
+`sec:dimension_result_proof`, `thm:main_extended` for `0 < s < 2` and the projectively
+exponentially separated case of `thm:main2`.
 
 The Ledrappier–Young formula `thm:feng1` is evaluated with the entropies of
 `sec:higher_dimensional_entropies`; a tuple without a proximal diagonal generator is reduced to
@@ -12,9 +13,11 @@ not part of this module; `thm:main2` does not use it.
 * `System.main_extended_normalised`: `thm:main_extended`, `0 < s < 2`, for a tuple containing
   a proximal diagonal generator.
 * `System.main_extended_lt_two'`: `thm:main_extended`, `0 < s < 2`.
-* `System.main2_of_bounds`: `thm:main2` from an upper and a lower bound for `\dim_H(X)`.
+* `System.main2_of_bounds`: the exponentially separated case of `thm:main2` from an upper
+  and a lower bound for `\dim_H(X)`.
 * `System.main_extended_dimaff`, `System.main2`: `thm:main_extended` for `dimaff(X) < 2` and
-  `thm:main2`, with `s = dimaff(X)`, Falconer's bound `System.dimH_attractor_le` and the lower
+  the exponentially separated case of `thm:main2`, with `s = dimaff(X)`, Falconer's bound
+  `System.dimH_attractor_le` and the lower
   bound `System.le_dimH_attractor`.
 -/
 public import BoxLike.AffinityMain
@@ -39,9 +42,8 @@ variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonCla
 
 /-- `thm:main_extended` for `0 < s < 2` and a tuple containing a proximal diagonal
 generator: `dim π_*μ = dimaff(𝖠)`. The parameter `s` is the
-affinity dimension through `hP : P(𝖠, s) = 0`. The article also invokes Rossi's bound
-`eq:hausdorff_ergodic_lyapunov`; the proof does not need it, because `thm:feng1` gives the
-dimension exactly.
+affinity dimension through `hP : P(𝖠, s) = 0`. The proof evaluates the formula of `thm:feng1`,
+which gives the dimension exactly; Rossi's bound `eq:hausdorff_ergodic_lyapunov` is not used.
 Depends on: `MorrisShmerkinLyapunov`, `thm:feng1` (planar, `FengLedrappierYoung`),
 `dimEntropy_zero_eq_entropy`, `thm:eq_state_h1_zero`, `thm:eq_state_h2_zero`,
 `thm:eq_state_h1_large`, `thm:orto_partition_dirac`, `thm:SOSC_h2_zero`, `eq:main_extended1`,
@@ -76,7 +78,7 @@ theorem main_extended_normalised (hms : MorrisShmerkinLyapunov.{u})
     have hh2 : S.dimEntropy μ 2 = 0 := by
       by_cases h2 : entropy μ ≤ -S.lyapunov₂ μ
       · exact S.orto_partition_dirac hms hfk hfjj hjr hfi hfib hlyb hrot hdiag hsep hs0 hs2 μ
-          hinv herg heq h1.le h2
+          hinv herg heq h2
       · exact S.SOSC_h2_zero hms hfk hfi hrot hdiag.proximal (hor.resolve_left h2) hs0 hs2 μ
           hinv herg heq
     rw [hh1, hh2, ledrappierYoung_large hl1 h1 hlt2.le, hdim] at hLY
@@ -156,7 +158,7 @@ theorem main_extended_lt_two' (hms : MorrisShmerkinLyapunov.{u})
       (μ.map group) (measurePreserving_shift_map_group hinv) (heq.map_group hinv hs0.le))
     heq hor
 
-/-- `thm:main2` with the hypotheses of the article and the two facts `hupper`, `hlower`:
+/-- The exponentially separated case of `thm:main2` with the two facts `hupper`, `hlower`:
 the ergodicity hypotheses of `main2` are discharged by `main_extended_lt_two'`. -/
 theorem main2_of_bounds (hms : MorrisShmerkinLyapunov.{u})
     (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
@@ -199,7 +201,8 @@ theorem main_extended_dimaff (hms : MorrisShmerkinLyapunov.{u})
   exact S.main_extended_lt_two' hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox hsep
     S.dimaff_pos h2 S.pressure_dimaff μ hinv heq hor
 
-/-- `thm:main2`. Let `X` be a proximal box-like self-affine set with rotations satisfying the
+/-- The exponentially separated case of `thm:main2`.
+Let `X` be a proximal box-like self-affine set with rotations satisfying the
 projective exponential separation condition such that `dimaff(X) < 2`, and let `μ` be the
 `s`-equilibrium state for `s = dimaff(X)`. If
 `dimaff(X) ≤ 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`, or if `X` satisfies the strong open set condition, then

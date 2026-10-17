@@ -154,6 +154,14 @@ theorem projExpSeparation_iff_frequently :
     obtain ⟨φ, hφ, hP⟩ := extraction_of_frequently_atTop h
     exact ⟨c, hc, φ, hφ, hP⟩
 
+/-- The absence of projective exact overlaps passes from `Φ` to `Φ^(2)` (proof of `thm:main2`,
+tex lines 3820 to 3823): a word of `Ψ^(2)` is a word of `Ψ` of twice the length with the same
+map, and this correspondence is injective. -/
+theorem NoExactOverlaps.sq (h : S.NoExactOverlaps) : S.sq.NoExactOverlaps := by
+  rw [noExactOverlaps_iff] at h ⊢
+  intro u u' huu'
+  exact S.flat_injective (h (by rw [S.gWord_flat, S.gWord_flat, huu']))
+
 /-- `thm:two-block-normalisation`, separation part: the projective exponential separation
 condition passes from `Φ` to `Φ^(2)`. -/
 theorem ProjExpSeparation.sq [Nonempty ι] (h : S.ProjExpSeparation) :

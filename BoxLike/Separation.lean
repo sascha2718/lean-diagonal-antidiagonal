@@ -68,6 +68,20 @@ are `c > 0` and a strictly increasing sequence `(n_k)` with `Δ_{n_k}^Ψ ≥ c^{
 def ProjExpSeparation : Prop :=
   ∃ c : ℝ, 0 < c ∧ ∃ n : ℕ → ℕ, StrictMono n ∧ ∀ k, ENNReal.ofReal (c ^ n k) ≤ S.gap (n k)
 
+/-- The projective system has no exact overlaps (`sec:exponential_separation`): `g_𝐢 ≠ g_𝐣` for
+any two distinct finite words `𝐢`, `𝐣` over the alphabet of `Ψ`, that is, the maps of `Ψ`
+generate a free semigroup. The separation hypothesis of `thm:main2`. -/
+def NoExactOverlaps : Prop := ∀ u u' : List (ι × ZMod 2), u ≠ u' → S.gWord u ≠ S.gWord u'
+
+/-- The absence of exact overlaps is the injectivity of `𝐢 ↦ g_𝐢`. -/
+theorem noExactOverlaps_iff : S.NoExactOverlaps ↔ Function.Injective S.gWord := by
+  constructor
+  · intro h u u' huu'
+    by_contra hne
+    exact h u u' hne huu'
+  · intro h u u' hne huu'
+    exact hne (h huu')
+
 theorem gap_le {n : ℕ} {u u' : List (ι × ZMod 2)} (hu : u.length = n) (hu' : u'.length = n)
     (hne : u ≠ u') (hd : S.gDeriv u = S.gDeriv u') :
     S.gap n ≤ ENNReal.ofReal |S.gWord u 0 - S.gWord u' 0| :=
@@ -137,5 +151,42 @@ theorem not_projExpSeparation_of_diagGap {J : Set ι} {a : ℝ} (hJ : ∀ i ∈ 
   exact absurd ((hsep n₀).trans (S.gap_le_diagGap hJ (n n₀))) (not_le.mpr (hn₀ _ hk))
 
 end System
+
+/-! ### Compositions of similarities of the line -/
+
+/-- The composition `g_{j_0} ∘ ⋯ ∘ g_{j_{n-1}}` of the similarities `g_j(x) = r_j x + t_j` of
+the line indexed by `κ`. For the projective system `Ψ` it is `g_𝐣`
+(`System.gWord_eq_simWord`); the finite diagonal subsystems in the proof of `thm:main2` use it
+for the coordinate maps of the subsystem. -/
+def simWord {κ : Type*} (r t : κ → ℝ) : List κ → ℝ → ℝ
+  | [] => id
+  | j :: u => (fun x => r j * x + t j) ∘ simWord r t u
+
+@[simp] theorem simWord_nil {κ : Type*} (r t : κ → ℝ) : simWord r t [] = id := rfl
+
+@[simp] theorem simWord_cons {κ : Type*} (r t : κ → ℝ) (j : κ) (u : List κ) :
+    simWord r t (j :: u) = (fun x => r j * x + t j) ∘ simWord r t u := rfl
+
+theorem simWord_append {κ : Type*} (r t : κ → ℝ) (u u' : List κ) :
+    simWord r t (u ++ u') = simWord r t u ∘ simWord r t u' := by
+  induction u with
+  | nil => rfl
+  | cons j u ih => simp [ih, Function.comp_assoc]
+
+/-- The composition of similarities is affine with slope the product of the ratios. -/
+theorem simWord_apply {κ : Type*} (r t : κ → ℝ) (u : List κ) (x : ℝ) :
+    simWord r t u x = (u.map r).prod * x + simWord r t u 0 := by
+  induction u with
+  | nil => simp
+  | cons j u ih =>
+    simp only [simWord_cons, Function.comp_apply, List.map_cons, List.prod_cons]
+    rw [ih]; ring
+
+/-- `g_𝐣` is the composition of the similarities `g_j(x) = g_j'(0) x + g_j(0)`. -/
+theorem System.gWord_eq_simWord (S : System ι) : S.gWord = simWord S.ratio S.trans := by
+  funext u
+  induction u with
+  | nil => rfl
+  | cons p u ih => rw [System.gWord_cons, ih]; rfl
 
 end BoxLike

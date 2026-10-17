@@ -96,7 +96,7 @@ theorem marginal_decomposition (hfk : FengKaenmakiGibbs.{u})
       S.lyapunov₂_sq_map_group (S.tendsto_lyapunov₂ hinv), neg_two_mul_div_two_mul,
       neg_two_mul_div_two_mul] at key
 
-/-- `thm:eq_state_proj_dim`: if `X` is a proximal box-like self-affine set with rotations
+/-- The case `0 < s < 2` of `thm:eq_state_proj_dim`: if `X` is a proximal box-like self-affine set with rotations
 satisfying the projective exponential separation condition and `μ` is the `s`-equilibrium
 state with `0 < s < 2`, then `(proj_x)_*(π_*μ)` and `(proj_y)_*(π_*μ)` are double-dimensional
 with upper packing dimension `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and lower Hausdorff dimension
@@ -119,7 +119,7 @@ theorem eq_state_proj_dim (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmaki
   exact ⟨hdd, hdd.upperPackingDim_eq hle (hd₁.measure_hasLocalDim_add_left_pos hne₁),
     hdd.lowerHausdorffDim_eq hle (hd₂.measure_hasLocalDim_add_right_pos hne₂)⟩
 
-/-- `thm:main1`. Let `X` be a proximal box-like self-affine set with rotations satisfying the
+/-- The case `0 < s < 2` of `thm:main1`. Let `X` be a proximal box-like self-affine set with rotations satisfying the
 projective exponential separation condition, let `0 < s < 2` be a zero of the pressure, that
 is `s = dimaff(X) < 2`, and let `μ` be the `s`-equilibrium state. Then the coordinate
 projections of `μ` are double-dimensional; they fail to be exact-dimensional precisely when

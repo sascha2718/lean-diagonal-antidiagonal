@@ -1,8 +1,7 @@
 module
 
 /-
-Bernoulli measures and the equilibrium state for `s ≥ 2` of `sec:normalisation`, tex lines 2451
-to 2456 and 2471 to 2480. A Bernoulli measure on `ℤ → ι` is the product of copies of a
+Bernoulli measures and `thm:bernoulli_equilibrium` in `sec:normalisation`. A Bernoulli measure on `ℤ → ι` is the product of copies of a
 probability measure `p` on the alphabet; it is invariant and ergodic. For `s ≥ 2` the potential
 `φ^s = |det|^{s/2}` is multiplicative, and the `s`-equilibrium state exists, is unique, and is the
 Bernoulli measure with the weights `p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}`.

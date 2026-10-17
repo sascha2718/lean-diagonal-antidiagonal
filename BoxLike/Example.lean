@@ -1,9 +1,11 @@
 module
 
 /-
-`ex:projection_double_dimensional` of `sec:dimension_of_projections`: the system
+A concrete rational system accompanying `sec:dimension_of_projections`:
 `φ_1(x, y) = (x/10, y/20 + 3/5)`, `φ_2(x, y) = (y/30 + 3/10, x/40 + 9/10)`, whose coordinate
 marginals of the equilibrium state have two distinct pointwise dimensions.
+It is not the example of the article: the prescribed-dimension family of
+`ex:projection_double_dimensional` is formalised in `BoxLike/PrescribedExample/`.
 
 General lemmas, in the namespace `BoxLike.System`:
 
@@ -40,14 +42,13 @@ The example, in the namespace `BoxLike.Example`:
   `proj_x(X) ⊆ [0, 1/3]`, `proj_y(X) ⊆ [3/5, 37/40]`, and the two marginals are mutually
   singular.
 * `M`, `svfSum_le_mulVec`, `spectralRadius_M`, `pressure_eq_log_spectralRadius`,
-  `spectralRadius_M_zero`, `spectralRadius_M_one_le`: the matrix `M(t)`, the display of tex
-  lines 3097 to 3101, `P(𝖠, t) = log ρ(M(t))` for `0 ≤ t ≤ 1`, `ρ(M(0)) = 2` and
+  `spectralRadius_M_zero`, `spectralRadius_M_one_le`: the matrix `M(t)`, the comparison with the singular-value sums, `P(𝖠, t) = log ρ(M(t))` for `0 ≤ t ≤ 1`, `ρ(M(0)) = 2` and
   `ρ(M(1)) ≤ 2/15`.
 * `dimaff_charEq`, `eq_dimaff_of_charEq`: the affinity dimension is the only solution of
   `(1 - 10^{-s})(1 - 20^{-s}) = 1200^{-s}` in `(0, 1]`.
 
-The explicit values of `λ_1`, `λ_2` through the Markov measure of tex lines 3111 to 3141 and
-the numerical values of tex lines 3148 to 3154 are out of scope.
+The explicit values of `λ_1`, `λ_2` through the Markov measure and their numerical
+approximations are out of scope.
 -/
 public import BoxLike.MainTwo
 public import Mathlib.Analysis.Normed.Algebra.Spectrum
@@ -79,7 +80,7 @@ theorem gWord_mem (hI : ∀ p, ∀ t ∈ I, S.g p t ∈ I) (u : List (ι × ZMod
   | nil => exact ht
   | cons p u ih => exact hI p _ ih
 
-/-- The common-prefix argument of `ex:projection_double_dimensional`. Suppose that every `g_j`
+/-- The common-prefix argument of `Example.sys`. Suppose that every `g_j`
 sends `I` into itself, that the images `g_j(I)` are at mutual distance at least `δ`, and that
 every contraction ratio is at least `ρ` in modulus. Then two distinct words `𝐣`, `𝐣'` of the same
 length `n` satisfy `|g_𝐣(t) - g_𝐣'(t')| ≥ δ ρ^{n-1}` for all `t, t' ∈ I`: the common prefix
@@ -120,7 +121,7 @@ theorem le_abs_gWord_sub (hδ : 0 ≤ δ) (hρ : S.RatioLowerBound ρ)
           (pow_le_one₀ hρ.1.le ((hρ.2 p).trans (S.abs_ratio_lt_one p).le))
 
 /-- The lower bound `Δ_n^Ψ ≥ δ ρ^{n-1}` from the common-prefix argument of
-`ex:projection_double_dimensional`, for a set `I ∋ 0` that every `g_j` sends into itself, with
+`Example.sys`, for a set `I ∋ 0` that every `g_j` sends into itself, with
 the images `g_j(I)` at mutual distance at least `δ` and all ratios at least `ρ` in modulus. The
 condition of equal derivatives in the definition of `Δ_n^Ψ` is not used. -/
 theorem le_gap (hδ : 0 ≤ δ) (hρ : S.RatioLowerBound ρ) (h0 : (0 : ℝ) ∈ I)
@@ -177,13 +178,13 @@ variable [Fintype ι] {s ρ : ℝ} {v : ZMod 2 → ℝ}
 omit [Fintype ι] in
 /-- `φ^s(A_𝐢) = max{|g'_𝐣|, |g'_𝐣'|}^s` for `s ≤ 1`, where `𝐣`, `𝐣'` are the two paths of `Σ_Z`
 over `𝐢`: the larger coordinate contraction to the power `s`, as in
-`ex:projection_double_dimensional`. -/
+`Example.sys`. -/
 theorem svf_matWord_of_le_one (hs1 : s ≤ 1) (w : List ι) :
     svf s (S.matWord w) =
       max |S.gDeriv (S.codeWord 0 w)| |S.gDeriv (S.codeWord 1 w)| ^ s := by
   rw [matWord_eq, svf_boxMat_of_le_one hs1]
 
-/-- The matrix `M(s)` of `ex:projection_double_dimensional` for a general box-like system, as
+/-- The matrix `M(s)` of `Example.sys` for a general box-like system, as
 an operator on vectors indexed by the two axes: its entries are
 `M(s)_{c,c'} = ∑ {|g'_{(i,c)}|^s : c + o(i) = c'}`. -/
 noncomputable def transfer (s : ℝ) (v : ZMod 2 → ℝ) (c : ZMod 2) : ℝ :=
@@ -219,7 +220,7 @@ theorem sum_abs_gDeriv_rpow_mul (s : ℝ) (n : ℕ) (v : ZMod 2 → ℝ) (c : ZM
     simp [codeWord_append, gDeriv_append, oWord_append, abs_mul,
       Real.mul_rpow (abs_nonneg _) (abs_nonneg _), add_assoc, mul_assoc]
 
-/-- The two-sided comparison of `ex:projection_double_dimensional`, tex lines 3097 to 3101, for
+/-- The two-sided comparison of `Example.sys`, tex lines 3097 to 3101, for
 a positive vector `v` in place of `(1, 1)`: for `0 ≤ s ≤ 1`,
 `min(v) ∑_{|𝐢| = n} φ^s(A_𝐢) ≤ (1, 1) M(s)^n v ≤ 2 max(v) ∑_{|𝐢| = n} φ^s(A_𝐢)`. The factor two
 compares the maximum of two terms with their sum. -/
@@ -270,7 +271,7 @@ theorem svfSum_bounds (hs0 : 0 ≤ s) (hs1 : s ≤ 1) (hvpos : ∀ c, 0 < v c) (
       (svf_nonneg s _)
     linarith
 
-/-- `P(𝖠, s) = log ρ(M(s))` for `0 ≤ s ≤ 1`, as in `ex:projection_double_dimensional`, for every
+/-- `P(𝖠, s) = log ρ(M(s))` for `0 ≤ s ≤ 1`, as in `Example.sys`, for every
 box-like system: if `v` is a positive vector with `M(s) v = ρ v`, then `P(𝖠, s) = log ρ`. -/
 theorem pressure_eq_log_of_eigenvector [Nonempty ι] (hs0 : 0 ≤ s) (hs1 : s ≤ 1)
     (hvpos : ∀ c, 0 < v c) (hv : ∀ c, S.transfer s v c = ρ * v c) :
@@ -332,7 +333,7 @@ section MainOne
 
 variable [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] {s : ℝ}
 
-/-- `thm:main1` for `0 < s ≤ 1`, as used in `ex:projection_double_dimensional` and in the first
+/-- `thm:main1` for `0 < s ≤ 1`, as used in `Example.sys` and in the first
 case of the proof of `thm:main1`. The equilibrium identity reads `h_0(μ) = -s λ_1(𝖠, μ)`, so
 the two pointwise dimensions of the coordinate marginals are `s` and
 `s λ_1(𝖠, μ)/λ_2(𝖠, μ)`. They are distinct because `λ_2(𝖠, μ) < λ_1(𝖠, μ) < 0`, both occur on
@@ -431,7 +432,7 @@ namespace Example
 open BoxLike.System
 open scoped Matrix
 
-/-- The system `Φ = (φ_1, φ_2)` of `ex:projection_double_dimensional`, over the alphabet
+/-- The system `Φ = (φ_1, φ_2)` of `Example.sys`, over the alphabet
 `Fin 2`: the index `0` is the diagonal map `φ_1` and the index `1` is the anti-diagonal map
 `φ_2`. -/
 noncomputable def sys : System (Fin 2) where
@@ -444,65 +445,65 @@ noncomputable def sys : System (Fin 2) where
   abs_a_lt_one i := by fin_cases i <;> norm_num [abs_lt]
   abs_b_lt_one i := by fin_cases i <;> norm_num [abs_lt]
 
-/-- The first map of `ex:projection_double_dimensional`: `φ_1(x, y) = (x/10, y/20 + 3/5)`. -/
+/-- The first map of `Example.sys`: `φ_1(x, y) = (x/10, y/20 + 3/5)`. -/
 @[simp] theorem sys_phi_zero (z : ℝ × ℝ) : sys.phi 0 z = (z.1 / 10, z.2 / 20 + 3 / 5) := by
   ext <;> simp [System.phi, sys] <;> ring
 
-/-- The second map of `ex:projection_double_dimensional`:
+/-- The second map of `Example.sys`:
 `φ_2(x, y) = (y/30 + 3/10, x/40 + 9/10)`. -/
 @[simp] theorem sys_phi_one (z : ℝ × ℝ) :
     sys.phi 1 z = (z.2 / 30 + 3 / 10, z.1 / 40 + 9 / 10) := by
   ext <;> simp [System.phi, sys, show (1 : ZMod 2) + 1 = 0 from by decide] <;> ring
 
-/-- The linear part `A_1 = diag(1/10, 1/20)` of `ex:projection_double_dimensional`. -/
+/-- The linear part `A_1 = diag(1/10, 1/20)` of `Example.sys`. -/
 @[simp] theorem sys_mat_zero : sys.mat 0 = !![1 / 10, 0; 0, 1 / 20] := rfl
 
-/-- The anti-diagonal linear part `A_2` of `ex:projection_double_dimensional`. -/
+/-- The anti-diagonal linear part `A_2` of `Example.sys`. -/
 @[simp] theorem sys_mat_one : sys.mat 1 = !![0, 1 / 30; 1 / 40, 0] := rfl
 
 /-- The first map `g_1(t) = t/10` of the projective system of
-`ex:projection_double_dimensional`. -/
+`Example.sys`. -/
 @[simp] theorem sys_g_zero_zero (t : ℝ) : sys.g (0, 0) t = t / 10 := by
   simp [System.g, System.trans, sys]; ring
 
 /-- The second map `g_2(t) = t/30 + 3/10` of the projective system of
-`ex:projection_double_dimensional`. -/
+`Example.sys`. -/
 @[simp] theorem sys_g_one_zero (t : ℝ) : sys.g (1, 0) t = t / 30 + 3 / 10 := by
   simp [System.g, System.trans, sys]; ring
 
 /-- The third map `g_3(t) = t/20 + 3/5` of the projective system of
-`ex:projection_double_dimensional`. -/
+`Example.sys`. -/
 @[simp] theorem sys_g_zero_one (t : ℝ) : sys.g (0, 1) t = t / 20 + 3 / 5 := by
   simp [System.g, System.trans, sys]; ring
 
 /-- The fourth map `g_4(t) = t/40 + 9/10` of the projective system of
-`ex:projection_double_dimensional`. -/
+`Example.sys`. -/
 @[simp] theorem sys_g_one_one (t : ℝ) : sys.g (1, 1) t = t / 40 + 9 / 10 := by
   simp [System.g, System.trans, sys]; ring
 
 /-! ### Rotations, proximality, irreducibility -/
 
-/-- The tuple of `ex:projection_double_dimensional` is box-like with rotations: `A_1` is
+/-- The tuple of `Example.sys` is box-like with rotations: `A_1` is
 diagonal and `A_2` is anti-diagonal. -/
 theorem withRotations : sys.WithRotations := ⟨⟨0, rfl⟩, ⟨1, rfl⟩⟩
 
-/-- The tuple of `ex:projection_double_dimensional` contains the proximal diagonal generator
+/-- The tuple of `Example.sys` contains the proximal diagonal generator
 `A_1 = diag(1/10, 1/20)`. -/
 theorem hasProximalDiagonal : sys.HasProximalDiagonal := by
   refine ⟨0, rfl, ?_⟩
   simp only [sys, Matrix.cons_val_zero]
   norm_num [abs_of_pos]
 
-/-- The matrix `A_1` of `ex:projection_double_dimensional` is proximal. -/
+/-- The matrix `A_1` of `Example.sys` is proximal. -/
 theorem isProximalMatrix_mat_zero : IsProximalMatrix (sys.mat 0) := by
   have h : sys.mat 0 = boxMat 0 (1 / 10) (1 / 20) := rfl
   rw [h, isProximalMatrix_boxMat_zero]
   norm_num [abs_of_pos]
 
-/-- The tuple of `ex:projection_double_dimensional` is proximal. -/
+/-- The tuple of `Example.sys` is proximal. -/
 theorem proximal : sys.Proximal := hasProximalDiagonal.proximal
 
-/-- The tuple of `ex:projection_double_dimensional` is irreducible: the only invariant lines of
+/-- The tuple of `Example.sys` is irreducible: the only invariant lines of
 `A_1` are the coordinate axes and `A_2` interchanges them. -/
 theorem irreducible : sys.Irreducible :=
   irreducible_of_hasProximalDiagonal withRotations hasProximalDiagonal
@@ -512,7 +513,7 @@ theorem irreducible : sys.Irreducible :=
 /-- The unit square `[0,1]²`. -/
 def square : Set (ℝ × ℝ) := Set.Icc (0 : ℝ) 1 ×ˢ Set.Icc (0 : ℝ) 1
 
-/-- The image `φ_1([0,1]²) = [0, 1/10] × [3/5, 13/20]` of `ex:projection_double_dimensional`. -/
+/-- The image `φ_1([0,1]²) = [0, 1/10] × [3/5, 13/20]` of `Example.sys`. -/
 theorem phi_zero_image_square :
     sys.phi 0 '' square = Set.Icc (0 : ℝ) (1 / 10) ×ˢ Set.Icc (3 / 5 : ℝ) (13 / 20) := by
   ext z
@@ -529,7 +530,7 @@ theorem phi_zero_image_square :
     · ext <;> dsimp only <;> ring
 
 /-- The image `φ_2([0,1]²) = [3/10, 1/3] × [9/10, 37/40]` of
-`ex:projection_double_dimensional`. -/
+`Example.sys`. -/
 theorem phi_one_image_square :
     sys.phi 1 '' square = Set.Icc (3 / 10 : ℝ) (1 / 3) ×ˢ Set.Icc (9 / 10 : ℝ) (37 / 40) := by
   ext z
@@ -545,7 +546,7 @@ theorem phi_one_image_square :
     · dsimp only; linarith
     · ext <;> dsimp only <;> ring
 
-/-- Both maps of `ex:projection_double_dimensional` send `[0,1]²` into itself. -/
+/-- Both maps of `Example.sys` send `[0,1]²` into itself. -/
 theorem phi_image_square_subset (i : Fin 2) : sys.phi i '' square ⊆ square := by
   revert i
   refine Fin.forall_fin_two.2 ⟨?_, ?_⟩
@@ -556,7 +557,7 @@ theorem phi_image_square_subset (i : Fin 2) : sys.phi i '' square ⊆ square := 
     exact Set.prod_mono (Set.Icc_subset_Icc (by norm_num) (by norm_num))
       (Set.Icc_subset_Icc (by norm_num) (by norm_num))
 
-/-- The two image rectangles of `ex:projection_double_dimensional` are disjoint. -/
+/-- The two image rectangles of `Example.sys` are disjoint. -/
 theorem disjoint_phi_image_square : Disjoint (sys.phi 0 '' square) (sys.phi 1 '' square) := by
   rw [phi_zero_image_square, phi_one_image_square]
   refine Set.disjoint_left.2 fun z hz hz' => ?_
@@ -571,11 +572,11 @@ theorem isCompact_square : IsCompact square := isCompact_Icc.prod isCompact_Icc
 theorem square_nonempty : square.Nonempty :=
   ⟨(0, 0), ⟨Set.left_mem_Icc.2 zero_le_one, Set.left_mem_Icc.2 zero_le_one⟩⟩
 
-/-- The self-affine set of `ex:projection_double_dimensional` lies in `[0,1]²`. -/
+/-- The self-affine set of `Example.sys` lies in `[0,1]²`. -/
 theorem attractor_subset_square : sys.attractor ⊆ square :=
   sys.attractor_subset_of_invariant isCompact_square square_nonempty phi_image_square_subset
 
-/-- The planar system of `ex:projection_double_dimensional` satisfies the strong separation
+/-- The planar system of `Example.sys` satisfies the strong separation
 condition. -/
 theorem strongSeparation : sys.StrongSeparation := by
   refine sys.strongSeparation_of_invariant isCompact_square square_nonempty
@@ -586,18 +587,18 @@ theorem strongSeparation : sys.StrongSeparation := by
       ⟨fun _ => disjoint_phi_image_square.symm, fun h => absurd rfl h⟩⟩
   exact fun i j hij => key i j hij
 
-/-- The planar system of `ex:projection_double_dimensional` satisfies the strong open set
+/-- The planar system of `Example.sys` satisfies the strong open set
 condition. -/
 theorem strongOpenSet : sys.StrongOpenSet := strongSeparation.strongOpenSet
 
 /-! ### Projective exponential separation -/
 
-/-- The four symbols of the projective system of `ex:projection_double_dimensional`. -/
+/-- The four symbols of the projective system of `Example.sys`. -/
 theorem symbol_cases (p : Fin 2 × ZMod 2) :
     p = (0, 0) ∨ p = (1, 0) ∨ p = (0, 1) ∨ p = (1, 1) := by
   revert p; decide
 
-/-- Every contraction ratio of the projective system of `ex:projection_double_dimensional` is
+/-- Every contraction ratio of the projective system of `Example.sys` is
 at least `1/40`. -/
 theorem ratioLowerBound : sys.RatioLowerBound (1 / 40) := by
   refine ⟨by norm_num, fun p => ?_⟩
@@ -605,7 +606,7 @@ theorem ratioLowerBound : sys.RatioLowerBound (1 / 40) := by
     simp only [ratio_zero, ratio_one, sys, Matrix.cons_val_zero, Matrix.cons_val_one] <;>
     norm_num [abs_of_pos]
 
-/-- The four maps of the projective system of `ex:projection_double_dimensional` send `[0,1]`
+/-- The four maps of the projective system of `Example.sys` send `[0,1]`
 into itself. -/
 theorem g_mem_Icc (p : Fin 2 × ZMod 2) (t : ℝ) (ht : t ∈ Set.Icc (0 : ℝ) 1) :
     sys.g p t ∈ Set.Icc (0 : ℝ) 1 := by
@@ -615,7 +616,7 @@ theorem g_mem_Icc (p : Fin 2 × ZMod 2) (t : ℝ) (ht : t ∈ Set.Icc (0 : ℝ) 
     constructor <;> linarith
 
 /-- The images of `[0,1]` under the four maps of the projective system of
-`ex:projection_double_dimensional`, namely `[0, 1/10]`, `[3/10, 1/3]`, `[3/5, 13/20]` and
+`Example.sys`, namely `[0, 1/10]`, `[3/10, 1/3]`, `[3/5, 13/20]` and
 `[9/10, 37/40]`, are pairwise at distance at least `1/5`. -/
 theorem le_abs_g_sub (p q : Fin 2 × ZMod 2) (hpq : p ≠ q) (t : ℝ) (ht : t ∈ Set.Icc (0 : ℝ) 1)
     (t' : ℝ) (ht' : t' ∈ Set.Icc (0 : ℝ) 1) : 1 / 5 ≤ |sys.g p t - sys.g q t'| := by
@@ -631,7 +632,7 @@ theorem le_abs_g_sub (p q : Fin 2 × ZMod 2) (hpq : p ≠ q) (t : ℝ) (ht : t �
        exact le_abs.2 (Or.inr (by linarith)))
 
 /-- The gap bound `Δ_n^Ψ ≥ 40^{1-n}/5` for every `n ≥ 1` of
-`ex:projection_double_dimensional`. -/
+`Example.sys`. -/
 theorem le_gap {n : ℕ} (hn : 1 ≤ n) :
     ENNReal.ofReal ((40 : ℝ) ^ (1 - (n : ℤ)) / 5) ≤ sys.gap n := by
   have h := System.le_gap (by norm_num : (0 : ℝ) ≤ 1 / 5) ratioLowerBound
@@ -644,7 +645,7 @@ theorem le_gap {n : ℕ} (hn : 1 ≤ n) :
   rw [e]
   exact h
 
-/-- The system of `ex:projection_double_dimensional` satisfies the projective exponential
+/-- The system of `Example.sys` satisfies the projective exponential
 separation condition. -/
 theorem projExpSeparation : sys.ProjExpSeparation :=
   System.projExpSeparation_of_le_abs (by norm_num : (0 : ℝ) < 1 / 5) ratioLowerBound
@@ -653,7 +654,7 @@ theorem projExpSeparation : sys.ProjExpSeparation :=
 /-! ### The affinity dimension lies in `(0, 1)` -/
 
 /-- `P(𝖠, 1) ≤ log ∑_i ‖A_i‖ = log(1/10 + 1/30) = log(2/15)` for the tuple of
-`ex:projection_double_dimensional`. The article bounds `ρ(M(1))` by the same number. -/
+`Example.sys`. The same bound holds for `ρ(M(1))`. -/
 theorem pressure_one_le : sys.pressure 1 ≤ Real.log (2 / 15) := by
   have h := sys.pressure_le zero_le_one (le_refl 1)
   rw [System.svfSum_one, Fin.sum_univ_two, Nat.cast_one, div_one] at h
@@ -669,7 +670,7 @@ theorem pressure_one_le : sys.pressure 1 ≤ Real.log (2 / 15) := by
   norm_num at h ⊢
   exact h
 
-/-- The affinity dimension of `ex:projection_double_dimensional` lies in `(0, 1)`. -/
+/-- The affinity dimension of `Example.sys` lies in `(0, 1)`. -/
 theorem dimaff_pos_lt_one : 0 < sys.dimaff ∧ sys.dimaff < 1 := by
   refine ⟨sys.dimaff_pos, ?_⟩
   by_contra hlt
@@ -682,7 +683,7 @@ theorem dimaff_pos_lt_one : 0 < sys.dimaff ∧ sys.dimaff < 1 := by
 
 /-! ### The conclusion of the example -/
 
-/-- The conclusion of `ex:projection_double_dimensional`. Let `μ` be an invariant
+/-- The projection-dimension conclusion for `Example.sys`. Let `μ` be an invariant
 `s`-equilibrium state for `s = dimaff(X)`. Each coordinate marginal of `μ` is double-dimensional
 with the two pointwise dimensions `s` and `s λ_1(𝖠, μ)/λ_2(𝖠, μ)`. These are distinct, the
 threshold `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)` of `thm:main1` holds, both values occur on sets of
@@ -703,7 +704,7 @@ theorem marginal_doubleDim (hms : MorrisShmerkinLyapunov.{0}) (hfk : FengKaenmak
   sys.main1_of_le_one hms hfk hfjj hjr withRotations proximal projExpSeparation
     dimaff_pos_lt_one.1 dimaff_pos_lt_one.2.le sys.pressure_dimaff μ hinv heq c
 
-/-- `\dim_H(X) = dimaff(X)` for the self-affine set of `ex:projection_double_dimensional`, from
+/-- `\dim_H(X) = dimaff(X)` for the self-affine set of `Example.sys`, from
 `thm:main2`, given an invariant `s`-equilibrium state `μ` for `s = dimaff(X)`. The first
 alternative of `thm:main2` holds because `dimaff(X) < 1`. -/
 theorem dimH_attractor (hms : MorrisShmerkinLyapunov.{0}) (hfk : FengKaenmakiGibbs.{0})
@@ -717,7 +718,7 @@ theorem dimH_attractor (hms : MorrisShmerkinLyapunov.{0}) (hfk : FengKaenmakiGib
 
 /-! ### The supports of the two marginals -/
 
-/-- The self-affine set of `ex:projection_double_dimensional` lies in the union of the two image
+/-- The self-affine set of `Example.sys` lies in the union of the two image
 rectangles. -/
 theorem attractor_subset_union :
     sys.attractor ⊆ Set.Icc (0 : ℝ) (1 / 10) ×ˢ Set.Icc (3 / 5 : ℝ) (13 / 20) ∪
@@ -732,14 +733,14 @@ theorem attractor_subset_union :
   · rwa [phi_zero_image_square] at h
   · rwa [phi_one_image_square] at h
 
-/-- `proj_x(X) ⊆ [0, 1/3]` in `ex:projection_double_dimensional`. -/
+/-- `proj_x(X) ⊆ [0, 1/3]` in `Example.sys`. -/
 theorem coord_zero_attractor_subset : coord 0 '' sys.attractor ⊆ Set.Icc (0 : ℝ) (1 / 3) := by
   rintro _ ⟨z, hz, rfl⟩
   rcases attractor_subset_union hz with h | h
   · exact ⟨h.1.1, h.1.2.trans (by norm_num)⟩
   · exact ⟨le_trans (by norm_num) h.1.1, h.1.2⟩
 
-/-- `proj_y(X) ⊆ [3/5, 37/40]` in `ex:projection_double_dimensional`. -/
+/-- `proj_y(X) ⊆ [3/5, 37/40]` in `Example.sys`. -/
 theorem coord_one_attractor_subset :
     coord 1 '' sys.attractor ⊆ Set.Icc (3 / 5 : ℝ) (37 / 40) := by
   rintro _ ⟨z, hz, rfl⟩
@@ -747,7 +748,7 @@ theorem coord_one_attractor_subset :
   · exact ⟨h.2.1, h.2.2.trans (by norm_num)⟩
   · exact ⟨le_trans (by norm_num) h.2.1, h.2.2⟩
 
-/-- The marginal `(proj_x)_*(π_*μ)` of `ex:projection_double_dimensional` is carried by
+/-- The marginal `(proj_x)_*(π_*μ)` of `Example.sys` is carried by
 `[0, 1/3]`, for every measure `μ` on `Σ`. -/
 theorem marginal_zero_compl_Icc (μ : Measure (ℤ → Fin 2)) :
     sys.marginal 0 μ (Set.Icc (0 : ℝ) (1 / 3))ᶜ = 0 :=
@@ -755,7 +756,7 @@ theorem marginal_zero_compl_Icc (μ : Measure (ℤ → Fin 2)) :
     ((disjoint_compl_left (a := Set.Icc (0 : ℝ) (1 / 3))).mono_right
       coord_zero_attractor_subset)
 
-/-- The marginal `(proj_y)_*(π_*μ)` of `ex:projection_double_dimensional` is carried by
+/-- The marginal `(proj_y)_*(π_*μ)` of `Example.sys` is carried by
 `[3/5, 37/40]`, for every measure `μ` on `Σ`. -/
 theorem marginal_one_compl_Icc (μ : Measure (ℤ → Fin 2)) :
     sys.marginal 1 μ (Set.Icc (3 / 5 : ℝ) (37 / 40))ᶜ = 0 :=
@@ -763,7 +764,7 @@ theorem marginal_one_compl_Icc (μ : Measure (ℤ → Fin 2)) :
     ((disjoint_compl_left (a := Set.Icc (3 / 5 : ℝ) (37 / 40))).mono_right
       coord_one_attractor_subset)
 
-/-- The two coordinate marginals of `ex:projection_double_dimensional` have disjoint supports:
+/-- The two coordinate marginals of `Example.sys` have disjoint supports:
 they are mutually singular, for every measure `μ` on `Σ`. -/
 theorem mutuallySingular_marginal (μ : Measure (ℤ → Fin 2)) :
     sys.marginal 0 μ ⟂ₘ sys.marginal 1 μ := by
@@ -777,7 +778,7 @@ theorem mutuallySingular_marginal (μ : Measure (ℤ → Fin 2)) :
 
 /-! ### The pressure and the characteristic equation -/
 
-/-- The matrix `M(t)` of `ex:projection_double_dimensional`. -/
+/-- The matrix `M(t)` of `Example.sys`. -/
 noncomputable def M (t : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   !![(10 : ℝ) ^ (-t), (30 : ℝ) ^ (-t); (40 : ℝ) ^ (-t), (20 : ℝ) ^ (-t)]
 
@@ -801,7 +802,7 @@ theorem perron_spec {p q e : ℝ} (he : 0 < e) :
   · unfold perron; linarith
   · unfold perron; linarith
 
-/-- The spectral radius `ρ(M(t))` of `ex:projection_double_dimensional` in closed form: the
+/-- The spectral radius `ρ(M(t))` of `Example.sys` in closed form: the
 larger root of the characteristic polynomial of `M(t)`. -/
 noncomputable def perronRoot (t : ℝ) : ℝ :=
   perron ((10 : ℝ) ^ (-t)) ((20 : ℝ) ^ (-t)) ((30 : ℝ) ^ (-t) * (40 : ℝ) ^ (-t))
@@ -810,7 +811,7 @@ noncomputable def perronRoot (t : ℝ) : ℝ :=
 theorem abs_one_div_rpow {x : ℝ} (hx : 0 < x) (t : ℝ) : |1 / x| ^ t = x ^ (-t) := by
   rw [abs_of_pos (by positivity), one_div, Real.inv_rpow hx.le, Real.rpow_neg hx.le]
 
-/-- The first row of `M(t)` of `ex:projection_double_dimensional` as an operator. -/
+/-- The first row of `M(t)` of `Example.sys` as an operator. -/
 theorem transfer_zero (t : ℝ) (v : ZMod 2 → ℝ) :
     sys.transfer t v 0 = (10 : ℝ) ^ (-t) * v 0 + (30 : ℝ) ^ (-t) * v 1 := by
   have r00 : |sys.ratio (0, 0)| ^ t = (10 : ℝ) ^ (-t) := abs_one_div_rpow (by norm_num) t
@@ -819,7 +820,7 @@ theorem transfer_zero (t : ℝ) (v : ZMod 2 → ℝ) :
   have o1 : sys.o 1 = 1 := rfl
   rw [System.transfer, Fin.sum_univ_two, r00, r10, o0, o1, add_zero, zero_add]
 
-/-- The second row of `M(t)` of `ex:projection_double_dimensional` as an operator. -/
+/-- The second row of `M(t)` of `Example.sys` as an operator. -/
 theorem transfer_one (t : ℝ) (v : ZMod 2 → ℝ) :
     sys.transfer t v 1 = (40 : ℝ) ^ (-t) * v 0 + (20 : ℝ) ^ (-t) * v 1 := by
   have r01 : |sys.ratio (0, 1)| ^ t = (20 : ℝ) ^ (-t) := abs_one_div_rpow (by norm_num) t
@@ -829,7 +830,7 @@ theorem transfer_one (t : ℝ) (v : ZMod 2 → ℝ) :
   rw [System.transfer, Fin.sum_univ_two, r01, r11, o0, o1, add_zero,
     show (1 : ZMod 2) + 1 = 0 by decide, add_comm]
 
-/-- The operator `System.transfer` of the system of `ex:projection_double_dimensional` is the
+/-- The operator `System.transfer` of the system of `Example.sys` is the
 matrix `M(t)` of the article. -/
 theorem transfer_eq_mulVec (t : ℝ) (v : ZMod 2 → ℝ) :
     ![sys.transfer t v 0, sys.transfer t v 1] = M t *ᵥ ![v 0, v 1] := by
@@ -845,7 +846,7 @@ theorem iterate_transfer_eq_mulVec (t : ℝ) (n : ℕ) (v : ZMod 2 → ℝ) :
   | succ n ih =>
     rw [Function.iterate_succ_apply, ih, transfer_eq_mulVec, Matrix.mulVec_mulVec, pow_succ]
 
-/-- The display of tex lines 3097 to 3101 in `ex:projection_double_dimensional`:
+/-- The comparison of singular-value sums and transfer-matrix powers for `Example.sys`:
 `∑_{|𝐢| = n} φ^t(A_𝐢) ≤ (1, 1) M(t)^n (1, 1)ᵀ ≤ 2 ∑_{|𝐢| = n} φ^t(A_𝐢)` for `0 ≤ t ≤ 1`. -/
 theorem svfSum_le_mulVec {t : ℝ} (ht0 : 0 ≤ t) (ht1 : t ≤ 1) (n : ℕ) :
     sys.svfSum t n ≤ ![1, 1] ⬝ᵥ (M t ^ n *ᵥ ![1, 1]) ∧
@@ -859,7 +860,7 @@ theorem svfSum_le_mulVec {t : ℝ} (ht0 : 0 ≤ t) (ht1 : t ≤ 1) (n : ℕ) :
   rw [e']
   simpa using h
 
-/-- `P(𝖠, t) = log ρ(M(t))` for `0 ≤ t ≤ 1` in `ex:projection_double_dimensional`, with the
+/-- `P(𝖠, t) = log ρ(M(t))` for `0 ≤ t ≤ 1` in `Example.sys`, with the
 spectral radius in closed form. The positive eigenvector of `M(t)` is
 `(30^{-t}, ρ(M(t)) - 10^{-t})`. -/
 theorem pressure_eq_log_perronRoot {t : ℝ} (ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
@@ -899,7 +900,7 @@ theorem mem_spectrum_M (t k : ℝ) :
     not_false_eq_true, Matrix.diagonal_apply_ne, zero_sub]
   constructor <;> intro h <;> linarith
 
-/-- The spectral radius of `M(t)` in `ex:projection_double_dimensional` is the larger root of
+/-- The spectral radius of `M(t)` in `Example.sys` is the larger root of
 its characteristic polynomial. -/
 theorem spectralRadius_M (t : ℝ) : spectralRadius ℝ (M t) = ENNReal.ofReal (perronRoot t) := by
   have he : 0 < (30 : ℝ) ^ (-t) * (40 : ℝ) ^ (-t) := by positivity
@@ -925,14 +926,14 @@ theorem spectralRadius_M (t : ℝ) : spectralRadius ℝ (M t) = ENNReal.ofReal (
     refine le_trans ?_ (le_iSup₂ (f := fun k _ => (‖k‖₊ : ℝ≥0∞)) (perronRoot t) hmem)
     rw [← enorm_eq_nnnorm, Real.enorm_eq_ofReal_abs, abs_of_pos hr]
 
-/-- The formula `P(𝖠, t) = log ρ(M(t))` for `0 ≤ t ≤ 1` of `ex:projection_double_dimensional`,
+/-- The formula `P(𝖠, t) = log ρ(M(t))` for `0 ≤ t ≤ 1` of `Example.sys`,
 with Mathlib's spectral radius. -/
 theorem pressure_eq_log_spectralRadius {t : ℝ} (ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
     sys.pressure t = Real.log (spectralRadius ℝ (M t)).toReal := by
   rw [spectralRadius_M, ENNReal.toReal_ofReal (perronRoot_pos t).le]
   exact pressure_eq_log_perronRoot ht0 ht1
 
-/-- `ρ(M(0)) = 2` in `ex:projection_double_dimensional`. -/
+/-- `ρ(M(0)) = 2` in `Example.sys`. -/
 theorem spectralRadius_M_zero : spectralRadius ℝ (M 0) = 2 := by
   have h : perronRoot 0 = 2 := by
     unfold perronRoot perron
@@ -943,7 +944,7 @@ theorem spectralRadius_M_zero : spectralRadius ℝ (M 0) = 2 := by
   rw [spectralRadius_M, h]
   norm_num
 
-/-- `ρ(M(1)) ≤ 2/15` in `ex:projection_double_dimensional`. -/
+/-- `ρ(M(1)) ≤ 2/15` in `Example.sys`. -/
 theorem spectralRadius_M_one_le : spectralRadius ℝ (M 1) ≤ ENNReal.ofReal (2 / 15) := by
   rw [spectralRadius_M]
   refine ENNReal.ofReal_le_ofReal ?_
@@ -957,7 +958,7 @@ theorem spectralRadius_M_one_le : spectralRadius ℝ (M 1) ≤ ENNReal.ofReal (2
   linarith
 
 /-- The equation `ρ(M(t)) = 1` is equivalent to `(1 - 10^{-t})(1 - 20^{-t}) = 1200^{-t}`, for
-`t > 0`, as in `ex:projection_double_dimensional`. -/
+`t > 0`, as in `Example.sys`. -/
 theorem perronRoot_eq_one_iff {t : ℝ} (ht : 0 < t) :
     perronRoot t = 1 ↔
       (1 - (10 : ℝ) ^ (-t)) * (1 - (20 : ℝ) ^ (-t)) = (1200 : ℝ) ^ (-t) := by
@@ -984,7 +985,7 @@ theorem perronRoot_eq_one_iff {t : ℝ} (ht : 0 < t) :
     · unfold perronRoot at h'
       linarith
 
-/-- The characteristic equation of `ex:projection_double_dimensional`: the affinity dimension
+/-- The characteristic equation of `Example.sys`: the affinity dimension
 `s` satisfies `(1 - 10^{-s})(1 - 20^{-s}) = 1200^{-s}`. -/
 theorem dimaff_charEq :
     (1 - (10 : ℝ) ^ (-sys.dimaff)) * (1 - (20 : ℝ) ^ (-sys.dimaff)) =
@@ -995,7 +996,7 @@ theorem dimaff_charEq :
   exact (perronRoot_eq_one_iff h0).1
     (Real.eq_one_of_pos_of_log_eq_zero (perronRoot_pos _) hP.symm)
 
-/-- The characteristic equation of `ex:projection_double_dimensional` has no solution in
+/-- The characteristic equation of `Example.sys` has no solution in
 `(0, 1]` other than the affinity dimension. -/
 theorem eq_dimaff_of_charEq {t : ℝ} (ht0 : 0 < t) (ht1 : t ≤ 1)
     (h : (1 - (10 : ℝ) ^ (-t)) * (1 - (20 : ℝ) ^ (-t)) = (1200 : ℝ) ^ (-t)) :

@@ -12,12 +12,18 @@ need only the symbolic and thermodynamic vocabulary; the ones here need the part
 Feng's set `Σ'` is an invariant Borel set of full measure on which his properties (4.1) to
 (4.4) hold, some of which concern forward time; it can be taken inside the article's box-like
 set `Σ'`, which is the one used here, with each partition extended to the whole shift by one
-null atom. The partitions agree on a set of full measure, so their `σ`-algebras agree modulo
-null sets and the conditional measures and entropies agree almost everywhere. The statements
-were compared with the arXiv version (v2) of the source on 2026-09-20.
+null atom. Feng's atom at a point of his set is the box-like atom cut down to his set, so the
+atoms differ pointwise in general. The conditional measures agree almost everywhere
+(`System.condMeas_fengXi_ae_eq` of `BoxLike/OseledetsBridge.lean`), hence so do the
+conditional informations and the entropies, and the information-sum identity holds for one
+family of partitions exactly when it holds for the other (`System.infoSum_fengXi_iff`). The
+statements were compared with the arXiv version (v2) of the source on 2026-09-20.
 
 * `FengInfoSum`, `FengInfoSumBar`: Feng, Lemma 4.6, first identity of (4.16), behind
-  `thm:feng_entropy_as_limit` and `thm:feng_entropy_zero`.
+  `thm:feng_entropy_as_limit` and `thm:feng_entropy_zero`. Both are theorems of the library
+  (`fengInfoSum_holds` in `BoxLike/FengIdentity.lean`, `fengInfoSumBar_holds` in
+  `BoxLike/FengIdentityBar.lean`); the results that state them as hypotheses receive these
+  proofs, and no headline statement takes them.
 * `FengLedrappierYoung`, `FengLedrappierYoungBar`: `thm:feng1`, from Feng, Theorems 1.2
   and 1.3.
 -/
@@ -34,7 +40,8 @@ universe u
 /-- Feng, Lemma 4.6, first identity of (4.16), for the planar partitions:
 `-log μ_𝐢^{ξ_i}(𝒫_0^{n-1}(𝐢)) = ∑_{k<n} I_μ(𝒫 | \widehat{ξ}_i)(σ^k 𝐢)` for all `n`, on one set of
 full measure. The proof of `thm:feng_entropy_zero` uses it. Hypotheses as in
-`thm:feng_entropy_as_limit`. -/
+`thm:feng_entropy_as_limit`. The library proves it along Feng's Lemmas 4.4 and 4.5
+(`fengInfoSum_holds`, `BoxLike/FengIdentity.lean`). -/
 def FengInfoSum : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ], MeasurePreserving (shift 1) μ μ →
@@ -44,7 +51,9 @@ def FengInfoSum : Prop :=
 
 /-- Feng, Lemma 4.6, first identity of (4.16), for the projective system and an
 invariant measure `ν` on `Σ_Z`, ergodic or not; the article checks Feng's constant-multiplicity
-hypothesis (4.7) in `sec:entropies`, tex lines 2017 to 2019. -/
+hypothesis (4.7) in `sec:entropies`, tex lines 1956 to 1959. The library proves it, with neither
+that hypothesis nor rotations nor proximality (`fengInfoSumBar_holds`,
+`BoxLike/FengIdentityBar.lean`). -/
 def FengInfoSumBar : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.WithRotations → S.Proximal → ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],

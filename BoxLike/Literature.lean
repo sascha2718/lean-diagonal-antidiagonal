@@ -21,6 +21,8 @@ left shift `shift 1`; the alphabet `ι` is finite with the discrete `σ`-algebra
   of ergodic Gibbs measures on a mixing sub-shift of finite type (Bowen).
 * `JordanRapaportDimension`: the dimension formula used in `eq:gibbs_proj_dim`, from
   Jordan–Rapaport, Proc. Lond. Math. Soc. (3) 122 (2021), Theorem 1.1.
+* `KittleKoglerDimension`: the dimension of self-similar measures on the line without exact
+  overlaps, from Kittle–Kogler, arXiv:2610.10511, Theorem 1.1, used in the proof of `thm:main2`.
 
 Falconer's bound `eq:hausdorff_affinity_upper_bound`, which the article cites, is a theorem of
 the library (`System.dimH_attractor_le` in `BoxLike/FalconerBound.lean`).
@@ -102,5 +104,25 @@ def JordanRapaportDimension : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.ProjExpSeparation → ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],
     Ergodic (shift 1) ν → IsExactDim (ν.map S.projBar) (min 1 (-entropy ν / S.lyapBar ν))
+
+/-- Kittle–Kogler, *The exact overlaps conjecture for self-similar measures on the real line*,
+arXiv:2610.10511 (7 October 2026), Theorem 1.1, in the form the article uses in the proof of
+`thm:main2` (tex lines 3888 to 3894). The source: let `μ = ∑_j p_j δ_{g_j}` be a probability
+measure on finitely many distinct contracting similarities `g_j(x) = r_j x + t_j` of `ℝ`, with
+`0 < |r_j| < 1` of either sign and `p_j > 0`; then the self-similar measure `ν`, the unique
+probability measure with `∑_j p_j (g_j)_* ν = ν`, satisfies `dim ν = min{1, h_μ / |χ_μ|}`,
+where `h_μ = lim_n H(μ^{*n}) / n` is the random walk entropy and `χ_μ = ∑_j p_j log |r_j|` the
+Lyapunov exponent. The source records that `ν` is exact-dimensional, so that `dim ν` is its
+exact dimension with closed intervals, and that `h_μ = H(p) = -∑_j p_j log p_j` when the
+similarities generate a free semigroup, that is, when there are no exact overlaps. The statement
+takes the latter hypothesis and the conclusion `dim ν = min{1, H(p) / |χ_μ|}`, which is the
+exact overlaps conjecture the source proves. Every solution `ν` of the stationarity equation is
+the self-similar measure, by Hutchinson's uniqueness. -/
+def KittleKoglerDimension : Prop :=
+  ∀ {κ : Type u} [Fintype κ] (r t p : κ → ℝ), (∀ j, r j ≠ 0) → (∀ j, |r j| < 1) →
+    (∀ j, 0 < p j) → ∑ j, p j = 1 → Function.Injective (simWord r t) →
+    ∀ (ν : Measure ℝ) [IsProbabilityMeasure ν],
+    ν = ∑ j, ENNReal.ofReal (p j) • ν.map (fun x => r j * x + t j) →
+    IsExactDim ν (min 1 ((∑ j, Real.negMulLog (p j)) / -(∑ j, p j * Real.log |r j|)))
 
 end BoxLike
