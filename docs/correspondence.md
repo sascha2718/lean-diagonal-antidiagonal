@@ -22,10 +22,6 @@ manifest [paper-correspondence.yaml](../paper-correspondence.yaml) reads 83 form
 1 intentionally unformalised, with 6 literature hypotheses. Every numbered statement except the open
 question is therefore formalised or cited, and no result rests on an unauthorised premise.
 
-The structured review is [review.json](review.json), with the detailed source inspections in
-[Sections 1–2](review-sections-1-2.json), [Section 3](review-section-3.json) and
-[Section 4](review-section-4.json).
-
 ## The three headline statements
 
 `Challenge.lean` imports Mathlib alone and contains exactly the three headline statements and
@@ -85,8 +81,8 @@ The review edits and compiles no LaTeX.
 "Formalised" can mean a collected family of component theorems; the entry retains their exact
 types. Internal inputs such as `GibbsDecomposition` are identified separately from the cited
 theorem hypotheses used to construct them. Geometry, invariance, ergodicity, positivity and
-parameter ranges are ordinary hypotheses, listed in the structured review and the Solution
-comments. The last column names the library theorems that the entry uses in place of a result the
+parameter ranges are ordinary hypotheses, listed in the Solution comments. The last column
+names the library theorems that the entry uses in place of a result the
 manuscript cites.
 
 | No. | Label | Coverage | Literature predicates | Proved in place of a citation |
@@ -417,6 +413,10 @@ snapshot, not mathematical completeness. The declaration index below records the
 library components; the numbered assessment above controls claims about the whole manuscript
 statement.
 
+The formulation of planar exponential separation in the norm on affine coefficients (tex lines
+1535 to 1537) is not formalised. The library proves the lower bound on distances between distinct
+cylinder images (`System.StrongSeparation.exists_le_dist_phiWord`).
+
 ## Declaration index
 
 Every result of the paper with the declarations that certify it, by topic. Tex line numbers
@@ -670,7 +670,7 @@ and, for an irreducible tuple, from uniqueness (`System.IsEquilibriumState.ergod
 | Feng, Theorems 1.2 and 1.3 (arXiv:1901.01691v2), `thm:feng1` | `FengLedrappierYoung` (`hly`) | declared in `LiteratureFeng`; compared with the source: faithful, the case `s = 2`, `k_1 = k_2 = 1`. Feng's order of the filtration, of the matrix products and the signs of the formula agree with the Lean definitions. Reductions: Feng's `Σ'` inside the box-like `Σ'`, with almost everywhere equal conditional measures (`System.condMeas_fengXi_ae_eq`); supremum versus Euclidean balls. `FengLedrappierYoung` follows from `PlanarFengLedrappierYoung` (`PlanarFengLedrappierYoung.fengLedrappierYoung`) |
 | Feng, Theorems 1.2 and 1.3 (arXiv:1901.01691v2), `thm:feng1`, second part: the case `d = 1` for the projective system `Ψ` | `FengLedrappierYoungBar` (`hlyb`) | follows from `FengLedrappierYoung`: `fengLedrappierYoungBar_of_fengLedrappierYoung` (`ProjectiveLineSystem`), through the planar system `z ↦ diag(g'_j, g'_j / 2) z + (g_j(0), 0)` of `Ψ`, whose attractor lies on the horizontal axis; the scalar formula holds for every box-like system, with neither rotations nor proximality (`System.isExactDim_map_projBar_of_fengLedrappierYoung`). The `Prop` in `LiteratureFeng` keeps the hypotheses `S.WithRotations` and `S.Proximal` of the article; library results that take `hlyb` receive this proof in Solution, and no headline takes it. Compared with the source: faithful, the case `d = 1` |
 | Feng, Theorems 1.2 (ii) and 1.3, formula (1.6) (Duke Math. J. 172 (2023); compared with arXiv:1901.01691v2), the first part of `thm:feng1` for every planar self-affine set | `PlanarFengLedrappierYoung` (`hly`) | declared in `LiteraturePlanarFeng`; authorised by the project owner. The source: an affine iterated function system on `ℝ^d`, not necessarily invertible or contracting; an ergodic `m` on the two-sided full shift for which the system is average contracting; the distinct Lyapunov exponents `λ_1 > ⋯ > λ_s` with multiplicities `k_i`; local dimensions with closed Euclidean balls; the entropies `h_i = H_m(𝒫 \| \widehat{ξ}_i)` of their (1.5). Specialisation: `d = 2`, invertible contractions (`PlanarSystem`), `μ` ergodic with `λ_2 < λ_1`, so that `s = 2`, `k_1 = k_2 = 1` and (1.6) reads `(h_1 - h_0)/λ_1 + (h_2 - h_1)/λ_2`. Feng's entropies for his partitions on a Borel set of full measure inside the library's `Σ'` are the library's (`PlanarSystem.condEntropy_fengXi_eq`), so the source statement implies the transcription (`planarFengLedrappierYoung_of_fengXi`, proved); closed balls of the supremum norm give the same pointwise dimension as Euclidean balls; the order of the matrix products and the signs agree with Feng's (1.3), Section 1.2 and (1.6). Degenerate tests, by hand: one letter with `A = diag(1/2, 1/4)`; zero translations with a Bernoulli measure; scaled rotations, where `λ_1 = λ_2` and the statement is silent. It implies `FengLedrappierYoung`. Taken by `PlanarSystem.feng1` and `planar_feng1`, which are `thm:feng1` at the article's scope, and by no headline result |
-| Feng, Lemma 4.6, first identity of (4.16) | `FengInfoSum` (`hfi`), `FengInfoSumBar` (`hfib`) | a theorem: `fengInfoSum_holds` (`FengIdentity`) and `fengInfoSumBar_holds` (`FengIdentityBar`), along Feng's Lemmas 4.4 and 4.5, with neither ergodicity nor his (4.7) in the general identity `infoSum_of_pullShift`. The `Prop`s in `LiteratureFeng` are the statements the library proves; library results that take `hfi`, `hfib` receive these proofs, and no headline takes them. Ergodicity cannot be dropped from `FengInfoSum` (`docs/findings.md`) |
+| Feng, Lemma 4.6, first identity of (4.16) | `FengInfoSum` (`hfi`), `FengInfoSumBar` (`hfib`) | a theorem: `fengInfoSum_holds` (`FengIdentity`) and `fengInfoSumBar_holds` (`FengIdentityBar`), along Feng's Lemmas 4.4 and 4.5, with neither ergodicity nor his (4.7) in the general identity `infoSum_of_pullShift`. The `Prop`s in `LiteratureFeng` are the statements the library proves; library results that take `hfi`, `hfib` receive these proofs, and no headline takes them. |
 | Kittle–Kogler, Theorem 1.1 (arXiv:2610.10511, 7 October 2026), in the proof of `thm:main2` | `KittleKoglerDimension` (`hkk`) | declared in `Literature`; compared with the arXiv version on 2026-10-17. The source: for a probability measure `μ = ∑_j p_j δ_{g_j}` on finitely many distinct contracting similarities `g_j(x) = r_j x + t_j` of `ℝ`, `0 < |r_j| < 1`, `p_j > 0`, the self-similar measure `ν` is exact-dimensional with `dim ν = min{1, h_μ / |χ_μ|}`, `h_μ` the random walk entropy and `χ_μ = ∑_j p_j log |r_j|`. The statement takes the hypothesis that the similarities generate a free semigroup, under which the source notes `h_μ = H(p)`, and concludes `dim ν = min{1, H(p) / |χ_μ|}`, the form the article uses; it quantifies over every solution of the stationarity equation, which is the self-similar measure by Hutchinson's uniqueness. Exact-dimensionality is the source's convention for `dim ν`, with closed intervals |
 | Birkhoff's pointwise ergodic theorem | | proved: `birkhoff_ae`, `birkhoff_ergodic` in `Birkhoff`, through the maximal ergodic theorem |
 | Shannon–McMillan–Breiman, cited from Petersen (tex lines 1973 to 1977); Feng (4.17), `thm:feng_entropy_kolmogorov_sinai` | | proved: `shannonMcMillanBreiman` (`ShannonMcMillanBreiman`), by Breiman's argument through Maker's theorem and Chung's maximal inequality; Feng's (4.17) is `System.feng_entropy_kolmogorov_sinai` and `PlanarSystem.feng_entropy_kolmogorov_sinai_general` |

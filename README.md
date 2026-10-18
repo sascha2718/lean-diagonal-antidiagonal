@@ -26,8 +26,8 @@ from the first (`fengLedrappierYoungBar_of_fengLedrappierYoung`). Proposition 3.
 (Fraser–Jordan–Jurga), the distinct Lyapunov exponents `eq:simple_lyapunov` (Morris–Shmerkin) and
 Rossi's bound `eq:hausdorff_ergodic_lyapunov` are proved with no literature premise.
 
-[docs/correspondence.md](docs/correspondence.md) is the human-readable review;
-[docs/review.json](docs/review.json) contains every entry with its exact source hypotheses.
+[docs/correspondence.md](docs/correspondence.md) records the coverage assessment, literature
+inputs and proof deviations.
 
 ## Headline results
 
@@ -141,12 +141,8 @@ pass, since no entry is partially formalised. No LaTeX compilation is performed 
 
 ## Further documentation
 
-[docs/findings.md](docs/findings.md) records the findings about the manuscript;
-[docs/mathlib-gaps.md](docs/mathlib-gaps.md) and [docs/layer-e.md](docs/layer-e.md) describe the
-representation and the infrastructure the library builds because Mathlib lacks it.
 [formalization.yaml](formalization.yaml) records provenance and the status of the three
-headlines. The detailed review is split across [Sections 1–2](docs/review-sections-1-2.json),
-[Section 3](docs/review-section-3.json) and [Section 4](docs/review-section-4.json).
+headlines.
 
 ## Attribution and licence
 

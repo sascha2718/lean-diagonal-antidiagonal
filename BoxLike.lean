@@ -13,8 +13,7 @@ uses one takes it as a hypothesis; the last module holds the ones that no main r
 on. The library proves several of these statements, and `Solution.lean` passes the proofs to
 the results that take them. A premise that is not authorised goes in `BoxLike/Proposals/`,
 which this module does not import; none is pending. `docs/correspondence.md` records the state
-of every numbered result, the remaining work and the fidelity boundary, and
-`docs/mathlib-gaps.md` the representation.
+of every numbered result, the remaining work and the fidelity boundary.
 
 * `Orientation`: the two-sided shift `σ^n` and the orientation cocycle `ε_n` of
   `eq:def_of_eps_mod2`, with the cocycle identity `eq:tau_omega_sigma_commutative1`.

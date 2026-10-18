@@ -5,7 +5,7 @@ The partitions of `sec:entropies` are measurable partitions (tex lines 1868 to 1
 1915; Feng, Lemma 4.2): each of `ξ_0, ξ_1, ξ_2`, `ξ_1^⊥`, `\overline{ξ}_0`, `\overline{ξ}_1` is
 the partition into the fibres of a Borel map into `ℝ`. The map records the past `𝐢^-` and the
 coordinates of `π(𝐢)` or `\overline{π}(𝐢)` that the atom fixes, and sends the complement of `Σ'`
-or of `Σ_Z` to one separate value. `docs/layer-e.md` records the choices made.
+or of `Σ_Z` to one separate value.
 
 * `past`, `past_eq_iff`, `measurable_past`: the past `𝐢^- = (i_{-1}, i_{-2}, …)` as a Borel map
   into `ℕ → ι`, with `𝐢^- = 𝐣^-` the relation `SamePast`.

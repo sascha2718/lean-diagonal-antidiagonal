@@ -3,7 +3,7 @@ module
 /-
 Partitions, conditional measures, conditional information and conditional entropy: the generic
 part of `sec:conditional` and of `sec:entropies`, on a standard Borel space `Ω` and on the
-two-sided full shift over a finite alphabet. `docs/layer-e.md` records the choices made.
+two-sided full shift over a finite alphabet.
 
 A partition of `Ω` is a map `ξ : Ω → Set Ω` sending a point to its atom. The conditional
 measures are the values of Mathlib's regular conditional probability kernel

@@ -199,8 +199,8 @@ end Challenge
 Each entry collects checked declarations with their actual Lean types. An alias of a helper
 retains all its hypotheses, including internal Gibbs decompositions; it does not by itself
 prove the entire prose statement. Literature inputs below name the cited theorem predicates
-needed from the paper hypotheses. See `docs/review.json` for exact source statements and
-verified primary-source links, and `docs/correspondence.md` for the coverage assessment.
+needed from the paper hypotheses. See `docs/correspondence.md` for the coverage assessment
+and literature sources.
 Missing results have entries but no manufactured proof or axiom.
 -/
 
