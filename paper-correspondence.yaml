@@ -3,7 +3,7 @@ scope: "All 41 numbered statements of the manuscript, and 45 prose spans with th
 source_version: "diagonal-antidiagonal.tex, working manuscript (no arXiv version yet)"
 manuscript_files: ["diagonal-antidiagonal.tex"]
 manuscript_revision: "2e45bb0a3f01a2047809a0bf74cb76dcdc93ac3b"
-manuscript_sha256: {"diagonal-antidiagonal.tex": "7c929ff22ca0cc25bf5fb4f914e0633dc8a45f6f32d809d858771b1f06644ad5"}
+manuscript_sha256: {"diagonal-antidiagonal.tex": "c9ff4f19c2731296ca77fd59ccf4fab3c056b545131ec74e325ddcd5c9cf158c"}
 entries:
   - source: "Fraser's packing and Minkowski dimension formula"
     label: "thm:fraser"
@@ -565,7 +565,7 @@ entries:
     file: "diagonal-antidiagonal.tex"
     start: "Applying Feng--Hu~\\cite[Theorem~2.8]{FengHu2009} to the one-sided versions of the ergodic measures"
     end: "double-dimensional without any separation assumption."
-    sha256: "c0a21432a01972a1b7b9dd27049153a6a59a502c1ce1aa8d1fc6df7a119f9294"
+    sha256: "5e351ac02864c67ee6559d879edd9d90b1dadef007e778467f950d94c92f5a35"
     status: "formalized"
     lean: ["BoxLike.System.marginal_isDoubleDim_normalised", "BoxLike.System.marginal_isDoubleDim", "BoxLike.ae_hasLocalDim_iff_of_le", "BoxLike.IsExactDim.of_le"]
     hypotheses: ["BoxLike.FengHuExactDim"]
@@ -641,7 +641,7 @@ entries:
     lean: ["BoxLike.map_eta_injective", "BoxLike.exists_map_eta_eq", "BoxLike.existsUnique_map_eta_eq", "BoxLike.exists_ergodic_map_eta_eq", "BoxLike.mapEtaEquiv", "BoxLike.ergodic_map_eta_iff", "BoxLike.ergodic_mapEtaEquiv_symm_iff", "BoxLike.isSigmaSubadditive_futureContent"]
     relation: "exact"
     headline: false
-    note: "Proved by the Carathéodory extension of a content on the clopen future sets, since Mathlib has no Kolmogorov extension theorem; σ-additivity on the algebra of cylinders is where the finiteness of the alphabet enters. Both directions of the ergodicity equivalence are proved. The identity (π^+)_*μ^+ = π_*μ of the following sentence is not formalised, since the library defines π on the two-sided shift and has no one-sided π^+."
+    note: "Proved by the Carathéodory extension of a content on the clopen future sets, since Mathlib has no Kolmogorov extension theorem; σ-additivity on the algebra of cylinders is where the finiteness of the alphabet enters. Both directions of the ergodicity equivalence are proved. The identity (π^+)_*μ^+ = π_*μ of the following sentence is proved by System.map_projPlus_eq_map_proj in BoxLike/Support/OneSidedProjection.lean and is recorded in the canonical-projections entry."
   - source: "Gibbs measures are doubling"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -853,15 +853,15 @@ entries:
   - source: "Potentials at s = 2"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
-    start: "At $s=2$, the potentials coincide"
+    start: "We extend the definitions of $f_{1,s}$ and $f_{2,s}$ to $s=2$ by the same formulas."
     end: "and hence so do the Gibbs measures."
-    sha256: "3b850515f1752b0559974c70f25785d55b49b6c9da645deab002f30cb3bc918d"
+    sha256: "f37df5a6071c0701ec32229c67f12b8b171f7a561cadcd0a4647ff530155c59f"
     status: "formalized"
     lean: ["BoxLike.System.potential₁_two_eq_potential₂_two", "BoxLike.System.eq_of_isGibbs_potential_two", "BoxLike.System.GibbsDecomposition.mu₁_eq_mu₂_of_two"]
     hypotheses: []
     relation: "exact"
     headline: false
-    note: "The formula of the potentials for 1 <= s < 2 extended to s = 2 gives f_{1,2} = f_{2,2} = log |det A_i|, and an invariant Gibbs measure for one equals the ergodic one for the other; the potentials are defined in the article only for 0 < s < 2."
+    note: "The manuscript explicitly extends the formula of the potentials for 1 <= s < 2 to s = 2, giving f_{1,2} = f_{2,2} = log |det A_i|, and an invariant Gibbs measure for one equals the ergodic one for the other."
   - source: "Threshold remarks of the introduction"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"

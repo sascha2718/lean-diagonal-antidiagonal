@@ -300,9 +300,9 @@ automation:
       framework: "Claude Code (Anthropic)"
       tool_setup: >-
         Agentic Lean development in Claude Code: a coordinator agent integrating the work of
-        parallel worker agents, one per task, under the rules of tools/AGENT_RULES.md and
-        tools/WORKER_RULES.md, all running Claude Opus 5.5 (claude-opus-5-5). The agents
-        stated, proved, refactored and repaired the library, the literature hypotheses, the
+        parallel worker agents, one per task, following task-specific briefs and shared
+        source-fidelity and module-ownership rules, all running Claude Opus 5.5 (claude-opus-5-5).
+        The agents stated, proved, refactored and repaired the library, the literature hypotheses, the
         proposed literature premises and the audit modules, and maintained the records of
         docs/.
       cost:
@@ -342,7 +342,8 @@ fidelity:
     Where the paper speaks of the unique s-equilibrium state, the audited statements hold for
     every shift-invariant s-equilibrium state and assume neither uniqueness nor ergodicity.
     Theorem 4.16 is stated as exact-dimensionality of the projected equilibrium state with
-    dimension min{2, dimaff(X)}. The four cited theorems of the headline results are Prop-valued
+    dimension min{2, dimaff(X)}. The three literature inputs of the headline results,
+    JordanRapaportDimension, FengLedrappierYoung and KittleKoglerDimension, are Prop-valued
     definitions, restated in Challenge.lean, and the audited theorems take them as hypotheses and
     are proved conditionally on them. Each quantifies over every finite alphabet and every
     box-like system, carries the hypotheses of the cited theorem and is stated about defined

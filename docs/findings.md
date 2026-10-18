@@ -9,51 +9,10 @@ finding is added where it belongs.
 
 ## Statements that need a repair
 
-- **`eq:V_lyapunov`, tex lines 1602 to 1606.** The characterisation of `V_𝐢^1` by the rate
-  `≤ λ_2` needs `λ_2 < λ_1`, which the surrounding text assumes: for `λ_1 = λ_2` every vector
-  satisfies it. Feng's (4.6) has `lim sup` where the article has `lim`; on `Σ'` the limit exists
-  for every vector, so the two sets agree there (`MatrixTuple.fengV_eq_filtration`).
-- **tex lines 1614 to 1616.** "By (V3), `V_𝐢^1` is one of the coordinate axes" also uses (V2),
-  `λ_2 < λ_1` and the identity of `thm:matrix_products_g_derivatives` for the norms of the
-  products applied to `e_1`, `e_2` (`System.V_one_eq_axis`).
-- **tex lines 1617 to 1618.** "We choose `Σ'` to contain every sequence sharing the past of one
-  of its elements; this is possible because the defining growth conditions depend only on past
-  coordinates." Saturating an arbitrary Oseledets set with respect to the past need not give a
-  Borel or invariant set. The set of all points at which the growth conditions hold is Borel,
-  invariant and saturated, and has full measure, which gives the required choice
-  (`MatrixTuple.regularSet`, `PlanarSystem.measurableSet_SigmaPrime`,
-  `PlanarSystem.shift_mem_SigmaPrime_iff`, `PlanarSystem.mem_SigmaPrime_of_samePast`,
-  `MatrixTuple.measure_regularSet_compl_of_ergodic`).
-- **`thm:irred_eq_state`, tex lines 2222 to 2239.** The proposition is credited to Feng–Käenmäki,
-  Proposition 1.2, for every `s > 0`. That proposition concerns the norm potential `‖·‖^q`; the
-  rescaling of tex lines 2235 to 2239 covers `0 < s < 2`, and for `s ≥ 2`, where
-  `φ^s = |det|^{s/2}`, the statement is `thm:bernoulli_equilibrium`, which needs neither the
-  citation nor irreducibility (`MatrixTuple.irred_eq_state_of_two_le`). The assertion "This
-  measure is ergodic" (tex line 2227) is not part of Feng–Käenmäki, Proposition 1.2; it follows
-  from uniqueness, as the remark after their (1.4) notes (`MatrixTuple.ergodic_of_unique`).
-- **The potentials at `s = 2`, tex line 2637.** `f_{1,s}`, `f_{2,s}` are defined for
-  `0 < s < 2` (tex lines 2506, 2523 and 2551), and the remark "At `s = 2`, the potentials
-  coincide" uses them at `s = 2`. With the formula of the case `1 ≤ s < 2` the remark is correct
-  (`System.potential₁_two_eq_potential₂_two`, `System.GibbsDecomposition.mu₁_eq_mu₂_of_two` in
-  `BoxLike/Support/PotentialsAtTwo.lean`).
-- **`thm:exact-dimensional-mixture`, tex line 2692.** The proof is omitted as straightforward,
-  while tex line 2829 cites "the differentiation argument in the proof of" the lemma and tex
-  line 2871 "the differentiation argument in" it.
-  The library supplies the proof from Besicovitch's differentiation theorem
-  (`IsExactDim.ae_hasLocalDim_add_left`, `IsExactDim.isDoubleDim_add`).
 - **`eq:haus_dim_sum`** is not cited anywhere in the manuscript. It is proved
   (`upperPackingDim_add`, `lowerHausdorffDim_add`).
 - **`thm:overline_h1_large`** uses the positivity of one of the pieces `τ(Σ^τ)`, `ω(Σ^ω)`, which
   is `thm:sigma_tau_omega_positive_eq_measure`, without citing it.
-- **`ex:projection_double_dimensional`, tex lines 3031 to 3033.** The identification of `μ_1`
-  with the Markov measure of the matrix `Q` uses the uniqueness of the Gibbs measure and
-  `P_Z(f_{1,s}) = 0`, neither of which the text mentions. The uniqueness of the equilibrium state
-  of the example follows without `FengKaenmakiUnique`
-  (`PrescribedExample.Gibbs.GibbsDecomposition.eq_markov`, `PrescribedExample.equilibrium_spec`).
-  The final sentence (tex line 3063), "Each pointwise dimension value occurs on a set of positive
-  measure in each projection", is attributed to `thm:eq_state_proj_dim`, whose statement does not
-  contain it; it follows from the stated values with `s_2 < s_1` and the proof of that theorem
-  (`PrescribedExample.Gibbs.marginal_spec`).
 
 ## Introduction
 
@@ -166,12 +125,11 @@ finding is added where it belongs.
     proof. The converse direction is not trivial; both directions are proved
     (`ergodic_map_eta_iff`), and the equivalence for an existing invariant lift does not need a
     finite alphabet.
-- `sec:subshift`, tex lines 898 to 899: "Since `Z²` is a positive matrix, `Σ_Z` is mixing" holds
+- `sec:subshift`: the positivity of `Z²`, and hence topological mixing of `Σ_Z`, holds
   exactly when both orientations occur: with diagonal generators only `Σ_Z` splits into two
   clopen invariant halves, with anti-diagonal generators only it has period two
   (`isTopologicallyMixing_subshiftShift_iff`, `not_isTopologicallyMixing_of_forall_eq_zero`,
-  `not_isTopologicallyMixing_of_forall_eq_one`). The cited Walters, Theorem 1.31, concerns the
-  mixing of Markov measures rather than topological mixing.
+  `not_isTopologicallyMixing_of_forall_eq_one`).
 - `lem:proj_gap_dominated` uses a common first-row entry, as does `System.gap_le_diagGap`. The
   Lean statement also covers empty and singleton subfamilies. At `n = 0`, both minima use the
   empty-infimum convention `∞`.
@@ -511,10 +469,6 @@ finding is added where it belongs.
     construction gives the scalar part of `thm:feng1` for the projective system of every
     box-like system, with neither rotations nor proximality
     (`System.isExactDim_map_projBar_of_fengLedrappierYoung`).
-  - tex lines 3714 to 3728: the independence of past and future of the Bernoulli measure,
-    invoked at tex line 3726, is needed already at tex line 3717 to identify the conditional
-    entropies `q_{x,n}`, `q_{y,n}` with Feng's entropies
-    (`BoxLike/MainTwoProse/PastIndependence.lean`).
   - tex lines 3722 to 3724: `0 ≤ q_n ≤ q_{y,n} = 0` is the monotonicity of conditional entropy
     under refinement (`condEntropyPoint_eq_zero_of_le`).
   - tex line 3725: strong separation of the selected subsystem is proved

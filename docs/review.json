@@ -1,7 +1,7 @@
 {
   "review_date": "2026-10-18",
   "manuscript": "../diagonal-antidiagonal.tex",
-  "manuscript_sha256": "0e3a7497df31ca3a2ef349205283225e97c4f5ec246e01ba58ebe0925a65dc01",
+  "manuscript_sha256": "90e8533290ab26ac530fb0022beaf261aef80d9dc97ca71621d9832747272819",
   "scope": "All 41 numbered theorem-like environments; the open question is recorded as a proposition and is not claimed proved. Status is semantic coverage, not merely successful elaboration.",
   "headline_endpoints": {
     "thm:main1": "Challenge.audit_main1",
@@ -855,7 +855,7 @@
       "number": "4.1",
       "label": "thm:exact-dimensional-mixture",
       "kind": "lemma",
-      "line": 2693,
+      "line": 2694,
       "status": "formalized",
       "lean": [
         "BoxLike.IsExactDim.ae_hasLocalDim_add_left",
@@ -878,7 +878,7 @@
       "number": "4.2",
       "label": "thm:feng1",
       "kind": "theorem",
-      "line": 2711,
+      "line": 2712,
       "status": "cited",
       "lean": [
         "BoxLike.planar_feng1",
@@ -911,7 +911,7 @@
       "number": "4.3",
       "label": "thm:entropy_eq_gibbs",
       "kind": "proposition",
-      "line": 2760,
+      "line": 2761,
       "status": "formalized",
       "lean": [
         "BoxLike.System.GibbsDecomposition.dimEntropy_zero_eq_gibbs",
@@ -1339,7 +1339,7 @@
       "result": "passed, with 55136 declarations checked by con-ron",
       "scope": "Local macOS development run without Linux sandbox isolation; not a Palomar verdict."
     },
-    "latex": "The manuscript SHA-256 is 0e3a7497df31ca3a2ef349205283225e97c4f5ec246e01ba58ebe0925a65dc01 (commit 2e45bb0). Its text of the introduction's classification sentence, the definition of rotating, the bounds on λ_1, the remark on linear changes of coordinates and Example 4.5 agrees with the Lean proofs (docs/findings.md). No LaTeX is edited or compiled.",
+    "latex": "The manuscript SHA-256 is 90e8533290ab26ac530fb0022beaf261aef80d9dc97ca71621d9832747272819. After the earlier editorial-file cleanup, three local corrections remain relative to reviewed commit 2e45bb0: the potentials are explicitly extended to s=2, and two references to the omitted proof of Lemma 4.1 invoke differentiation of measures directly. All other mathematical prose, citations and the 41 numbered environments are unchanged. Entry line numbers refer to the current source; historical tex line references in prose refer to commit 2e45bb0. No LaTeX compilation was run for these edits.",
     "completed_declaration_axioms": {
       "command": "lake env lean tools/AuditAxioms.lean",
       "result": "passed for 5351 constants; only propext, Classical.choice and Quot.sound"

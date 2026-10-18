@@ -1,11 +1,11 @@
 module
 
 /-
-The remark at the end of `sec:gibbs_measures` (tex line 2637): "At `s = 2`, the potentials
+The remark at the end of `sec:gibbs_measures`: "At `s = 2`, the potentials
 coincide, `f_{1,2} = f_{2,2}`, and hence so do the Gibbs measures."
 
-The potentials `f_{1,s}`, `f_{2,s}` are defined in the manuscript for `0 < s < 2` (tex lines 2505
-to 2551); at `s = 2` the remark uses the formula of the case `1 ≤ s < 2`, which is the definition
+The manuscript extends the potentials `f_{1,s}`, `f_{2,s}` to `s = 2` using the formula of
+the case `1 ≤ s < 2`, which is the definition
 `System.potential₁` of the library for every `s ≥ 1`. At `s = 2` both potentials of the symbol
 `(i, c)` equal `log |a_i| + log |b_i| = log |det A_i|`. The Gibbs measures then coincide by the
 uniqueness of the ergodic Gibbs measure of a potential (`IsGibbs.eq_of_ergodic`).

@@ -6,6 +6,11 @@ build/
 .DS_Store
 NOTES.local.md
 
+# Generated Python bytecode and toolchain-update output
+__pycache__/
+*.py[cod]
+.bump.log
+
 # Agent experiments and axiom printouts
 tools/scratch/
 

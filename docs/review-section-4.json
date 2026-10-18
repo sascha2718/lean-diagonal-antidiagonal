@@ -3,7 +3,8 @@
   "review_date": "2026-10-18",
   "reviewer_scope": "Section 4 of the manuscript, all 16 numbered results, source-level semantic and proof-route assessment.",
   "manuscript": "../../diagonal-antidiagonal.tex",
-  "manuscript_sha256": "0e3a7497df31ca3a2ef349205283225e97c4f5ec246e01ba58ebe0925a65dc01",
+  "manuscript_sha256": "90e8533290ab26ac530fb0022beaf261aef80d9dc97ca71621d9832747272819",
+  "snapshot_note": "The manuscript hash and entry line numbers include local corrections to reviewed commit 2e45bb0. In Section 4, two references to the omitted proof of Lemma 4.1 now invoke differentiation of measures directly; the proof remains omitted. Numbered environments and the scalar Feng argument are unchanged. Historical tex line references in prose refer to commit 2e45bb0.",
   "method": "Read the LaTeX statements and proofs, the records of docs/, and the Lean signatures and relevant proof bodies. Literature statements below are the local Prop hypotheses with their recorded citations. The no-exact-overlaps argument of Example 4.5 is the prefix-cancellation and equal-length concatenation argument of the Lean proof. No LaTeX compilation was run.",
   "dependency_convention": "direct_literature_hypotheses lists the named cited Prop binders on the primary library declaration of the entry. hms, hfk, hfi, hfib and hfjj are theorems of the library (morrisShmerkinLyapunov_holds, equilibriumGibbs, fengInfoSum_holds, fengInfoSumBar_holds, fraserJordanJurgaDecomposition_holds) that Solution supplies, and hlyb follows from hly (fengLedrappierYoungBar_of_fengLedrappierYoung), which Solution supplies in the same way; hfk is the binder of EquilibriumGibbsStatement. paper_level_literature_hypotheses lists the cited predicates needed from the manuscript's hypotheses; it omits hms, hfk, hfi, hfib, hfjj and hlyb, and lists hly where an entry uses hlyb. hfk with hfjj constructs an internal GibbsDecomposition, which is never itself a literature hypothesis. Lists do not include Lean's standard axioms or Mathlib results.",
   "literature_hypotheses": {
@@ -91,7 +92,7 @@
   "entries": [
     {
       "number": "4.1",
-      "line": 2693,
+      "line": 2694,
       "label": "thm:exact-dimensional-mixture",
       "kind": "lemma",
       "lean_declarations": [
@@ -114,7 +115,7 @@
     },
     {
       "number": "4.2",
-      "line": 2711,
+      "line": 2712,
       "label": "thm:feng1",
       "kind": "theorem",
       "lean_declarations": [
@@ -147,7 +148,7 @@
     },
     {
       "number": "4.3",
-      "line": 2760,
+      "line": 2761,
       "label": "thm:entropy_eq_gibbs",
       "kind": "proposition",
       "lean_declarations": [
