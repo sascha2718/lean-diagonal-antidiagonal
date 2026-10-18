@@ -37,6 +37,7 @@ Oseledets theorem is used.
 * `System.sigma_tau_omega_positive`: `thm:sigma_tau_omega_positive_eq_measure`.
 -/
 public import BoxLike.Birkhoff
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.General
 public import BoxLike.PartitionIdentities
 public import Mathlib.MeasureTheory.Integral.DominatedConvergence
@@ -576,20 +577,19 @@ theorem measure_cylinder_le_two_mul (μ : Measure (ℤ → ι))
   exact ⟨key _ (S.measurableSet_SigmaTau μ) hτ, key _ (S.measurableSet_SigmaOmega μ) hω⟩
 
 /-- `thm:sigma_tau_omega_positive_eq_measure`: `μ(Σ^τ) > 0` and `μ(Σ^ω) > 0` for the
-ergodic `s`-equilibrium state, `0 < s < 2`, of a proximal box-like tuple with rotations. The
-ergodicity `herg` comes from `thm:irred_eq_state`. The counting inequality of the article is
-integrated against the invariant measure, which gives `μ([i]) ≤ 2 μ(Σ^τ)` and
+ergodic `s`-equilibrium state, `0 < s < 2`, of a box-like tuple with rotations; proximality is
+not used. The ergodicity `herg` comes from `thm:irred_eq_state`. The counting inequality of the
+article is integrated against the invariant measure, which gives `μ([i]) ≤ 2 μ(Σ^τ)` and
 `μ([i]) ≤ 2 μ(Σ^ω)` for an anti-diagonal `A_i`; Birkhoff's theorem and `eq:simple_lyapunov` are
 not used.
 Depends on: `shift_mem_SigmaTau_iff`, `measure_SigmaPrime_compl`, `thm:irred_eq_state` (full
-support, from the Gibbs bounds of Feng–Käenmäki, `FengKaenmakiGibbs`). -/
-theorem sigma_tau_omega_positive (hfk : FengKaenmakiGibbs.{u}) (hrot : S.WithRotations)
-    (hprox : S.Proximal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
+support, from the Gibbs bounds of `EquilibriumGibbsStatement`, which the library proves). -/
+theorem sigma_tau_omega_positive (hfk : EquilibriumGibbsStatement.{u}) (hrot : S.WithRotations)
+    (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
     (heq : S.IsEquilibriumState s μ) : 0 < μ (S.SigmaTau μ) ∧ 0 < μ (S.SigmaOmega μ) := by
   obtain ⟨i, hi⟩ := hrot.2
-  have hpos := (hfk S (S.irreducible_of_proximal hrot hprox) hs0 hs2 μ hinv
-    heq).measure_cylinder_pos i
+  have hpos := (hfk S hrot hs0 hs2 μ hinv heq).measure_cylinder_pos i
   obtain ⟨hτ, hω⟩ := S.measure_cylinder_le_two_mul μ hinv (S.measure_SigmaPrime_compl μ hinv herg)
     hi
   refine ⟨pos_of_ne_zero fun h => ?_, pos_of_ne_zero fun h => ?_⟩

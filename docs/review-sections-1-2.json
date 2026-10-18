@@ -1,41 +1,44 @@
 {
-  "review_date": "2026-10-17",
+  "review_date": "2026-10-18",
   "scope": "Every numbered theorem-like environment of Sections 1 and 2 of diagonal-antidiagonal.tex; statements, their prose proofs (including the deferred proofs of Theorems 1.2 and 1.3), the named Lean declarations and the literature boundaries. This is a source review, not a kernel check.",
   "latex_modified": false,
   "numbered_entries": 11,
-  "snapshot_note": "Assessment of the final tree. Ten of the eleven entries are formalised or cited; Question 1.4 is open and recorded as a proposition. All three headline statements have complete proofs.",
+  "snapshot_note": "Assessment of the final tree. Ten of the eleven entries are formalised; Question 1.4 is open and recorded as a proposition. All three headline statements have complete proofs.",
   "literature_hypotheses": {
     "BoxLike.System.FraserBound": {
-      "lean_location": "BoxLike/FraserChain.lean:78",
-      "exact_statement": "For the given finite nonempty contractive invertible box-like system S: packingDim S.attractor = upperBoxDim S.attractor and upperBoxDim S.attractor <= ofReal S.dimmaff.",
+      "lean_location": "BoxLike/FraserChain.lean:84",
+      "exact_statement": "For the given finite nonempty contractive invertible box-like system S: packingDim S.attractor = upperBoxDim S.attractor and upperBoxDim S.attractor <= ofReal S.dimmaff. A theorem of the library: System.fraserBound_holds (BoxLike/Fraser/UpperBound.lean), along Fraser's proof, with no literature premise. Library statements that take it as a hypothesis receive this proof in Solution; no headline takes it.",
       "citation": "Fraser, Theorem 2.3",
       "verified_source": "https://arxiv.org/html/1108.2639v1#Thmtheorem2.3",
-      "verification": "Read Theorem 2.3 and standing definitions in source. Source assumes at least two maps; Lean proves the single-map case separately. First equality is proved internally, so only the inequality is essential external input. The manuscript uses the upper Minkowski dimension, as the source does."
+      "verification": "Read Theorem 2.3 and standing definitions in source. Source assumes at least two maps; Lean proves the single-map case separately. The first equality is proved separately (System.packingDim_attractor), so the content of the source beyond it is the inequality. The manuscript uses the upper Minkowski dimension, as the source does.",
+      "proof": "Fraser's Section 5, \"Upper bound (assuming no separation conditions)\": his Lemma 5.1 (1) (FraserUpper.exists_sum_modSvfSum_le), the cover of X by the copies φ_𝐢(X) of the δ-stopping words and his bounds (5.7) and (5.8) for the projections give \\overline{\\dim}_M X ≤ dimmaff(X) (System.upperBoxDim_attractor_le_of_modPressure_neg, System.upperBoxDim_attractor_le_dimmaff); the equality \\dim_P X = \\overline{\\dim}_M X is System.packingDim_attractor, and System.fraserBound_iff combines the two."
     },
     "BoxLike.System.FraserROSC": {
-      "lean_location": "BoxLike/FraserChain.lean:85",
-      "exact_statement": "For given finite nonempty S, RectangularOpenSet S implies packingDim, lowerBoxDim and upperBoxDim of the attractor all equal ofReal S.dimmaff.",
+      "lean_location": "BoxLike/FraserChain.lean:92",
+      "exact_statement": "For given finite nonempty S, RectangularOpenSet S implies packingDim, lowerBoxDim and upperBoxDim of the attractor all equal ofReal S.dimmaff. A theorem of the library: System.fraserROSC_holds (BoxLike/Fraser/Main.lean), along Fraser's proof, with no literature premise. Library statements that take it as a hypothesis receive this proof in Solution; no headline takes it.",
       "citation": "Fraser, Theorem 2.3",
       "verified_source": "https://arxiv.org/html/1108.2639v1",
-      "verification": "Rectangular open set condition matches source Definition 1.2. Corollary 2.5 is derived in Lean from this hypothesis and full projections; it is not an additional literature premise."
+      "verification": "Rectangular open set condition matches source Definition 1.2. Corollary 2.5 is derived in Lean from this statement and full projections (System.FraserROSC.dimmaff_eq_dimaff, System.FraserROSC.dim_eq_dimaff).",
+      "proof": "Fraser's Section 5, \"Lower bound (assuming the ROSC)\": the open rectangles φ_𝐢(R), 𝐢 ∈ I_δ, are pairwise disjoint, a square of side 2δ meets boundedly many of them (System.fraserStopSum_meets_le), the projections onto the longer sides have the dimensions s(𝐢), and his Lemma 5.1 (2) (System.exists_le_fraserStopSum) bounds the stopped sums of ψ^t from below, which gives dimmaff(X) ≤ \\underline{\\dim}_M X (System.dimmaff_le_lowerBoxDim); with the first part (System.fraserROSC_of_fraserBound, System.fraserROSC_of_le). In the super-multiplicative case of Lemma 5.1 (2) a block sum takes the place of Fraser's k-block stopping set, which need not be prefix-free (System.exists_le_fraserStopSum_of_ge)."
     },
     "BoxLike.MorrisShmerkinLyapunov": {
-      "lean_location": "BoxLike/Literature.lean:58",
-      "exact_statement": "Universally over finite discrete alphabets and systems S: WithRotations, HasProximalDiagonal, 0<s<2, invariant probability mu and IsEquilibriumState s mu imply lyapunov2 mu < lyapunov1 mu.",
+      "lean_location": "BoxLike/Literature.lean:66",
+      "exact_statement": "Universally over finite discrete alphabets and systems S: WithRotations, HasProximalDiagonal, 0<s<2, invariant probability mu and IsEquilibriumState s mu imply lyapunov2 mu < lyapunov1 mu. A theorem of the library: morrisShmerkinLyapunov_holds (BoxLike/MorrisShmerkin.lean), along Morris-Shmerkin, Lemmas 3.4 and 3.5, with no literature premise. Library statements that take it as a hypothesis receive this proof in Solution; no headline takes it.",
       "citation": "Morris-Shmerkin, Theorem 3.1, arXiv v3",
       "verified_source": "https://arxiv.org/pdf/1602.08789",
       "verification": "PDF identifies v3; Theorem 3.1 on PDF page 8 assumes no common invariant line and a hyperbolic generator. Lean's normalisation implies both. Source multiplication order is reversed, so the transposed tuple is required. Two-sided to one-sided passage remains a documented semantic reduction. Explicit v3 fetch failed, but unversioned PDF fetched and identifies v3."
     },
     "BoxLike.FengKaenmakiGibbs": {
-      "lean_location": "BoxLike/Literature.lean:74",
-      "exact_statement": "Universally over finite discrete alphabets: S.Irreducible, 0<s<2, invariant probability mu and IsEquilibriumState s mu imply HasGibbsBounds s mu.",
+      "lean_location": "BoxLike/Literature.lean:86",
+      "exact_statement": "Universally over finite discrete alphabets: S.Irreducible, 0<s<2, invariant probability mu and IsEquilibriumState s mu imply HasGibbsBounds s mu. A theorem of the library: fengKaenmakiGibbs_holds (BoxLike/QuasiMultiplicative/Main.lean), from fengKaenmakiNormEquilibrium_holds, with no literature premise. Library statements that take it as a hypothesis receive this proof in Solution; no headline takes it.",
       "citation": "Feng-Kaenmaki, Proposition 1.2",
       "verified_source": "https://arxiv.org/html/1009.3129v1",
       "verification": "Read Proposition 1.2 and irreducibility Definition 1.1. Source gives the norm-potential Gibbs bounds for q>0. Use q=s for s<=1 and q=2-s with A'_i=|det A_i|^((s-1)/(2-s)) A_i for 1<s<2. This rescaling and two-sided passage are mathematical reductions, not extra source premises. Uniqueness is not used by main1/main2.",
-      "implied_by": "Implied by the authorised FengKaenmakiNormEquilibrium (FengKaenmakiNormEquilibrium.fengKaenmakiGibbs, BoxLike/LiteratureFengKaenmaki.lean)."
+      "implied_by": "Implied by FengKaenmakiNormEquilibrium (FengKaenmakiNormEquilibrium.fengKaenmakiGibbs, BoxLike/LiteratureFengKaenmaki.lean), which the library proves (fengKaenmakiNormEquilibrium_holds); hence fengKaenmakiGibbs_holds.",
+      "uses": "Taken only by the results stated for irreducible tuples, which receive fengKaenmakiGibbs_holds in Solution; no headline takes it. For box-like tuples with rotations the conclusion is the theorem EquilibriumGibbsStatement (equilibriumGibbs, BoxLike/EquilibriumGibbs.lean), which the main line takes."
     },
     "BoxLike.FraserJordanJurgaDecomposition": {
-      "lean_location": "BoxLike/Literature.lean:92",
+      "lean_location": "BoxLike/Literature.lean:104",
       "exact_statement": "Universally over finite discrete alphabets: WithRotations, HasProximalDiagonal, 0<s<2 and an invariant probability mu with HasGibbsBounds s mu imply existence of mu1,mu2 satisfying GibbsDecomposition s mu mu1 mu2, including ergodic probability Gibbs lifts, their four restricted push-forward decompositions and Lyapunov identities. A theorem of the library: fraserJordanJurgaDecomposition_holds (BoxLike/FraserJordanJurga/Main.lean), with no literature premise; the hypothesis HasProximalDiagonal is not used. Library statements that take it as a hypothesis receive this proof in Solution; no headline takes it.",
       "citation": "Fraser-Jordan-Jurga, Lemma 1.3 and Corollaries 1.5 and 1.6, with Gibbs-measure existence on the mixing SFT as used in their setup",
       "verified_source": "https://arxiv.org/html/1706.06833v2",
@@ -44,21 +47,21 @@
       "proof": "Bowen's theorem (bowenGibbsExistence) gives the ergodic Gibbs measure μ₁ for f_{1,s} on the mixing Σ_Z (System.exists_isGibbs_potential₁), and μ₂ is its image under the exchange of the axes (System.isGibbs_potential₂_map_flipAxis); the image of μ₁ under forgetting the axis has the Gibbs bounds of φ^s, since each word has two lifts and φ^s(A_w) is the larger of the two exponentials (System.hasGibbsBounds_map_unCode); every invariant measure with the Gibbs bounds equals this ergodic measure (System.eq_of_hasGibbsBounds); the four decompositions follow from Σ_Z = τ(Σ) ⊔ ω(Σ) and the exchange of the two ranges; the Lyapunov identities follow from Birkhoff's theorem along the two lifts and the relative-entropy comparison \\overline{λ}(𝖠, μ₂) ≤ \\overline{λ}(𝖠, μ₁) (System.lyapunov_map_unCode_of_isGibbs)."
     },
     "BoxLike.JordanRapaportDimension": {
-      "lean_location": "BoxLike/Literature.lean:105",
+      "lean_location": "BoxLike/Literature.lean:117",
       "exact_statement": "Universally over finite discrete alphabets and S: ProjExpSeparation S and an ergodic invariant probability nu on the full doubled alphabet imply IsExactDim (nu.map S.projBar) (min 1 (-entropy nu / S.lyapBar nu)). No support-on-subshift premise is required.",
       "citation": "Jordan-Rapaport, Theorem 1.1",
       "verified_source": "https://arxiv.org/html/1908.00271v2",
       "verification": "Read Definition 1, Theorem 1.1 and exact-dimensionality convention. Signed nonzero contractions and subsequence exponential separation match. Source uses base-2 logs, while Lean uses natural logs; ratio is unchanged. Two-sided measure is passed to its one-sided factor."
     },
     "BoxLike.FengInfoSumBar": {
-      "lean_location": "BoxLike/LiteratureFeng.lean:57",
+      "lean_location": "BoxLike/LiteratureFeng.lean:59",
       "exact_statement": "Universally over finite discrete alphabets, WithRotations and Proximal S, invariant probability nu supported on subshift S.o, every partition index i: almost surely for every n, -log(condMeas nu (S.xiBar i) y)(cylinder(block n y)) equals the sum over k<n of condInfo nu (S.xiBar i) (shift k y). No ergodicity premise. A theorem of the library: fengInfoSumBar_holds (BoxLike/FengIdentityBar.lean), proved along Feng's Lemmas 4.4 and 4.5 without the constant-multiplicity hypothesis, rotations or proximality. Library statements that take it as a hypothesis receive this proof in Solution; no headline takes it.",
       "citation": "Feng, Lemma 4.6, first identity of (4.16)",
       "source": "https://arxiv.org/html/1901.01691v2",
       "verification": "Lean definition read exactly. A theorem of the library: fengInfoSumBar_holds (BoxLike/FengIdentityBar.lean), proved along Feng's Lemmas 4.4 and 4.5 without the constant-multiplicity hypothesis, rotations or proximality. Library statements that take it as a hypothesis receive this proof in Solution; no headline takes it."
     },
     "BoxLike.FengLedrappierYoung": {
-      "lean_location": "BoxLike/LiteratureFeng.lean:70",
+      "lean_location": "BoxLike/LiteratureFeng.lean:72",
       "exact_statement": "Universally over finite discrete alphabets and S, invariant ergodic probability mu with lyapunov2<lyapunov1: IsExactDim (mu.map S.proj) ((h1-h0)/lyapunov1+(h2-h1)/lyapunov2), where hi=S.dimEntropy mu i.",
       "citation": "Feng, Theorems 1.2 and 1.3",
       "source": "https://arxiv.org/html/1901.01691v2",
@@ -66,14 +69,15 @@
       "implied_by": "Implied by the authorised PlanarFengLedrappierYoung (PlanarFengLedrappierYoung.fengLedrappierYoung, BoxLike/LiteraturePlanarFeng.lean), the first part of thm:feng1 for every planar self-affine set; the headlines take this box-like form."
     },
     "BoxLike.FengLedrappierYoungBar": {
-      "lean_location": "BoxLike/LiteratureFeng.lean:82",
-      "exact_statement": "Universally over finite discrete alphabets, WithRotations and Proximal S, invariant ergodic probability nu supported on subshift S.o: IsExactDim (nu.map S.projBar) ((hbar1-hbar0)/S.lyapBar nu).",
+      "lean_location": "BoxLike/LiteratureFeng.lean:88",
+      "exact_statement": "Universally over finite discrete alphabets, WithRotations and Proximal S, invariant ergodic probability nu supported on subshift S.o: IsExactDim (nu.map S.projBar) ((hbar1-hbar0)/S.lyapBar nu). A theorem of the library from FengLedrappierYoung: fengLedrappierYoungBar_of_fengLedrappierYoung (BoxLike/ProjectiveLineSystem.lean), which uses neither WithRotations nor Proximal. Library statements that take it as a hypothesis receive this proof in Solution; no headline takes it.",
       "citation": "Feng, Theorems 1.2 and 1.3, dimension-one specialisation",
       "source": "https://arxiv.org/html/1901.01691v2",
-      "verification": "Lean definition read exactly. WithRotations and Proximal are unnecessary restrictions of the chosen external boundary, forcing a zero-weight anti-diagonal dummy symbol in the main2 subsystem proof. Detailed source verification belongs to Section 4 review."
+      "verification": "Lean definition read exactly. WithRotations and Proximal are unnecessary: System.isExactDim_map_projBar_of_fengLedrappierYoung proves the formula for every box-like system. The second proof of main2 (main2_noExactOverlaps_all) meets them with a zero-weight anti-diagonal dummy symbol in its subsystem. Detailed source verification belongs to Section 4 review.",
+      "implied_by": "Implied by FengLedrappierYoung (fengLedrappierYoungBar_of_fengLedrappierYoung, BoxLike/ProjectiveLineSystem.lean), through the planar system z ↦ diag(g'_j, g'_j/2) z + (g_j(0), 0) of the projective system, whose attractor lies on the horizontal axis."
     },
     "BoxLike.KittleKoglerDimension": {
-      "lean_location": "BoxLike/Literature.lean:123",
+      "lean_location": "BoxLike/Literature.lean:135",
       "exact_statement": "For every finite alphabet kappa, ratios r_j != 0 with |r_j|<1, real translations t_j, positive real weights p_j summing to one, and injective simWord r t: every stationary probability nu with nu=sum_j ofReal(p_j) times (x -> r_j*x+t_j)_*nu is exact-dimensional with min(1,sum_j negMulLog(p_j)/(-sum_j p_j log|r_j|)).",
       "citation": "Kittle-Kogler, Theorem 1.1, arXiv:2610.10511v1, 7 October 2026",
       "verified_source": "https://arxiv.org/html/2610.10511v1",
@@ -99,29 +103,34 @@
       "line": 422,
       "label": "thm:fraser",
       "kind": "theorem",
-      "status": "cited",
+      "status": "formalized",
       "lean_declarations": [
         "BoxLike.System.FraserBound",
         "BoxLike.System.FraserROSC",
         "BoxLike.System.packingDim_attractor",
         "BoxLike.System.FraserROSC.dimmaff_eq_dimaff",
-        "BoxLike.System.FraserROSC.dim_eq_dimaff"
+        "BoxLike.System.FraserROSC.dim_eq_dimaff",
+        "BoxLike.System.fraserBound_holds",
+        "BoxLike.System.fraserROSC_holds",
+        "BoxLike.System.upperBoxDim_attractor_le_dimmaff",
+        "BoxLike.System.upperBoxDim_attractor_le_of_modPressure_neg",
+        "BoxLike.System.dimmaff_le_lowerBoxDim",
+        "BoxLike.System.exists_le_fraserStopSum",
+        "BoxLike.System.fraserROSC_of_fraserBound"
       ],
-      "literature_hypotheses": [
-        "BoxLike.System.FraserBound",
-        "BoxLike.System.FraserROSC"
-      ],
+      "literature_hypotheses": [],
       "standing_hypotheses": [
         "Finite nonempty box-like contractive invertible affine IFS",
         "ROSC for second and third conclusions",
         "Both coordinate projections have Minkowski dimension one for third conclusion"
       ],
-      "fidelity": "All three assertions represented. Packing=upper-box is proved internally; the remaining source claims enter as explicit Prop hypotheses. Projections' box dimensions exist internally. The upper Minkowski dimension of the manuscript is that of the source.",
+      "fidelity": "All three assertions are proved for every box-like system, in the form of the source: \\dim_P X = \\overline{\\dim}_M X ≤ dimmaff(X) (`System.fraserBound_holds`); under the rectangular open set condition \\dim_P X = \\dim_M X = dimmaff(X) (`System.fraserROSC_holds`; both parts, `paper_1_1_0`); and, if moreover both coordinate projections have Minkowski dimension one, dimmaff(X) = dimaff(X) (`paper_1_1_14`), so that \\dim_P X = \\dim_M X = dimaff(X) (`paper_1_1_13`). No literature premise is used. The box dimensions of the projections exist (`System.lowerBoxDim_coord_eq`). The upper Minkowski dimension of the manuscript is that of the source; without a separation condition the source asserts nothing about the lower Minkowski dimension.",
       "proof_deviations": [
-        "Paper cites Fraser with no proof. Lean proves packing=upper-box by bi-Lipschitz copies and Baire category, and derives the full-projection consequence by equality of singular- value functions in [1,2]. These are added proofs rather than deviations from a supplied prose proof."
+        "Proof: the paper cites Fraser with no proof; the formalisation follows Fraser's proof (arXiv:1108.2639v1, Section 5). The equality \\dim_P X = \\overline{\\dim}_M X follows from bi-Lipschitz copies and Baire category, the argument Fraser quotes (`System.packingDim_attractor`). The upper bound \\overline{\\dim}_M X ≤ dimmaff(X) follows his \"Upper bound (assuming no separation conditions)\": his Lemma 5.1 (1) (`FraserUpper.exists_sum_modSvfSum_le`), the cover of X by the copies φ_𝐢(X) of the δ-stopping words and his bounds (5.7) and (5.8) for the projections (`System.upperBoxDim_attractor_le_of_modPressure_neg`, `System.upperBoxDim_attractor_le_dimmaff`). The lower bound dimmaff(X) ≤ \\underline{\\dim}_M X under the rectangular open set condition follows his \"Lower bound (assuming the ROSC)\": the open rectangles φ_𝐢(R), 𝐢 ∈ I_δ, are pairwise disjoint, a square of side 2δ meets boundedly many of them (`System.fraserStopSum_meets_le`), the projections onto the longer sides have the dimensions s(𝐢), and his Lemma 5.1 (2) (`System.exists_le_fraserStopSum`) bounds the stopped sums of ψ^t from below (`System.dimmaff_le_lowerBoxDim`). Fraser's Corollary 2.5 follows from the second part by equality of the singular value functions on [1, 2] (`System.FraserROSC.dimmaff_eq_dimaff`).",
+        "Deviation from Fraser's proof: in the super-multiplicative case t ≥ s_1 + s_2 of his Lemma 5.1 (2), the proof uses F(𝐢) = ∑_{m<b} ∑_{|𝐣|=m} ψ^t(𝐢𝐣), for a block length b with Ψ_b^t ≥ 1, in place of Fraser's k-block stopping set I_{k,δ}; F satisfies F(𝐢) ≤ ∑_j F(𝐢j) and is comparable with ψ^t (`System.exists_le_fraserStopSum_of_ge`). As Fraser writes it, I_{k,δ} need not be prefix-free, so his (5.5) needs a bounded-multiplicity argument that the formalisation does not use. This concerns Fraser's paper, not the manuscript."
       ],
-      "solution_entry_at_review_start": "PAPER_ENTRY thm:fraser: paper_1_1_1 to paper_1_1_5",
-      "recommended_action": "None: the cited parts are explicit Prop hypotheses with checked sources."
+      "solution_entry_at_review_start": "PAPER_ENTRY thm:fraser: paper_1_1_0 to paper_1_1_14",
+      "recommended_action": "None."
     },
     {
       "number": "1.2",
@@ -138,8 +147,6 @@
         "BoxLike.System.eq_state_proj_dim_all"
       ],
       "literature_hypotheses": [
-        "BoxLike.MorrisShmerkinLyapunov",
-        "BoxLike.FengKaenmakiGibbs",
         "BoxLike.JordanRapaportDimension"
       ],
       "standing_hypotheses": [
@@ -148,6 +155,8 @@
         "Proximal",
         "ProjExpSeparation",
         "mu invariant probability and equilibrium at dimaff. Every value of dimaff is covered.",
+        "Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov, proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library statements take it as a hypothesis and Solution discharges it.",
+        "Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library statements take it as a hypothesis and Solution discharges it.",
         "Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14, proved in BoxLike/FraserJordanJurga/); the library statements take it as a hypothesis and Solution discharges it."
       ],
       "fidelity": "All conclusions are proved for every value of s = dimaff: double-dimensionality, both directions of the failure of exact-dimensionality, and exact dimension one at and above the threshold. Lean quantifies over every equilibrium state and does not need uniqueness or ergodicity as premises. For s >= 2 the exponents coincide, the threshold is one and both values of the minimum are one (main1_of_two_le).",
@@ -176,8 +185,6 @@
         "BoxLike.System.main2_noExactOverlaps_all"
       ],
       "literature_hypotheses": [
-        "BoxLike.MorrisShmerkinLyapunov",
-        "BoxLike.FengKaenmakiGibbs",
         "BoxLike.FengLedrappierYoung",
         "BoxLike.KittleKoglerDimension"
       ],
@@ -189,13 +196,15 @@
         "mu invariant probability equilibrium at dimaff",
         "dimaff<=2-lyapunov1/lyapunov2 OR StrongOpenSet. The headline is proved by the sharp form `System.main2_prose`, which needs neither FengInfoSumBar nor FengLedrappierYoungBar",
         "the Shannon-McMillan-Breiman theorem it takes is the library theorem `shannonMcMillanBreiman`.",
+        "Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov, proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library statements take it as a hypothesis and Solution discharges it.",
+        "Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library statements take it as a hypothesis and Solution discharges it.",
         "Proved inputs: BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5; the library statements take them as hypotheses and Solution discharges them.",
         "Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14, proved in BoxLike/FraserJordanJurga/); the library statements take it as a hypothesis and Solution discharges it."
       ],
       "fidelity": "Full statement proved for every value of dimaff, for every equilibrium state. The all-range endpoint `System.main2_noExactOverlaps_all` (Gibbs/Birkhoff counting with an appended anti-diagonal symbol and an Option alphabet) is an alternative proof.",
       "proof_deviations": [
         "the returns to horizontal orientation come from ergodicity through Cesàro averages (`frequently_measure_inter_shift_ge`) along infinitely many lengths; the prose invokes mixing of μ₁, which is not formalised and not needed.",
-        "the scalar formula for the coordinate entropies of the diagonal subsystem (tex 3717-3721) is derived from the authorised planar `FengLedrappierYoung` applied to the auxiliary box-like system `lineSystem` (z ↦ diag(r, r/2) z + (t_k, 0)), which carries the line system on the horizontal axis; the prose cites Feng's scalar theorem directly, whose literal transcription for diagonal subsystems is the unauthorised proposal `FengLedrappierYoungBarScalar` (BoxLike/Proposals/GScalarFeng.lean), not used."
+        "the scalar formula for the coordinate entropies of the diagonal subsystem (tex 3717-3721) is derived from the authorised planar `FengLedrappierYoung` applied to the auxiliary box-like system `lineSystem` (z ↦ diag(r, r/2) z + (t_k, 0)), which carries the line system on the horizontal axis; the prose cites Feng's scalar theorem directly. The same argument gives the scalar formula for the projective system of every box-like system from `FengLedrappierYoung` (`System.isExactDim_map_projBar_of_fengLedrappierYoung`); this proof does not use it."
       ],
       "solution_entry_at_review_start": "PAPER_ENTRY thm:main2: paper_1_3_1 to paper_1_3_10",
       "recommended_action": "None."

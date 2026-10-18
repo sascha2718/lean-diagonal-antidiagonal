@@ -23,6 +23,7 @@ not part of this module; `thm:main2` does not use it.
 public import BoxLike.AffinityMain
 public import BoxLike.EquilibriumEntropyLarge
 public import BoxLike.EquilibriumEntropySmall
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.FalconerBound
 public import BoxLike.SeparationConditions
 public import BoxLike.StrongOpenSetEntropy
@@ -49,7 +50,7 @@ Depends on: `MorrisShmerkinLyapunov`, `thm:feng1` (planar, `FengLedrappierYoung`
 `thm:eq_state_h1_large`, `thm:orto_partition_dirac`, `thm:SOSC_h2_zero`, `eq:main_extended1`,
 `eq:main_extended2`, `eq:diml_min2`. -/
 theorem main_extended_normalised (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
     (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
@@ -88,7 +89,7 @@ theorem main_extended_normalised (hms : MorrisShmerkinLyapunov.{u})
 `thm:two-block-normalisation`, with the ergodicity hypotheses in the form in which the two cases
 of `thm:box_like_proximal` use them. -/
 theorem main_extended_lt_two_aux (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
     (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal)
@@ -127,7 +128,7 @@ Depends on: `thm:box_like_proximal`, `thm:two-block-normalisation`
 `System.lyapunov₂_sq_map_group`, `System.ProjExpSeparation.sq`, `System.proj_sq_group`,
 `System.StrongOpenSet.sq`). -/
 theorem main_extended_lt_two (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
     (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal)
@@ -142,9 +143,9 @@ theorem main_extended_lt_two (hms : MorrisShmerkinLyapunov.{u})
 /-- `thm:main_extended` for `0 < s < 2` with the ergodicity hypotheses discharged: in
 each case of `thm:box_like_proximal` the ergodicity needed is that of the equilibrium state of a
 tuple containing a proximal diagonal generator, which `ergodic_of_hasProximalDiagonal` derives
-from the hypotheses `FengKaenmakiGibbs` and `FraserJordanJurgaDecomposition`. -/
+from the hypotheses `EquilibriumGibbsStatement` and `FraserJordanJurgaDecomposition`. -/
 theorem main_extended_lt_two' (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
     (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal)
@@ -161,7 +162,7 @@ theorem main_extended_lt_two' (hms : MorrisShmerkinLyapunov.{u})
 /-- The exponentially separated case of `thm:main2` with the two facts `hupper`, `hlower`:
 the ergodicity hypotheses of `main2` are discharged by `main_extended_lt_two'`. -/
 theorem main2_of_bounds (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
     (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation)
@@ -188,7 +189,7 @@ rotations satisfying the projective exponential separation condition and `μ` th
 `s`-equilibrium state for `s = dimaff(𝖠) < 2`. If `h_0(μ) ≤ -λ_2(𝖠, μ)` or `X` satisfies the
 strong open set condition, then `π_*μ` is exact-dimensional with `dim(π_*μ) = dimaff(𝖠)`. -/
 theorem main_extended_dimaff (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
     (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
@@ -209,7 +210,7 @@ projective exponential separation condition such that `dimaff(X) < 2`, and let `
 `\dim_H(X) = dimaff(X)`. The upper bound is Falconer's, `eq:hausdorff_affinity_upper_bound`,
 and the lower bound is `dim(π_*μ) ≤ \dim_H(X)`. -/
 theorem main2 (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
     (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)

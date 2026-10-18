@@ -10,9 +10,9 @@ from the strong open set condition alone."
 
 Here `s` is the parameter of the `s`-equilibrium state `μ`, `s = dimaff(X)` in `thm:main2`, and
 the threshold is `2 - λ_1(𝖠, μ) / λ_2(𝖠, μ)`. The distinctness of the exponents for `s < 2` is
-`eq:simple_lyapunov`, which the article takes from Morris–Shmerkin; it enters as the literature
-hypothesis `MorrisShmerkinLyapunov` through `System.simple_lyapunov`. The other statements are
-proved without literature hypotheses.
+`eq:simple_lyapunov`, which the article takes from Morris–Shmerkin; it enters as the hypothesis
+`MorrisShmerkinLyapunov` through `System.simple_lyapunov`, and the library proves it
+(`morrisShmerkinLyapunov_holds`). The other statements are proved without such hypotheses.
 
 * `one_lt_threshold`, `threshold_lt_two`: `λ_2 < λ_1 < 0` gives `1 < 2 - λ_1/λ_2 < 2`, and
   `λ_2 ≤ λ_1 < 0` gives `0 < λ_1/λ_2 ≤ 1`.
@@ -28,6 +28,7 @@ proved without literature hypotheses.
   `System.main2_of_dimaff_eq_two`: at `dimaff(X) = 2` the hypotheses of `thm:main2` reduce to the
   strong open set condition, which alone gives `dim_H X = dimaff(X)`.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.General
 public import BoxLike.MainTwoEndpoint
 public import BoxLike.ProjectionLarge
@@ -111,9 +112,9 @@ theorem dimaff_le_threshold_of_le_one [Nonempty ι] (h1 : S.dimaff ≤ 1) (μ : 
 /-- Tex line 494, "the absence of projective exact overlaps suffices whenever `dimaff(X) ≤ 1`":
 under the hypotheses of `thm:main2` other than the alternative, `dimaff(X) ≤ 1` gives
 `dim_H X = dimaff(X)`. This applies `thm:main2` (`System.main2_noExactOverlaps_all`) and takes
-its literature hypotheses. -/
+its hypotheses. -/
 theorem main2_of_dimaff_le_one (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
     (hlyb : FengLedrappierYoungBar.{u}) (hkk : KittleKoglerDimension.{u}) [Nonempty ι]
     (hrot : S.WithRotations) (hprox : S.Proximal) (hfree : S.NoExactOverlaps)

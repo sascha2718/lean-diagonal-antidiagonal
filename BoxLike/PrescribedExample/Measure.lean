@@ -69,6 +69,7 @@ The example:
 -/
 public import BoxLike.EntropyEqualityEndpoint
 public import BoxLike.EquilibriumExistence
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.GibbsProperties
 public import BoxLike.Main
 public import BoxLike.PressureZ
@@ -887,14 +888,14 @@ theorem lyapBar_markov {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1) :
 
 /-- `h_0`, `λ_1` and `λ_2` of the `s`-equilibrium state of `ex:projection_double_dimensional`,
 tex lines 3028 to 3048, for `0 < s ≤ 1` with `2 a^s + 2 b^s = 1` and `p = 2 a^s`. By
-`FengKaenmakiGibbs` and `FraserJordanJurgaDecomposition`, every invariant `s`-equilibrium
+`EquilibriumGibbsStatement` and `FraserJordanJurgaDecomposition`, every invariant `s`-equilibrium
 state `μ` has a decomposition of `thm:eq_state_is_sum`, whose Gibbs measures are
 `μ_1 = markov p` and `μ_2 = markov (1 - p)` (`GibbsDecomposition.eq_markov`). Hence
 `μ = q_*(markov p)`; by `thm:entropy_eq_gibbs`, `h_0(μ) = \overline{h}_0(μ_1) = log 2 + H(p)`,
 also in the conditional form `S.dimEntropy μ 0`; and by `thm:eq_state_is_sum`, averaging over
 `μ_1` with the weights `(p, 1 - p)`, `λ_1(𝖠, μ) = ∫ f_{1,1} dμ_1 = p log a + (1 - p) log b` and
 `λ_2(𝖠, μ) = ∫ f_{2,1} dμ_1 = p log b + (1 - p) log a`. -/
-theorem isEquilibriumState_spec (hfk : FengKaenmakiGibbs.{0})
+theorem isEquilibriumState_spec (hfk : EquilibriumGibbsStatement.{0})
     (hfjj : FraserJordanJurgaDecomposition.{0}) (hs0 : 0 < s) (hs1 : s ≤ 1)
     (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) (μ : Measure (ℤ → Fin 4)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : (sys P t).IsEquilibriumState s μ) :
@@ -907,7 +908,7 @@ theorem isEquilibriumState_spec (hfk : FengKaenmakiGibbs.{0})
         prob P s * Real.log P.b + (1 - prob P s) * Real.log P.a := by
   obtain ⟨h0, h1⟩ := prob_pos_lt_one P hP
   have hs2 : s < 2 := by linarith
-  have hgibbs := hfk (sys P t) (irreducible P t) hs0 hs2 μ hinv heq
+  have hgibbs := hfk (sys P t) (withRotations P t) hs0 hs2 μ hinv heq
   obtain ⟨μ₁, μ₂, hdec⟩ := hfjj (sys P t) (withRotations P t) (hasProximalDiagonal P t) hs0 hs2 μ
     hinv hgibbs
   have := hdec.prob₁
@@ -926,7 +927,7 @@ theorem isEquilibriumState_spec (hfk : FengKaenmakiGibbs.{0})
 `0 < s ≤ 1` with `2 a^s + 2 b^s = 1`. Existence is `System.exists_isEquilibriumState`;
 uniqueness follows from `isEquilibriumState_spec`, which identifies every invariant
 `s`-equilibrium state with `q_*(markov p)`, without the uniqueness part of `thm:irred_eq_state`. -/
-theorem existsUnique_isEquilibriumState (hfk : FengKaenmakiGibbs.{0})
+theorem existsUnique_isEquilibriumState (hfk : EquilibriumGibbsStatement.{0})
     (hfjj : FraserJordanJurgaDecomposition.{0}) (hs0 : 0 < s) (hs1 : s ≤ 1)
     (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
     ∃! μ : Measure (ℤ → Fin 4), IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ ∧

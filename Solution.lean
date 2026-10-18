@@ -32,11 +32,10 @@ double-dimensional with the values `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and `min{1,
 It fails to be exact-dimensional, with any dimension, precisely when
 `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`; at equality and above it is exact-dimensional of dimension one.
 The conclusion holds for every `s`-equilibrium state, so the uniqueness of the equilibrium state
-in the paper is not needed. The proof uses the cited theorems of Morris–Shmerkin,
-Feng–Käenmäki and Jordan–Rapaport. -/
+in the paper is not needed. The proof uses the cited theorem of Jordan–Rapaport; the inputs
+the paper takes from Morris–Shmerkin and Feng–Käenmäki are theorems of the library. -/
 theorem audit_main1 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-    (S : System ι) (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
-    (hjr : JordanRapaportDimension.{u})
+    (S : System ι) (hjr : JordanRapaportDimension.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ) (c : ZMod 2) :
@@ -49,7 +48,7 @@ theorem audit_main1 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableS
     isEquilibriumState_iff] at hrot hprox hsep hinv heq
   simp only [isDoubleDim_iff, isExactDim_iff, marginal_eq, entropy_eq, lyapunov₁_eq,
     lyapunov₂_eq, dimaff_eq]
-  exact (toLib S).main1_dimaff_all (morrisShmerkinLyapunov hms) (fengKaenmakiGibbs hfk)
+  exact (toLib S).main1_dimaff_all BoxLike.morrisShmerkinLyapunov_holds BoxLike.equilibriumGibbs
     BoxLike.fraserJordanJurgaDecomposition_holds (jordanRapaportDimension hjr) hrot hprox hsep μ
     hinv heq c
 
@@ -60,11 +59,10 @@ rotations satisfying the projective exponential separation condition, and let `�
 `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and `min{1, -h_0(μ)/λ_2(𝖠, μ)}`, their upper packing dimension is
 `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and their lower Hausdorff dimension is `min{1, -h_0(μ)/λ_2(𝖠, μ)}`.
 The conclusion holds for every `s`-equilibrium state, so its uniqueness and ergodicity in the
-paper are not needed. The proof uses the cited theorems of Morris–Shmerkin, Feng–Käenmäki and
-Jordan–Rapaport; for `s ≥ 2` only Jordan–Rapaport is used. -/
+paper are not needed. The proof uses the cited theorem of Jordan–Rapaport; the inputs the
+paper takes from Morris–Shmerkin and Feng–Käenmäki are theorems of the library. -/
 theorem audit_eq_state_proj_dim {ι : Type u} [Fintype ι] [MeasurableSpace ι]
-    [MeasurableSingletonClass ι] (S : System ι) {s : ℝ} (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u})
+    [MeasurableSingletonClass ι] (S : System ι) {s : ℝ}
     (hjr : JordanRapaportDimension.{u}) (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
@@ -77,9 +75,9 @@ theorem audit_eq_state_proj_dim {ι : Type u} [Fintype ι] [MeasurableSpace ι]
     isEquilibriumState_iff] at hrot hprox hsep hinv heq
   simp only [isDoubleDim_iff, upperPackingDim_eq, lowerHausdorffDim_eq, marginal_eq, entropy_eq,
     lyapunov₁_eq, lyapunov₂_eq]
-  exact (toLib S).eq_state_proj_dim_all (morrisShmerkinLyapunov hms) (fengKaenmakiGibbs hfk)
-    BoxLike.fraserJordanJurgaDecomposition_holds (jordanRapaportDimension hjr) hrot hprox hsep hs0
-    μ hinv heq c
+  exact (toLib S).eq_state_proj_dim_all BoxLike.morrisShmerkinLyapunov_holds
+    BoxLike.equilibriumGibbs BoxLike.fraserJordanJurgaDecomposition_holds
+    (jordanRapaportDimension hjr) hrot hprox hsep hs0 μ hinv heq c
 
 /-! ## Dimension of the equilibrium state and of the self-affine set -/
 
@@ -88,12 +86,10 @@ whose projective system has no exact overlaps, and let `μ` be an
 `s`-equilibrium state for `s = dimaff(X)`. If
 `dimaff(X) ≤ 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`, or if `X` satisfies the strong open set condition, then
 `dim_H(X) = dimaff(X)`. Any `s`-equilibrium state may serve as `μ`. The proof uses the cited
-theorems of Morris–Shmerkin, Feng–Käenmäki, Feng (the planar Ledrappier–Young formula)
-and Kittle–Kogler. -/
+theorems of Feng (the planar Ledrappier–Young formula) and Kittle–Kogler; the inputs the paper
+takes from Morris–Shmerkin and Feng–Käenmäki are theorems of the library. -/
 theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-    (S : System ι) (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u})
-    (hly : FengLedrappierYoung.{u}) (hkk : KittleKoglerDimension.{u})
+    (S : System ι) (hly : FengLedrappierYoung.{u}) (hkk : KittleKoglerDimension.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hfree : S.NoExactOverlaps) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
@@ -104,8 +100,8 @@ theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableS
     isEquilibriumState_iff, lyapunov₁_eq, lyapunov₂_eq, strongOpenSet_iff]
     at hrot hprox hfree hinv heq hor
   rw [attractor_eq, dimaff_eq]
-  exact (toLib S).main2_prose BoxLike.shannonMcMillanBreiman (morrisShmerkinLyapunov hms)
-    (fengKaenmakiGibbs hfk) BoxLike.fraserJordanJurgaDecomposition_holds (fengLedrappierYoung hly)
+  exact (toLib S).main2_prose BoxLike.shannonMcMillanBreiman BoxLike.morrisShmerkinLyapunov_holds
+    BoxLike.equilibriumGibbs BoxLike.fraserJordanJurgaDecomposition_holds (fengLedrappierYoung hly)
     (kittleKoglerDimension hkk) hrot hprox hfree μ hinv heq hor
 
 /-- Theorem 4.16 (`thm:main_extended`). Let `X` be a proximal box-like self-affine set with
@@ -113,13 +109,13 @@ rotations satisfying the projective exponential separation condition, and let `�
 `s`-equilibrium state for `s = dimaff(𝖠)`. If `h_0(μ) ≤ -λ_2(𝖠, μ)` or `X` satisfies the strong
 open set condition, then `π_*μ` is exact-dimensional with `dim(π_*μ) = min{2, dimaff(𝖠)}`. The
 conclusion holds for every `s`-equilibrium state, so its uniqueness in the paper is not needed.
-The proof uses the cited theorems of Morris–Shmerkin, Feng–Käenmäki, Jordan–Rapaport and
-Feng (the two Ledrappier–Young formulas). -/
+The proof uses the cited theorems of Jordan–Rapaport and Feng (the planar Ledrappier–Young
+formula, which gives the scalar one through
+`BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung`); the inputs the paper takes from
+Morris–Shmerkin and Feng–Käenmäki are theorems of the library. -/
 theorem audit_main_extended {ι : Type u} [Fintype ι] [MeasurableSpace ι]
-    [MeasurableSingletonClass ι] (S : System ι) (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u})
-    (hjr : JordanRapaportDimension.{u})
-    (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
+    [MeasurableSingletonClass ι] (S : System ι) (hjr : JordanRapaportDimension.{u})
+    (hly : FengLedrappierYoung.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsep : S.ProjExpSeparation) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
@@ -129,9 +125,10 @@ theorem audit_main_extended {ι : Type u} [Fintype ι] [MeasurableSpace ι]
     isEquilibriumState_iff, entropy_eq, lyapunov₂_eq, strongOpenSet_iff]
     at hrot hprox hsep hinv heq hor
   rw [isExactDim_iff, proj_eq, dimaff_eq]
-  exact (toLib S).main_extended_min (morrisShmerkinLyapunov hms) (fengKaenmakiGibbs hfk)
-    BoxLike.fraserJordanJurgaDecomposition_holds (jordanRapaportDimension hjr) BoxLike.fengInfoSum_holds
-    BoxLike.fengInfoSumBar_holds (fengLedrappierYoung hly) (fengLedrappierYoungBar hlyb) hrot hprox
+  exact (toLib S).main_extended_min BoxLike.morrisShmerkinLyapunov_holds BoxLike.equilibriumGibbs
+    BoxLike.fraserJordanJurgaDecomposition_holds (jordanRapaportDimension hjr)
+    BoxLike.fengInfoSum_holds BoxLike.fengInfoSumBar_holds (fengLedrappierYoung hly)
+    (BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung (fengLedrappierYoung hly)) hrot hprox
     hsep μ hinv heq hor
 
 /-- Theorem 4.16 (`thm:main_extended`), the case `s = dimaff(𝖠) ≥ 2`, with `s` entering as a
@@ -157,13 +154,13 @@ the formula that the paper derives in the paragraph after (4.4)
 `dim(π_*μ) ≤ dim_H(X)`, and the upper bound is Falconer's bound (3.7)
 (`eq:hausdorff_affinity_upper_bound`), which holds for every box-like set. For `dimaff(X) < 2`
 and the first alternative in the form `dimaff(X) ≤ 2 - λ_1/λ_2` this is Theorem 1.3. Any
-`s`-equilibrium state for `s = dimaff(X)` may serve as `μ`. The proof uses the cited theorems of Morris–Shmerkin, Feng–Käenmäki, Jordan–Rapaport and
-Feng (the two Ledrappier–Young formulas). -/
+`s`-equilibrium state for `s = dimaff(X)` may serve as `μ`. The proof uses the cited theorems
+of Jordan–Rapaport and Feng (the planar Ledrappier–Young formula, which gives the scalar one
+through `BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung`); the inputs the paper takes from
+Morris–Shmerkin and Feng–Käenmäki are theorems of the library. -/
 theorem audit_dimH_eq_min {ι : Type u} [Fintype ι] [MeasurableSpace ι]
-    [MeasurableSingletonClass ι] (S : System ι) (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u})
-    (hjr : JordanRapaportDimension.{u})
-    (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
+    [MeasurableSingletonClass ι] (S : System ι) (hjr : JordanRapaportDimension.{u})
+    (hly : FengLedrappierYoung.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsep : S.ProjExpSeparation) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
@@ -173,9 +170,11 @@ theorem audit_dimH_eq_min {ι : Type u} [Fintype ι] [MeasurableSpace ι]
     isEquilibriumState_iff, entropy_eq, lyapunov₂_eq, strongOpenSet_iff]
     at hrot hprox hsep hinv heq hor
   rw [attractor_eq, dimaff_eq]
-  exact (toLib S).dimH_attractor_eq_min (morrisShmerkinLyapunov hms) (fengKaenmakiGibbs hfk)
-    BoxLike.fraserJordanJurgaDecomposition_holds (jordanRapaportDimension hjr) BoxLike.fengInfoSum_holds
-    BoxLike.fengInfoSumBar_holds (fengLedrappierYoung hly) (fengLedrappierYoungBar hlyb) hrot hprox
+  exact (toLib S).dimH_attractor_eq_min BoxLike.morrisShmerkinLyapunov_holds
+    BoxLike.equilibriumGibbs BoxLike.fraserJordanJurgaDecomposition_holds
+    (jordanRapaportDimension hjr) BoxLike.fengInfoSum_holds BoxLike.fengInfoSumBar_holds
+    (fengLedrappierYoung hly)
+    (BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung (fengLedrappierYoung hly)) hrot hprox
     hsep μ hinv heq hor
 
 /-- `dim_H(X) = 2` when `dimaff(X) ≥ 2` and `X` satisfies the strong open set condition: the
@@ -210,35 +209,94 @@ namespace Solution.Paper
 universe u
 
 -- PAPER_ENTRY thm:fraser
-/-! 1.1 (`thm:fraser`): cited.
-Literature hypotheses: BoxLike.System.FraserBound, BoxLike.System.FraserROSC.
-  BoxLike.System.FraserBound: Fraser, Theorem 2.3.
-  BoxLike.System.FraserROSC: Fraser, Theorem 2.3.
+/-! 1.1 (`thm:fraser`): formalized.
+Literature hypotheses: none.
+Proved input: BoxLike.System.FraserBound (`System.fraserBound_holds`, Fraser, Theorem 2.3, first
+part, proved in BoxLike/Fraser/Upper.lean and BoxLike/Fraser/UpperBound.lean); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.System.FraserROSC (`System.fraserROSC_holds`, Fraser, Theorem 2.3, second
+part, proved in BoxLike/Fraser/LowerStop.lean, LowerCover.lean, Lower.lean and Main.lean); the
+library statements take it as a hypothesis and Solution discharges it.
 
 Other inputs: Finite nonempty box-like contractive invertible affine IFS; ROSC for second and
 third conclusions; Both coordinate projections have Minkowski dimension one for third conclusion
 
-Fidelity: All three assertions represented. Packing=upper-box is proved internally; the remaining
-source claims enter as explicit Prop hypotheses. Projections' box dimensions exist internally.
-The upper Minkowski dimension of the manuscript is that of the source.
+Fidelity: All three assertions are proved for every box-like system, in the form of the source:
+\dim_P X = \overline{\dim}_M X ≤ dimmaff(X) (`System.fraserBound_holds`); under the rectangular
+open set condition \dim_P X = \dim_M X = dimmaff(X) (`System.fraserROSC_holds`; both parts,
+`paper_1_1_0`); and, if moreover both coordinate projections have Minkowski dimension one,
+dimmaff(X) = dimaff(X) (`paper_1_1_14`), so that \dim_P X = \dim_M X = dimaff(X)
+(`paper_1_1_13`). The box dimensions of the projections exist (`System.lowerBoxDim_coord_eq`).
+The upper Minkowski dimension of the manuscript is that of the source; without a separation
+condition the source asserts nothing about the lower Minkowski dimension.
 
-PROOF DEVIATION: Paper cites Fraser with no proof. Lean proves packing=upper-box by bi-Lipschitz
-copies and Baire category, and derives the full-projection consequence by equality of singular-
-value functions in [1,2]. These are added proofs rather than deviations from a supplied prose
-proof.
+Proof: the paper cites Fraser with no proof; the formalisation follows Fraser's proof, with the
+deviation below. The equality \dim_P X = \overline{\dim}_M X follows from bi-Lipschitz copies and
+Baire category, the argument Fraser quotes (`System.packingDim_attractor`). The upper bound
+\overline{\dim}_M X ≤ dimmaff(X) follows Fraser's Section 5, "Upper bound (assuming no separation
+conditions)": his Lemma 5.1 (1) (`FraserUpper.exists_sum_modSvfSum_le`), the cover of X by the
+copies φ_𝐢(X) of the δ-stopping words and his bounds (5.7) and (5.8) for the projections
+(`System.upperBoxDim_attractor_le_of_modPressure_neg`, `System.upperBoxDim_attractor_le_dimmaff`).
+The lower bound dimmaff(X) ≤ \underline{\dim}_M X under the rectangular open set condition
+follows his "Lower bound (assuming the ROSC)": the open rectangles φ_𝐢(R), 𝐢 ∈ I_δ, are pairwise
+disjoint, a square of side 2δ meets boundedly many of them (`System.fraserStopSum_meets_le`),
+the projections onto the longer sides have the dimensions s(𝐢), and his Lemma 5.1 (2)
+(`System.exists_le_fraserStopSum`) bounds the stopped sums of ψ^t from below
+(`System.dimmaff_le_lowerBoxDim`). Fraser's Corollary 2.5 follows from the second part by
+equality of the singular value functions on [1, 2] (`System.FraserROSC.dimmaff_eq_dimaff`).
+
+PROOF DEVIATION: in the super-multiplicative case t ≥ s_1 + s_2 of Fraser's Lemma 5.1 (2), the
+proof uses F(𝐢) = ∑_{m<b} ∑_{|𝐣|=m} ψ^t(𝐢𝐣), for a block length b with Ψ_b^t ≥ 1, in place of
+Fraser's k-block stopping set I_{k,δ}; F satisfies F(𝐢) ≤ ∑_j F(𝐢j) and is comparable with ψ^t
+(`System.exists_le_fraserStopSum_of_ge`). As Fraser writes it, I_{k,δ} need not be prefix-free,
+so his (5.5) needs a bounded-multiplicity argument that the formalisation does not use.
 -/
+/-- `thm:fraser` for every box-like self-affine set, with no literature premise: both parts of
+Fraser's Theorem 2.3 hold. -/
+theorem paper_1_1_0 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι) :
+    S.FraserBound ∧ S.FraserROSC :=
+  ⟨S.fraserBound_holds, S.fraserROSC_holds⟩
 noncomputable abbrev paper_1_1_1 := @BoxLike.System.FraserBound
 noncomputable abbrev paper_1_1_2 := @BoxLike.System.FraserROSC
 noncomputable abbrev paper_1_1_3 := @BoxLike.System.packingDim_attractor
 noncomputable abbrev paper_1_1_4 := @BoxLike.System.FraserROSC.dimmaff_eq_dimaff
 noncomputable abbrev paper_1_1_5 := @BoxLike.System.FraserROSC.dim_eq_dimaff
+noncomputable abbrev paper_1_1_6 := @BoxLike.System.fraserBound_holds
+noncomputable abbrev paper_1_1_7 := @BoxLike.System.fraserROSC_holds
+noncomputable abbrev paper_1_1_8 := @BoxLike.System.upperBoxDim_attractor_le_dimmaff
+noncomputable abbrev paper_1_1_9 := @BoxLike.System.upperBoxDim_attractor_le_of_modPressure_neg
+noncomputable abbrev paper_1_1_10 := @BoxLike.System.dimmaff_le_lowerBoxDim
+noncomputable abbrev paper_1_1_11 := @BoxLike.System.exists_le_fraserStopSum
+noncomputable abbrev paper_1_1_12 := @BoxLike.System.fraserROSC_of_fraserBound
+/-- `thm:fraser`, third part (Fraser's Corollary 2.5), with no literature premise: under the
+rectangular open set condition, if both coordinate projections of `X` have Minkowski dimension
+one, then `\dim_P X = \dim_M X = dimaff(X)`. -/
+theorem paper_1_1_13 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι)
+    (hrosc : S.RectangularOpenSet)
+    (hproj : ∀ c, BoxLike.upperBoxDim (BoxLike.System.coord c '' S.attractor) = 1) :
+    BoxLike.packingDim S.attractor = ENNReal.ofReal S.dimaff ∧
+      BoxLike.lowerBoxDim S.attractor = ENNReal.ofReal S.dimaff ∧
+      BoxLike.upperBoxDim S.attractor = ENNReal.ofReal S.dimaff :=
+  S.fraserROSC_holds.dim_eq_dimaff hrosc hproj
+/-- `thm:fraser`, third part, as the paper states it, with no literature premise: under the
+rectangular open set condition, if both coordinate projections of `X` have Minkowski dimension
+one, then `dimmaff(X) = dimaff(X)`. -/
+theorem paper_1_1_14 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι)
+    (hrosc : S.RectangularOpenSet)
+    (hproj : ∀ c, BoxLike.upperBoxDim (BoxLike.System.coord c '' S.attractor) = 1) :
+    S.dimmaff = S.dimaff :=
+  S.fraserROSC_holds.dimmaff_eq_dimaff hrosc hproj
 
 -- PAPER_ENTRY thm:main1
 /-! 1.2 (`thm:main1`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs, BoxLike.JordanRapaportDimension.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: BoxLike.JordanRapaportDimension.
   BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
 proved in BoxLike/FraserJordanJurga/); the library statements take it as a hypothesis and Solution
 discharges it.
@@ -268,11 +326,15 @@ noncomputable abbrev paper_1_2_6 := @BoxLike.System.eq_state_proj_dim_all
 
 -- PAPER_ENTRY thm:main2
 /-! 1.3 (`thm:main2`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs, BoxLike.FengLedrappierYoung, BoxLike.KittleKoglerDimension.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: BoxLike.FengLedrappierYoung, BoxLike.KittleKoglerDimension.
   BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
   BoxLike.KittleKoglerDimension: Kittle-Kogler, Theorem 1.1, arXiv:2610.10511v1, 7 October 2026.
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved inputs: BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5;
 the library statements take them as hypotheses and Solution discharges them.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
@@ -308,9 +370,10 @@ mixing of μ₁, which is not formalised and not needed.
 PROOF DEVIATION: the scalar formula for the coordinate entropies of the diagonal subsystem
 (tex 3716-3721) is derived from the authorised planar `FengLedrappierYoung` applied to the
 auxiliary box-like system `lineSystem` (z ↦ diag(r, r/2) z + (t_k, 0)), which carries the line
-system on the horizontal axis; the prose cites Feng's scalar theorem directly, whose literal
-transcription for diagonal subsystems is the unauthorised proposal `FengLedrappierYoungBarScalar`
-(BoxLike/Proposals/GScalarFeng.lean), not used.
+system on the horizontal axis; the prose cites Feng's scalar theorem directly. The same
+argument gives the scalar formula for the projective system of every box-like system from
+`FengLedrappierYoung` (`System.isExactDim_map_projBar_of_fengLedrappierYoung`); this proof does
+not use it.
 
 The all-range endpoint `System.main2_noExactOverlaps_all` (Gibbs/Birkhoff counting with an
 appended anti-diagonal symbol and an Option alphabet) is an alternative proof.
@@ -749,23 +812,34 @@ noncomputable abbrev paper_3_9_3 := @BoxLike.System.image_unCode_xiBar_inter_cyl
 
 -- PAPER_ENTRY thm:irred_eq_state
 /-! 3.10 (`thm:irred_eq_state`): formalized.
-Literature hypotheses: BoxLike.FengKaenmakiNormEquilibrium; for the box-like endpoint
-BoxLike.FengKaenmakiGibbs, BoxLike.FengKaenmakiUnique.
-  BoxLike.FengKaenmakiNormEquilibrium: Feng-Kaenmaki, Discrete Contin. Dyn. Syst. 30 (2011),
-    Proposition 1.2, for real planar invertible irreducible tuples and the potential ‖·‖^q on
-    the one-sided shift (arXiv:1009.3129v1); authorised by the project owner.
-  BoxLike.FengKaenmakiGibbs, BoxLike.FengKaenmakiUnique: its box-like specialisations
-    (`FengKaenmakiNormEquilibrium.fengKaenmakiGibbs`, `.fengKaenmakiUnique`).
+Literature hypotheses: none.
+Proved input: BoxLike.FengKaenmakiNormEquilibrium (`fengKaenmakiNormEquilibrium_holds`,
+Feng-Kaenmaki, Discrete Contin. Dyn. Syst. 30 (2011), Proposition 1.2, for real planar invertible
+irreducible tuples and the potential ‖·‖^q on the one-sided shift, read in arXiv:1009.3129v1,
+proved in BoxLike/QuasiMultiplicative/); the general endpoint
+`MatrixTuple.irred_eq_state_of_fengKaenmaki` takes it as a hypothesis and Solution discharges it
+(`paper_3_10_25`).
+Proved inputs: BoxLike.FengKaenmakiGibbs (`fengKaenmakiGibbs_holds`) and
+BoxLike.FengKaenmakiUnique (`fengKaenmakiUnique_holds`), its box-like specialisations
+(`FengKaenmakiNormEquilibrium.fengKaenmakiGibbs`, `.fengKaenmakiUnique`); the irreducible
+box-like endpoint `System.irred_eq_state` takes them as hypotheses and Solution discharges them
+(`paper_3_10_26`).
 
-Other inputs: an irreducible tuple of invertible planar matrices (`TupleIrreducible`) and s>0.
-The cited theorem enters for 0<s<2 only.
+Other inputs: an irreducible tuple of invertible planar matrices (`TupleIrreducible`) and s>0;
+Feng-Kaenmaki, Proposition 1.2, enters for 0<s<2 only. The endpoint for tuples with rotations
+takes a box-like System with rotations and s>0.
 
 Fidelity: the full statement at the article's scope, every irreducible tuple in GL_2(R)^N and
 every s>0: existence, uniqueness, ergodicity and the Gibbs bounds of the s-equilibrium state
-(`MatrixTuple.irred_eq_state_of_fengKaenmaki`). The box-like endpoint `System.irred_eq_state` is
-its specialisation from the box-like predicates. Existence of an ergodic equilibrium state for
-every invertible tuple and s>=0, reducible or not (tex 2217-2218), is
-`MatrixTuple.exists_ergodic_isEquilibriumState`, without literature input.
+(`MatrixTuple.irred_eq_state_of_fengKaenmaki`; with no premise, `paper_3_10_25`). The box-like
+endpoint `System.irred_eq_state` is its specialisation from the box-like predicates (with no
+premise, `paper_3_10_26`). Existence of an ergodic equilibrium state for every invertible tuple
+and s>=0, reducible or not (tex 2217-2218), is `MatrixTuple.exists_ergodic_isEquilibriumState`,
+without literature input. For box-like tuples
+with rotations, which need not be irreducible and are the tuples of the main results, the full
+statement holds for every s>0 with no literature premise (`System.irred_eq_state_of_withRotations`);
+the main line takes its Gibbs bounds through `EquilibriumGibbsStatement` (`equilibriumGibbs`) and
+its uniqueness through `System.unique_of_withRotations`.
 
 Proof: as in the prose: existence by the variational construction
 (`MatrixTuple.exists_isEquilibriumState`); for 0<s<2 the norm potential for s<=1 and the
@@ -777,6 +851,31 @@ determinant Bernoulli calculation (`MatrixTuple.irred_eq_state_of_two_le`). Ergo
 from uniqueness (`MatrixTuple.ergodic_of_unique`), which the source states as a remark after its
 (1.4); the article credits the whole proposition to Feng-Kaenmaki, whose Proposition 1.2 does not
 cover s>=2.
+
+Proof of Feng-Kaenmaki, Proposition 1.2 (BoxLike/QuasiMultiplicative/,
+`fengKaenmakiNormEquilibrium_holds`), along the architecture of Bowen's theorem: the norm of an
+irreducible tuple is quasi-multiplicative with connecting words of length at most one, by
+compactness of the unit sphere of the matrices, and invertibility is not needed
+(`MatrixTuple.normQuasiMultiplicative_of_irreducible`); for q>0 the periodic-orbit measures of
+‖·‖^q satisfy uniform Gibbs bounds for every fixed word once their period is large, a weak-star
+limit point is an invariant Gibbs measure, and a Gibbs measure is ergodic by a quasi-Bernoulli
+lower bound (`normGibbsExistence`, `MatrixTuple.HasNormGibbs.ergodic`); for every q>=0 an
+invariant q-equilibrium state μ on Σ satisfies D_n(μ ‖ μ_q) <= log C on the cylinder partitions,
+so μ ≪ μ_q and μ = μ_q (`MatrixTuple.IsNormEquilibrium.eq_of_hasNormGibbs`); the one-sided
+statement follows through the natural extension (`exists_map_eta_eq`,
+`MatrixTuple.hasNormGibbsPlus_map_eta_iff`, `fengKaenmakiNormEquilibrium_of_normGibbsExistence`).
+
+Proof for tuples with rotations: for 0<s<2 the image μ_G = q_*μ₁ of Bowen's ergodic Gibbs
+measure μ₁ for f_{1,s} on Σ_Z has the Gibbs bounds with a constant K
+(`System.exists_isGibbs_potential₁`, `System.hasGibbsBounds_map_unCode`); for an invariant
+s-equilibrium state μ the equilibrium equation at level n and the lower Gibbs bound give the
+relative entropy bound D_n(μ ‖ μ_G) ≤ log K on the cylinder partitions
+(`IsEquilibriumState.blockRelEntropy_le`), hence μ ≪ μ_G
+(`absolutelyContinuous_of_blockRelEntropy_le`) and μ = μ_G, since μ_G is ergodic
+(`IsEquilibriumState.eq_map_unCode`); for s>=2 μ is the Bernoulli measure of 3.12. Uniqueness,
+ergodicity and the Gibbs bounds follow (`System.unique_of_withRotations`,
+`IsEquilibriumState.ergodic_of_withRotations`,
+`IsEquilibriumState.hasGibbsBounds_of_withRotations`).
 -/
 noncomputable abbrev paper_3_10_0 := @BoxLike.MatrixTuple.irred_eq_state_of_fengKaenmaki
 noncomputable abbrev paper_3_10_1 := @BoxLike.System.irred_eq_state
@@ -795,11 +894,68 @@ noncomputable abbrev paper_3_10_12 := @BoxLike.FengKaenmakiNormEquilibrium.svf
 noncomputable abbrev paper_3_10_13 := @BoxLike.FengKaenmakiNormEquilibrium.twoSided
 noncomputable abbrev paper_3_10_14 := @BoxLike.FengKaenmakiNormEquilibrium.fengKaenmakiGibbs
 noncomputable abbrev paper_3_10_15 := @BoxLike.FengKaenmakiNormEquilibrium.fengKaenmakiUnique
+noncomputable abbrev paper_3_10_16 := @BoxLike.System.irred_eq_state_of_withRotations
+noncomputable abbrev paper_3_10_17 := @BoxLike.System.unique_of_withRotations
+noncomputable abbrev paper_3_10_18 := @BoxLike.System.IsEquilibriumState.ergodic_of_withRotations
+noncomputable abbrev paper_3_10_19 :=
+  @BoxLike.System.IsEquilibriumState.hasGibbsBounds_of_withRotations
+noncomputable abbrev paper_3_10_20 :=
+  @BoxLike.System.existsUnique_isEquilibriumState_of_withRotations
+noncomputable abbrev paper_3_10_21 := @BoxLike.System.IsEquilibriumState.eq_map_unCode
+noncomputable abbrev paper_3_10_22 := @BoxLike.System.IsEquilibriumState.blockRelEntropy_le
+noncomputable abbrev paper_3_10_23 := @BoxLike.absolutelyContinuous_of_blockRelEntropy_le
+/-- The Gibbs bounds of `thm:irred_eq_state` for tuples with rotations, as the main line takes
+them: `EquilibriumGibbsStatement` holds. -/
+theorem paper_3_10_24 : BoxLike.EquilibriumGibbsStatement.{u} := BoxLike.equilibriumGibbs
+open MeasureTheory in
+/-- `thm:irred_eq_state` at the article's scope, with no literature premise: for an irreducible
+tuple of invertible planar matrices and every `s > 0` there is a unique invariant
+`s`-equilibrium state, and it is ergodic with the Gibbs bounds. `FengKaenmakiNormEquilibrium` is
+`fengKaenmakiNormEquilibrium_holds`. -/
+theorem paper_3_10_25 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+    (A : ι → Matrix (Fin 2) (Fin 2) ℝ) (hA : ∀ i, (A i).det ≠ 0)
+    (hirr : BoxLike.TupleIrreducible A) {s : ℝ} (hs0 : 0 < s) :
+    ∃ μ : Measure (ℤ → ι), IsProbabilityMeasure μ ∧ MeasurePreserving (BoxLike.shift 1) μ μ ∧
+      BoxLike.MatrixTuple.IsEquilibriumState A s μ ∧
+      (∀ ν : Measure (ℤ → ι), IsProbabilityMeasure ν → MeasurePreserving (BoxLike.shift 1) ν ν →
+        BoxLike.MatrixTuple.IsEquilibriumState A s ν → ν = μ) ∧
+      Ergodic (BoxLike.shift 1) μ ∧ BoxLike.MatrixTuple.HasGibbsBounds A s μ :=
+  BoxLike.MatrixTuple.irred_eq_state_of_fengKaenmaki BoxLike.fengKaenmakiNormEquilibrium_holds A hA
+    hirr hs0
+open MeasureTheory in
+/-- `thm:irred_eq_state` for irreducible box-like systems, with no literature premise:
+`FengKaenmakiGibbs` and `FengKaenmakiUnique` are `fengKaenmakiGibbs_holds` and
+`fengKaenmakiUnique_holds`. -/
+theorem paper_3_10_26 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+    (S : BoxLike.System ι) (hirr : S.Irreducible) {s : ℝ} (hs0 : 0 < s) :
+    ∃ μ : Measure (ℤ → ι), IsProbabilityMeasure μ ∧ MeasurePreserving (BoxLike.shift 1) μ μ ∧
+      S.IsEquilibriumState s μ ∧
+      (∀ ν : Measure (ℤ → ι), IsProbabilityMeasure ν → MeasurePreserving (BoxLike.shift 1) ν ν →
+        S.IsEquilibriumState s ν → ν = μ) ∧
+      Ergodic (BoxLike.shift 1) μ ∧ S.HasGibbsBounds s μ :=
+  S.irred_eq_state BoxLike.fengKaenmakiGibbs_holds BoxLike.fengKaenmakiUnique_holds hirr hs0
+/-- Feng–Käenmäki, Proposition 1.2, in the form of the source: `FengKaenmakiNormEquilibrium`
+holds. -/
+theorem paper_3_10_27 : BoxLike.FengKaenmakiNormEquilibrium.{u} :=
+  BoxLike.fengKaenmakiNormEquilibrium_holds
+/-- The Gibbs bounds of `thm:irred_eq_state` for irreducible box-like tuples and `0 < s < 2`:
+`FengKaenmakiGibbs` holds. -/
+theorem paper_3_10_28 : BoxLike.FengKaenmakiGibbs.{u} := BoxLike.fengKaenmakiGibbs_holds
+/-- The uniqueness part of `thm:irred_eq_state` for irreducible box-like tuples and
+`0 < s < 2`: `FengKaenmakiUnique` holds. -/
+theorem paper_3_10_29 : BoxLike.FengKaenmakiUnique.{u} := BoxLike.fengKaenmakiUnique_holds
+noncomputable abbrev paper_3_10_30 := @BoxLike.fengKaenmakiNormEquilibrium_of_normGibbsExistence
+noncomputable abbrev paper_3_10_31 := @BoxLike.normGibbsExistence
+noncomputable abbrev paper_3_10_32 := @BoxLike.MatrixTuple.normQuasiMultiplicative_of_irreducible
+noncomputable abbrev paper_3_10_33 := @BoxLike.MatrixTuple.IsNormEquilibrium.eq_of_hasNormGibbs
+noncomputable abbrev paper_3_10_34 := @BoxLike.MatrixTuple.HasNormGibbs.ergodic
+noncomputable abbrev paper_3_10_35 := @BoxLike.MatrixTuple.exists_ergodic_hasNormGibbs_forall_eq
+noncomputable abbrev paper_3_10_36 :=
+  @BoxLike.MatrixTuple.NormQuasiMultiplicative.exists_ergodic_hasNormGibbs
 
 -- PAPER_ENTRY thm:two-block-normalisation
 /-! 3.11 (`thm:two-block-normalisation`): formalized.
-Literature hypotheses: BoxLike.FengKaenmakiUnique.
-  BoxLike.FengKaenmakiUnique: Feng-Kaenmaki (2011), Proposition 1.2 (uniqueness for 0<s<2).
+Literature hypotheses: none.
 
 Other inputs: a proximal System with rotations; s>0; an invariant s-equilibrium probability
 measure mu.
@@ -813,10 +969,11 @@ h(μ^(2)) = 2h(μ) and both Lyapunov scalings; equality of the projected measure
 dimension, the coordinate marginals and that grouping a Bernoulli measure gives a Bernoulli
 measure.
 
-Proof: as in the prose; uniqueness and ergodicity come from Proposition 3.10 applied to A²
-(`System.unique_of_irreducible`, `IsEquilibriumState.ergodic_of_irreducible`); the proximal
-diagonal generator of A² squares the original one or comes from `hasProximalDiagonal_or_sq`
-(`Proximal.sq_hasProximalDiagonal`); the floor/subsequence argument gives projective separation.
+Proof: as in the prose; uniqueness and ergodicity come from Proposition 3.10 applied to A²,
+which has rotations, with no literature premise (`System.unique_of_withRotations`,
+`IsEquilibriumState.ergodic_of_withRotations`); the proximal diagonal generator of A² squares the
+original one or comes from `hasProximalDiagonal_or_sq` (`Proximal.sq_hasProximalDiagonal`); the
+floor/subsequence argument gives projective separation.
 
 The remark on invertible linear changes of coordinates (tex 2352-2353) is formalised in
 BoxLike/Planar/ChangeOfBasis.lean (`MatrixTuple.comparable_conj`, `PlanarSystem.ConjBy.*`).
@@ -848,15 +1005,18 @@ noncomputable abbrev paper_3_12_6 := @BoxLike.bernoulli_cylinder
 
 -- PAPER_ENTRY thm:sigma_tau_omega_positive_eq_measure
 /-! 3.13 (`thm:sigma_tau_omega_positive_eq_measure`): formalized.
-Literature hypotheses: BoxLike.FengKaenmakiGibbs.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: none.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 
-Other inputs: Proximal System with rotations; 0<s<2; invariant ergodic equilibrium probability
-measure; hfk. Uniqueness is not used. No Morris-Shmerkin hypothesis or simple-spectrum assumption
-is required by this particular Lean endpoint.
+Other inputs: System with rotations; 0<s<2; invariant ergodic equilibrium probability measure;
+hfk. Uniqueness is not used. No Morris-Shmerkin hypothesis or simple-spectrum assumption is
+required by this particular Lean endpoint, and proximality, a hypothesis of the manuscript, is
+not used.
 
-Fidelity: Both positive-mass conclusions match. The Birkhoff display carries its almost-everywhere
-qualifier (tex 2462).
+Fidelity: Both positive-mass conclusions match, without the proximality of the manuscript. The
+Birkhoff display carries its almost-everywhere qualifier (tex 2462).
 
 Proof: as in the prose (`System.sigma_tau_omega_positive_eq_measure`,
 BoxLike/Aligned/SigmaTauOmega.lean, the form used by 4.6): the counting inequality summed along
@@ -873,9 +1033,12 @@ noncomputable abbrev paper_3_13_6 := @BoxLike.System.measure_cylinder_le_two_mul
 
 -- PAPER_ENTRY thm:eq_state_is_sum
 /-! 3.14 (`thm:eq_state_is_sum`): formalized.
-Literature hypotheses: BoxLike.FengKaenmakiGibbs, only to pass from the manuscript's hypothesis
-"μ is the s-equilibrium state" to the Gibbs bounds that the decomposition takes.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: none.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean), only to
+pass from the manuscript's hypothesis "μ is the s-equilibrium state" to the Gibbs bounds that the
+decomposition takes; every invariant s-equilibrium state is the image q_*μ₁ of the decomposition
+(`System.IsEquilibriumState.eq_map_unCode`).
 
 Other inputs: a box-like System with rotations and 0<s<2; an invariant probability measure μ with
 the Gibbs bounds of `thm:irred_eq_state`.
@@ -913,6 +1076,7 @@ noncomputable abbrev paper_3_14_20 := @BoxLike.System.eq_of_hasGibbsBounds
 noncomputable abbrev paper_3_14_21 := @BoxLike.System.hasGibbsBounds_map_unCode
 noncomputable abbrev paper_3_14_22 := @BoxLike.System.lyapunov_map_unCode_of_isGibbs
 noncomputable abbrev paper_3_14_23 := @BoxLike.System.exists_isGibbs_potential₁
+noncomputable abbrev paper_3_14_24 := @BoxLike.System.IsEquilibriumState.eq_map_unCode
 
 -- PAPER_ENTRY thm:exact-dimensional-mixture
 /-! 4.1 (`thm:exact-dimensional-mixture`): formalized.
@@ -937,24 +1101,33 @@ noncomputable abbrev paper_4_1_6 := @BoxLike.isExactDim_add_iff
 
 -- PAPER_ENTRY thm:feng1
 /-! 4.2 (`thm:feng1`): cited.
-Literature hypotheses: BoxLike.PlanarFengLedrappierYoung, BoxLike.FengLedrappierYoungBar; the
-headlines use the box-like specialisation BoxLike.FengLedrappierYoung.
+Literature hypotheses: BoxLike.PlanarFengLedrappierYoung; the headlines use the box-like
+specialisation BoxLike.FengLedrappierYoung.
   BoxLike.PlanarFengLedrappierYoung: Feng, Duke Math. J. 172 (2023), Theorems 1.2 (ii) and 1.3,
     formula (1.6), for planar self-affine systems (arXiv:1901.01691v2); authorised by the
     project owner.
   BoxLike.FengLedrappierYoung: its box-like specialisation
     (`PlanarFengLedrappierYoung.fengLedrappierYoung`).
-  BoxLike.FengLedrappierYoungBar: Feng, Theorems 1.2 and 1.3, dimension-one specialisation.
+Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
+the second part of thm:feng1 from FengLedrappierYoung, proved in
+BoxLike/ProjectiveLineSystem.lean); `planar_feng1` takes it as a hypothesis and `paper_4_2_10`
+discharges it from BoxLike.PlanarFengLedrappierYoung.
 
 Other inputs: planar clause: every planar self-affine system (PlanarSystem), ergodic invariant
 probability measure, λ₂<λ₁. Scalar clause: proximal box-like System with rotations, ergodic
-invariant probability measure carried by Σ_Z.
+invariant probability measure carried by Σ_Z; its proof needs neither rotations nor
+proximality.
 
 Fidelity: both clauses at the article's scope (`planar_feng1`), as cited results; the article
-gives no proof. Lean uses closed sup-norm balls, which give the same pointwise dimension as
-Feng's closed Euclidean balls. Feng's partitions on his admissible set have almost everywhere
-the same conditional measures as the partitions of the library (`PlanarSystem.condMeas_fengXi_ae_eq`),
-so the source statement implies the transcription (`planarFengLedrappierYoung_of_fengXi`).
+gives no proof. Both follow from PlanarFengLedrappierYoung (`paper_4_2_11`): the planar clause
+is `PlanarSystem.feng1`, and the scalar clause is the planar formula for the planar system
+z ↦ diag(g'_j, g'_j/2) z + (g_j(0), 0) of the projective system, whose attractor lies on the
+horizontal axis, whose exponents are \overline{λ} and \overline{λ} - log 2 and whose partitions
+ξ_2 and ξ_1 agree (`System.isExactDim_map_projBar_of_fengLedrappierYoung`, for every box-like
+system). Lean uses closed sup-norm balls, which give the same pointwise dimension as Feng's
+closed Euclidean balls. Feng's partitions on his admissible set have almost everywhere the same
+conditional measures as the partitions of the library (`PlanarSystem.condMeas_fengXi_ae_eq`), so
+the source statement implies the transcription (`planarFengLedrappierYoung_of_fengXi`).
 -/
 noncomputable abbrev paper_4_2_1 := @BoxLike.planar_feng1
 noncomputable abbrev paper_4_2_2 := @BoxLike.PlanarSystem.feng1
@@ -963,11 +1136,36 @@ noncomputable abbrev paper_4_2_4 := @BoxLike.PlanarFengLedrappierYoung.fengLedra
 noncomputable abbrev paper_4_2_5 := @BoxLike.planarFengLedrappierYoung_of_fengXi
 noncomputable abbrev paper_4_2_6 := @BoxLike.FengLedrappierYoung.{u}
 noncomputable abbrev paper_4_2_7 := @BoxLike.FengLedrappierYoungBar.{u}
+noncomputable abbrev paper_4_2_8 := @BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung
+noncomputable abbrev paper_4_2_9 := @BoxLike.System.isExactDim_map_projBar_of_fengLedrappierYoung
+/-- `thm:feng1`, second part, from the first: `PlanarFengLedrappierYoung` implies
+`FengLedrappierYoungBar`, through its box-like specialisation `FengLedrappierYoung`. -/
+theorem paper_4_2_10 (h : BoxLike.PlanarFengLedrappierYoung.{u}) :
+    BoxLike.FengLedrappierYoungBar.{u} :=
+  BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung h.fengLedrappierYoung
+open MeasureTheory BoxLike in
+/-- `thm:feng1`, both parts, at the article's scope, from `PlanarFengLedrappierYoung` alone. -/
+theorem paper_4_2_11 (h : PlanarFengLedrappierYoung.{u}) :
+    (∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+      (P : PlanarSystem ι) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ],
+      MeasurePreserving (shift 1) μ μ → Ergodic (shift 1) μ → P.lyapunov₂ μ < P.lyapunov₁ μ →
+      IsExactDim (μ.map P.proj)
+        ((P.dimEntropy μ 1 - P.dimEntropy μ 0) / P.lyapunov₁ μ +
+          (P.dimEntropy μ 2 - P.dimEntropy μ 1) / P.lyapunov₂ μ)) ∧
+    (∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+      (S : System ι), S.WithRotations → S.Proximal →
+      ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],
+      MeasurePreserving (shift 1) ν ν → Ergodic (shift 1) ν → ν (subshift S.o)ᶜ = 0 →
+      IsExactDim (ν.map S.projBar)
+        ((S.dimEntropyBar ν 1 - S.dimEntropyBar ν 0) / S.lyapBar ν)) :=
+  planar_feng1 h (paper_4_2_10 h)
 
 -- PAPER_ENTRY thm:entropy_eq_gibbs
 /-! 4.3 (`thm:entropy_eq_gibbs`): formalized.
-Literature hypotheses: BoxLike.FengKaenmakiGibbs.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: none.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
 proved in BoxLike/FraserJordanJurga/); the library statements take it as a hypothesis and Solution
 discharges it.
@@ -999,10 +1197,14 @@ noncomputable abbrev paper_4_3_8 := @BoxLike.System.dimEntropyBar_zero_eq_entrop
 
 -- PAPER_ENTRY thm:eq_state_proj_dim
 /-! 4.4 (`thm:eq_state_proj_dim`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs, BoxLike.JordanRapaportDimension.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: BoxLike.JordanRapaportDimension.
   BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
 proved in BoxLike/FraserJordanJurga/); the library statements take it as a hypothesis and Solution
 discharges it.
@@ -1046,10 +1248,14 @@ noncomputable abbrev paper_4_4_14 := @BoxLike.System.marginal_decomposition_norm
 
 -- PAPER_ENTRY ex:projection_double_dimensional
 /-! 4.5 (`ex:projection_double_dimensional`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs, BoxLike.JordanRapaportDimension.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3 (through thm:eq_state_proj_dim).
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2 (Gibbs bounds of the s₁-equilibrium state).
+Literature hypotheses: BoxLike.JordanRapaportDimension.
   BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1 (through thm:eq_state_proj_dim).
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
 proved in BoxLike/FraserJordanJurga/); the library statements take it as a hypothesis and Solution
 discharges it.
@@ -1094,9 +1300,13 @@ noncomputable abbrev paper_4_5_13 := @BoxLike.PrescribedExample.volume_badSet_le
 
 -- PAPER_ENTRY thm:gibbs_tau_omega_positive
 /-! 4.6 (`thm:gibbs_tau_omega_positive`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: none.
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
 proved in BoxLike/FraserJordanJurga/); the library statements take it as a hypothesis and Solution
 discharges it.
@@ -1116,9 +1326,13 @@ noncomputable abbrev paper_4_6_1 := @BoxLike.System.gibbs_tau_omega_positive
 
 -- PAPER_ENTRY thm:conditional_two_ways
 /-! 4.7 (`thm:conditional_two_ways`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: none.
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
 proved in BoxLike/FraserJordanJurga/); the library statements take it as a hypothesis and Solution
 discharges it.
@@ -1147,11 +1361,19 @@ noncomputable abbrev paper_4_7_7 := @BoxLike.condMeas_transport
 
 -- PAPER_ENTRY thm:overline_h1_zero
 /-! 4.8 (`thm:overline_h1_zero`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs, BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoungBar.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung.
   BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
-  BoxLike.FengLedrappierYoungBar: Feng, Theorems 1.2 and 1.3, dimension-one specialisation.
+  BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
+Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
+the second part of thm:feng1 from FengLedrappierYoung, proved in
+BoxLike/ProjectiveLineSystem.lean); the library statements take it as a hypothesis and Solution
+discharges it.
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved inputs: BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5;
 the library statements take them as hypotheses and Solution discharges them.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
@@ -1172,11 +1394,19 @@ noncomputable abbrev paper_4_8_1 := @BoxLike.System.overline_h1_zero
 
 -- PAPER_ENTRY thm:overline_h1_zero_large
 /-! 4.9 (`thm:overline_h1_zero_large`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs, BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoungBar.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung.
   BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
-  BoxLike.FengLedrappierYoungBar: Feng, Theorems 1.2 and 1.3, dimension-one specialisation.
+  BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
+Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
+the second part of thm:feng1 from FengLedrappierYoung, proved in
+BoxLike/ProjectiveLineSystem.lean); the library statements take it as a hypothesis and Solution
+discharges it.
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved inputs: BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5;
 the library statements take them as hypotheses and Solution discharges them.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
@@ -1197,9 +1427,13 @@ noncomputable abbrev paper_4_9_1 := @BoxLike.System.overline_h1_zero_large
 
 -- PAPER_ENTRY thm:overline_h1_large
 /-! 4.10 (`thm:overline_h1_large`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: none.
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved inputs: BoxLike.FengInfoSum (fengInfoSum_holds) and BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5;
 the library statements take them as hypotheses and Solution discharges them.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
@@ -1220,11 +1454,19 @@ noncomputable abbrev paper_4_10_1 := @BoxLike.System.overline_h1_large
 
 -- PAPER_ENTRY thm:eq_state_h1_zero
 /-! 4.11 (`thm:eq_state_h1_zero`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs, BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoungBar.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung.
   BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
-  BoxLike.FengLedrappierYoungBar: Feng, Theorems 1.2 and 1.3, dimension-one specialisation.
+  BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
+Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
+the second part of thm:feng1 from FengLedrappierYoung, proved in
+BoxLike/ProjectiveLineSystem.lean); the library statements take it as a hypothesis and Solution
+discharges it.
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved inputs: BoxLike.FengInfoSum (fengInfoSum_holds) and BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5;
 the library statements take them as hypotheses and Solution discharges them.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
@@ -1246,11 +1488,19 @@ noncomputable abbrev paper_4_11_1 := @BoxLike.System.eq_state_h1_zero
 
 -- PAPER_ENTRY thm:eq_state_h1_large
 /-! 4.12 (`thm:eq_state_h1_large`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs, BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoungBar.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung.
   BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
-  BoxLike.FengLedrappierYoungBar: Feng, Theorems 1.2 and 1.3, dimension-one specialisation.
+  BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
+Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
+the second part of thm:feng1 from FengLedrappierYoung, proved in
+BoxLike/ProjectiveLineSystem.lean); the library statements take it as a hypothesis and Solution
+discharges it.
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved inputs: BoxLike.FengInfoSum (fengInfoSum_holds) and BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5;
 the library statements take them as hypotheses and Solution discharges them.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
@@ -1270,11 +1520,19 @@ noncomputable abbrev paper_4_12_1 := @BoxLike.System.eq_state_h1_large
 
 -- PAPER_ENTRY thm:eq_state_h2_zero
 /-! 4.13 (`thm:eq_state_h2_zero`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs, BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoungBar.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung.
   BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
-  BoxLike.FengLedrappierYoungBar: Feng, Theorems 1.2 and 1.3, dimension-one specialisation.
+  BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
+Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
+the second part of thm:feng1 from FengLedrappierYoung, proved in
+BoxLike/ProjectiveLineSystem.lean); the library statements take it as a hypothesis and Solution
+discharges it.
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved inputs: BoxLike.FengInfoSum (fengInfoSum_holds) and BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5;
 the library statements take them as hypotheses and Solution discharges them.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
@@ -1293,11 +1551,19 @@ noncomputable abbrev paper_4_13_1 := @BoxLike.System.eq_state_h2_zero
 
 -- PAPER_ENTRY thm:orto_partition_dirac
 /-! 4.14 (`thm:orto_partition_dirac`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs, BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoungBar.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung.
   BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
-  BoxLike.FengLedrappierYoungBar: Feng, Theorems 1.2 and 1.3, dimension-one specialisation.
+  BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
+Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
+the second part of thm:feng1 from FengLedrappierYoung, proved in
+BoxLike/ProjectiveLineSystem.lean); the library statements take it as a hypothesis and Solution
+discharges it.
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved inputs: BoxLike.FengInfoSum (fengInfoSum_holds) and BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5;
 the library statements take them as hypotheses and Solution discharges them.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
@@ -1317,9 +1583,13 @@ noncomputable abbrev paper_4_14_1 := @BoxLike.System.orto_partition_dirac
 
 -- PAPER_ENTRY thm:SOSC_h2_zero
 /-! 4.15 (`thm:SOSC_h2_zero`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: none.
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved inputs: BoxLike.FengInfoSum (fengInfoSum_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5;
 the library statements take them as hypotheses and Solution discharges them.
 
@@ -1327,9 +1597,9 @@ Other inputs: WithRotations, Proximal, StrongOpenSet, 0<s<2, invariant ergodic p
 equilibrium μ. No projective separation and no proximal diagonal generator required.
 
 Fidelity: The printed endpoint h₂=0 matches. The manuscript's equilibrium state is already
-declared ergodic in the surrounding setup. The existing lemma explicitly takes ergodicity;
-removing that input in a new wrapper requires hfk+hfjj via normalization (and would enlarge the
-wrapper's literature dependency set).
+declared ergodic in the surrounding setup. The existing lemma explicitly takes ergodicity, which
+holds for every invariant equilibrium state of a tuple with rotations, with no literature premise
+(`System.IsEquilibriumState.ergodic_of_withRotations`).
 
 Proof: the open-set and unique-future-address argument of the prose. The recurrence of the word
 w (tex 3506 to 3507) comes from ergodicity through Poincaré recurrence
@@ -1339,12 +1609,19 @@ noncomputable abbrev paper_4_15_1 := @BoxLike.System.SOSC_h2_zero
 
 -- PAPER_ENTRY thm:main_extended
 /-! 4.16 (`thm:main_extended`): formalized.
-Literature hypotheses: BoxLike.MorrisShmerkinLyapunov, BoxLike.FengKaenmakiGibbs, BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung, BoxLike.FengLedrappierYoungBar.
-  BoxLike.MorrisShmerkinLyapunov: Morris-Shmerkin, Theorem 3.1, arXiv v3.
-  BoxLike.FengKaenmakiGibbs: Feng-Kaenmaki, Proposition 1.2.
+Literature hypotheses: BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung.
   BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
   BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
-  BoxLike.FengLedrappierYoungBar: Feng, Theorems 1.2 and 1.3, dimension-one specialisation.
+Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
+the second part of thm:feng1 from FengLedrappierYoung, proved in
+BoxLike/ProjectiveLineSystem.lean); the library statements take it as a hypothesis and Solution
+discharges it.
+Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
+proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
+statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of
+Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved inputs: BoxLike.FengInfoSum (fengInfoSum_holds) and BoxLike.FengInfoSumBar (fengInfoSumBar_holds), Feng, Lemma 4.6, first identity of (4.16), proved internally along Feng's Lemmas 4.4 and 4.5;
 the library statements take them as hypotheses and Solution discharges them.
 Proved input: BoxLike.FraserJordanJurgaDecomposition (`fraserJordanJurgaDecomposition_holds`, Proposition 3.14,
@@ -1358,8 +1635,9 @@ endpoint.
 Fidelity: The full all-s exact-dimensionality statement is represented. Positivity of s
 follows from rotations. For s≥2 the entropy alternative is impossible and the SOSC volume argument
 yields exact dimension 2. The ge-two helper needs no external literature hypotheses, rotations,
-proximality or projective separation. Rossi's bound occurs only in the background before the
-theorem; the proof does not use it.
+proximality or projective separation. Rossi's bound `eq:hausdorff_ergodic_lyapunov`, which the
+paper states before the theorem, is proved (`System.rossiBound`, `prose_rossi_0` below); the
+proof does not use it.
 
 PROOF DEVIATION: For s<2, the Lean proof follows normalization, the two entropy regimes, the SOSC
 case and evaluation of Feng's formula.
@@ -1372,5 +1650,57 @@ noncomputable abbrev paper_4_16_1 := @BoxLike.System.main_extended_min
 noncomputable abbrev paper_4_16_2 := @BoxLike.System.main_extended
 noncomputable abbrev paper_4_16_3 := @BoxLike.System.main_extended_normalised
 noncomputable abbrev paper_4_16_4 := @BoxLike.System.main_extended_ge_two
+
+/-! ## Unnumbered claims
+
+Rossi's bound `eq:hausdorff_ergodic_lyapunov` (tex lines 2728 to 2731): for every ergodic
+μ ∈ M_σ(Σ), \overline{dim}_H(π_*μ) ≤ min{2, dimL(𝖠, μ)}. The paper cites Rossi, J. Math. Anal.
+Appl. 413 (2014), Theorem 2.2, as motivation before thm:main_extended; no proof of a numbered
+result uses it.
+Literature hypotheses: none.
+
+Fidelity: the statement `System.RossiBound` (BoxLike/DimensionFormula.lean), for every box-like
+system and every ergodic invariant probability measure, holds (`System.rossiBound`). Equality
+holds for the equilibrium state of thm:main_extended (`System.upperHausdorffDim_map_proj_eq`).
+
+Proof: a covering argument (BoxLike/Rossi.lean). For t ≤ 2 with h_0(μ) + Λ(𝖠, μ, t) < 0, the
+Shannon-McMillan-Breiman theorem and the Furstenberg-Kesten limits along the forward products
+(`System.ae_tendsto_log_norm_matWord`, `System.ae_tendsto_log_alpha₂_matWord`) bound the number
+of typical words of length n and the sides of the rectangles that contain their copies of X;
+covering the rectangles by squares gives a Borel set of full π_*μ-measure and Hausdorff dimension
+at most t (`System.exists_dimH_le_of_add_energy_neg`), and the mass distribution principle bounds
+the lower pointwise dimension by t almost everywhere (`ae_lowerLocalDim_le_of_dimH_le`,
+`System.ae_lowerLocalDim_map_proj_le`, `System.essSup_lowerLocalDim_map_proj_le`).
+-/
+/-- Rossi's bound `eq:hausdorff_ergodic_lyapunov` holds for every box-like system. -/
+theorem prose_rossi_0 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+    (S : BoxLike.System ι) : S.RossiBound :=
+  S.rossiBound
+noncomputable abbrev prose_rossi_1 := @BoxLike.System.RossiBound
+noncomputable abbrev prose_rossi_2 := @BoxLike.System.ae_lowerLocalDim_map_proj_le
+noncomputable abbrev prose_rossi_3 := @BoxLike.System.essSup_lowerLocalDim_map_proj_le
+noncomputable abbrev prose_rossi_4 := @BoxLike.System.exists_dimH_le_of_add_energy_neg
+noncomputable abbrev prose_rossi_5 := @BoxLike.System.ae_tendsto_log_norm_matWord
+noncomputable abbrev prose_rossi_6 := @BoxLike.System.ae_tendsto_log_alpha₂_matWord
+noncomputable abbrev prose_rossi_7 := @BoxLike.ae_lowerLocalDim_le_of_dimH_le
+noncomputable abbrev prose_rossi_8 := @BoxLike.System.upperHausdorffDim_map_proj_eq
+
+/-! The squeeze of the modified affinity dimension (tex lines 548 to 550): if
+\dim_H X = dimaff(X), then dimmaff(X) = dimaff(X).
+Literature hypotheses: none.
+Proved input: BoxLike.System.FraserBound (`System.fraserBound_holds`, the first part of
+thm:fraser); the library statements `System.dimmaff_eq_dimaff`,
+`System.dimmaff_eq_dimaff_noExactOverlaps` and `System.dimmaff_eq_dimaff_main2` take it as a
+hypothesis, and `prose_squeeze_0` discharges it for the first.
+
+Fidelity: the squeeze for every box-like system with \dim_H X = dimaff(X) (`prose_squeeze_0`);
+the hypotheses of thm:main2 give \dim_H X = dimaff(X) (`System.main2_prose`, and
+`Challenge.audit_main2` for the challenge statement).
+-/
+/-- The squeeze of tex lines 548 to 550, with no literature premise: if `\dim_H X = dimaff(X)`,
+then `dimmaff(X) = dimaff(X)`. The first part of `thm:fraser` is `System.fraserBound_holds`. -/
+theorem prose_squeeze_0 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι)
+    (hH : dimH S.attractor = ENNReal.ofReal S.dimaff) : S.dimmaff = S.dimaff :=
+  S.dimmaff_eq_dimaff S.fraserBound_holds hH
 
 end Solution.Paper

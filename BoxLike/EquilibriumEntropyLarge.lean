@@ -31,6 +31,7 @@ For `thm:eq_state_h1_large`, Jordan–Rapaport and the scalar part of `thm:feng1
 -/
 public import BoxLike.Aligned.ConditionalTwoWays
 public import BoxLike.ConditionalTwoWays
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.FengEntropy
 public import BoxLike.General
 public import BoxLike.PastEntropy
@@ -208,7 +209,7 @@ separation is not assumed. The equality of the constants `\overline{h}_1(μ_1)` 
 Depends on: `thm:gibbs_tau_omega_positive`, `eq:orientation-restrictions`,
 `thm:conditional_two_ways`, `thm:partition_tau_conj`, `thm:feng_entropy_as_limit` (both parts),
 `eq:ergodic_entropy_constant`. -/
-theorem overline_h1_large (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem overline_h1_large (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) (hrot : S.WithRotations)
     (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
@@ -220,9 +221,9 @@ theorem overline_h1_large (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmaki
   have hlt := S.simple_lyapunov hms hrot hdiag.proximal hs0 hs2 μ hinv heq
   obtain ⟨-, ⟨z1, z2, -, -⟩, -⟩ :=
     S.gibbs_tau_omega_positive hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
-  obtain ⟨r1, -, p1⟩ := S.orientation_restrictions hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
+  obtain ⟨r1, -, p1⟩ := S.orientation_restrictions hfk hrot hs0 hs2 μ hinv herg heq hdec
     (Or.inl rfl) (Or.inl rfl)
-  obtain ⟨r2, -, -⟩ := S.orientation_restrictions hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
+  obtain ⟨r2, -, -⟩ := S.orientation_restrictions hfk hrot hs0 hs2 μ hinv herg heq hdec
     (Or.inr rfl) (Or.inr rfl)
   have hc := S.conditional_two_ways_normalised hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
   have a1 := S.h1Large_aux hfi hfib hrot hdiag.proximal μ hinv herg hlt hdec.ergodic₁
@@ -244,14 +245,14 @@ theorem overline_h1_large (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmaki
 
 /-- `thm:eq_state_h1_large`: under projective exponential separation, if
 `h_0(μ) ≥ -λ_1(𝖠, μ)`, then `h_1(μ) = h_0(μ) + λ_1(𝖠, μ)`. Here `h_0(μ)` is `entropy μ`. The
-Gibbs measures are obtained inside the proof from the Gibbs bounds of Feng–Käenmäki,
-`FengKaenmakiGibbs`, and the decomposition of Fraser–Jordan–Jurga,
+Gibbs measures are obtained inside the proof from the Gibbs bounds of `thm:irred_eq_state`,
+`EquilibriumGibbsStatement`, and the decomposition of `thm:eq_state_is_sum`,
 `FraserJordanJurgaDecomposition`. The two values of `dim \overline{π}_*μ_1` are those of
 `eq:eq_state_h1_large1` and `eq:eq_state_h1_large2`.
 Depends on: the dimension formula of Jordan–Rapaport, `JordanRapaportDimension`,
 `thm:entropy_eq_gibbs`, `thm:eq_state_is_sum`, `thm:feng1` (scalar),
 `dimEntropyBar_zero_eq_entropy`, `thm:overline_h1_large`. -/
-theorem eq_state_h1_large (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem eq_state_h1_large (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) (hlyb : FengLedrappierYoungBar.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hsep : S.ProjExpSeparation)
@@ -259,7 +260,7 @@ theorem eq_state_h1_large (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmaki
     (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
     (heq : S.IsEquilibriumState s μ) (hent : -S.lyapunov₁ μ ≤ entropy μ) :
     S.dimEntropy μ 1 = entropy μ + S.lyapunov₁ μ := by
-  have hgibbs := hfk S (irreducible_of_hasProximalDiagonal hrot hdiag) hs0 hs2 μ hinv heq
+  have hgibbs := hfk S hrot hs0 hs2 μ hinv heq
   obtain ⟨μ₁, μ₂, hdec⟩ := hfjj S hrot hdiag hs0 hs2 μ hinv hgibbs
   have := hdec.prob₁
   have := hdec.prob₂

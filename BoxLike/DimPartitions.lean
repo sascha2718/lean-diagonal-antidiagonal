@@ -25,6 +25,7 @@ state of a tuple containing a proximal diagonal generator, and the first step of
 * `neg_lt_entropy_of_two_le`: for `s ≥ 2` the entropy of an equilibrium state exceeds `-λ_2`.
 -/
 public import BoxLike.Conditional
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.Main
 public import BoxLike.SlowAxis
 
@@ -253,15 +254,16 @@ theorem ergodic_of_gibbsDecomposition {μ : Measure (ℤ → ι)}
   exact hmp.ergodic_of_ergodic_semiconj hdec.ergodic₁ (measurable_shift 1)
     (fun y => unCode_shift 1 y)
 
-/-- Proved from the Gibbs bounds of Feng–Käenmäki, `FengKaenmakiGibbs`, and the decomposition
-of Fraser–Jordan–Jurga, `FraserJordanJurgaDecomposition`: for a tuple containing a proximal
+/-- Proved from the Gibbs bounds of `thm:irred_eq_state` for tuples with rotations,
+`EquilibriumGibbsStatement`, and the decomposition of `thm:eq_state_is_sum`,
+`FraserJordanJurgaDecomposition`, both proved in the library: for a tuple containing a proximal
 diagonal generator and `0 < s < 2`, every invariant `s`-equilibrium state is ergodic. -/
-theorem ergodic_of_hasProximalDiagonal (hfk : FengKaenmakiGibbs.{u})
+theorem ergodic_of_hasProximalDiagonal (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hrot : S.WithRotations)
     (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) : Ergodic (shift 1) μ := by
-  have hgibbs := hfk S (irreducible_of_hasProximalDiagonal hrot hdiag) hs0 hs2 μ hinv heq
+  have hgibbs := hfk S hrot hs0 hs2 μ hinv heq
   obtain ⟨μ₁, μ₂, h⟩ := hfjj S hrot hdiag hs0 hs2 μ hinv hgibbs
   exact S.ergodic_of_gibbsDecomposition h
 

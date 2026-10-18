@@ -1,5 +1,6 @@
 module
 
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.MainTwoFree
 public import BoxLike.DimensionFormula
 
@@ -30,10 +31,13 @@ theorem StrongOpenSet.dimaff_eq_two (h : S.StrongOpenSet) (h2 : 2 ≤ S.dimaff) 
   rw [S.pressure_of_two_le le_rfl]
   simpa using congrArg Real.log hsum
 
-/-- `thm:main2` without an extra `dimaff < 2` assumption. The seven literature
-hypotheses are used only in the finite-subsystem branch below two. -/
+/-- `thm:main2` without an extra `dimaff < 2` assumption. The seven hypotheses on statements
+are used only in the finite-subsystem branch below two; `FengLedrappierYoung` and
+`KittleKoglerDimension` are cited theorems, and the library proves the other five,
+`FengLedrappierYoungBar` from `FengLedrappierYoung`
+(`fengLedrappierYoungBar_of_fengLedrappierYoung`). -/
 theorem main2_noExactOverlaps_all (hms : BoxLike.MorrisShmerkinLyapunov.{u})
-    (hfk : BoxLike.FengKaenmakiGibbs.{u})
+    (hfk : BoxLike.EquilibriumGibbsStatement.{u})
     (hfjj : BoxLike.FraserJordanJurgaDecomposition.{u})
     (hfib : BoxLike.FengInfoSumBar.{u}) (hly : BoxLike.FengLedrappierYoung.{u})
     (hlyb : BoxLike.FengLedrappierYoungBar.{u}) (hkk : BoxLike.KittleKoglerDimension.{u})
@@ -65,7 +69,7 @@ hence the strong open set condition, its projective system has no exact overlaps
 projective exponential separation condition, and `dimaff(X) < 2` since `∑_i |det A_i| < 1`.
 The theorem of Bárány and Käenmäki enters as the hypothesis `NoOverlap.BaranyKaenmakiTheorem`. -/
 theorem NoOverlap.dimH_eq_dimaff' (h : NoOverlap.BaranyKaenmakiTheorem)
-    (hms : MorrisShmerkinLyapunov.{0}) (hfk : FengKaenmakiGibbs.{0})
+    (hms : MorrisShmerkinLyapunov.{0}) (hfk : EquilibriumGibbsStatement.{0})
     (hfjj : FraserJordanJurgaDecomposition.{0}) (hfib : FengInfoSumBar.{0})
     (hly : FengLedrappierYoung.{0}) (hlyb : FengLedrappierYoungBar.{0})
     (hkk : KittleKoglerDimension.{0}) :

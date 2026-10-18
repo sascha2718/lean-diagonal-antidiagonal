@@ -34,6 +34,7 @@ distribution principle bounds `\dim_H X` from below by these dimensions, which t
   `dimaff(X) < 2` and `\dim_H X = dimaff(X)`.
 -/
 public import BoxLike.EquilibriumExistence
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.FraserChain
 public import BoxLike.General
 public import BoxLike.MainTwo
@@ -241,7 +242,7 @@ theorem le_dimH_attractor_of_words (hfib : FengInfoSumBar.{u}) (hly : FengLedrap
 generator, with `s` the zero of the pressure in `(0, 2)` and the alternative in the entropy
 form `h_0(μ) ≤ -λ_2(𝖠, μ)` of tex lines 3638 to 3646. -/
 theorem main2_noExactOverlaps_normalised (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
     (hlyb : FengLedrappierYoungBar.{u}) (hkk : KittleKoglerDimension.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hfree : S.NoExactOverlaps)
@@ -401,7 +402,7 @@ entropy form, for every proximal tuple: the reduction to a tuple containing a pr
 generator through `thm:two-block-normalisation` (tex lines 3633 to 3636), as in
 `main_extended_lt_two_aux`. -/
 theorem main2_noExactOverlaps_of_pressure (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
     (hlyb : FengLedrappierYoungBar.{u}) (hkk : KittleKoglerDimension.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal) (hfree : S.NoExactOverlaps)
@@ -435,10 +436,10 @@ system has no exact overlaps, such that `dimaff(X) < 2`, and let `μ` be the `s`
 state for `s = dimaff(X)`. If `dimaff(X) ≤ 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`, or if `X` satisfies the
 strong open set condition, then `\dim_H(X) = dimaff(X)`. The upper bound is Falconer's,
 `eq:hausdorff_affinity_upper_bound`; the lower bound comes from the finite diagonal subsystems.
-Depends on: `MorrisShmerkinLyapunov`, `FengKaenmakiGibbs`, `FraserJordanJurgaDecomposition`,
+Depends on: `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`,
 `FengInfoSumBar`, `FengLedrappierYoung`, `FengLedrappierYoungBar`, `KittleKoglerDimension`. -/
 theorem main2_noExactOverlaps (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
     (hlyb : FengLedrappierYoungBar.{u}) (hkk : KittleKoglerDimension.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hfree : S.NoExactOverlaps)
@@ -460,7 +461,7 @@ theorem main2_noExactOverlaps (hms : MorrisShmerkinLyapunov.{u})
 /-- The chain `\dim_H X = \dim_P X = \dim_M X = dimaff(X)` of tex lines 543 to 547 under the
 hypotheses of `thm:main2`. -/
 theorem dim_chain_noExactOverlaps (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
     (hlyb : FengLedrappierYoungBar.{u}) (hkk : KittleKoglerDimension.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hfree : S.NoExactOverlaps)
@@ -475,9 +476,10 @@ theorem dim_chain_noExactOverlaps (hms : MorrisShmerkinLyapunov.{u})
     heq hor)
 
 /-- The squeeze `dimmaff(X) = dimaff(X)` of tex lines 548 to 550 under the hypotheses of
-`thm:main2`, with the first part of `thm:fraser` as the hypothesis `hB`. -/
+`thm:main2`, with the first part of `thm:fraser` as the hypothesis `hB`, which
+`System.fraserBound_holds` proves. -/
 theorem dimmaff_eq_dimaff_noExactOverlaps (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
     (hlyb : FengLedrappierYoungBar.{u}) (hkk : KittleKoglerDimension.{u}) [Nonempty ι]
     (hB : S.FraserBound) (hrot : S.WithRotations) (hprox : S.Proximal) (hfree : S.NoExactOverlaps)
@@ -523,7 +525,7 @@ hence the strong open set condition, its projective system has no exact overlaps
 projective exponential separation condition, and `dimaff(X) < 2` since `∑_i |det A_i| < 1`.
 The theorem of Bárány and Käenmäki enters as the hypothesis `NoOverlap.BaranyKaenmakiPair`. -/
 theorem NoOverlap.dimH_eq_dimaff (h : NoOverlap.BaranyKaenmakiPair)
-    (hms : MorrisShmerkinLyapunov.{0}) (hfk : FengKaenmakiGibbs.{0})
+    (hms : MorrisShmerkinLyapunov.{0}) (hfk : EquilibriumGibbsStatement.{0})
     (hfjj : FraserJordanJurgaDecomposition.{0}) (hfib : FengInfoSumBar.{0})
     (hly : FengLedrappierYoung.{0}) (hlyb : FengLedrappierYoungBar.{0})
     (hkk : KittleKoglerDimension.{0}) :

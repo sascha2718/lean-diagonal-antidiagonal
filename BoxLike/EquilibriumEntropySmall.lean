@@ -28,6 +28,7 @@ Dirac conditional measures into vanishing entropy.
 * `System.orto_partition_dirac`: `thm:orto_partition_dirac`.
 -/
 public import BoxLike.AverageEntropy
+public import BoxLike.EquilibriumGibbsStatement
 public import Mathlib.MeasureTheory.Measure.Dirac.Def
 public import Mathlib.MeasureTheory.Measure.Dirac.Basic
 
@@ -76,8 +77,8 @@ variable {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)}
 /-- `eq:orientation-restrictions` for almost everywhere statements: for `T ∈ {τ, ω}` and
 `E ∈ {Σ^τ, Σ^ω}`, a property that holds for `\overline{μ}`-almost every point of `T(E)` holds at
 `T(𝐢)` for `μ`-almost every `𝐢 ∈ E`, because `\overline{μ}|_{T(E)} = ½ T_*(μ|_E)`. -/
-theorem ae_of_ae_avgMeasure_image (hfk : FengKaenmakiGibbs.{u}) (hrot : S.WithRotations)
-    (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
+theorem ae_of_ae_avgMeasure_image (hfk : EquilibriumGibbsStatement.{u})
+    (hrot : S.WithRotations) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ)
     (hdec : S.GibbsDecomposition s μ μ₁ μ₂)
@@ -94,7 +95,7 @@ theorem ae_of_ae_avgMeasure_image (hfk : FengKaenmakiGibbs.{u}) (hrot : S.WithRo
     rcases hT with rfl | rfl
     exacts [measurableSet_tau_image S.o hEm, measurableSet_omega_image S.o hEm]
   have h1 : ∀ᵐ y ∂(avgMeasure μ₁ μ₂).restrict (T '' E), p y := (ae_restrict_iff' hF).2 h
-  rw [(S.orientation_restrictions hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec hT hE).1,
+  rw [(S.orientation_restrictions hfk hrot hs0 hs2 μ hinv herg heq hdec hT hE).1,
     Measure.ae_smul_measure_iff (by norm_num)] at h1
   exact (ae_restrict_iff' hEm).1 (ae_of_ae_map hTm.aemeasurable h1)
 
@@ -102,8 +103,8 @@ theorem ae_of_ae_avgMeasure_image (hfk : FengKaenmakiGibbs.{u}) (hrot : S.WithRo
 `E ∈ {Σ^τ, Σ^ω}` and let `ζ` be a partition of `Σ`. If `T_*μ_{\overline{T}(𝐣)}^ζ = δ_𝐣` for
 `\overline{μ}`-almost every `𝐣 ∈ T(E)`, then `μ_𝐢^ζ = δ_𝐢` for `μ`-almost every `𝐢 ∈ E`.
 Depends on: `eq:orientation-restrictions`. -/
-theorem condMeas_eq_dirac_of_avgMeasure (hfk : FengKaenmakiGibbs.{u}) (hrot : S.WithRotations)
-    (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
+theorem condMeas_eq_dirac_of_avgMeasure (hfk : EquilibriumGibbsStatement.{u})
+    (hrot : S.WithRotations) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ)
     (hdec : S.GibbsDecomposition s μ μ₁ μ₂) {T : (ℤ → ι) → ℤ → ι × ZMod 2}
@@ -115,7 +116,7 @@ theorem condMeas_eq_dirac_of_avgMeasure (hfk : FengKaenmakiGibbs.{u}) (hrot : S.
   have hun : ∀ z, unCode (T z) = z := by
     rcases hT with rfl | rfl
     exacts [fun z => unCode_tau z, fun z => unCode_omega z]
-  filter_upwards [S.ae_of_ae_avgMeasure_image hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec hT hE h]
+  filter_upwards [S.ae_of_ae_avgMeasure_image hfk hrot hs0 hs2 μ hinv herg heq hdec hT hE h]
     with x hx hxE
   have h' := hx hxE
   rw [hun] at h'
@@ -137,13 +138,13 @@ theorem dimEntropy_eq_zero_of_condMeas_eq_dirac (hfi : FengInfoSum.{u}) (μ : Me
 
 /-- `thm:eq_state_h1_zero`: under projective exponential separation, if
 `h_0(μ) ≤ -λ_1(𝖠, μ)`, then `h_1(μ) = 0` and `μ_𝐢^{ξ_1} = δ_𝐢` for `μ`-almost every `𝐢`. The
-Gibbs measures are obtained inside the proof from the Gibbs bounds of Feng–Käenmäki,
-`FengKaenmakiGibbs`, and the decomposition of Fraser–Jordan–Jurga,
+Gibbs measures are obtained inside the proof from the Gibbs bounds of `thm:irred_eq_state`,
+`EquilibriumGibbsStatement`, and the decomposition of `thm:eq_state_is_sum`,
 `FraserJordanJurgaDecomposition`.
 Depends on: `thm:overline_h1_zero`, `thm:feng_entropy_zero` (both parts),
 `thm:conditional_two_ways`, `eq:orientation-restrictions`, `eq:tau_omega_partition2`,
 `measure_SigmaPrime_compl`, `eq:ergodic_entropy_constant`. -/
-theorem eq_state_h1_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem eq_state_h1_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) (hlyb : FengLedrappierYoungBar.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hsep : S.ProjExpSeparation)
@@ -153,7 +154,7 @@ theorem eq_state_h1_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiG
     S.dimEntropy μ 1 = 0 ∧ ∀ᵐ x ∂μ, condMeas μ (S.xi μ 1) x = Measure.dirac x := by
   have hprox := hdiag.proximal
   have hlt := S.simple_lyapunov hms hrot hprox hs0 hs2 μ hinv heq
-  have hgibbs := hfk S (irreducible_of_hasProximalDiagonal hrot hdiag) hs0 hs2 μ hinv heq
+  have hgibbs := hfk S hrot hs0 hs2 μ hinv heq
   obtain ⟨μ₁, μ₂, hdec⟩ := hfjj S hrot hdiag hs0 hs2 μ hinv hgibbs
   have := hdec.prob₁
   have := hdec.prob₂
@@ -171,12 +172,12 @@ theorem eq_state_h1_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiG
   have hc := S.conditional_two_ways_normalised hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
   -- `T_*μ_𝐢^{ξ_1} = δ_{T(𝐢)}` on `Σ^τ` for `T = τ` and on `Σ^ω` for `T = ω`.
   have hτ : ∀ᵐ x ∂μ, x ∈ S.SigmaTau μ → condMeas μ (S.xi μ 1) x = Measure.dirac x := by
-    refine S.condMeas_eq_dirac_of_avgMeasure hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
+    refine S.condMeas_eq_dirac_of_avgMeasure hfk hrot hs0 hs2 μ hinv herg heq hdec
       (Or.inl rfl) (Or.inl rfl) _ ?_
     filter_upwards [hbar, hc] with y hb hy hyF
     rw [← (hy.1 hyF).2, ← (hy.1 hyF).1, hb]
   have hω : ∀ᵐ x ∂μ, x ∈ S.SigmaOmega μ → condMeas μ (S.xi μ 1) x = Measure.dirac x := by
-    refine S.condMeas_eq_dirac_of_avgMeasure hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
+    refine S.condMeas_eq_dirac_of_avgMeasure hfk hrot hs0 hs2 μ hinv herg heq hdec
       (Or.inr rfl) (Or.inr rfl) _ ?_
     filter_upwards [hbar, hc] with y hb hy hyF
     rw [← (hy.2.2.1 hyF).2, ← (hy.2.2.1 hyF).1, hb]
@@ -193,7 +194,7 @@ theorem eq_state_h1_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiG
 `h_0(μ) ≤ -λ_1(𝖠, μ)`, then `h_2(μ) = 0`.
 Depends on: `thm:eq_state_h1_zero`, `thm:finer_partition_dirac_mass`, `thm:feng_entropy_zero`,
 `isMeasurablePartition_xi`, `eq:ergodic_entropy_constant`. -/
-theorem eq_state_h2_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem eq_state_h2_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) (hlyb : FengLedrappierYoungBar.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hsep : S.ProjExpSeparation)
@@ -213,7 +214,8 @@ theorem eq_state_h2_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiG
 Depends on: `thm:overline_h1_zero_large`, `thm:conditional_two_ways`,
 `eq:orientation-restrictions`, `thm:finer_partition_dirac_mass`, `thm:feng_entropy_zero`,
 `isMeasurablePartition_xi`, `isMeasurablePartition_xiPerp`, `eq:ergodic_entropy_constant`. -/
-theorem orto_partition_dirac (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem orto_partition_dirac (hms : MorrisShmerkinLyapunov.{u})
+    (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) (hlyb : FengLedrappierYoungBar.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hsep : S.ProjExpSeparation)
@@ -222,7 +224,7 @@ theorem orto_partition_dirac (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenm
     (heq : S.IsEquilibriumState s μ)
     (hent₂ : entropy μ ≤ -S.lyapunov₂ μ) : S.dimEntropy μ 2 = 0 := by
   have hlt := S.simple_lyapunov hms hrot hdiag.proximal hs0 hs2 μ hinv heq
-  have hgibbs := hfk S (irreducible_of_hasProximalDiagonal hrot hdiag) hs0 hs2 μ hinv heq
+  have hgibbs := hfk S hrot hs0 hs2 μ hinv heq
   obtain ⟨μ₁, μ₂, hdec⟩ := hfjj S hrot hdiag hs0 hs2 μ hinv hgibbs
   have := hdec.prob₁
   have := hdec.prob₂
@@ -233,12 +235,12 @@ theorem orto_partition_dirac (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenm
   have hc := S.conditional_two_ways_normalised hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
   -- `T_*μ_𝐢^{ξ_1^⊥} = δ_{T(𝐢)}` on `Σ^τ` for `T = ω` and on `Σ^ω` for `T = τ`.
   have hτ : ∀ᵐ x ∂μ, x ∈ S.SigmaTau μ → condMeas μ (S.xiPerp μ) x = Measure.dirac x := by
-    refine S.condMeas_eq_dirac_of_avgMeasure hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
+    refine S.condMeas_eq_dirac_of_avgMeasure hfk hrot hs0 hs2 μ hinv herg heq hdec
       (Or.inr rfl) (Or.inl rfl) _ ?_
     filter_upwards [hbar, hc] with y hb hy hyF
     rw [← (hy.2.1 hyF).2, ← (hy.2.1 hyF).1, hb (Or.inl hyF)]
   have hω : ∀ᵐ x ∂μ, x ∈ S.SigmaOmega μ → condMeas μ (S.xiPerp μ) x = Measure.dirac x := by
-    refine S.condMeas_eq_dirac_of_avgMeasure hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
+    refine S.condMeas_eq_dirac_of_avgMeasure hfk hrot hs0 hs2 μ hinv herg heq hdec
       (Or.inl rfl) (Or.inr rfl) _ ?_
     filter_upwards [hbar, hc] with y hb hy hyF
     rw [← (hy.2.2.2 hyF).2, ← (hy.2.2.2 hyF).1, hb (Or.inr hyF)]

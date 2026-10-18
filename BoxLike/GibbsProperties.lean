@@ -23,10 +23,14 @@ comment on the method in the introduction (tex lines 517 to 525), `sec:affinity_
   `System.not_forall_measureReal_cylinder_eq_prod`, `System.not_isBernoulli`: for a proximal
   box-like tuple with rotations and `0 < s < 2`, a measure with the Gibbs bounds is neither
   quasi-Bernoulli nor Bernoulli.
-* `System.IsEquilibriumState.submultiplicative`, `System.IsEquilibriumState.cylinder_bounds_dimaff`,
-  `System.IsEquilibriumState.not_quasiBernoulli`, `System.IsEquilibriumState.not_isBernoulli`:
-  the same for the equilibrium state, from the Gibbs bounds of Feng–Käenmäki,
-  `FengKaenmakiGibbs`.
+* `System.IsEquilibriumState.submultiplicative`, `System.IsEquilibriumState.cylinder_bounds_dimaff`:
+  sub-multiplicativity and the cylinder bounds of the equilibrium state of an irreducible
+  tuple, from the Gibbs bounds of Feng–Käenmäki, `FengKaenmakiGibbs`, which the library proves
+  (`fengKaenmakiGibbs_holds`).
+* `System.IsEquilibriumState.not_quasiBernoulli`, `System.IsEquilibriumState.not_isBernoulli`:
+  the equilibrium state of a proximal box-like tuple with rotations is neither quasi-Bernoulli
+  nor Bernoulli, from the Gibbs bounds of `EquilibriumGibbsStatement`, which the library proves
+  (`equilibriumGibbs`).
 * `IsGibbsWith.measureReal_cylinder_le_succ`, `IsGibbsWith.doubling`, `IsGibbs.doubling`:
   `ν[𝐢|_n] ≤ C² exp(P + ‖f‖_∞) ν[𝐢|_{n+1}]`;
   `IsGibbsWith.measureReal_preimage_shift_cylinder_le` is the companion for an extension to the
@@ -47,6 +51,7 @@ comment on the method in the introduction (tex lines 517 to 525), `sec:affinity_
   `\overline{τ}_*μ_2 = \overline{ω}_*μ_1`, positivity, and absolute continuity with respect to
   `μ`.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.GibbsOrientation
 public import Mathlib.Dynamics.Ergodic.Extreme
 
@@ -505,7 +510,7 @@ theorem not_isBernoulli (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 <
 
 /-- Tex lines 2244 to 2250: for an irreducible tuple and `0 < s < 2` every invariant
 `s`-equilibrium state is sub-multiplicative. Proved from the Gibbs bounds of Feng–Käenmäki,
-`FengKaenmakiGibbs`. -/
+`FengKaenmakiGibbs`, which `fengKaenmakiGibbs_holds` proves. -/
 theorem IsEquilibriumState.submultiplicative (hfk : FengKaenmakiGibbs.{u})
     [MeasurableSingletonClass ι] (hirr : S.Irreducible) (hs0 : 0 < s) (hs2 : s < 2)
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
@@ -514,7 +519,8 @@ theorem IsEquilibriumState.submultiplicative (hfk : FengKaenmakiGibbs.{u})
 
 /-- Tex lines 2250 to 2256: for an irreducible tuple with `0 < dimaff(𝖠) < 2` every invariant
 equilibrium state `μ` at `s = dimaff(𝖠)` satisfies `C⁻¹ φ^s(A_𝐢) ≤ μ[𝐢] ≤ C φ^s(A_𝐢)` for all
-`𝐢 ∈ Σ_*^+`. Proved from the Gibbs bounds of Feng–Käenmäki, `FengKaenmakiGibbs`. -/
+`𝐢 ∈ Σ_*^+`. Proved from the Gibbs bounds of Feng–Käenmäki, `FengKaenmakiGibbs`, which
+`fengKaenmakiGibbs_holds` proves. -/
 theorem IsEquilibriumState.cylinder_bounds_dimaff (hfk : FengKaenmakiGibbs.{u}) [Nonempty ι]
     [MeasurableSingletonClass ι] (hirr : S.Irreducible) (hs0 : 0 < S.dimaff)
     (hs2 : S.dimaff < 2) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
@@ -525,25 +531,23 @@ theorem IsEquilibriumState.cylinder_bounds_dimaff (hfk : FengKaenmakiGibbs.{u}) 
   (hfk S hirr hs0 hs2 μ hinv heq).cylinder_bounds_dimaff
 
 /-- Tex lines 520 to 524: the `s`-equilibrium state of a proximal box-like tuple with rotations
-is not quasi-Bernoulli for `0 < s < 2`. Proved from the Gibbs bounds of Feng–Käenmäki,
-`FengKaenmakiGibbs`. -/
-theorem IsEquilibriumState.not_quasiBernoulli (hfk : FengKaenmakiGibbs.{u})
+is not quasi-Bernoulli for `0 < s < 2`. Proved from the Gibbs bounds of `thm:irred_eq_state`
+for tuples with rotations, `EquilibriumGibbsStatement`. -/
+theorem IsEquilibriumState.not_quasiBernoulli (hfk : EquilibriumGibbsStatement.{u})
     [MeasurableSingletonClass ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 < s)
     (hs2 : s < 2) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) : ¬ IsQuasiBernoulli μ :=
-  System.not_quasiBernoulli hrot hprox hs0 hs2
-    (hfk S (S.irreducible_of_proximal hrot hprox) hs0 hs2 μ hinv heq)
+  System.not_quasiBernoulli hrot hprox hs0 hs2 (hfk S hrot hs0 hs2 μ hinv heq)
 
 /-- Tex lines 524 to 525 and 2362 to 2368: the `s`-equilibrium state of a proximal box-like tuple
 with rotations is not a Bernoulli measure for `0 < s < 2`. Proved from the Gibbs bounds of
-Feng–Käenmäki, `FengKaenmakiGibbs`; the second iterates of `thm:two-block-normalisation` are not
-needed. -/
-theorem IsEquilibriumState.not_isBernoulli (hfk : FengKaenmakiGibbs.{u})
+`thm:irred_eq_state` for tuples with rotations, `EquilibriumGibbsStatement`; the second iterates
+of `thm:two-block-normalisation` are not needed. -/
+theorem IsEquilibriumState.not_isBernoulli (hfk : EquilibriumGibbsStatement.{u})
     [MeasurableSingletonClass ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 < s)
     (hs2 : s < 2) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) : ¬ IsBernoulli μ :=
-  System.not_isBernoulli hrot hprox hs0 hs2
-    (hfk S (S.irreducible_of_proximal hrot hprox) hs0 hs2 μ hinv heq)
+  System.not_isBernoulli hrot hprox hs0 hs2 (hfk S hrot hs0 hs2 μ hinv heq)
 
 end GibbsBounds
 

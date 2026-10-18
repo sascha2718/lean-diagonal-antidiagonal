@@ -18,6 +18,7 @@ normalised Lebesgue measure has exact dimension two.
 * `System.main_extended`: `thm:main_extended`.
 -/
 public import BoxLike.BernoulliEntropy
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.InvariantMeasure
 public import BoxLike.LebesgueOpenSet
 public import BoxLike.MainTwo
@@ -124,7 +125,7 @@ an `s`-equilibrium state. If `h_0(μ) ≤ -λ_2(𝖠, μ)` or the strong open se
 `π_*μ` is exact-dimensional with `dim π_*μ = min{2, dimaff(𝖠)}`. For `s ≥ 2` the entropy
 alternative is impossible. -/
 theorem main_extended (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
     (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal)
@@ -147,7 +148,7 @@ theorem main_extended (hms : MorrisShmerkinLyapunov.{u})
 /-- `thm:main_extended` with `s = dimaff(𝖠)`, the zero of the pressure:
 `dim π_*μ = min{2, dimaff(𝖠)}`. -/
 theorem main_extended_min (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
     (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)

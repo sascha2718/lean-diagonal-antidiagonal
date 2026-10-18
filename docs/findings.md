@@ -68,19 +68,19 @@ finding is added where it belongs.
   rotations in no basis (`antiDiagonalExample`, `antiDiagonalExample_not_withRotations_conj` in
   `BoxLike/Aligned/BoxLikeProximal.lean`).
 - tex lines 491 to 497 are correct. "When `s < 2`, the exponents are distinct" is
-  Morris–Shmerkin through `eq:simple_lyapunov`; "for `s ≥ 2`, the exponents coincide" holds for
-  box-like tuples with rotations (`System.IsEquilibriumState.lyapunov_eq_of_two_le`, which needs
-  both matrix types); "the strong open set condition is needed only beyond the threshold"
-  describes the hypotheses of `thm:main2` and is not a necessity claim
-  (`BoxLike/Support/IntroductionClaims.lean`).
+  `eq:simple_lyapunov`, after Morris–Shmerkin (`morrisShmerkinLyapunov_holds`); "for `s ≥ 2`, the
+  exponents coincide" holds for box-like tuples with rotations
+  (`System.IsEquilibriumState.lyapunov_eq_of_two_le`, which needs both matrix types); "the strong
+  open set condition is needed only beyond the threshold" describes the hypotheses of `thm:main2`
+  and is not a necessity claim (`BoxLike/Support/IntroductionClaims.lean`).
 - `thm:fraser` uses the upper Minkowski dimension without separation, matching Fraser's
-  Theorem 2.3 (arXiv:1108.2639v1). The equality `\dim_P X = \overline{\dim}_M X` is proved for
-  every box-like set (`System.packingDim_attractor`), so only the bound by `dimmaff(X)` requires
-  the `FraserBound` premise. Given `dim_H X = dimaff(X)`, the dimension chain of tex lines 540 to
-  547 follows without a further premise (`System.dim_chain`); the squeeze of the modified
-  affinity dimension (tex lines 548 to 550) uses `FraserBound` (`System.dimmaff_eq_dimaff`). The
-  forms with suffix `noExactOverlaps` take the hypotheses of `thm:main2`
-  (`System.dim_chain_noExactOverlaps`).
+  Theorem 2.3 (arXiv:1108.2639v1); the library proves all three parts as the manuscript states
+  them (`System.fraserBound_holds`, `System.fraserROSC_holds`). Given
+  `dim_H X = dimaff(X)`, the dimension chain of tex lines 540 to 547 follows without a further
+  premise (`System.dim_chain`), and so does the squeeze of the modified affinity dimension (tex
+  lines 548 to 550), from the first part of `thm:fraser` (`System.dimmaff_eq_dimaff`,
+  `System.fraserBound_holds`). The forms with suffix `noExactOverlaps` take the hypotheses of
+  `thm:main2` (`System.dim_chain_noExactOverlaps`).
 - tex lines 542 to 544: the bound of the upper Minkowski dimension by the affinity dimension has
   no citation at this point. It is proved for every planar self-affine set
   (`PlanarSystem.upperBoxDim_attractor_le`).
@@ -290,6 +290,26 @@ finding is added where it belongs.
     general, since `φ^s` is sub-multiplicative and Jensen's inequality goes the wrong way. What
     survives is the two-parameter estimate `System.log_svfSum_le_avgBlockMeasure` for
     `1 ≤ m ≤ n`, from which a weak-star limit point gives the conclusion.
+- `thm:irred_eq_state` (tex lines 2225 to 2234) holds for every box-like tuple with rotations and
+  every `s > 0`, irreducible or not, and for these tuples its proof needs no citation of
+  Feng–Käenmäki. A tuple with rotations need not be irreducible: `(1/2) I` and
+  `[[0, 1/2], [1/2, 0]]` share the line through `(1, 1)`. For `0 < s < 2` the image
+  `μ_G = q_*μ_1` of the ergodic Gibbs measure `μ_1` of `f_{1,s}` (tex lines 2501 to 2503) has the
+  Gibbs bounds of `φ^s` with a constant `K`, since each word has the two lifts `τ(𝐢)|_n`,
+  `ω(𝐢)|_n` and `φ^s(A_w)` is the larger of the two exponentials (tex lines 2565 to 2570,
+  `System.hasGibbsBounds_map_unCode`). For an invariant `s`-equilibrium state `μ`,
+  `eq:eq_state_def` with the sub-additivity of the entropy and the energy gives
+  `n P(𝖠, s) ≤ H_μ(𝒫_0^{n-1}) + ∑_{|w| = n} μ([w]) log φ^s(A_w)`, and the lower Gibbs bound turns
+  this into `∑_{|w| = n} μ([w]) log(μ([w]) / μ_G([w])) ≤ log K` for every `n`. Bounded relative
+  entropy of the cylinder partitions gives `μ ≪ μ_G`, and `μ = μ_G` because `μ_G` is ergodic; for
+  `s ≥ 2` the statement is `thm:bernoulli_equilibrium`. Hence the equilibrium state is unique,
+  ergodic and has the Gibbs bounds
+  (`System.irred_eq_state_of_withRotations`, `System.IsEquilibriumState.eq_map_unCode`,
+  `System.IsEquilibriumState.blockRelEntropy_le`, `absolutelyContinuous_of_blockRelEntropy_le`).
+  The irreducibility of `𝖠²` in the proof of `thm:two-block-normalisation` (tex lines 2307 to
+  2309) is then not needed for the uniqueness and ergodicity of `μ^(2)` (tex lines 2324 to 2325),
+  since `𝖠²` has rotations (`System.unique_sq_equilibrium`,
+  `System.IsEquilibriumState.ergodic_of_withRotations`).
 - tex lines 2244 to 2250: correct; the invariance of `μ` is not used
   (`System.HasGibbsBounds.submultiplicative`).
 - The Bernoulli definition (tex lines 2355 to 2362) imposes the cylinder condition at every
@@ -311,15 +331,21 @@ finding is added where it belongs.
   `λ_1 + λ_2 = ∫ log |det A_{i_0}| dμ` holds for every invariant `μ`. The lemma holds for every
   box-like tuple and every `s ≥ 2`. Lean follows the entropy bound, its equality case and Gibbs'
   inequality, using `entropy_bernoulli` to verify that the Bernoulli measure attains the bound.
-- `thm:sigma_tau_omega_positive_eq_measure` does not need a proximal diagonal generator, and has
-  a shorter proof: integrating the counting inequality against the invariant measure gives
-  `μ([i]) ≤ 2μ(Σ^τ)` for an anti-diagonal `A_i`, with no use of Birkhoff's theorem or of
-  `λ_2 < λ_1` (`System.sigma_tau_omega_positive`). The prose proof is formalised as written
-  (`System.sigma_tau_omega_positive_eq_measure`).
+- `thm:sigma_tau_omega_positive_eq_measure` needs neither proximality nor a proximal diagonal
+  generator. Its proof uses the ergodicity and the full support of `μ` (tex lines 2455 to 2456),
+  which hold for every box-like tuple with rotations (`thm:irred_eq_state` above), and with
+  `Σ^τ`, `Σ^ω` given by the backward growth rates of the two axes the counting inequality holds
+  without `λ_2 < λ_1`; proximality enters the statement only through `eq:simple_lyapunov`, which
+  defines `Σ'` and makes `Σ^τ` and `Σ^ω` disjoint. The prose proof is formalised as written, for
+  every box-like tuple with rotations (`System.sigma_tau_omega_positive_eq_measure`). The lemma
+  also has a shorter proof: integrating the counting inequality against the invariant measure
+  gives `μ([i]) ≤ 2μ(Σ^τ)` for an anti-diagonal `A_i`, with no use of Birkhoff's theorem or of
+  `λ_2 < λ_1` (`System.sigma_tau_omega_positive`).
 - `eq:orientation-restrictions` holds for every Borel set `E`, from `thm:eq_state_is_sum` alone;
   only the positivity uses `thm:sigma_tau_omega_positive_eq_measure`.
 - Ergodicity of the equilibrium state follows from `thm:eq_state_is_sum` alone, also for
-  `μ^(2)`: `μ = q_*μ_1` is a factor of the ergodic `μ_1` (`System.ergodic_of_hasProximalDiagonal`).
+  `μ^(2)`: `μ = q_*μ_1` is a factor of the ergodic `μ_1` (`System.ergodic_of_hasProximalDiagonal`,
+  `System.IsEquilibriumState.ergodic_of_withRotations`).
 - tex lines 2484 to 2487: the limit defining `P_Z(f)` over periodic points exists exactly when
   some generator is diagonal; with anti-diagonal generators only, the sum vanishes for odd `n`
   (`periodicSum_eq_zero_of_odd`). Mixing is not needed. The form with all admissible words has a
@@ -367,16 +393,28 @@ finding is added where it belongs.
   (`System.lyapBar_map_flipAxis_le_of_isGibbs`). Every invariant measure with the Gibbs bounds of
   `thm:irred_eq_state` equals `q_*μ_1` (`System.eq_of_hasGibbsBounds`,
   `System.hasGibbsBounds_map_unCode`), so it is unique and ergodic, and the proposition needs
-  neither uniqueness nor ergodicity of `μ` as a hypothesis. In the formalised entry a proximal
-  diagonal generator enters only through the irreducibility that `FengKaenmakiGibbs` takes to
-  pass from the equilibrium state to its Gibbs bounds (`System.irreducible_of_hasProximalDiagonal`).
+  neither uniqueness nor ergodicity of `μ` as a hypothesis. The passage from the equilibrium
+  state to its Gibbs bounds needs neither irreducibility nor a proximal diagonal generator
+  (`thm:irred_eq_state` above), so the formalised entry uses no proximal diagonal generator.
 - Fraser–Jordan–Jurga's decomposition uses no separation condition; strong separation enters
   their paper only from Section 2 on.
-- `eq:simple_lyapunov` is Morris–Shmerkin, Theorem 3.1, directly; Lemmas 3.4 and 3.5 combine to
-  it only through the uniqueness of their Proposition 3.3. Morris–Shmerkin order products as
-  `A_{x_n} ⋯ A_{x_1}`; their theorem applies to the transposed tuple, which has the same norms of
-  products and the same equilibrium states. The citation of Morris–Shmerkin, Theorem 4.2, at tex
-  lines 1583 to 1584 is not used by any proof.
+- `eq:simple_lyapunov` (tex lines 2362 to 2373) needs neither a proximal diagonal generator nor
+  the passage to `𝖠²` and `μ^(2)` of tex lines 2366 to 2369. Morris–Shmerkin's Lemma 3.4, an
+  equilibrium state with `λ_1 = λ_2` is Bernoulli, is Gibbs' inequality and holds for every
+  box-like tuple and every `s ≥ 0`: with `q_i = |det A_i|^{s/2}`, equal exponents give
+  `Λ(𝖠, μ, s) = ∑_i μ([i]) log q_i`, so
+  `P(𝖠, s) ≤ H_μ(𝒫) + ∑_i μ([i]) log q_i ≤ log ∑_i q_i ≤ P(𝖠, s)`, and equality forces
+  `h_0(μ) = H_μ(𝒫)` (`System.IsEquilibriumState.isBernoulli_of_lyapunov_eq`). Lemma 3.5 holds for
+  every proximal tuple with rotations, since a measure with the Gibbs bounds is not even
+  quasi-Bernoulli (above), and every equilibrium state has the Gibbs bounds (`thm:irred_eq_state`
+  above). The two lemmas therefore combine directly for every proximal box-like tuple with
+  rotations (`System.IsEquilibriumState.lyapunov₂_lt_lyapunov₁_of_withRotations`,
+  `morrisShmerkinLyapunov_holds` in `BoxLike/MorrisShmerkin.lean`); in Morris–Shmerkin they
+  combine through the uniqueness of their Proposition 3.3, which the Gibbs bounds of every
+  equilibrium state replace. Morris–Shmerkin order products as `A_{x_n} ⋯ A_{x_1}`; their
+  Theorem 3.1 applies to the transposed tuple, which has the same norms of products and the same
+  equilibrium states. The citation of Morris–Shmerkin, Theorem 4.2, at tex lines 1583 to 1584 is
+  not used by any proof.
 
 ## `sec:ledrappier_young_formula` and `sec:dimension_of_projections`
 
@@ -469,8 +507,10 @@ finding is added where it belongs.
     2718 to 2723) concerns proximal box-like systems with rotations, and a diagonal subsystem has
     no rotations; the citation is within Feng's theorem but outside `thm:feng1` as stated. Lean
     derives the scalar formula from the planar `FengLedrappierYoung` applied to an auxiliary
-    box-like system carrying the line system (`BoxLike/MainTwoProse/ScalarFeng.lean`); the
-    literal transcription is the unused proposal `FengLedrappierYoungBarScalar`.
+    box-like system carrying the line system (`BoxLike/MainTwoProse/ScalarFeng.lean`). The same
+    construction gives the scalar part of `thm:feng1` for the projective system of every
+    box-like system, with neither rotations nor proximality
+    (`System.isExactDim_map_projBar_of_fengLedrappierYoung`).
   - tex lines 3714 to 3728: the independence of past and future of the Bernoulli measure,
     invoked at tex line 3726, is needed already at tex line 3717 to identify the conditional
     entropies `q_{x,n}`, `q_{y,n}` with Feng's entropies

@@ -34,6 +34,7 @@ hypothesis.
 * `System.exists_typical_words_smb`: the typical words of an ergodic measure on `Σ_Z`.
 * `System.exists_typical_words_prose`: the typical words of the equilibrium state.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.General
 public import BoxLike.Main
 public import BoxLike.MainTwoProse.Pigeonhole
@@ -521,10 +522,10 @@ which charges every cylinder of `Σ_Z`, has entropy `h_0(μ)` (`thm:entropy_eq_g
 integrals `∫ f_{1,1} dμ_1 = λ_1`, `∫ f_{2,1} dμ_1 = λ_2`, by the Shannon–McMillan–Breiman
 theorem, the Birkhoff theorem, the return of `μ_1` to `τ(Σ)` and the pigeonhole on the count
 vectors.
-Depends on: `ShannonMcMillanBreimanStatement`, `FengKaenmakiGibbs`,
+Depends on: `ShannonMcMillanBreimanStatement`, `EquilibriumGibbsStatement`,
 `FraserJordanJurgaDecomposition`. -/
 theorem exists_typical_words_prose (hsmb : ShannonMcMillanBreimanStatement.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) {s : ℝ} (hs0 : 0 < s)
     (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState s μ) :
@@ -535,7 +536,7 @@ theorem exists_typical_words_prose (hsmb : ShannonMcMillanBreimanStatement.{u})
       Tendsto (fun m => Real.log |a m| / n m) atTop (𝓝 (S.lyapunov₁ μ)) ∧
       Tendsto (fun m => Real.log |b m| / n m) atTop (𝓝 (S.lyapunov₂ μ)) := by
   have : Nonempty ι := nonempty_of_measure μ
-  have hgibbs := hfk S (irreducible_of_hasProximalDiagonal hrot hdiag) hs0 hs2 μ hinv heq
+  have hgibbs := hfk S hrot hs0 hs2 μ hinv heq
   obtain ⟨μ₁, μ₂, hdec⟩ := hfjj S hrot hdiag hs0 hs2 μ hinv hgibbs
   have := hdec.prob₁
   have hpos : ∀ y ∈ subshift S.o, ∀ n : ℕ, 0 < n → 0 < μ₁.real (cylinder (block n y)) :=

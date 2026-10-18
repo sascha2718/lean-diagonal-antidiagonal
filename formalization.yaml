@@ -12,7 +12,7 @@ project:
   description: >-
     Lean formalisation and source review of the manuscript, with an entry for every numbered
     statement in Solution.lean. Challenge.lean contains only the three headline results
-    (Theorems 1.2, 1.3 and 4.16), their explicit literature hypotheses and the 72 definitions
+    (Theorems 1.2, 1.3 and 4.16), their explicit literature hypotheses and the 62 definitions
     their statements need. All three are proved for their full ranges. Every numbered statement
     is formalised or cited, except Question 1.4, which is open, and no result rests on an
     unauthorised premise; docs/review.json records every entry.
@@ -53,13 +53,18 @@ sources:
       - "Pablo Shmerkin"
     type: "article"
     id: "doi:10.1090/tran/7334"
-    location: "Trans. Amer. Math. Soc. 371 (2019), Theorem 3.1 (numbering of arXiv:1602.08789v3)"
-    relationship: "other"
+    location: "Trans. Amer. Math. Soc. 371 (2019), Theorem 3.1 and Lemmas 3.4 and 3.5 (numbering of arXiv:1602.08789v3)"
+    relationship: "independently-proves"
     note: >-
-      Assumed, not proved. Stated as the Prop-valued definition MorrisShmerkinLyapunov
-      (BoxLike/Literature.lean): for a box-like system with rotations, a proximal diagonal
-      generator and 0 < s < 2, every s-equilibrium state has distinct Lyapunov exponents. A
-      hypothesis of the audited Theorems 1.2, 1.3, 4.4 and 4.16 and of the dimension formula.
+      Proved, with no literature input. Stated as the Prop-valued definition
+      MorrisShmerkinLyapunov (BoxLike/Literature.lean): for a box-like system with rotations, a
+      proximal diagonal generator and 0 < s < 2, every s-equilibrium state has distinct Lyapunov
+      exponents. The library proves it (morrisShmerkinLyapunov_holds, BoxLike/MorrisShmerkin.lean)
+      along Lemmas 3.4 and 3.5: an equilibrium state with equal exponents is Bernoulli, by Gibbs'
+      inequality, and a measure with the Gibbs bounds is not; the Gibbs bounds of the equilibrium
+      state are equilibriumGibbs. The conclusion holds for every proximal box-like tuple with
+      rotations, with no proximal diagonal generator. The library statements that take it as a
+      hypothesis receive this proof in Solution; no audited theorem takes it.
   - title: "Equilibrium states of the pressure function for products of matrices"
     authors:
       - "De-Jun Feng"
@@ -67,19 +72,32 @@ sources:
     type: "article"
     id: "doi:10.3934/dcds.2011.30.699"
     location: "Discrete Contin. Dyn. Syst. 30 (2011), Proposition 1.2"
-    relationship: "other"
+    relationship: "independently-proves"
     note: >-
-      Assumed, not proved. Stated for irreducible box-like systems and 0 < s < 2 as two
-      Prop-valued definitions: FengKaenmakiGibbs (BoxLike/Literature.lean), the Gibbs bounds of
-      Proposition 3.10, a hypothesis of the audited Theorems 1.2, 1.3, 4.4 and 4.16 and of the
-      dimension formula; and FengKaenmakiUnique (BoxLike/LiteratureRemarks.lean), uniqueness of
-      the s-equilibrium state, which no audited theorem takes. For 1 < s < 2 both apply the
-      source to the rescaled tuple |det A_i|^((s-1)/(2-s)) A_i with q = 2 - s. The statement
-      in the form of the source, for every irreducible tuple of invertible planar matrices and
-      the norm potential on the one-sided shift, is FengKaenmakiNormEquilibrium
-      (BoxLike/LiteratureFengKaenmaki.lean), authorised by the project owner; it implies both
-      box-like predicates and is a hypothesis of Proposition 3.10 at the article's scope
-      (MatrixTuple.irred_eq_state_of_fengKaenmaki), of no audited theorem.
+      Proved, with no literature input. The statement in the form of the source, for every
+      irreducible tuple of invertible planar matrices and the norm potential on the one-sided
+      shift, is FengKaenmakiNormEquilibrium (BoxLike/LiteratureFengKaenmaki.lean), authorised by
+      the project owner; the library proves it (fengKaenmakiNormEquilibrium_holds,
+      BoxLike/QuasiMultiplicative/): the norm of an irreducible tuple is quasi-multiplicative
+      with connecting words of length at most one, Bowen's construction with periodic-orbit
+      measures gives an ergodic Gibbs measure of the norm potential, and every invariant
+      equilibrium state equals it by a bound on the relative entropy of the cylinder partitions;
+      the natural extension transfers this to the one-sided shift. Its box-like specialisations
+      for 0 < s < 2, FengKaenmakiGibbs (BoxLike/Literature.lean), the Gibbs bounds of
+      Proposition 3.10, and FengKaenmakiUnique (BoxLike/LiteratureRemarks.lean), uniqueness of
+      the s-equilibrium state, apply the source to the rescaled tuple
+      |det A_i|^((s-1)/(2-s)) A_i with q = 2 - s for 1 < s < 2, and hold
+      (fengKaenmakiGibbs_holds, fengKaenmakiUnique_holds). The library statements of
+      Proposition 3.10 for irreducible tuples (MatrixTuple.irred_eq_state_of_fengKaenmaki,
+      System.irred_eq_state) take these statements as hypotheses and receive the proofs in
+      Solution. For box-like tuples with rotations, irreducible or not, which include the tuples
+      of the main results, the library proves Proposition 3.10 with no literature input
+      (System.irred_eq_state_of_withRotations, BoxLike/EquilibriumGibbs.lean): for 0 < s < 2
+      every invariant s-equilibrium state equals the image of Bowen's ergodic Gibbs measure
+      under forgetting the orientation, by a bound on the relative entropy of the cylinder
+      partitions. The audited theorems take the Gibbs bounds in this form,
+      EquilibriumGibbsStatement, which Solution discharges with equilibriumGibbs; no audited
+      theorem takes a Feng–Käenmäki predicate.
   - title: "Dimensions of equilibrium measures on a class of planar self-affine sets"
     authors:
       - "Jonathan M. Fraser"
@@ -116,8 +134,8 @@ sources:
       the projective exponential separation condition, which is their exponential separation
       for the projective system, the projection of an ergodic measure on the sub-shift is
       exact-dimensional with the entropy-to-exponent ratio, capped at one, as its dimension. A
-      hypothesis of the audited Theorems 1.2, 4.4 and 4.16 and of the dimension formula; the
-      proof of Theorem 1.3 does not use it.
+      hypothesis of the audited Theorems 1.2 and 4.16, of Theorem 4.4 and of the dimension
+      formula; the proof of Theorem 1.3 does not use it.
   - title: "Dimension of invariant measures for affine iterated function systems"
     authors:
       - "De-Jun Feng"
@@ -126,11 +144,13 @@ sources:
     location: "Duke Math. J. 172 (2023), Lemma 4.6 and Theorems 1.2 and 1.3 (numbering of arXiv:1901.01691v2)"
     relationship: "other"
     note: >-
-      Theorems 1.2 and 1.3 are assumed, not proved: FengLedrappierYoung and
-      FengLedrappierYoungBar (BoxLike/LiteratureFeng.lean), the Ledrappier–Young formula for the
-      plane and for the projective system, for box-like systems. FengLedrappierYoung is a
-      hypothesis of the audited Theorems 1.3 and 4.16, FengLedrappierYoungBar of Theorem 4.16 and
-      of the dimension formula. The planar formula for every planar self-affine set,
+      Theorems 1.2 and 1.3 are assumed, not proved, in the form FengLedrappierYoung
+      (BoxLike/LiteratureFeng.lean), the Ledrappier–Young formula in the plane for box-like
+      systems, a hypothesis of the audited Theorems 1.3 and 4.16 and of the dimension formula.
+      The formula for the projective system, FengLedrappierYoungBar, follows from it through the
+      planar system z ↦ diag(g'_j, g'_j / 2) z + (g_j(0), 0) of the projective system
+      (fengLedrappierYoungBar_of_fengLedrappierYoung, BoxLike/ProjectiveLineSystem.lean) and is a
+      hypothesis of no audited theorem. The planar formula for every planar self-affine set,
       PlanarFengLedrappierYoung (BoxLike/LiteraturePlanarFeng.lean), is authorised by the
       project owner; it implies FengLedrappierYoung and is a hypothesis of Theorem 4.2 at the
       article's scope (planar_feng1), of no audited theorem. Lemma 4.6, first identity of
@@ -172,12 +192,18 @@ sources:
     type: "article"
     id: "doi:10.1088/0951-7715/25/7/2075"
     location: "Nonlinearity 25 (2012), Theorem 2.3 and Corollary 2.5 (numbering of arXiv:1108.2639v1)"
-    relationship: "other"
+    relationship: "independently-proves"
     note: >-
-      Assumed, not proved. Theorem 2.3 is stated as System.FraserBound and System.FraserROSC
-      (BoxLike/FraserChain.lean), which give Theorem 1.1 of the paper; Corollary 2.5 is derived
-      from them. System.FraserBound is a hypothesis of the squeeze dimmaff(X) = dimaff(X) in the
-      introduction. No audited theorem takes them.
+      Proved, with no literature input. Theorem 2.3 is stated as System.FraserBound and
+      System.FraserROSC (BoxLike/FraserChain.lean), which give Theorem 1.1 of the paper, and the
+      library proves both along Fraser's Section 5 (System.fraserBound_holds,
+      System.fraserROSC_holds, BoxLike/Fraser/): the upper bound from his Lemma 5.1 (1) and the
+      cover by the copies of the stopping words, the lower bound under the rectangular open set
+      condition from his Lemma 5.1 (2) and an area count for the disjoint rectangles. In the
+      super-multiplicative case of Lemma 5.1 (2) a block sum takes the place of Fraser's k-block
+      stopping set, which need not be prefix-free. Corollary 2.5 is derived from the second
+      part. The squeeze dimmaff(X) = dimaff(X) in the introduction takes System.FraserBound and
+      receives this proof in Solution. No audited theorem takes them.
   - title: "Super-exponential condensation without exact overlaps"
     authors:
       - "Balázs Bárány"
@@ -197,11 +223,16 @@ sources:
     type: "article"
     id: "doi:10.1016/j.jmaa.2013.12.030"
     location: "J. Math. Anal. Appl. 413 (2014), Theorem 2.2"
-    relationship: "other"
+    relationship: "independently-proves"
     note: >-
-      Stated as System.RossiBound (BoxLike/DimensionFormula.lean) and taken by no theorem: the
-      proof of Theorem 4.16 evaluates the Ledrappier–Young formula to an equality. Equality in
-      the bound for the equilibrium state of Theorem 4.16 is proved.
+      Proved, with no literature input. Stated as System.RossiBound
+      (BoxLike/DimensionFormula.lean) for every box-like system and every ergodic measure, and
+      proved by a covering argument (System.rossiBound, BoxLike/RossiBound.lean,
+      BoxLike/Rossi.lean): the Shannon–McMillan–Breiman theorem and the Furstenberg–Kesten limits
+      along the forward products bound the typical words and the rectangles containing their
+      copies of X, and the mass distribution principle bounds the lower pointwise dimension.
+      Taken by no theorem: the proof of Theorem 4.16 evaluates the Ledrappier–Young formula to an
+      equality. Equality in the bound for the equilibrium state of Theorem 4.16 is proved.
   - title: "The Hausdorff dimension of self-affine fractals"
     authors:
       - "K. J. Falconer"
@@ -222,14 +253,13 @@ related_formalizations: []
 
 status:
   scope: >-
-    All 41 numbered entries assessed: 38 formalized, 2 cited (Theorems 1.1 and 4.2) and
+    All 41 numbered entries assessed: 39 formalized, 1 cited (Theorem 4.2) and
     1 open question (Question 1.4, recorded as a proposition with no answer). With the 45 prose
-    spans the manifest reads 81 formalized, 4 cited and 1 intentionally unformalized, with
-    14 literature hypotheses. The three headline proofs are
+    spans the manifest reads 83 formalized, 2 cited and 1 intentionally unformalized, with
+    6 literature hypotheses. The three headline proofs are
     complete. The library and Solution have no sorry and no declared axiom. Cited literature
     predicates are explicit hypotheses, not kernel axioms. No result rests on an unauthorised
-    premise; the one proposal in BoxLike/Proposals/, FengLedrappierYoungBarScalar, is used by
-    no result.
+    premise, and no proposed premise is pending.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: ["propext", "Classical.choice", "Quot.sound"]
@@ -240,10 +270,6 @@ status:
       axioms: ["propext", "Classical.choice", "Quot.sound"]
       comparator_config: "comparator-config.json"
       literature_dependencies:
-        - statement: "MorrisShmerkinLyapunov: the Lyapunov exponents of the equilibrium state are distinct"
-          source: "On equality of Hausdorff and affinity dimensions, via self-affine measures on positive subsystems"
-        - statement: "FengKaenmakiGibbs: the Gibbs bounds of the equilibrium state"
-          source: "Equilibrium states of the pressure function for products of matrices"
         - statement: "JordanRapaportDimension: the dimension of projected ergodic measures under exponential separation"
           source: "Dimension of ergodic measures projected onto self-similar sets with overlaps"
     - declaration: "Challenge.audit_main2"
@@ -252,10 +278,6 @@ status:
       axioms: ["propext", "Classical.choice", "Quot.sound"]
       comparator_config: "comparator-config.json"
       literature_dependencies:
-        - statement: "MorrisShmerkinLyapunov: the Lyapunov exponents of the equilibrium state are distinct"
-          source: "On equality of Hausdorff and affinity dimensions, via self-affine measures on positive subsystems"
-        - statement: "FengKaenmakiGibbs: the Gibbs bounds of the equilibrium state"
-          source: "Equilibrium states of the pressure function for products of matrices"
         - statement: "FengLedrappierYoung: the Ledrappier–Young formula for planar ergodic measures (Theorems 1.2 and 1.3)"
           source: "Dimension of invariant measures for affine iterated function systems"
         - statement: "KittleKoglerDimension: the dimension of a self-similar measure on the line without exact overlaps (Theorem 1.1)"
@@ -266,15 +288,9 @@ status:
       axioms: ["propext", "Classical.choice", "Quot.sound"]
       comparator_config: "comparator-config.json"
       literature_dependencies: &main_line
-        - statement: "MorrisShmerkinLyapunov: the Lyapunov exponents of the equilibrium state are distinct"
-          source: "On equality of Hausdorff and affinity dimensions, via self-affine measures on positive subsystems"
-        - statement: "FengKaenmakiGibbs: the Gibbs bounds of the equilibrium state"
-          source: "Equilibrium states of the pressure function for products of matrices"
         - statement: "JordanRapaportDimension: the dimension of projected ergodic measures under exponential separation"
           source: "Dimension of ergodic measures projected onto self-similar sets with overlaps"
         - statement: "FengLedrappierYoung: the Ledrappier–Young formula for planar ergodic measures (Theorems 1.2 and 1.3)"
-          source: "Dimension of invariant measures for affine iterated function systems"
-        - statement: "FengLedrappierYoungBar: the Ledrappier–Young formula for the projective system (Theorems 1.2 and 1.3)"
           source: "Dimension of invariant measures for affine iterated function systems"
 
 automation:
@@ -287,8 +303,8 @@ automation:
         parallel worker agents, one per task, under the rules of tools/AGENT_RULES.md and
         tools/WORKER_RULES.md, all running Claude Opus 5.5 (claude-opus-5-5). The agents
         stated, proved, refactored and repaired the library, the literature hypotheses, the
-        proposed premises of BoxLike/Proposals/ and the audit modules, and maintained the
-        records of docs/.
+        proposed literature premises and the audit modules, and maintained the records of
+        docs/.
       cost:
         wall_time: "not tracked"  # TODO(authors): confirm.
         spend_usd: "subscription-based"  # TODO(authors): confirm.
@@ -326,20 +342,23 @@ fidelity:
     Where the paper speaks of the unique s-equilibrium state, the audited statements hold for
     every shift-invariant s-equilibrium state and assume neither uniqueness nor ergodicity.
     Theorem 4.16 is stated as exact-dimensionality of the projected equilibrium state with
-    dimension min{2, dimaff(X)}. The six cited theorems of the headline results are Prop-valued
+    dimension min{2, dimaff(X)}. The four cited theorems of the headline results are Prop-valued
     definitions, restated in Challenge.lean, and the audited theorems take them as hypotheses and
-    are proved conditionally on them. Each quantifies over every
-    finite alphabet and every box-like system, carries the hypotheses of the cited theorem and
-    is stated about defined objects only. Their statements reduce the sources as follows: the
-    sources work on the one-sided shift; Morris–Shmerkin's theorem applies to the transposed
-    tuple; Feng–Käenmäki's proposition
-    applies for 1 < s < 2 to a rescaled tuple with q = 2 - s; Feng's set Σ' lies inside the
-    box-like Σ' of the paper, with almost everywhere equal conditional measures; Kittle–Kogler's
-    theorem is taken in the form with the Shannon entropy of the weights, which the source
-    identifies with the random walk entropy in the absence of exact overlaps. The audited theorems
-    use Proposition 3.10 only through its Gibbs bounds. Proposition 3.14 of Fraser–Jordan–Jurga
-    is proved in the library (fraserJordanJurgaDecomposition_holds). Off the main line, Fraser's
-    Theorem 2.3 bounds the upper Minkowski dimension, as the manuscript states. The library
+    are proved conditionally on them. Each quantifies over every finite alphabet and every
+    box-like system, carries the hypotheses of the cited theorem and is stated about defined
+    objects only. Their statements reduce the sources as follows: the sources work on the
+    one-sided shift; Feng's set Σ' lies inside the box-like Σ' of the paper, with almost
+    everywhere equal conditional measures; Kittle–Kogler's theorem is taken in the form with the
+    Shannon entropy of the weights, which the source identifies with the random walk entropy in
+    the absence of exact overlaps. The audited theorems use Proposition 3.10 only through its
+    Gibbs bounds, which the library proves for box-like tuples with rotations (equilibriumGibbs),
+    and the library proves the distinct Lyapunov exponents that the manuscript takes from
+    Morris–Shmerkin (morrisShmerkinLyapunov_holds). Proposition 3.14 of Fraser–Jordan–Jurga is
+    proved in the library (fraserJordanJurgaDecomposition_holds). Off the main line, Fraser's
+    Theorem 2.3 bounds the upper Minkowski dimension, as the manuscript states, and the library
+    proves it (System.fraserBound_holds, System.fraserROSC_holds), as it proves Feng–Käenmäki's
+    Proposition 1.2 for irreducible planar tuples (fengKaenmakiNormEquilibrium_holds) and
+    Rossi's bound (System.rossiBound). The library
     declares no axiom. Challenge.lean contains one sorry per audited theorem. Solution.lean
     supplies the three complete headline proofs; comparator-config.json declares no
     definition_names, so no
@@ -371,10 +390,10 @@ alignment:
       status: "literature-dependency"
       note: >-
         Full parameter range, from System.main1_dimaff_all: below two by the Gibbs
-        decomposition, from two on by the orientation lift of Theorem 4.4. Its three explicit
-        literature inputs are MorrisShmerkinLyapunov, FengKaenmakiGibbs and
-        JordanRapaportDimension; for s >= 2 only JordanRapaportDimension is used. The Gibbs
-        decomposition is the theorem fraserJordanJurgaDecomposition_holds.
+        decomposition, from two on by the orientation lift of Theorem 4.4. Its one explicit
+        literature input is JordanRapaportDimension. The distinct Lyapunov exponents, the Gibbs
+        bounds of the equilibrium state and the Gibbs decomposition are the theorems
+        morrisShmerkinLyapunov_holds, equilibriumGibbs and fraserJordanJurgaDecomposition_holds.
     - source: "Theorem 1.3 (thm:main2)"
       lean: "Challenge.audit_main2"
       module: "Challenge"
@@ -382,19 +401,22 @@ alignment:
       note: >-
         Full parameter range, from System.main2_prose, along the proof of the manuscript, with
         the Shannon–McMillan–Breiman theorem and the Gibbs decomposition
-        (fraserJordanJurgaDecomposition_holds) proved in the library. Its four explicit
-        literature inputs are MorrisShmerkinLyapunov, FengKaenmakiGibbs, FengLedrappierYoung and
-        KittleKoglerDimension.
+        (fraserJordanJurgaDecomposition_holds) proved in the library, and so are the distinct
+        Lyapunov exponents and the Gibbs bounds of the equilibrium state
+        (morrisShmerkinLyapunov_holds, equilibriumGibbs). Its two explicit literature inputs are
+        FengLedrappierYoung and KittleKoglerDimension.
     - source: "Theorem 4.16 (thm:main_extended)"
       lean: "Challenge.audit_main_extended"
       module: "Challenge"
       status: "literature-dependency"
       note: >-
-        Full parameter range, from System.main_extended_min. Its five explicit literature inputs
-        are MorrisShmerkinLyapunov, FengKaenmakiGibbs, JordanRapaportDimension,
-        FengLedrappierYoung and FengLedrappierYoungBar; Feng's information-sum identity and the
-        Gibbs decomposition enter as the theorems fengInfoSum_holds, fengInfoSumBar_holds and
-        fraserJordanJurgaDecomposition_holds. The s>=2 branch uses none of these inputs.
+        Full parameter range, from System.main_extended_min. Its two explicit literature inputs
+        are JordanRapaportDimension and FengLedrappierYoung; the distinct Lyapunov exponents, the
+        Gibbs bounds of the equilibrium state, Feng's information-sum identity, the Gibbs
+        decomposition and Feng's scalar Ledrappier–Young formula enter as the theorems
+        morrisShmerkinLyapunov_holds, equilibriumGibbs, fengInfoSum_holds, fengInfoSumBar_holds,
+        fraserJordanJurgaDecomposition_holds and fengLedrappierYoungBar_of_fengLedrappierYoung.
+        The s>=2 branch uses none of these inputs.
 
 acknowledgements: >-
   Lean 4 and Mathlib (leanprover-community), the leanprover comparator with the kernels bundled

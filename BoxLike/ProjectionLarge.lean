@@ -23,6 +23,7 @@ respect to this average.
 * `System.eq_state_proj_dim_of_two_le`: the conclusions of `thm:eq_state_proj_dim` for `s ≥ 2`.
 * `System.eq_state_proj_dim_all`: `thm:eq_state_proj_dim` for every `s > 0`.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.General
 public import BoxLike.OrientationLift
 
@@ -180,7 +181,8 @@ double-dimensional with upper packing dimension `min{1, -h_0(μ)/λ_1(𝖠, μ)}
 dimension `min{1, -h_0(μ)/λ_2(𝖠, μ)}`. The conclusion holds for every invariant `s`-equilibrium
 state. For `s ≥ 2` the proof uses the orientation lift (`eq_state_proj_dim_of_two_le`), for
 `0 < s < 2` the Gibbs decomposition (`eq_state_proj_dim`). -/
-theorem eq_state_proj_dim_all (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem eq_state_proj_dim_all (hms : MorrisShmerkinLyapunov.{u})
+    (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation) (hs0 : 0 < s)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]

@@ -10,9 +10,10 @@ cited by the article without proof are `Prop`-valued definitions of the modules
 `BoxLike/Literature.lean`, `BoxLike/LiteratureFeng.lean`, `BoxLike/LiteraturePlanarFeng.lean`,
 `BoxLike/LiteratureFengKaenmaki.lean` and `BoxLike/LiteratureRemarks.lean`, and every result that
 uses one takes it as a hypothesis; the last module holds the ones that no main result depends
-on. Premises that are not authorised are in `BoxLike/Proposals/`, which this module does not
-import. `docs/correspondence.md` records the
-state of every numbered result, the remaining work and the fidelity boundary, and
+on. The library proves several of these statements, and `Solution.lean` passes the proofs to
+the results that take them. A premise that is not authorised goes in `BoxLike/Proposals/`,
+which this module does not import; none is pending. `docs/correspondence.md` records the state
+of every numbered result, the remaining work and the fidelity boundary, and
 `docs/mathlib-gaps.md` the representation.
 
 * `Orientation`: the two-sided shift `σ^n` and the orientation cocycle `ε_n` of
@@ -44,7 +45,8 @@ state of every numbered result, the remaining work and the fidelity boundary, an
 * `Thermodynamic`: Lyapunov exponents, `eq:eq_state_def`, the potentials `f_{1,s}`, `f_{2,s}`,
   Gibbs measures on `Σ_Z`, the conclusion of `thm:eq_state_is_sum`, the coordinate marginals.
 * `Literature`: the literature theorems of the main line as `Prop`s: Morris–Shmerkin,
-  Feng–Käenmäki (the Gibbs bounds), Fraser–Jordan–Jurga, Jordan–Rapaport, Kittle–Kogler.
+  Feng–Käenmäki (the Gibbs bounds), Fraser–Jordan–Jurga, Jordan–Rapaport, Kittle–Kogler. The
+  library proves the statements of Morris–Shmerkin, Feng–Käenmäki and Fraser–Jordan–Jurga.
 * `Main`: `thm:entropy_eq_gibbs` and the decomposition `eq:proj_eq_is_sum`, `eq:gibbs_proj_dim`
   of the coordinate marginals, for a tuple containing a proximal diagonal generator.
 * `Proximal`: proximal matrices and tuples, `thm:box_like_proximal`.
@@ -110,14 +112,14 @@ state of every numbered result, the remaining work and the fidelity boundary, an
 * `BernoulliEquilibrium`: Bernoulli measures, their invariance, ergodicity and entropy; for
   `s ≥ 2` the equilibrium state exists, is unique and is Bernoulli (`sec:normalisation`).
 * `DimensionFormula`: `\dim_H(X) = min{2, dimaff}` under the hypotheses of `thm:main_extended`,
-  the statement of Rossi's bound `eq:hausdorff_ergodic_lyapunov`, and equality in it for the
-  equilibrium state.
+  the statement of Rossi's bound `eq:hausdorff_ergodic_lyapunov`, which `RossiBound` proves, and
+  equality in it for the equilibrium state.
 * `LiteraturePlanarFeng`, `Planar.FengOne`: Feng's Ledrappier–Young formula for planar
   self-affine systems as a `Prop`, its box-like specialisation, and `thm:feng1` at the article's
   scope.
 * `LiteratureFengKaenmaki`, `IrreducibleEquilibriumTuple`: Feng–Käenmäki, Proposition 1.2, for
   irreducible invertible planar tuples as a `Prop`, its reductions and box-like specialisations,
-  and `thm:irred_eq_state` at the article's scope.
+  and `thm:irred_eq_state` at the article's scope; `QuasiMultiplicative` proves the `Prop`.
 * `Bowen`: Bowen's theorem, the existence of an ergodic Gibbs measure for every Hölder potential
   on the mixing sub-shift `Σ_Z` (`bowenGibbsExistence`): the weighted periodic-orbit measures
   satisfy uniform Gibbs bounds up to every length, a limit by compactness is an invariant Gibbs
@@ -127,13 +129,35 @@ state of every numbered result, the remaining work and the fidelity boundary, an
   two `s`-Gibbs measures and its Lyapunov exponents (`fraserJordanJurgaDecomposition_holds`), from
   Bowen's theorem, the Gibbs bounds of the image of `μ_1` under forgetting the orientation, and a
   relative-entropy comparison of the two projective exponents.
+* `EquilibriumGibbsStatement`, `Support.RelativeEntropy`, `EquilibriumGibbs`: `thm:irred_eq_state`
+  for box-like tuples with rotations and every `s > 0`, with no literature premise: every
+  equilibrium state is the image of Bowen's Gibbs measure, by a uniform bound on the relative
+  entropy over the cylinders (`equilibriumGibbs`, `System.irred_eq_state_of_withRotations`).
+* `MorrisShmerkin`: `eq:simple_lyapunov` from Morris–Shmerkin's Lemmas 3.4 and 3.5, proved, and
+  the statement `MorrisShmerkinLyapunov` (`morrisShmerkinLyapunov_holds`).
+* `Fraser`: `thm:fraser` for every box-like self-affine set, with no literature premise: the
+  upper bound `\overline{\dim}_M X ≤ dimmaff(X)` after Fraser's §5 (`Upper`) and the statement
+  `System.FraserBound` (`UpperBound`, `System.fraserBound_holds`); the `δ`-stoppings and Fraser's
+  Lemma 5.1 (2) (`LowerStop`); the lower bound `dimmaff(X) ≤ \underline{\dim}_M X` under the
+  rectangular open set condition (`LowerCover`, `Lower`); and the statement `System.FraserROSC`
+  (`Main`, `System.fraserROSC_holds`).
+* `Rossi`, `RossiBound`: Rossi's bound `eq:hausdorff_ergodic_lyapunov` by a covering argument,
+  from the Shannon–McMillan–Breiman theorem and the Furstenberg–Kesten limits along the forward
+  products, and the statement `System.RossiBound` (`System.rossiBound`).
+* `QuasiMultiplicative`: Feng–Käenmäki, Proposition 1.2, for every irreducible tuple of
+  invertible planar matrices, with no literature premise: the norm of an irreducible tuple is
+  quasi-multiplicative, the potential `‖·‖^q` has an ergodic Gibbs measure by Bowen's
+  construction, and every invariant `q`-equilibrium state equals it by a relative-entropy bound;
+  the statements `FengKaenmakiNormEquilibrium`, `FengKaenmakiGibbs` and `FengKaenmakiUnique` hold
+  (`fengKaenmakiNormEquilibrium_holds`, `fengKaenmakiGibbs_holds`, `fengKaenmakiUnique_holds`).
 * `LiteratureRemarks`: the literature theorems that no main result depends on, as `Prop`s:
-  Feng–Hu, Theorem 2.8, and the uniqueness part of `thm:irred_eq_state`.
+  Feng–Hu, Theorem 2.8, and the uniqueness part of `thm:irred_eq_state`, which
+  `QuasiMultiplicative` proves.
 * `NoSeparation`: the remark before `thm:eq_state_proj_dim` that the coordinate marginals are
   double-dimensional without separation, and the uniqueness of `μ^(2)` in
   `thm:two-block-normalisation`.
-* `UniqueEquilibrium`: uniqueness of the `s`-equilibrium state of a proximal box-like tuple
-  with rotations for every `s > 0` (`thm:irred_eq_state`).
+* `UniqueEquilibrium`: uniqueness of the `s`-equilibrium state of a box-like tuple with
+  rotations for every `s > 0` (`thm:irred_eq_state`), with no literature premise.
 * `CodingTopology`: `τ`, `ω` as closed embeddings, `β` as a homeomorphism conjugating `σ²` to
   the shift, the natural projection `η` of `sec:two_sided_shift_space`; `η_*` is injective and
   preserves ergodicity in both directions.
@@ -170,10 +194,10 @@ state of every numbered result, the remaining work and the fidelity boundary, an
   `dimmaff(X) ≤ dimaff(X)` for every box-like set.
 * `FalconerBound`: Falconer's bound `\overline{\dim}_M X ≤ min{2, dimaff(X)}` for every box-like
   self-affine set, and with it `eq:hausdorff_affinity_upper_bound`.
-* `FraserChain`: `thm:fraser`, with Fraser's theorem as a hypothesis and
-  `\dim_P X = \overline{\dim}_M X` proved; the chain `\dim_H X = \dim_P X = \dim_M X = dimaff(X)`
-  of the introduction, and the squeeze `dimmaff(X) = dimaff(X)` from the first part of
-  `thm:fraser`.
+* `FraserChain`: `thm:fraser` as the statements `System.FraserBound` and `System.FraserROSC`,
+  which `Fraser` proves, with `\dim_P X = \overline{\dim}_M X`; the chain
+  `\dim_H X = \dim_P X = \dim_M X = dimaff(X)` of the introduction, and the squeeze
+  `dimmaff(X) = dimaff(X)` from the first part of `thm:fraser`.
 * `NoOverlapExampleFree`: the algebraic part of `prop:ssc_no_overlap_not_pesc`: algebraically
   independent parameters and the freeness of the semigroup generated by the projective system.
 * `NoOverlapExample`: `prop:ssc_no_overlap_not_pesc` and the paragraph after its proof, with the
@@ -225,7 +249,8 @@ state of every numbered result, the remaining work and the fidelity boundary, an
 * `TupleErgodicEquilibrium`: existence of an ergodic equilibrium state for every tuple of
   invertible matrices and every `s ≥ 0`: the set of equilibrium states is compact, and a maximiser
   of a strictly convex functional of the cylinder masses is extreme, hence ergodic.
-* `IrreducibleEquilibrium`: `thm:irred_eq_state` for irreducible box-like systems.
+* `IrreducibleEquilibrium`: `thm:irred_eq_state` for irreducible box-like systems, from
+  `FengKaenmakiGibbs` and `FengKaenmakiUnique`, which `QuasiMultiplicative` proves.
 * `BernoulliGrouping`, `TwoBlockNormalisation`: grouping a Bernoulli measure into pairs, and
   `thm:two-block-normalisation` in one endpoint with its consequences.
 * `FengIdentity`, `FengIdentityBar`: Feng's information-sum identity (Lemma 4.6, (4.16)) for
@@ -254,6 +279,9 @@ state of every numbered result, the remaining work and the fidelity boundary, an
   Shannon–McMillan–Breiman theorem and returns to horizontal orientation, the pigeonhole over
   count vectors, the diagonal subsystem, the entropy threshold by conditional-entropy
   monotonicity, strong separation in the open-set branch, and the endpoint.
+* `ProjectiveLineSystem`: the second part of `thm:feng1` from the first, through the planar
+  system `z ↦ diag(g'_j, g'_j / 2) z + (g_j(0), 0)` of the projective system: `FengLedrappierYoung`
+  implies `FengLedrappierYoungBar` (`fengLedrappierYoungBar_of_fengLedrappierYoung`).
 -/
 public import BoxLike.Orientation
 public import BoxLike.Coding
@@ -400,6 +428,26 @@ public import BoxLike.FraserJordanJurga.Gibbs
 public import BoxLike.FraserJordanJurga.Decomposition
 public import BoxLike.FraserJordanJurga.Lyapunov
 public import BoxLike.FraserJordanJurga.Main
+public import BoxLike.EquilibriumGibbsStatement
+public import BoxLike.Support.RelativeEntropy
+public import BoxLike.EquilibriumGibbs
+public import BoxLike.MorrisShmerkin
+public import BoxLike.Fraser.Upper
+public import BoxLike.Fraser.UpperBound
+public import BoxLike.Fraser.LowerStop
+public import BoxLike.Fraser.LowerCover
+public import BoxLike.Fraser.Lower
+public import BoxLike.Fraser.Main
+public import BoxLike.Rossi
+public import BoxLike.RossiBound
+public import BoxLike.QuasiMultiplicative.Defs
+public import BoxLike.QuasiMultiplicative.Irreducible
+public import BoxLike.QuasiMultiplicative.Uniqueness
+public import BoxLike.QuasiMultiplicative.GibbsMeasurePressure
+public import BoxLike.QuasiMultiplicative.GibbsMeasurePeriodic
+public import BoxLike.QuasiMultiplicative.GibbsMeasureErgodic
+public import BoxLike.QuasiMultiplicative.GibbsMeasure
+public import BoxLike.QuasiMultiplicative.Main
 public import BoxLike.IrreducibleEquilibrium
 public import BoxLike.BernoulliGrouping
 public import BoxLike.TwoBlockNormalisation
@@ -429,3 +477,4 @@ public import BoxLike.Support.ConditionalInformation
 public import BoxLike.Support.HolderPressure
 public import BoxLike.Support.GibbsUniqueness
 public import BoxLike.Support.PlanarProjection
+public import BoxLike.ProjectiveLineSystem

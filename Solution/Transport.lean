@@ -193,18 +193,6 @@ end Partitions
 
 section Literature
 
-/-- Morris–Shmerkin, `eq:simple_lyapunov`. -/
-theorem morrisShmerkinLyapunov (h : Challenge.MorrisShmerkinLyapunov.{u}) :
-    BoxLike.MorrisShmerkinLyapunov.{u} := by
-  intro ι _ _ _ S hrot hdiag s hs0 hs2 μ _ hinv heq
-  exact h (ofLib S) hrot hdiag hs0 hs2 μ hinv heq
-
-/-- Feng–Käenmäki, the Gibbs bounds of `thm:irred_eq_state`. -/
-theorem fengKaenmakiGibbs (h : Challenge.FengKaenmakiGibbs.{u}) :
-    BoxLike.FengKaenmakiGibbs.{u} := by
-  intro ι _ _ _ S hirr s hs0 hs2 μ _ hinv heq
-  exact h (ofLib S) hirr hs0 hs2 μ hinv heq
-
 /-- Jordan–Rapaport, the dimension of `\overline{π}_*ν`. -/
 theorem jordanRapaportDimension (h : Challenge.JordanRapaportDimension.{u}) :
     BoxLike.JordanRapaportDimension.{u} := by
@@ -224,12 +212,6 @@ theorem fengLedrappierYoung (h : Challenge.FengLedrappierYoung.{u}) :
   have key := h (ofLib S) μ hinv herg hl
   simp only [dimEntropy_eq] at key
   exact key
-
-/-- Feng, the Ledrappier–Young formula for `\overline{π}_*ν`. -/
-theorem fengLedrappierYoungBar (h : Challenge.FengLedrappierYoungBar.{u}) :
-    BoxLike.FengLedrappierYoungBar.{u} := by
-  intro ι _ _ _ S hrot hprox ν _ hinv herg hsupp
-  exact h (ofLib S) hrot hprox ν hinv herg hsupp
 
 end Literature
 

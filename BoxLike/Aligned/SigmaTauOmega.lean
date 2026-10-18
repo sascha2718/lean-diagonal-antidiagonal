@@ -21,6 +21,7 @@ the indicators of `Σ^τ` and `U` then gives `μ(Σ^τ) ≥ ½ μ(U)` at a `μ`-
 
 The only import is `BoxLike.SigmaMeasure`, so `BoxLike.GibbsOrientation` can import this module.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.SigmaMeasure
 
 @[expose] public section
@@ -207,23 +208,22 @@ theorem measureReal_antiDiagSet_le (μ : Measure (ℤ → ι)) [IsProbabilityMea
     hlim (S.measurableSet_SigmaOmega μ) fun x hx n => (S.birkhoffSum_antiDiagSet_le μ hx n).2⟩
 
 /-- `thm:sigma_tau_omega_positive_eq_measure`: `μ(Σ^τ) > 0` and `μ(Σ^ω) > 0` for the
-ergodic `s`-equilibrium state, `0 < s < 2`, of a proximal box-like tuple with rotations. The
-statement is that of `sigma_tau_omega_positive`. The counting inequality from
+ergodic `s`-equilibrium state, `0 < s < 2`, of a box-like tuple with rotations; proximality is
+not used. The statement is that of `sigma_tau_omega_positive`. The counting inequality from
 `eq:sigma_tau_omega_positive_eq_measure1` is summed along the orbit, Birkhoff's theorem gives
 `μ(Σ^τ) ≥ ½ μ(⋃_{j_0 > ℓ} [j_0])` and `μ(Σ^ω) ≥ ½ μ(⋃_{j_0 > ℓ} [j_0])`, and
 `μ(⋃_{j_0 > ℓ} [j_0]) > 0` because the equilibrium state is fully supported. The ergodicity `herg`
-comes from `thm:irred_eq_state`; full support from its Gibbs bounds (`FengKaenmakiGibbs`).
-Depends on: `measureReal_antiDiagSet_le`, `irreducible_of_proximal`,
-`HasGibbsBounds.measure_cylinder_pos`. -/
-theorem sigma_tau_omega_positive_eq_measure (hfk : FengKaenmakiGibbs.{u})
-    (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 < s) (hs2 : s < 2)
+comes from `thm:irred_eq_state`; full support from its Gibbs bounds
+(`EquilibriumGibbsStatement`, which the library proves).
+Depends on: `measureReal_antiDiagSet_le`, `HasGibbsBounds.measure_cylinder_pos`. -/
+theorem sigma_tau_omega_positive_eq_measure (hfk : EquilibriumGibbsStatement.{u})
+    (hrot : S.WithRotations) (hs0 : 0 < s) (hs2 : s < 2)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) :
     0 < μ (S.SigmaTau μ) ∧ 0 < μ (S.SigmaOmega μ) := by
   obtain ⟨i, hi⟩ := hrot.2
   -- Full support: the anti-diagonal cylinder `[i]` has positive mass.
-  have hcyl := (hfk S (S.irreducible_of_proximal hrot hprox) hs0 hs2 μ hinv
-    heq).measure_cylinder_pos i
+  have hcyl := (hfk S hrot hs0 hs2 μ hinv heq).measure_cylinder_pos i
   have hUpos : 0 < μ.real S.antiDiagSet := by
     rw [measureReal_def]
     exact ENNReal.toReal_pos (hcyl.trans_le (measure_mono (S.cylinder_subset_antiDiagSet hi))).ne'

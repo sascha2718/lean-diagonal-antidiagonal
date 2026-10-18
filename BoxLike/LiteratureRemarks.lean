@@ -15,7 +15,10 @@ the discrete `σ`-algebra.
   Theorem 2.8. The article uses it in `sec:dimension_of_projections`.
 * `FengKaenmakiUnique`: the uniqueness part of `thm:irred_eq_state`, from Feng–Käenmäki,
   Discrete Contin. Dyn. Syst. 30 (2011), Proposition 1.2, applied with `q = s` for
-  `0 < s ≤ 1` and to a rescaled tuple with `q = 2 - s` for `1 < s < 2`.
+  `0 < s ≤ 1` and to a rescaled tuple with `q = 2 - s` for `1 < s < 2`. The library proves it
+  (`fengKaenmakiUnique_holds` in `BoxLike/QuasiMultiplicative/Main.lean`), and the conclusion
+  for tuples with rotations (`System.unique_of_withRotations` in
+  `BoxLike/EquilibriumGibbs.lean`); results stated for irreducible tuples take it.
 
 The statements were compared with the sources on 2026-09-21 (arXiv:1002.2036v1 and the journal
 version of Feng–Hu, arXiv:1009.3129v1 and the journal version of Feng–Käenmäki); `docs/correspondence.md`,
@@ -58,7 +61,10 @@ function is `‖·‖^s` and `q = s`. For `1 < s < 2` and planar matrices
 applies with `q = 2 - s`. The source works on the one-sided shift; pressure, entropy and energy
 depend on the cylinders at non-negative positions only, and an invariant measure on `Σ` is
 determined by them. For `s ≥ 2` the potential is multiplicative and the library proves
-uniqueness directly. -/
+uniqueness directly. The library proves the statement (`fengKaenmakiUnique_holds` in
+`BoxLike/QuasiMultiplicative/Main.lean`), and its conclusion for tuples with rotations, which need
+not be irreducible, and every `s > 0` (`System.unique_of_withRotations`); results stated for
+irreducible tuples (`BoxLike/IrreducibleEquilibrium.lean`) take `FengKaenmakiUnique`. -/
 def FengKaenmakiUnique : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.Irreducible → ∀ {s : ℝ}, 0 < s → s < 2 →

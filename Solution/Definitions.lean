@@ -40,12 +40,6 @@ section Coding
 
 variable {ι : Type*} (o : ι → ZMod 2)
 
-/-- The transition rule of `Z` (`sec:subshift`). -/
-def Trans (p q : ι × ZMod 2) : Prop := q.2 = p.2 + o p.1
-
-/-- The two-sided sub-shift of finite type `Σ_Z` of `sec:subshift`. -/
-def subshift : Set (ℤ → ι × ZMod 2) := {y | ∀ n, Trans o (y n) (y (n + 1))}
-
 /-- The coding `τ` of `eq:def_of_tau_omega`: `τ_n(𝐢) = i_n + N ε_n(𝐢)`. -/
 def tau (x : ℤ → ι) : ℤ → ι × ZMod 2 := fun n => (x n, eps o x n)
 
@@ -89,9 +83,6 @@ variable {ι : Type*} (S : System ι)
 
 /-- Both diagonal and anti-diagonal generators occur (`thm:box_like_sa`). -/
 def WithRotations : Prop := (∃ i, S.o i = 0) ∧ ∃ i, S.o i = 1
-
-/-- A proximal diagonal generator exists (`sec:gibbs_measures`). -/
-def HasProximalDiagonal : Prop := ∃ i, S.o i = 0 ∧ |S.a i| ≠ |S.b i|
 
 /-- The linear part `A_i`. -/
 def mat (i : ι) : Matrix (Fin 2) (Fin 2) ℝ := boxMat (S.o i) (S.a i) (S.b i)
@@ -239,7 +230,7 @@ end System
 
 end Affinity
 
-/-! ## Proximality, irreducibility and the strong open set condition -/
+/-! ## Proximality and the strong open set condition -/
 
 section Proximal
 
@@ -257,10 +248,6 @@ variable {ι : Type*}
 /-- Some non-empty product is proximal (`sec:irreducibility`). -/
 def Proximal (S : System ι) : Prop :=
   ∃ w : List ι, w ≠ [] ∧ IsProximalMatrix (S.matWord w)
-
-/-- No common invariant line (`sec:irreducibility`). -/
-def Irreducible (S : System ι) : Prop :=
-  ¬ ∃ v : Fin 2 → ℝ, v ≠ 0 ∧ ∀ i, ∃ c : ℝ, S.mat i *ᵥ v = c • v
 
 end System
 
@@ -380,7 +367,7 @@ def IsDoubleDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
 
 end MeasureDim
 
-/-! ## Lyapunov exponents, equilibrium states and Gibbs measures -/
+/-! ## Lyapunov exponents and equilibrium states -/
 
 section Thermodynamic
 
@@ -413,14 +400,6 @@ noncomputable def energyLim (s : ℝ) (μ : Measure (ℤ → ι)) : ℝ :=
 /-- `μ` is an `s`-equilibrium state, `eq:eq_state_def`: `P(𝖠, s) = h_0(μ) + Λ(𝖠, μ, s)`. -/
 def IsEquilibriumState [Fintype ι] (s : ℝ) (μ : Measure (ℤ → ι)) : Prop :=
   S.pressure s = entropy μ + S.energyLim s μ
-
-/-- Gibbs bounds for the singular value potential (`thm:irred_eq_state`). -/
-def HasGibbsBounds [Fintype ι] (s : ℝ) (μ : Measure (ℤ → ι)) : Prop :=
-  ∃ C : ℝ, 1 ≤ C ∧ ∀ n : ℕ, 0 < n → ∀ w : Fin n → ι,
-    C⁻¹ * (Real.exp (-(n * S.pressure s)) * svf s (S.matWord (List.ofFn w))) ≤
-        μ.real (cylinder w) ∧
-      μ.real (cylinder w) ≤
-        C * (Real.exp (-(n * S.pressure s)) * svf s (S.matWord (List.ofFn w)))
 
 /-- The coordinate marginal of `π_*μ`, with `c = 0` for `x` and `c = 1` for `y`. -/
 noncomputable def marginal (c : ZMod 2) (μ : Measure (ℤ → ι)) : Measure ℝ :=
@@ -503,17 +482,6 @@ noncomputable def xi (μ : Measure (ℤ → ι)) (i : ℕ) : (ℤ → ι) → Se
 
 end Planar
 
-section Projective
-
-variable {ι : Type u} (S : System ι)
-
-/-- The projective partitions `\overline{ξ}_i`, extended by the atom `Σ_Zᶜ` (`sec:entropies`). -/
-noncomputable def xiBar : ℕ → (ℤ → ι × ZMod 2) → Set (ℤ → ι × ZMod 2)
-  | 0 => atomsOn (subshift S.o) fun y => {z | SamePast z y}
-  | _ => atomsOn (subshift S.o) fun y => {z | SamePast z y ∧ S.projBar z = S.projBar y}
-
-end Projective
-
 section Entropies
 
 variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
@@ -522,10 +490,6 @@ variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonCla
 /-- The `i`-dimensional entropy `h_i(μ) = H_μ(𝒫 | \widehat{ξ}_i)` (`sec:entropies`). -/
 noncomputable def dimEntropy (μ : Measure (ℤ → ι)) [IsFiniteMeasure μ] (i : ℕ) : ℝ :=
   condEntropy μ (S.xi μ i)
-
-/-- The projective entropies `\overline{h}_i(ν)` (`sec:entropies`). -/
-noncomputable def dimEntropyBar (ν : Measure (ℤ → ι × ZMod 2)) [IsFiniteMeasure ν] (i : ℕ) : ℝ :=
-  condEntropy ν (S.xiBar i)
 
 end Entropies
 
@@ -541,22 +505,6 @@ Each `Prop` below is an explicit literature hypothesis of the headline statement
 section Literature
 
 open MeasureTheory
-
-/-- Morris–Shmerkin, Theorem 3.1 (arXiv:1602.08789v3): distinct Lyapunov exponents
-(`eq:simple_lyapunov`). -/
-def MorrisShmerkinLyapunov : Prop :=
-  ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
-    S.WithRotations → S.HasProximalDiagonal → ∀ {s : ℝ}, 0 < s → s < 2 →
-    ∀ (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ], MeasurePreserving (shift 1) μ μ →
-    S.IsEquilibriumState s μ → S.lyapunov₂ μ < S.lyapunov₁ μ
-
-/-- Feng–Käenmäki, Proposition 1.2 (arXiv:1009.3129v1): Gibbs bounds
-(`thm:irred_eq_state`). -/
-def FengKaenmakiGibbs : Prop :=
-  ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
-    S.Irreducible → ∀ {s : ℝ}, 0 < s → s < 2 →
-    ∀ (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ], MeasurePreserving (shift 1) μ μ →
-    S.IsEquilibriumState s μ → S.HasGibbsBounds s μ
 
 /-- Jordan–Rapaport, Theorem 1.1 (arXiv:1908.00271): projection dimension under exponential
 separation (`eq:gibbs_proj_dim`). -/
@@ -583,15 +531,6 @@ def FengLedrappierYoung : Prop :=
     IsExactDim (μ.map S.proj)
       ((S.dimEntropy μ 1 - S.dimEntropy μ 0) / S.lyapunov₁ μ +
         (S.dimEntropy μ 2 - S.dimEntropy μ 1) / S.lyapunov₂ μ)
-
-/-- Feng, Theorems 1.2 and 1.3 (arXiv:1901.01691v2): the scalar Ledrappier–Young formula
-(`thm:feng1`). -/
-def FengLedrappierYoungBar : Prop :=
-  ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
-    S.WithRotations → S.Proximal → ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],
-    MeasurePreserving (shift 1) ν ν → Ergodic (shift 1) ν → ν (subshift S.o)ᶜ = 0 →
-    IsExactDim (ν.map S.projBar)
-      ((S.dimEntropyBar ν 1 - S.dimEntropyBar ν 0) / S.lyapBar ν)
 
 end Literature
 

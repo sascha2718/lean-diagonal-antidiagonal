@@ -27,6 +27,7 @@ image `T(E)` is Borel by the Lusin–Souslin theorem.
 * `System.conditional_two_ways`: `thm:conditional_two_ways`.
 -/
 public import BoxLike.ConditionalLemmas
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.GibbsOrientation
 public import BoxLike.MeasurablePartitions
 public import BoxLike.PartitionIdentities
@@ -306,7 +307,8 @@ the later results use.
 Depends on: `eq:orientation-restrictions` (`orientation_restrictions`),
 `thm:gibbs_tau_omega_positive`, `thm:partitions_xi1`, `conditional_two_ways_aux`
 (`condMeas_transport`, `condMeas_unique`). -/
-theorem conditional_two_ways (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem conditional_two_ways (hms : MorrisShmerkinLyapunov.{u})
+    (hfk : EquilibriumGibbsStatement.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) [IsProbabilityMeasure μ₁]
@@ -332,7 +334,7 @@ theorem conditional_two_ways (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenm
   -- `eq:orientation-restrictions` for `\overline{μ}`.
   have hor := fun {T : (ℤ → ι) → ℤ → ι × ZMod 2} (hT : T = tau S.o ∨ T = omega S.o)
       {E : Set (ℤ → ι)} (hE : E = S.SigmaTau μ ∨ E = S.SigmaOmega μ) =>
-    (S.orientation_restrictions hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec hT hE).1
+    (S.orientation_restrictions hfk hrot hs0 hs2 μ hinv herg heq hdec hT hE).1
   -- The restriction of the Gibbs measure that charges `T(E)`.
   have hk₁ : ∀ {F : Set (ℤ → ι × ZMod 2)}, μ₂ F = 0 →
       (μ₁ + μ₂).restrict F = μ₁.restrict F := fun h => by

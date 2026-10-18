@@ -39,6 +39,7 @@ conditional measures of `\overline{μ}`.
 -/
 public import BoxLike.Aligned.ConditionalTwoWays
 public import BoxLike.ConditionalTwoWays
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.FengEntropy
 public import BoxLike.General
 public import BoxLike.PastEntropy
@@ -161,7 +162,8 @@ theorem dimEntropyBarAt_eq_of_condMeas_eq (hfib : FengInfoSumBar.{u})
 variable {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)}
 
 /-- `thm:gibbs_tau_omega_positive`: `μ_1(ω(Σ^τ) ∪ τ(Σ^ω)) = 0`. -/
-theorem measure_slowPart_eq_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem measure_slowPart_eq_zero (hms : MorrisShmerkinLyapunov.{u})
+    (hfk : EquilibriumGibbsStatement.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
     (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
@@ -172,7 +174,8 @@ theorem measure_slowPart_eq_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengK
   exact measure_union_null z3 z4
 
 /-- `thm:gibbs_tau_omega_positive`: `μ_2(τ(Σ^τ) ∪ ω(Σ^ω)) = 0`. -/
-theorem measure_fastPart_eq_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem measure_fastPart_eq_zero (hms : MorrisShmerkinLyapunov.{u})
+    (hfk : EquilibriumGibbsStatement.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
     (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
@@ -183,7 +186,7 @@ theorem measure_fastPart_eq_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengK
   exact measure_union_null z1 z2
 
 /-- `thm:gibbs_tau_omega_positive`: `μ_1`-almost every point lies in `τ(Σ^τ) ∪ ω(Σ^ω)`. -/
-theorem ae_mem_fastPart (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem ae_mem_fastPart (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
     (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
@@ -199,7 +202,7 @@ theorem ae_mem_fastPart (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGi
     ((measurableSet_tau_image S.o (S.measurableSet_SigmaTau μ)).union hm)).2 h1
 
 /-- `thm:gibbs_tau_omega_positive`: `μ_2`-almost every point lies in `ω(Σ^τ) ∪ τ(Σ^ω)`. -/
-theorem ae_mem_slowPart (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem ae_mem_slowPart (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
     (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
@@ -223,7 +226,7 @@ by `thm:conditional_two_ways`, and `μ_2` does not charge it.
 Depends on: `thm:feng_entropy_as_limit` (scalar), `eq:ergodic_entropy_constant`,
 `thm:conditional_two_ways`, `thm:gibbs_tau_omega_positive`. -/
 theorem dimEntropyBarAt_avgMeasure_fast (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfib : FengInfoSumBar.{u}) (hrot : S.WithRotations)
+    (hfk : EquilibriumGibbsStatement.{u}) (hfib : FengInfoSumBar.{u}) (hrot : S.WithRotations)
     (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) [IsProbabilityMeasure μ₁]
@@ -251,7 +254,7 @@ by `thm:conditional_two_ways`, and `μ_1` does not charge it.
 Depends on: `thm:feng_entropy_as_limit` (scalar), `eq:ergodic_entropy_constant`,
 `thm:conditional_two_ways`, `thm:gibbs_tau_omega_positive`. -/
 theorem dimEntropyBarAt_avgMeasure_slow (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfib : FengInfoSumBar.{u}) (hrot : S.WithRotations)
+    (hfk : EquilibriumGibbsStatement.{u}) (hfib : FengInfoSumBar.{u}) (hrot : S.WithRotations)
     (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) [IsProbabilityMeasure μ₁]
@@ -278,7 +281,7 @@ theorem dimEntropyBarAt_avgMeasure_slow (hms : MorrisShmerkinLyapunov.{u})
 `𝐢 ∈ ω(Σ^τ) ∪ τ(Σ^ω)`, by `thm:conditional_two_ways`; the measure `μ_1` does not charge this set.
 Depends on: `thm:conditional_two_ways`, `thm:gibbs_tau_omega_positive`. -/
 theorem condMeas_avgMeasure_eq_dirac_slow (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hrot : S.WithRotations)
+    (hfk : EquilibriumGibbsStatement.{u}) (hrot : S.WithRotations)
     (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) [IsProbabilityMeasure μ₁]
@@ -306,7 +309,7 @@ Depends on: `JordanRapaportDimension`, `thm:entropy_eq_gibbs`, `thm:eq_state_is_
 `eq:simple_lyapunov`, `thm:feng1` (scalar), `dimEntropyBar_zero_eq_entropy`,
 `thm:feng_entropy_as_limit` (scalar), `eq:ergodic_entropy_constant`,
 `thm:conditional_two_ways`, `thm:gibbs_tau_omega_positive`. -/
-theorem overline_h1_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem overline_h1_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hjr : JordanRapaportDimension.{u}) (hfib : FengInfoSumBar.{u})
     (hlyb : FengLedrappierYoungBar.{u}) (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
     (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
@@ -348,7 +351,8 @@ sets.
 Depends on: `thm:entropy_eq_gibbs`, `thm:eq_state_is_sum`, `JordanRapaportDimension`,
 `thm:feng1` (scalar), `dimEntropyBar_zero_eq_entropy`, `thm:feng_entropy_zero` (scalar),
 `eq:ergodic_entropy_constant`, `thm:conditional_two_ways`, `thm:gibbs_tau_omega_positive`. -/
-theorem overline_h1_zero_large (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem overline_h1_zero_large (hms : MorrisShmerkinLyapunov.{u})
+    (hfk : EquilibriumGibbsStatement.{u})
     (hjr : JordanRapaportDimension.{u}) (hfib : FengInfoSumBar.{u})
     (hlyb : FengLedrappierYoungBar.{u}) (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
     (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))

@@ -27,6 +27,7 @@ to `\overline{μ}` and `F`, to `μ_k` and `F`, and to `μ` and `E`, remove the r
 * `System.conditional_two_ways_normalised_case`: one of the four cases.
 * `System.conditional_two_ways_normalised`: `thm:conditional_two_ways`.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.GibbsOrientation
 public import BoxLike.ConditionalTwoWays
 
@@ -128,8 +129,8 @@ restriction is `(μ_1)_{T(E)}` when `μ_2(T(E)) = 0` and `(μ_2)_{T(E)}` when `�
 `thm:gibbs_tau_omega_positive` provides in each of the four cases.
 Depends on: `eq:orientation-restrictions`, `thm:eq_state_is_sum`,
 `eq:inverse-coding-restrictions`. -/
-theorem normalised_orientation_restrictions (hfk : FengKaenmakiGibbs.{u})
-    (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2)
+theorem normalised_orientation_restrictions (hfk : EquilibriumGibbsStatement.{u})
+    (hrot : S.WithRotations) (hs0 : 0 < s) (hs2 : s < 2)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ)
     (hdec : S.GibbsDecomposition s μ μ₁ μ₂) {T : (ℤ → ι) → ℤ → ι × ZMod 2}
@@ -147,8 +148,7 @@ theorem normalised_orientation_restrictions (hfk : FengKaenmakiGibbs.{u})
   have hres : (μ₁ + μ₂).restrict (T '' E) = (μ.restrict E).map T := by
     rcases hT with rfl | rfl
     exacts [hdec.restrict_tau_image hEm, hdec.restrict_omega_image hEm]
-  have h1 := (S.orientation_restrictions hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
-    hT hE).1
+  have h1 := (S.orientation_restrictions hfk hrot hs0 hs2 μ hinv herg heq hdec hT hE).1
   have h2 : (2⁻¹ : ℝ≥0) • (μ.restrict E).map T = ((2⁻¹ : ℝ≥0) : ℝ≥0∞) • (μ.restrict E).map T :=
     rfl
   refine ⟨cond_image_eq_map_cond hTm (by simp) ENNReal.coe_ne_top (h1.trans h2), fun h => ?_,
@@ -245,7 +245,7 @@ Depends on: `eq:normalised-orientation-restrictions`, `thm:gibbs_tau_omega_posit
 `thm:sigma_tau_omega_positive_eq_measure`, `thm:partitions_xi1`,
 `thm:conditional_measures_of_a_conditional_measure`, `condMeas_unique`. -/
 theorem conditional_two_ways_normalised (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
+    (hfk : EquilibriumGibbsStatement.{u}) (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
     (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
     (heq : S.IsEquilibriumState s μ) [IsProbabilityMeasure μ₁] [IsProbabilityMeasure μ₂]
@@ -269,18 +269,18 @@ theorem conditional_two_ways_normalised (hms : MorrisShmerkinLyapunov.{u})
   have hmω := S.measurableSet_SigmaOmega μ
   -- `μ(Σ^τ) > 0` and `μ(Σ^ω) > 0`: `thm:sigma_tau_omega_positive_eq_measure`.
   obtain ⟨pτ, pω⟩ :=
-    S.sigma_tau_omega_positive_eq_measure hfk hrot hdiag.proximal hs0 hs2 μ hinv herg heq
+    S.sigma_tau_omega_positive_eq_measure hfk hrot hs0 hs2 μ hinv herg heq
   -- The zero and positive terms of `thm:gibbs_tau_omega_positive`.
   obtain ⟨-, ⟨z1, z2, z3, z4⟩, ⟨q1, q2, q3, q4⟩⟩ :=
     S.gibbs_tau_omega_positive hms hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec
   -- `\overline{μ}(T(E)) = ½ μ(E) > 0`: `eq:orientation-restrictions`.
   have hpos := fun {T : (ℤ → ι) → ℤ → ι × ZMod 2} (hT : T = tau S.o ∨ T = omega S.o)
       {E : Set (ℤ → ι)} (hE : E = S.SigmaTau μ ∨ E = S.SigmaOmega μ) =>
-    (S.orientation_restrictions hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec hT hE).2.2
+    (S.orientation_restrictions hfk hrot hs0 hs2 μ hinv herg heq hdec hT hE).2.2
   -- `\overline{μ}_{T(E)} = T_*μ_E = (μ_k)_{T(E)}`: `eq:normalised-orientation-restrictions`.
   have hnor := fun {T : (ℤ → ι) → ℤ → ι × ZMod 2} (hT : T = tau S.o ∨ T = omega S.o)
       {E : Set (ℤ → ι)} (hE : E = S.SigmaTau μ ∨ E = S.SigmaOmega μ) =>
-    S.normalised_orientation_restrictions hfk hrot hdiag hs0 hs2 μ hinv herg heq hdec hT hE
+    S.normalised_orientation_restrictions hfk hrot hs0 hs2 μ hinv herg heq hdec hT hE
   have c1 := S.conditional_two_ways_normalised_case μ (avgMeasure μ₁ μ₂) μ₁ (Or.inl rfl) hmτ
     (S.isMeasurablePartition_xi μ 1) (fun x hx => (S.xi_one_of_mem_SigmaTau μ hx).2)
     (fun x hx => (S.xi_one_of_mem_SigmaTau μ hx).1) pτ (hpos (Or.inl rfl) (Or.inl rfl)) q1

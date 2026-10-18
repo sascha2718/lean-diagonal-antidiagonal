@@ -50,6 +50,7 @@ The example, in the namespace `BoxLike.Example`:
 The explicit values of `λ_1`, `λ_2` through the Markov measure and their numerical
 approximations are out of scope.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.MainTwo
 public import Mathlib.Analysis.Normed.Algebra.Spectrum
 public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
@@ -340,7 +341,7 @@ the two pointwise dimensions of the coordinate marginals are `s` and
 sets of positive measure, and the marginal is not exact-dimensional. The threshold
 `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)` of `thm:main1` holds for every `s ≤ 1`, as the proof of
 `thm:main1` notes. -/
-theorem main1_of_le_one (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem main1_of_le_one (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (hs1 : s ≤ 1) (hP : S.pressure s = 0)
@@ -385,7 +386,7 @@ theorem main1_of_le_one (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGi
 /-- `thm:main2` for `dimaff(X) ≤ 1`: the alternative `dimaff(X) ≤ 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)` holds
 for every such `X`, because `λ_2(𝖠, μ) < λ_1(𝖠, μ) < 0` gives `λ_1(𝖠, μ)/λ_2(𝖠, μ) < 1`. Hence
 `\dim_H(X) = dimaff(X)` without a separation condition on the planar system. -/
-theorem main2_of_le_one (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem main2_of_le_one (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
     (hlyb : FengLedrappierYoungBar.{u}) [Nonempty ι] (hrot : S.WithRotations)
@@ -688,7 +689,7 @@ theorem dimaff_pos_lt_one : 0 < sys.dimaff ∧ sys.dimaff < 1 := by
 with the two pointwise dimensions `s` and `s λ_1(𝖠, μ)/λ_2(𝖠, μ)`. These are distinct, the
 threshold `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)` of `thm:main1` holds, both values occur on sets of
 positive marginal measure, and the marginal is not exact-dimensional. -/
-theorem marginal_doubleDim (hms : MorrisShmerkinLyapunov.{0}) (hfk : FengKaenmakiGibbs.{0})
+theorem marginal_doubleDim (hms : MorrisShmerkinLyapunov.{0}) (hfk : EquilibriumGibbsStatement.{0})
     (hfjj : FraserJordanJurgaDecomposition.{0}) (hjr : JordanRapaportDimension.{0})
     (μ : Measure (ℤ → Fin 2)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : sys.IsEquilibriumState sys.dimaff μ)
@@ -707,7 +708,7 @@ theorem marginal_doubleDim (hms : MorrisShmerkinLyapunov.{0}) (hfk : FengKaenmak
 /-- `\dim_H(X) = dimaff(X)` for the self-affine set of `Example.sys`, from
 `thm:main2`, given an invariant `s`-equilibrium state `μ` for `s = dimaff(X)`. The first
 alternative of `thm:main2` holds because `dimaff(X) < 1`. -/
-theorem dimH_attractor (hms : MorrisShmerkinLyapunov.{0}) (hfk : FengKaenmakiGibbs.{0})
+theorem dimH_attractor (hms : MorrisShmerkinLyapunov.{0}) (hfk : EquilibriumGibbsStatement.{0})
     (hfjj : FraserJordanJurgaDecomposition.{0}) (hjr : JordanRapaportDimension.{0})
     (hfi : FengInfoSum.{0}) (hfib : FengInfoSumBar.{0}) (hly : FengLedrappierYoung.{0})
     (hlyb : FengLedrappierYoungBar.{0}) (μ : Measure (ℤ → Fin 2)) [IsProbabilityMeasure μ]

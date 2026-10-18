@@ -24,6 +24,7 @@ everywhere for `μ_2`, and on the four sets it is `λ_1`, `λ_1`, `λ_2`, `λ_2`
 * `System.orientation_restrictions`: `eq:orientation-restrictions`.
 -/
 public import BoxLike.Aligned.SigmaTauOmega
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.SigmaMeasure
 
 @[expose] public section
@@ -216,7 +217,8 @@ Depends on: `thm:eq_state_is_sum`, `eq:lyapunov_exponent_gsystem`,
 `thm:lyapunov_exponents_via_g_system`, `eq:simple_lyapunov`, `measure_SigmaPrime_compl`,
 `eq:tau_omega_partition`, `eq:tau_omega_partition2`,
 `thm:sigma_tau_omega_positive_eq_measure`. -/
-theorem gibbs_tau_omega_positive (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem gibbs_tau_omega_positive (hms : MorrisShmerkinLyapunov.{u})
+    (hfk : EquilibriumGibbsStatement.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
@@ -249,7 +251,7 @@ theorem gibbs_tau_omega_positive (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengK
     S.measure_eq_zero_of_hasBackRate hlt.ne' hr₁ (by rintro _ ⟨x, hx, rfl⟩; exact hx.2)
   have z4 : μ₁ (tau S.o '' S.SigmaOmega μ) = 0 :=
     S.measure_eq_zero_of_hasBackRate hlt.ne' hr₁ (by rintro _ ⟨x, hx, rfl⟩; exact hx.1)
-  obtain ⟨pτ, pω⟩ := S.sigma_tau_omega_positive_eq_measure hfk hrot hdiag.proximal hs0 hs2 μ hinv herg heq
+  obtain ⟨pτ, pω⟩ := S.sigma_tau_omega_positive_eq_measure hfk hrot hs0 hs2 μ hinv herg heq
   refine ⟨⟨?_, ?_⟩, ⟨z1, z2, z3, z4⟩, ?_, ?_, ?_, ?_⟩
   · exact S.measure_tau_image_add_measure_omega_image hdec.supp₁
       (map_unCode_of_decomposition hdec.supp₁ hdec.eq₁) hmτ hmω hfull hlt.ne' hr₁
@@ -276,15 +278,15 @@ theorem gibbs_tau_omega_positive (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengK
 `\overline{μ}|_{T(E)} = ½ T_*(μ|_E)` and `\overline{μ}(T(E)) = ½ μ(E) > 0`.
 Depends on: `thm:eq_state_is_sum`, `eq:inverse-coding-restrictions`,
 `thm:gibbs_tau_omega_positive`, `thm:sigma_tau_omega_positive_eq_measure`. -/
-theorem orientation_restrictions (hfk : FengKaenmakiGibbs.{u}) (hrot : S.WithRotations)
-    (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
+theorem orientation_restrictions (hfk : EquilibriumGibbsStatement.{u}) (hrot : S.WithRotations)
+    (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
     (heq : S.IsEquilibriumState s μ) (hdec : S.GibbsDecomposition s μ μ₁ μ₂)
     {T : (ℤ → ι) → ℤ → ι × ZMod 2} (hT : T = tau S.o ∨ T = omega S.o) {E : Set (ℤ → ι)}
     (hE : E = S.SigmaTau μ ∨ E = S.SigmaOmega μ) :
     (avgMeasure μ₁ μ₂).restrict (T '' E) = (2⁻¹ : ℝ≥0) • (μ.restrict E).map T ∧
       avgMeasure μ₁ μ₂ (T '' E) = 2⁻¹ * μ E ∧ 0 < avgMeasure μ₁ μ₂ (T '' E) := by
-  obtain ⟨pτ, pω⟩ := S.sigma_tau_omega_positive_eq_measure hfk hrot hdiag.proximal hs0 hs2 μ hinv herg heq
+  obtain ⟨pτ, pω⟩ := S.sigma_tau_omega_positive_eq_measure hfk hrot hs0 hs2 μ hinv herg heq
   have hEm : MeasurableSet E := by
     rcases hE with rfl | rfl
     exacts [S.measurableSet_SigmaTau μ, S.measurableSet_SigmaOmega μ]

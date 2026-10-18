@@ -14,6 +14,7 @@ of the proof of `thm:main2`.
   the proof of `thm:main2`.
 -/
 public import BoxLike.AffinityDim
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.General
 public import BoxLike.MassDistribution
 public import BoxLike.Variational
@@ -63,7 +64,7 @@ projective exponential separation condition such that `dimaff(X) < 2`, and let `
 double-dimensional. Both projections fail to be exact-dimensional precisely when
 `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`. At equality and above, both projections are exact-dimensional
 of dimension one. -/
-theorem main1_dimaff (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem main1_dimaff (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation)
     (h2 : S.dimaff < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]

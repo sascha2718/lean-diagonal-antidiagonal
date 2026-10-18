@@ -26,6 +26,7 @@ exponent satisfies `0 < s ≤ 1` and `2 a^s + 2 b^s = 1`, and `p = 2 a^s`. The t
 * `Gibbs.marginal_spec`: `thm:eq_state_proj_dim` for the example, with the values `s` and
   `s (log 2 + H(p))/(log 2 + J(p))`, each on a set of positive measure, tex lines 3056 to 3063.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.General
 public import BoxLike.PrescribedExample.Measure
 
@@ -141,7 +142,7 @@ to 3055: for every invariant `s`-equilibrium state `μ`,
 `-h_0(μ)/λ_2(𝖠, μ) = s (log 2 + H(p))/(log 2 + J(p))`. The entropy and the exponents are those of
 `isEquilibriumState_spec`, computed through `thm:entropy_eq_gibbs` and
 `thm:eq_state_is_sum`. -/
-theorem isEquilibriumState_ratios (hfk : FengKaenmakiGibbs.{0})
+theorem isEquilibriumState_ratios (hfk : EquilibriumGibbsStatement.{0})
     (hfjj : FraserJordanJurgaDecomposition.{0}) (hs0 : 0 < s) (hs1 : s ≤ 1)
     (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) (μ : Measure (ℤ → Fin 4)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : (sys P t).IsEquilibriumState s μ) :
@@ -193,7 +194,7 @@ under the projective exponential separation condition, for every invariant `s`-e
 `s (log 2 + H(p))/(log 2 + J(p)) < s`, upper packing dimension `s` and lower Hausdorff dimension
 `s (log 2 + H(p))/(log 2 + J(p))`, and each value occurs on a set of positive measure. The values
 come from `isEquilibriumState_ratios` and `min{1, ·}` leaves them unchanged. -/
-theorem marginal_spec (hms : MorrisShmerkinLyapunov.{0}) (hfk : FengKaenmakiGibbs.{0})
+theorem marginal_spec (hms : MorrisShmerkinLyapunov.{0}) (hfk : EquilibriumGibbsStatement.{0})
     (hfjj : FraserJordanJurgaDecomposition.{0}) (hjr : JordanRapaportDimension.{0})
     (P : Params) (t : Fin 8 → ℝ) (hsep : (sys P t).ProjExpSeparation) {s : ℝ} (hs0 : 0 < s)
     (hs1 : s ≤ 1) (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) (μ : Measure (ℤ → Fin 4))

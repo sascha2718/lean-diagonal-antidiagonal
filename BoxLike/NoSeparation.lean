@@ -13,8 +13,11 @@ exact-dimensional by Feng–Hu, the restricted projections `ν_{x,k}`, `ν_{y,k}
 * `System.marginal_isDoubleDim_normalised`: the remark for a tuple with a proximal diagonal
   generator.
 * `System.marginal_isDoubleDim`: the remark for every proximal box-like tuple with rotations.
-* `System.unique_sq_equilibrium`: the uniqueness of `μ^(2)` in `thm:two-block-normalisation`.
+* `System.unique_sq_equilibrium`: the uniqueness of `μ^(2)` in `thm:two-block-normalisation`,
+  from `thm:irred_eq_state` for the tuple `𝖠²` with rotations (`System.unique_of_withRotations`).
 -/
+public import BoxLike.EquilibriumGibbs
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.General
 public import BoxLike.LiteratureRemarks
 
@@ -65,13 +68,13 @@ variable (S)
 /-- The remark before `thm:eq_state_proj_dim` for a tuple with a proximal diagonal generator:
 each coordinate marginal of the `s`-equilibrium state, `0 < s < 2`, is double-dimensional, and
 no separation condition is assumed. -/
-theorem marginal_isDoubleDim_normalised (hfk : FengKaenmakiGibbs.{u})
+theorem marginal_isDoubleDim_normalised (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hfh : FengHuExactDim.{u}) (hrot : S.WithRotations)
     (hprox : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) (c : ZMod 2) :
     ∃ d₁ d₂ : ℝ, IsDoubleDim (S.marginal c μ) d₁ d₂ := by
-  have hgibbs := hfk S (irreducible_of_hasProximalDiagonal hrot hprox) hs0 hs2 μ hinv heq
+  have hgibbs := hfk S hrot hs0 hs2 μ hinv heq
   obtain ⟨μ₁, μ₂, h⟩ := hfjj S hrot hprox hs0 hs2 μ hinv hgibbs
   obtain ⟨r, M, hS⟩ := S.exists_bounds
   have := h.prob₁
@@ -99,7 +102,7 @@ theorem marginal_isDoubleDim_normalised (hfk : FengKaenmakiGibbs.{u})
 /-- The remark before `thm:eq_state_proj_dim`: for a proximal box-like tuple with rotations and
 `0 < s < 2`, both coordinate marginals of the `s`-equilibrium state are double-dimensional
 without any separation assumption. Grouping preserves the marginals. -/
-theorem marginal_isDoubleDim (hfk : FengKaenmakiGibbs.{u})
+theorem marginal_isDoubleDim (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hfh : FengHuExactDim.{u}) (hrot : S.WithRotations)
     (hprox : S.Proximal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
@@ -112,18 +115,17 @@ theorem marginal_isDoubleDim (hfk : FengKaenmakiGibbs.{u})
       hs0 hs2 (μ.map group) (measurePreserving_shift_map_group hinv) (heq.map_group hinv hs0.le) c
     rwa [S.marginal_sq_map_group] at key
 
-/-- `thm:two-block-normalisation`, uniqueness of `μ^(2)`: if `𝖠²` contains a proximal diagonal
-generator, then `β_*μ` is the unique `s`-equilibrium state of `𝖠²` for `0 < s < 2`. -/
-theorem unique_sq_equilibrium (hfku : FengKaenmakiUnique.{u}) (hrot : S.WithRotations)
-    (hprox : S.sq.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
+/-- `thm:two-block-normalisation`, uniqueness of `μ^(2)`: for a box-like tuple with rotations
+and `s > 0`, `β_*μ` is the unique invariant `s`-equilibrium state of `𝖠²`. The tuple `𝖠²` has
+rotations, and `thm:irred_eq_state` holds for it with no literature premise
+(`System.unique_of_withRotations`). -/
+theorem unique_sq_equilibrium (hrot : S.WithRotations) (hs0 : 0 < s) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) (μ' : Measure (ℤ → ι × ι)) [IsProbabilityMeasure μ']
     (hinv' : MeasurePreserving (shift 1) μ' μ') (heq' : S.sq.IsEquilibriumState s μ') :
-    μ' = μ.map group := by
-  exact hfku S.sq
-    (irreducible_of_hasProximalDiagonal (S.sq_withRotations hrot) hprox) hs0 hs2 μ'
-    (μ.map group) hinv' (measurePreserving_shift_map_group hinv) heq'
-    (heq.map_group hinv hs0.le)
+    μ' = μ.map group :=
+  S.sq.unique_of_withRotations (S.sq_withRotations hrot) hs0 μ' (μ.map group) hinv'
+    (measurePreserving_shift_map_group hinv) heq' (heq.map_group hinv hs0.le)
 
 end System
 

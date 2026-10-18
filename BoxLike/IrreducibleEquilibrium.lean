@@ -2,15 +2,19 @@ module
 
 /-
 `thm:irred_eq_state` for box-like systems: for an irreducible box-like tuple and every `s > 0`
-there is a unique `s`-equilibrium state; it is ergodic and has the Gibbs bounds. The
-literature inputs are the two parts of Feng–Käenmäki, Proposition 1.2, as the library states
+there is a unique `s`-equilibrium state; it is ergodic and has the Gibbs bounds. The inputs
+from the literature are the two parts of Feng–Käenmäki, Proposition 1.2, as the library states
 them for box-like systems: the Gibbs bounds `FengKaenmakiGibbs` and the uniqueness
-`FengKaenmakiUnique`, both for `0 < s < 2`. Existence is the variational construction of
+`FengKaenmakiUnique`, both for `0 < s < 2`. The library proves both (`fengKaenmakiGibbs_holds`,
+`fengKaenmakiUnique_holds` in `BoxLike/QuasiMultiplicative/Main.lean`); that module builds on
+this one, so the results here take them as hypotheses, and `Solution.lean` passes the proofs.
+Existence is the variational construction of
 `BoxLike/EquilibriumExistence.lean`; for `s ≥ 2` uniqueness and the Gibbs bounds are the
 determinant calculation of `thm:bernoulli_equilibrium`; ergodicity follows from uniqueness,
 since the extreme points of the set of equilibrium states are ergodic
 (`System.ergodic_of_unique`). The general irreducible tuple of the article is treated in
-`BoxLike/IrreducibleEquilibriumTuple.lean`.
+`BoxLike/IrreducibleEquilibriumTuple.lean`. For tuples with rotations
+`BoxLike/EquilibriumGibbs.lean` proves the proposition with no literature premise.
 
 * `System.Irreducible.nonempty`: an irreducible tuple has a letter.
 * `System.unique_of_irreducible`: two invariant `s`-equilibrium states of an irreducible tuple
@@ -46,8 +50,9 @@ theorem Irreducible.nonempty (h : S.Irreducible) : Nonempty ι :=
   TupleIrreducible.nonempty (A := S.mat) h
 
 /-- `thm:irred_eq_state`, uniqueness: two invariant `s`-equilibrium states of an irreducible
-box-like tuple coincide, for every `s > 0`. For `0 < s < 2` this is `FengKaenmakiUnique`; for
-`s ≥ 2` both are the Bernoulli measure of `thm:bernoulli_equilibrium`. -/
+box-like tuple coincide, for every `s > 0`. For `0 < s < 2` this is `FengKaenmakiUnique`, which
+`fengKaenmakiUnique_holds` proves; for `s ≥ 2` both are the Bernoulli measure of
+`thm:bernoulli_equilibrium`. -/
 theorem unique_of_irreducible (hfku : FengKaenmakiUnique.{u}) (hirr : S.Irreducible)
     (hs0 : 0 < s) (μ μ' : Measure (ℤ → ι)) [IsProbabilityMeasure μ] [IsProbabilityMeasure μ']
     (hinv : MeasurePreserving (shift 1) μ μ) (hinv' : MeasurePreserving (shift 1) μ' μ')
@@ -70,8 +75,9 @@ theorem IsEquilibriumState.ergodic_of_irreducible (hfku : FengKaenmakiUnique.{u}
 
 /-- `thm:irred_eq_state`, the Gibbs bounds: the `s`-equilibrium state of an irreducible box-like
 tuple satisfies `C⁻¹ exp(-|𝐢| P(𝖠, s)) φ^s(A_𝐢) ≤ μ([𝐢]) ≤ C exp(-|𝐢| P(𝖠, s)) φ^s(A_𝐢)` for
-every `s > 0`. For `0 < s < 2` this is `FengKaenmakiGibbs`; for `s ≥ 2` the equilibrium state
-is the Bernoulli measure of `thm:bernoulli_equilibrium` and `C = 1`. -/
+every `s > 0`. For `0 < s < 2` this is `FengKaenmakiGibbs`, which `fengKaenmakiGibbs_holds`
+proves; for `s ≥ 2` the equilibrium state is the Bernoulli measure of `thm:bernoulli_equilibrium`
+and `C = 1`. -/
 theorem IsEquilibriumState.hasGibbsBounds_of_irreducible (hfk : FengKaenmakiGibbs.{u})
     (hirr : S.Irreducible) (hs0 : 0 < s) {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState s μ) :
@@ -88,8 +94,9 @@ variable (S)
 for each `s > 0` there is an invariant `s`-equilibrium state `μ`, every invariant
 `s`-equilibrium state equals `μ`, `μ` is ergodic, and there is a constant `C ≥ 1` with
 `C⁻¹ exp(-|𝐢| P(𝖠, s)) φ^s(A_𝐢) ≤ μ([𝐢]) ≤ C exp(-|𝐢| P(𝖠, s)) φ^s(A_𝐢)` for all finite words
-`𝐢`. The literature inputs are `FengKaenmakiGibbs` and `FengKaenmakiUnique`, used for
-`0 < s < 2` only. -/
+`𝐢`. The inputs from the literature are `FengKaenmakiGibbs` and `FengKaenmakiUnique`, used for
+`0 < s < 2` only; the library proves both (`fengKaenmakiGibbs_holds`,
+`fengKaenmakiUnique_holds`). -/
 theorem irred_eq_state (hfk : FengKaenmakiGibbs.{u}) (hfku : FengKaenmakiUnique.{u})
     (hirr : S.Irreducible) (hs0 : 0 < s) :
     ∃ μ : Measure (ℤ → ι), IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ ∧

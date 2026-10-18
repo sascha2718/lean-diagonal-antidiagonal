@@ -1,5 +1,5 @@
 {
-  "review_date": "2026-10-17",
+  "review_date": "2026-10-18",
   "scope": "All 14 numbered environments of Section 3 of diagonal-antidiagonal.tex. The review inspects the LaTeX statements and proofs and the Lean declarations and proofs, and modifies and compiles no LaTeX. It is a semantic source review, not a kernel build.",
   "conventions": "Lean names below include the BoxLike namespace. System is the contracting diagonal/anti-diagonal System structure; PlanarSystem is an arbitrary planar self-affine system and MatrixTuple an arbitrary tuple of real 2 x 2 matrices. Finite alphabets have the discrete measurable structure; invariant measures are Borel probability measures unless stated otherwise. No library axiom is used: listed literature inputs are explicit Prop-valued hypotheses.",
   "summary": {
@@ -12,9 +12,10 @@
       "3.3 proves the cited nested-disintegration results of Einsiedler-Ward",
       "3.5 and 3.7 prove Feng's identity along his Lemmas 4.4 and 4.5, with the planar Oseledets theorem for mu(Sigma') = 1",
       "3.6 follows Feng's (4.17) with the Shannon-McMillan-Breiman theorem, proved by Breiman's argument",
-      "3.10 proves existence variationally and ergodicity from uniqueness, and takes the Gibbs bounds and uniqueness for 0<s<2 from FengKaenmakiNormEquilibrium through the rescaling and the one-sided reduction of the prose",
-      "3.13 also has an integrated proof of the counting inequality without Birkhoff's theorem",
-      "3.14 is proved (fraserJordanJurgaDecomposition_holds) from Bowen's theorem with no literature premise; FengKaenmakiGibbs passes from the equilibrium state to the Gibbs bounds"
+      "3.10 proves existence variationally and ergodicity from uniqueness, and the Gibbs bounds and uniqueness for 0<s<2 from FengKaenmakiNormEquilibrium through the rescaling and the one-sided reduction of the prose; the library proves FengKaenmakiNormEquilibrium (fengKaenmakiNormEquilibrium_holds) by the quasi-multiplicativity of the norm, Bowen's construction with periodic-orbit measures and a bound on the relative entropy of the cylinder partitions; for box-like tuples with rotations, irreducible or not, it proves the whole proposition by a bound on the relative entropy of the cylinder partitions and the ergodicity of the image of Bowen's Gibbs measure",
+      "3.11 takes the uniqueness and ergodicity of mu^(2) from 3.10 for A^2, which has rotations, without the irreducibility of A^2",
+      "3.13 also has an integrated proof of the counting inequality without Birkhoff's theorem; neither proof uses proximality",
+      "3.14 is proved (fraserJordanJurgaDecomposition_holds) from Bowen's theorem with no literature premise; the Gibbs bounds of the equilibrium state are EquilibriumGibbsStatement, a theorem of the library (equilibriumGibbs)"
     ]
   },
   "primary_source_check": {
@@ -47,20 +48,20 @@
         "BoxLike.System.measure_SigmaPrime_compl"
       ],
       "lean_locations": [
-        "BoxLike/OseledetsFiltration.lean:958",
-        "BoxLike/OseledetsFiltration.lean:908",
-        "BoxLike/OseledetsFiltration.lean:700",
-        "BoxLike/OseledetsFiltration.lean:740",
-        "BoxLike/OseledetsFiltration.lean:792",
-        "BoxLike/OseledetsFiltration.lean:848",
-        "BoxLike/OseledetsFiltration.lean:854",
-        "BoxLike/OseledetsFiltration.lean:826",
-        "BoxLike/OseledetsFiltration.lean:398",
-        "BoxLike/OseledetsFiltration.lean:364",
+        "BoxLike/OseledetsFiltration.lean:959",
+        "BoxLike/OseledetsFiltration.lean:909",
+        "BoxLike/OseledetsFiltration.lean:701",
+        "BoxLike/OseledetsFiltration.lean:741",
+        "BoxLike/OseledetsFiltration.lean:793",
+        "BoxLike/OseledetsFiltration.lean:849",
+        "BoxLike/OseledetsFiltration.lean:855",
+        "BoxLike/OseledetsFiltration.lean:827",
+        "BoxLike/OseledetsFiltration.lean:399",
+        "BoxLike/OseledetsFiltration.lean:365",
         "BoxLike/OseledetsBridge.lean:421",
         "BoxLike/OseledetsBridge.lean:689",
         "BoxLike/SlowAxis.lean:159",
-        "BoxLike/SigmaMeasure.lean:454"
+        "BoxLike/SigmaMeasure.lean:455"
       ],
       "literature_hypotheses": [],
       "exact_hypotheses": "",
@@ -319,14 +320,33 @@
         "BoxLike.FengKaenmakiNormEquilibrium.svf",
         "BoxLike.FengKaenmakiNormEquilibrium.twoSided",
         "BoxLike.FengKaenmakiNormEquilibrium.fengKaenmakiGibbs",
-        "BoxLike.FengKaenmakiNormEquilibrium.fengKaenmakiUnique"
+        "BoxLike.FengKaenmakiNormEquilibrium.fengKaenmakiUnique",
+        "BoxLike.System.irred_eq_state_of_withRotations",
+        "BoxLike.System.unique_of_withRotations",
+        "BoxLike.System.IsEquilibriumState.ergodic_of_withRotations",
+        "BoxLike.System.IsEquilibriumState.hasGibbsBounds_of_withRotations",
+        "BoxLike.System.existsUnique_isEquilibriumState_of_withRotations",
+        "BoxLike.System.IsEquilibriumState.eq_map_unCode",
+        "BoxLike.System.IsEquilibriumState.blockRelEntropy_le",
+        "BoxLike.absolutelyContinuous_of_blockRelEntropy_le",
+        "BoxLike.equilibriumGibbs",
+        "BoxLike.fengKaenmakiNormEquilibrium_holds",
+        "BoxLike.fengKaenmakiGibbs_holds",
+        "BoxLike.fengKaenmakiUnique_holds",
+        "BoxLike.fengKaenmakiNormEquilibrium_of_normGibbsExistence",
+        "BoxLike.normGibbsExistence",
+        "BoxLike.MatrixTuple.normQuasiMultiplicative_of_irreducible",
+        "BoxLike.MatrixTuple.IsNormEquilibrium.eq_of_hasNormGibbs",
+        "BoxLike.MatrixTuple.HasNormGibbs.ergodic",
+        "BoxLike.MatrixTuple.exists_ergodic_hasNormGibbs_forall_eq",
+        "BoxLike.MatrixTuple.NormQuasiMultiplicative.exists_ergodic_hasNormGibbs"
       ],
       "lean_locations": [
-        "BoxLike/IrreducibleEquilibriumTuple.lean:33",
-        "BoxLike/IrreducibleEquilibrium.lean:93",
-        "BoxLike/IrreducibleEquilibrium.lean:51",
-        "BoxLike/IrreducibleEquilibrium.lean:63",
-        "BoxLike/IrreducibleEquilibrium.lean:75",
+        "BoxLike/IrreducibleEquilibriumTuple.lean:38",
+        "BoxLike/IrreducibleEquilibrium.lean:100",
+        "BoxLike/IrreducibleEquilibrium.lean:56",
+        "BoxLike/IrreducibleEquilibrium.lean:68",
+        "BoxLike/IrreducibleEquilibrium.lean:81",
         "BoxLike/TupleEquilibriumExistence.lean:654",
         "BoxLike/TupleEquilibriumLarge.lean:284",
         "BoxLike/TupleEquilibrium.lean:494",
@@ -334,22 +354,39 @@
         "BoxLike/TupleEquilibriumNorm.lean:411",
         "BoxLike/TupleEquilibriumNorm.lean:157",
         "BoxLike/TupleErgodicEquilibrium.lean:357",
-        "BoxLike/LiteratureFengKaenmaki.lean:187",
-        "BoxLike/LiteratureFengKaenmaki.lean:168",
-        "BoxLike/LiteratureFengKaenmaki.lean:215",
-        "BoxLike/LiteratureFengKaenmaki.lean:222"
+        "BoxLike/LiteratureFengKaenmaki.lean:196",
+        "BoxLike/LiteratureFengKaenmaki.lean:177",
+        "BoxLike/LiteratureFengKaenmaki.lean:224",
+        "BoxLike/LiteratureFengKaenmaki.lean:231",
+        "BoxLike/EquilibriumGibbs.lean:215",
+        "BoxLike/EquilibriumGibbs.lean:175",
+        "BoxLike/EquilibriumGibbs.lean:161",
+        "BoxLike/EquilibriumGibbs.lean:147",
+        "BoxLike/EquilibriumGibbs.lean:201",
+        "BoxLike/EquilibriumGibbs.lean:134",
+        "BoxLike/EquilibriumGibbs.lean:66",
+        "BoxLike/Support/RelativeEntropy.lean:142",
+        "BoxLike/EquilibriumGibbs.lean:189",
+        "BoxLike/QuasiMultiplicative/Main.lean:83",
+        "BoxLike/QuasiMultiplicative/Main.lean:88",
+        "BoxLike/QuasiMultiplicative/Main.lean:93",
+        "BoxLike/QuasiMultiplicative/Main.lean:65",
+        "BoxLike/QuasiMultiplicative/GibbsMeasure.lean:149",
+        "BoxLike/QuasiMultiplicative/Irreducible.lean:145",
+        "BoxLike/QuasiMultiplicative/Uniqueness.lean:163",
+        "BoxLike/QuasiMultiplicative/GibbsMeasureErgodic.lean:322",
+        "BoxLike/QuasiMultiplicative/Main.lean:47",
+        "BoxLike/QuasiMultiplicative/GibbsMeasure.lean:117"
       ],
-      "literature_hypotheses": [
-        "BoxLike.FengKaenmakiNormEquilibrium",
-        "BoxLike.FengKaenmakiGibbs",
-        "BoxLike.FengKaenmakiUnique"
-      ],
-      "exact_hypotheses": "an irreducible tuple of invertible planar matrices (`TupleIrreducible`, det A_i != 0) and s>0 (`MatrixTuple.irred_eq_state_of_fengKaenmaki`); the cited theorem enters for 0<s<2 only. The box-like endpoint `System.irred_eq_state` takes an irreducible box-like System and the box-like predicates FengKaenmakiGibbs and FengKaenmakiUnique, which FengKaenmakiNormEquilibrium implies. Existence (`MatrixTuple.exists_isEquilibriumState`), the case s>=2 without irreducibility (`MatrixTuple.irred_eq_state_of_two_le`), ergodicity of a unique equilibrium state (`MatrixTuple.ergodic_of_unique`), existence of an ergodic equilibrium state for every s>=0, reducible or not (`MatrixTuple.exists_ergodic_isEquilibriumState`, tex 2217-2218), and the rescaling and two-sided reductions of the prose are proved without literature input.",
-      "fidelity": "the full statement at the article's scope, every irreducible tuple in GL_2(R)^N and every s>0: existence, uniqueness, ergodicity and the Gibbs bounds of the s-equilibrium state (`MatrixTuple.irred_eq_state_of_fengKaenmaki`), from the authorised `FengKaenmakiNormEquilibrium` (BoxLike/LiteratureFengKaenmaki.lean), Feng-Kaenmaki, Proposition 1.2, in the form of the source. The box-like endpoint `System.irred_eq_state` is its specialisation through the box-like predicates.",
+      "literature_hypotheses": [],
+      "exact_hypotheses": "an irreducible tuple of invertible planar matrices (`TupleIrreducible`, det A_i != 0) and s>0 (`MatrixTuple.irred_eq_state_of_fengKaenmaki`, which takes FengKaenmakiNormEquilibrium as a hypothesis for 0<s<2 only; Solution discharges it with `fengKaenmakiNormEquilibrium_holds`, `paper_3_10_25`). The irreducible box-like endpoint `System.irred_eq_state` takes an irreducible box-like System and the box-like predicates FengKaenmakiGibbs and FengKaenmakiUnique, which FengKaenmakiNormEquilibrium implies and the library proves (`fengKaenmakiGibbs_holds`, `fengKaenmakiUnique_holds`, `paper_3_10_26`). Existence (`MatrixTuple.exists_isEquilibriumState`), the case s>=2 without irreducibility (`MatrixTuple.irred_eq_state_of_two_le`), ergodicity of a unique equilibrium state (`MatrixTuple.ergodic_of_unique`), existence of an ergodic equilibrium state for every s>=0, reducible or not (`MatrixTuple.exists_ergodic_isEquilibriumState`, tex 2217-2218), and the rescaling and two-sided reductions of the prose are proved without literature input. The endpoint for tuples with rotations (`System.irred_eq_state_of_withRotations`) takes a box-like System with rotations and s>0, and no literature premise.",
+      "fidelity": "the full statement at the article's scope, every irreducible tuple in GL_2(R)^N and every s>0: existence, uniqueness, ergodicity and the Gibbs bounds of the s-equilibrium state (`MatrixTuple.irred_eq_state_of_fengKaenmaki`; with no premise, `paper_3_10_25`), from `FengKaenmakiNormEquilibrium` (BoxLike/LiteratureFengKaenmaki.lean), Feng-Kaenmaki, Proposition 1.2, in the form of the source, which the library proves (`fengKaenmakiNormEquilibrium_holds`). The irreducible box-like endpoint `System.irred_eq_state` is its specialisation through the box-like predicates (with no premise, `paper_3_10_26`). No literature premise is used. For box-like tuples with rotations, which need not be irreducible, the full statement holds for every s>0 with no literature premise (`System.irred_eq_state_of_withRotations`); the main line takes its Gibbs bounds through `EquilibriumGibbsStatement` (`equilibriumGibbs`) and its uniqueness through `System.unique_of_withRotations`.",
       "proof_deviations": [
-        "Proof: as in the prose: the norm potential for s<=1, the rescaled tuple A'_i = |det A_i|^((s-1)/(2-s)) A_i with exponent 2-s for 1<s<2 (`FengKaenmakiNormEquilibrium.svf`, `isEquilibriumState_iff_rescale`, `hasGibbsBounds_iff_rescale`), the reduction to the one-sided shift (`FengKaenmakiNormEquilibrium.twoSided`, `isNormEquilibriumPlus_map_eta_iff`), and the determinant Bernoulli calculation for s>=2, which Feng-Kaenmaki, Proposition 1.2, does not cover. Ergodicity follows from uniqueness (extreme points of the equilibrium states are ergodic, proved through the sub-affinity of entropy), which the source states as a remark after its (1.4)."
+        "Proof: as in the prose: the norm potential for s<=1, the rescaled tuple A'_i = |det A_i|^((s-1)/(2-s)) A_i with exponent 2-s for 1<s<2 (`FengKaenmakiNormEquilibrium.svf`, `isEquilibriumState_iff_rescale`, `hasGibbsBounds_iff_rescale`), the reduction to the one-sided shift (`FengKaenmakiNormEquilibrium.twoSided`, `isNormEquilibriumPlus_map_eta_iff`), and the determinant Bernoulli calculation for s>=2, which Feng-Kaenmaki, Proposition 1.2, does not cover. Ergodicity follows from uniqueness (extreme points of the equilibrium states are ergodic, proved through the sub-affinity of entropy), which the source states as a remark after its (1.4).",
+        "Proof of Feng-Kaenmaki, Proposition 1.2 (BoxLike/QuasiMultiplicative/, `fengKaenmakiNormEquilibrium_holds`), along the architecture of Bowen's theorem: the norm of an irreducible tuple is quasi-multiplicative with connecting words of length at most one, by compactness of the unit sphere of the matrices, and invertibility is not needed (`MatrixTuple.normQuasiMultiplicative_of_irreducible`); for q>0 the periodic-orbit measures of ‖·‖^q satisfy uniform Gibbs bounds for every fixed word once their period is large, a weak-star limit point is an invariant Gibbs measure, and a Gibbs measure is ergodic by a quasi-Bernoulli lower bound (`normGibbsExistence`, `MatrixTuple.HasNormGibbs.ergodic`); for every q>=0 an invariant q-equilibrium state μ on Σ satisfies D_n(μ ‖ μ_q) <= log C on the cylinder partitions, so μ ≪ μ_q and μ = μ_q (`MatrixTuple.IsNormEquilibrium.eq_of_hasNormGibbs`); the one-sided statement follows through the natural extension (`exists_map_eta_eq`, `MatrixTuple.hasNormGibbsPlus_map_eta_iff`, `fengKaenmakiNormEquilibrium_of_normGibbsExistence`). The box-like predicates follow (`fengKaenmakiGibbs_holds`, `fengKaenmakiUnique_holds`).",
+        "Proof for tuples with rotations: for 0<s<2 the image μ_G = q_*μ₁ of Bowen's ergodic Gibbs measure μ₁ for f_{1,s} on Σ_Z has the Gibbs bounds with a constant K (`System.exists_isGibbs_potential₁`, `System.hasGibbsBounds_map_unCode`); for an invariant s-equilibrium state μ the equilibrium equation at level n and the lower Gibbs bound give the relative entropy bound D_n(μ ‖ μ_G) ≤ log K on the cylinder partitions (`IsEquilibriumState.blockRelEntropy_le`), hence μ ≪ μ_G (`absolutelyContinuous_of_blockRelEntropy_le`) and μ = μ_G, since μ_G is ergodic (`IsEquilibriumState.eq_map_unCode`); for s>=2 μ is the Bernoulli measure of 3.12. Uniqueness, ergodicity and the Gibbs bounds follow (`System.unique_of_withRotations`, `IsEquilibriumState.ergodic_of_withRotations`, `IsEquilibriumState.hasGibbsBounds_of_withRotations`)."
       ],
-      "suggested_fix": "None: the cited theorem is an explicit, authorised Prop hypothesis with a checked source.",
+      "suggested_fix": "None.",
       "literature_source_record": {
         "name": "BoxLike.FengKaenmakiNormEquilibrium",
         "citation": "Feng-Kaenmaki, Equilibrium states of the pressure function for products of matrices, Discrete Contin. Dyn. Syst. 30 (2011), Proposition 1.2",
@@ -358,9 +395,10 @@
         "source_boundary": "Source: F = R or C, d x d matrices irreducible over F^d (their Definition 1.1), the one-sided full shift, P(q) of their (1.1) with the standard matrix norm, M_*(mu) of (1.2), q-equilibrium states by (1.4); conclusion: for each q>0 a unique q-equilibrium state mu_q with the Gibbs property (1.6), and P'(q) = M_*(mu_q). Specialisation: F = R, d = 2, invertible matrices, the l2 operator norm (all norms give the same P, M_* and equilibrium states, and the Gibbs property with another constant), entropy entropyPlus of the generating partition, P and M_* as limUnder of convergent sequences (MatrixTuple.tendsto_normPressure, MatrixTuple.tendsto_normLyapPlus, tendsto_entropyPlus). Weaker than the source: no existence of mu_q (proved: MatrixTuple.exists_isEquilibriumState), the Gibbs property for n >= 1 only, no differentiability of P, no singular matrices (for which P(q) = -inf is possible and Real.log 0 = 0 would make a transcription false). Degenerate instances: the empty alphabet is not irreducible, so the statement is silent; for the one-letter tuple of the quarter turn the conclusion is proved (FengKaenmakiNormEquilibrium.degenerate_quarterTurn).",
         "reductions": "FengKaenmakiNormEquilibrium.twoSided (the two-sided shift); FengKaenmakiNormEquilibrium.svf (the singular value potential for 0<s<2: q = s for s <= 1, the rescaled tuple A'_i = |det A_i|^((s-1)/(2-s)) A_i with q = 2-s for 1<s<2); FengKaenmakiNormEquilibrium.fengKaenmakiGibbs and .fengKaenmakiUnique (the box-like predicates FengKaenmakiGibbs and FengKaenmakiUnique).",
         "authorisation": "Authorised by the project owner.",
-        "downstream_uses": "MatrixTuple.irred_eq_state_of_fengKaenmaki (Proposition 3.10, thm:irred_eq_state, at the article's scope) and the reductions above; no headline result.",
+        "downstream_uses": "MatrixTuple.irred_eq_state_of_fengKaenmaki (Proposition 3.10, thm:irred_eq_state, at the article's scope), which receives fengKaenmakiNormEquilibrium_holds in Solution (paper_3_10_25), and the reductions above; no headline result.",
         "exact_lean_declaration": "def FengKaenmakiNormEquilibrium : Prop :=\n  ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]\n    (A : ι → Matrix (Fin 2) (Fin 2) ℝ), (∀ i, (A i).det ≠ 0) → TupleIrreducible A →\n    ∀ {q : ℝ}, 0 < q → ∀ (ν : Measure (ℕ → ι)) [IsProbabilityMeasure ν],\n    MeasurePreserving shiftPlus ν ν → MatrixTuple.IsNormEquilibriumPlus A q ν →\n    MatrixTuple.HasNormGibbsPlus A q ν ∧\n      ∀ (ν' : Measure (ℕ → ι)) [IsProbabilityMeasure ν'], MeasurePreserving shiftPlus ν' ν' →\n        MatrixTuple.IsNormEquilibriumPlus A q ν' → ν' = ν\n",
-        "lean_source": "BoxLike/LiteratureFengKaenmaki.lean:88"
+        "lean_source": "BoxLike/LiteratureFengKaenmaki.lean:97",
+        "proof": "The norm of an irreducible tuple is quasi-multiplicative with connecting words of length at most one, by compactness of the unit sphere of the matrices, without invertibility (MatrixTuple.normQuasiMultiplicative_of_irreducible); for q>0 Bowen's construction with periodic-orbit measures gives an invariant Gibbs measure of ‖·‖^q on the two-sided shift, ergodic by a quasi-Bernoulli lower bound (normGibbsExistence, MatrixTuple.NormQuasiMultiplicative.exists_ergodic_hasNormGibbs, MatrixTuple.HasNormGibbs.ergodic); for every q>=0 the equilibrium equation and the Gibbs bound give D_n(μ ‖ μ_q) <= log C on the cylinder partitions, so every invariant q-equilibrium state equals μ_q (MatrixTuple.IsNormEquilibrium.eq_of_hasNormGibbs, MatrixTuple.exists_ergodic_hasNormGibbs_forall_eq); the natural extension transfers this to the one-sided shift (exists_map_eta_eq, MatrixTuple.isNormEquilibriumPlus_map_eta_iff, MatrixTuple.hasNormGibbsPlus_map_eta_iff, fengKaenmakiNormEquilibrium_of_normGibbsExistence)."
       }
     },
     {
@@ -377,20 +415,18 @@
         "BoxLike.System.IsEquilibriumState.map_group"
       ],
       "lean_locations": [
-        "BoxLike/TwoBlockNormalisation.lean:107",
-        "BoxLike/TwoBlockNormalisation.lean:144",
-        "BoxLike/TwoBlockNormalisation.lean:80",
-        "BoxLike/TwoBlockNormalisation.lean:86",
+        "BoxLike/TwoBlockNormalisation.lean:110",
+        "BoxLike/TwoBlockNormalisation.lean:147",
+        "BoxLike/TwoBlockNormalisation.lean:82",
+        "BoxLike/TwoBlockNormalisation.lean:88",
         "BoxLike/BernoulliGrouping.lean:92",
-        "BoxLike/General.lean:49"
+        "BoxLike/General.lean:50"
       ],
-      "literature_hypotheses": [
-        "BoxLike.FengKaenmakiUnique"
-      ],
+      "literature_hypotheses": [],
       "exact_hypotheses": "a proximal System with rotations; s>0; an invariant s-equilibrium probability measure mu.",
       "fidelity": "one endpoint (`System.two_block_normalisation`) assembles every conclusion: attractor equality; both matrix types; a proximal diagonal generator of the second iterate; preservation of strong separation, the strong open set condition and projective exponential separation; μ^(2) an invariant s-equilibrium state, the unique one, and ergodic; P(A², t) = 2P(A, t) for t>=0; h(μ^(2)) = 2h(μ) and both Lyapunov scalings; equality of the projected measures. The wrapper `System.two_block_normalisation_consequences` gives the affinity dimension, the Lyapunov dimension, the coordinate marginals and that grouping a Bernoulli measure gives a Bernoulli measure. The remark on invertible linear changes of coordinates (tex 2352-2353) is formalised in BoxLike/Planar/ChangeOfBasis.lean (`MatrixTuple.comparable_conj`, `PlanarSystem.ConjBy.*`).",
       "proof_deviations": [
-        "Proof: as in the prose; uniqueness and ergodicity come from Proposition 3.10 applied to A² (`System.unique_of_irreducible`, `IsEquilibriumState.ergodic_of_irreducible`); the proximal diagonal generator of A² squares the original one or comes from `hasProximalDiagonal_or_sq` (`Proximal.sq_hasProximalDiagonal`); the floor/subsequence argument gives projective separation."
+        "Proof: as in the prose; uniqueness and ergodicity come from Proposition 3.10 applied to A², which has rotations, with no literature premise (`System.unique_of_withRotations`, `IsEquilibriumState.ergodic_of_withRotations`); the proximal diagonal generator of A² squares the original one or comes from `hasProximalDiagonal_or_sq` (`Proximal.sq_hasProximalDiagonal`); the floor/subsequence argument gives projective separation."
       ],
       "suggested_fix": "None."
     },
@@ -427,18 +463,18 @@
       "label": "thm:sigma_tau_omega_positive_eq_measure",
       "status": "formalized",
       "lean": [
+        "BoxLike.System.sigma_tau_omega_positive_eq_measure",
         "BoxLike.System.sigma_tau_omega_positive",
         "BoxLike.System.measure_cylinder_le_two_mul"
       ],
       "lean_locations": [
-        "BoxLike/SigmaMeasure.lean:586",
-        "BoxLike/SigmaMeasure.lean:548"
+        "BoxLike/Aligned/SigmaTauOmega.lean:219",
+        "BoxLike/SigmaMeasure.lean:587",
+        "BoxLike/SigmaMeasure.lean:549"
       ],
-      "literature_hypotheses": [
-        "BoxLike.FengKaenmakiGibbs"
-      ],
-      "exact_hypotheses": "Proximal System with rotations; 0<s<2; invariant ergodic equilibrium probability measure; hfk. Uniqueness is not used. No Morris-Shmerkin hypothesis or simple-spectrum assumption is required by this particular Lean endpoint.",
-      "fidelity": "Both positive-mass conclusions match. The Birkhoff display carries its almost-everywhere qualifier (tex 2462).",
+      "literature_hypotheses": [],
+      "exact_hypotheses": "System with rotations; 0<s<2; invariant ergodic equilibrium probability measure; hfk. Uniqueness is not used. No Morris-Shmerkin hypothesis or simple-spectrum assumption is required by this particular Lean endpoint, and proximality, a hypothesis of the manuscript, is not used. Proved input: BoxLike.EquilibriumGibbsStatement (`equilibriumGibbs`, the Gibbs bounds of Proposition 3.10 for tuples with rotations, proved in BoxLike/EquilibriumGibbs.lean); the library statements take it as a hypothesis and Solution discharges it.",
+      "fidelity": "Both positive-mass conclusions match, without the proximality of the manuscript. The Birkhoff display carries its almost-everywhere qualifier (tex 2462).",
       "proof_deviations": [
         "Proof: as in the prose (`System.sigma_tau_omega_positive_eq_measure`, BoxLike/Aligned/SigmaTauOmega.lean, the form used by 4.6): the counting inequality summed along the orbit, and Birkhoff's theorem for the indicators of Σ^τ and of the anti-diagonal cylinders. The integrated one-step bound mu([i]) <= 2 mu(SigmaTau) from invariance (`System.sigma_tau_omega_positive`) is an alternative proof."
       ],
@@ -467,7 +503,8 @@
         "BoxLike.System.GibbsDecomposition.map_flip",
         "BoxLike.System.decomposition₂_of_decompositions",
         "BoxLike.System.GibbsDecomposition.eq_mu₁",
-        "BoxLike.System.GibbsDecomposition.eq_mu₂"
+        "BoxLike.System.GibbsDecomposition.eq_mu₂",
+        "BoxLike.System.IsEquilibriumState.eq_map_unCode"
       ],
       "lean_locations": [
         "BoxLike/FraserJordanJurga/Main.lean:134",
@@ -476,7 +513,7 @@
         "BoxLike/FraserJordanJurga/Lyapunov.lean:256",
         "BoxLike/FraserJordanJurga/Gibbs.lean:45",
         "BoxLike/FraserJordanJurga/Main.lean:56",
-        "BoxLike/Literature.lean:92",
+        "BoxLike/Literature.lean:104",
         "BoxLike/Thermodynamic.lean:110",
         "BoxLike/PressureZ.lean:944",
         "BoxLike/PressureZ.lean:952",
@@ -487,12 +524,11 @@
         "BoxLike/PressureZ.lean:1028",
         "BoxLike/PressureZ.lean:970",
         "BoxLike/Support/GibbsUniqueness.lean:306",
-        "BoxLike/Support/GibbsUniqueness.lean:316"
+        "BoxLike/Support/GibbsUniqueness.lean:316",
+        "BoxLike/EquilibriumGibbs.lean:134"
       ],
-      "literature_hypotheses": [
-        "BoxLike.FengKaenmakiGibbs"
-      ],
-      "exact_hypotheses": "A box-like System with rotations and 0<s<2; an invariant probability measure μ with the Gibbs bounds of `thm:irred_eq_state`. FengKaenmakiGibbs passes from the manuscript's hypothesis \"μ is the s-equilibrium state\" to these Gibbs bounds, with irreducibility from the rotations and the proximal diagonal generator. Pressure equalities need only a diagonal generator and 0<s<2. Integral identities and axis symmetry follow from a GibbsDecomposition witness.",
+      "literature_hypotheses": [],
+      "exact_hypotheses": "A box-like System with rotations and 0<s<2; an invariant probability measure μ with the Gibbs bounds of `thm:irred_eq_state`. EquilibriumGibbsStatement, a theorem of the library (`equilibriumGibbs`), passes from the manuscript's hypothesis \"μ is the s-equilibrium state\" to these Gibbs bounds, with no irreducibility and no proximal diagonal generator: every invariant s-equilibrium state is the image q_*μ₁ of the decomposition (`System.IsEquilibriumState.eq_map_unCode`). Pressure equalities need only a diagonal generator and 0<s<2. Integral identities and axis symmetry follow from a GibbsDecomposition witness.",
       "fidelity": "The article quotes the proposition from Fraser-Jordan-Jurga (Lemma 1.3, Corollaries 1.5 and 1.6); the library proves it (`fraserJordanJurgaDecomposition_holds`): the ergodic s-Gibbs measures μ₁, μ₂ carried by Σ_Z, the four decompositions of μ, and λ_1(𝖠, μ) = \\overline{λ}(𝖠, μ₁), λ_2(𝖠, μ) = \\overline{λ}(𝖠, μ₂). The pressure identities P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s}) are `System.pressure_eq_pressureZ₁` and `System.pressure_eq_pressureZ₂`. Proximality and a proximal diagonal generator are not used. Every invariant measure with the Gibbs bounds equals the image of μ₁, so it is unique and ergodic, and the s-Gibbs measures of a decomposition are unique (`GibbsDecomposition.eq_mu₁`, `GibbsDecomposition.eq_mu₂`).",
       "proof_deviations": [
         "Proof: Bowen's theorem (bowenGibbsExistence) gives the ergodic Gibbs measure μ₁ for f_{1,s} on the mixing Σ_Z (System.exists_isGibbs_potential₁), and μ₂ is its image under the exchange of the axes (System.isGibbs_potential₂_map_flipAxis); the image of μ₁ under forgetting the axis has the Gibbs bounds of φ^s, since each word has two lifts and φ^s(A_w) is the larger of the two exponentials (System.hasGibbsBounds_map_unCode); every invariant measure with the Gibbs bounds equals this ergodic measure (System.eq_of_hasGibbsBounds); the four decompositions follow from Σ_Z = τ(Σ) ⊔ ω(Σ) and the exchange of the two ranges; the Lyapunov identities follow from Birkhoff's theorem along the two lifts and the relative-entropy comparison \\overline{λ}(𝖠, μ₂) ≤ \\overline{λ}(𝖠, μ₁) (System.lyapunov_map_unCode_of_isGibbs)."

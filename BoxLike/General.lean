@@ -14,6 +14,7 @@ between `(Φ, μ)` and `(Φ^(2), β_*μ)`.
 * `System.eq_state_proj_dim`: `thm:eq_state_proj_dim`.
 * `System.main1`: `thm:main1`.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.Grouping
 public import BoxLike.Lyapunov
 public import BoxLike.Main
@@ -76,7 +77,7 @@ proximal box-like tuple with rotations: each coordinate marginal of the `s`-equi
 `0 < s < 2`, is the sum of two non-zero exact-dimensional measures of dimensions
 `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and `min{1, -h_0(μ)/λ_2(𝖠, μ)}`. Grouping preserves the marginals
 and the ratios of entropy to Lyapunov exponents. -/
-theorem marginal_decomposition (hfk : FengKaenmakiGibbs.{u})
+theorem marginal_decomposition (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation) (hs0 : 0 < s)
     (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
@@ -101,7 +102,7 @@ satisfying the projective exponential separation condition and `μ` is the `s`-e
 state with `0 < s < 2`, then `(proj_x)_*(π_*μ)` and `(proj_y)_*(π_*μ)` are double-dimensional
 with upper packing dimension `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and lower Hausdorff dimension
 `min{1, -h_0(μ)/λ_2(𝖠, μ)}`. -/
-theorem eq_state_proj_dim (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem eq_state_proj_dim (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation) (hs0 : 0 < s)
     (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
@@ -125,7 +126,7 @@ is `s = dimaff(X) < 2`, and let `μ` be the `s`-equilibrium state. Then the coor
 projections of `μ` are double-dimensional; they fail to be exact-dimensional precisely when
 `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`; at equality and above they are exact-dimensional of dimension
 one. -/
-theorem main1 (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem main1 (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation) (hs0 : 0 < s)
     (hs2 : s < 2) (hP : S.pressure s = 0) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]

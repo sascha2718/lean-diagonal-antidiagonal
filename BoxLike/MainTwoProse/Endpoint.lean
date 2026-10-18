@@ -26,13 +26,17 @@ The assembled proof of `thm:main2` in `sec:dimension_result_proof` along the pro
 * `System.le_dimH_attractor_of_family`: `\dim_H X ≥ dim ν_n` for one family.
 * `System.main2_prose_normalised`, `System.main2_prose_of_pressure`, `System.main2_prose_lt_two`:
   the case `0 < s < 2`.
-* `System.main2_prose`: `thm:main2` with the literature hypotheses the proof uses.
+* `System.main2_prose`: `thm:main2` with the hypotheses the proof uses: the statements
+  `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement` and
+  `FraserJordanJurgaDecomposition`, which the library proves, and the literature hypotheses
+  `FengLedrappierYoung` and `KittleKoglerDimension`.
 * `System.main2_prose_all`: `thm:main2` with the type of `System.main2_noExactOverlaps_all` and
   the hypothesis `hsmb`.
 * `System.main2_noExactOverlaps_prose`: `thm:main2` with exactly the type of
   `System.main2_noExactOverlaps_all`, the Shannon–McMillan–Breiman theorem being the library
   theorem `shannonMcMillanBreiman`.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.MainTwoEndpoint
 public import BoxLike.MainTwoProse.EntropyThreshold
 public import BoxLike.MainTwoProse.OpenSetBranch
@@ -203,10 +207,11 @@ Breiman theorem (`exists_typical_words_prose`); in the entropy case the families
 `min{#W_n, ⌊|b_n|⁻¹⌋}` words; under the strong open set condition every word is prefixed by a
 diagonal word `v` with `φ_v(X) ⊆ U`; the lengths and logarithms of the coordinate contraction
 ratios change by bounded amounts; `|b_n| < |a_n|` for all large `n`; and `dim ν_n → s`.
-Depends on: `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`, `FengKaenmakiGibbs`,
-`FraserJordanJurgaDecomposition`, `FengLedrappierYoung`, `KittleKoglerDimension`. -/
+Depends on: `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`,
+`EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`, `FengLedrappierYoung`,
+`KittleKoglerDimension`. -/
 theorem main2_prose_normalised (hsmb : ShannonMcMillanBreimanStatement.{u})
-    (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+    (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hly : FengLedrappierYoung.{u})
     (hkk : KittleKoglerDimension.{u}) (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
     (hfree : S.NoExactOverlaps) {s : ℝ} (hs0 : 0 < s) (hs2 : s < 2) (hP : S.pressure s = 0)
@@ -358,10 +363,11 @@ theorem main2_prose_normalised (hsmb : ShannonMcMillanBreimanStatement.{u})
 form, for every proximal tuple: the reduction to a proximal diagonal generator through
 `thm:two-block-normalisation`, with the absence of exact overlaps passing to the second
 iterate, and the upper bound `eq:hausdorff_affinity_upper_bound`.
-Depends on: `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`, `FengKaenmakiGibbs`,
-`FraserJordanJurgaDecomposition`, `FengLedrappierYoung`, `KittleKoglerDimension`. -/
+Depends on: `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`,
+`EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`, `FengLedrappierYoung`,
+`KittleKoglerDimension`. -/
 theorem main2_prose_of_pressure (hsmb : ShannonMcMillanBreimanStatement.{u})
-    (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+    (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hly : FengLedrappierYoung.{u})
     (hkk : KittleKoglerDimension.{u}) (hrot : S.WithRotations) (hprox : S.Proximal)
     (hfree : S.NoExactOverlaps) {s : ℝ} (hs0 : 0 < s) (hs2 : s < 2) (hP : S.pressure s = 0)
@@ -391,10 +397,11 @@ theorem main2_prose_of_pressure (hsmb : ShannonMcMillanBreimanStatement.{u})
 /-- `thm:main2` in the case `dimaff(X) < 2`, along the prose: the equivalence
 `s ≤ 2 - λ_1/λ_2 ⟺ h_0(μ) ≤ -λ_2` from `eq:diml_min2` and `eq:simple_lyapunov`, then
 `main2_prose_of_pressure`.
-Depends on: `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`, `FengKaenmakiGibbs`,
-`FraserJordanJurgaDecomposition`, `FengLedrappierYoung`, `KittleKoglerDimension`. -/
+Depends on: `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`,
+`EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`, `FengLedrappierYoung`,
+`KittleKoglerDimension`. -/
 theorem main2_prose_lt_two (hsmb : ShannonMcMillanBreimanStatement.{u})
-    (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+    (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hly : FengLedrappierYoung.{u})
     (hkk : KittleKoglerDimension.{u}) [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hfree : S.NoExactOverlaps) (h2 : S.dimaff < 2) (μ : Measure (ℤ → ι))
@@ -423,10 +430,11 @@ and the determinant argument of `thm:main_extended` under the strong open set co
 `s = 2` and `dim(π_*μ) = 2`, so `\dim_H X = 2` since `π_*μ` is carried by `X ⊆ ℝ²`; for
 `0 < s < 2` the finite diagonal subsystems give the lower bound and
 `eq:hausdorff_affinity_upper_bound` the upper bound.
-Depends on: `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`, `FengKaenmakiGibbs`,
-`FraserJordanJurgaDecomposition`, `FengLedrappierYoung`, `KittleKoglerDimension`. -/
+Depends on: `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`,
+`EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`, `FengLedrappierYoung`,
+`KittleKoglerDimension`. -/
 theorem main2_prose (hsmb : ShannonMcMillanBreimanStatement.{u})
-    (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+    (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hly : FengLedrappierYoung.{u})
     (hkk : KittleKoglerDimension.{u}) (hrot : S.WithRotations) (hprox : S.Proximal)
     (hfree : S.NoExactOverlaps) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
@@ -463,7 +471,7 @@ statement `FengLedrappierYoung`, and `q_n = 0` in the entropy case from the mono
 conditional entropy. -/
 theorem main2_prose_all (hsmb : ShannonMcMillanBreimanStatement.{u})
     (hms : BoxLike.MorrisShmerkinLyapunov.{u})
-    (hfk : BoxLike.FengKaenmakiGibbs.{u})
+    (hfk : BoxLike.EquilibriumGibbsStatement.{u})
     (hfjj : BoxLike.FraserJordanJurgaDecomposition.{u})
     (_hfib : BoxLike.FengInfoSumBar.{u}) (hly : BoxLike.FengLedrappierYoung.{u})
     (_hlyb : BoxLike.FengLedrappierYoungBar.{u}) (hkk : BoxLike.KittleKoglerDimension.{u})
@@ -479,10 +487,10 @@ theorem main2_prose_all (hsmb : ShannonMcMillanBreimanStatement.{u})
 hypothesis `hsmb` of `main2_prose_all` is discharged by the library theorem
 `shannonMcMillanBreiman`. The hypotheses `FengInfoSumBar` and `FengLedrappierYoungBar` of the type
 are not used.
-Depends on: `MorrisShmerkinLyapunov`, `FengKaenmakiGibbs`, `FraserJordanJurgaDecomposition`,
+Depends on: `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`,
 `FengLedrappierYoung`, `KittleKoglerDimension`. -/
 theorem main2_noExactOverlaps_prose (hms : BoxLike.MorrisShmerkinLyapunov.{u})
-    (hfk : BoxLike.FengKaenmakiGibbs.{u})
+    (hfk : BoxLike.EquilibriumGibbsStatement.{u})
     (hfjj : BoxLike.FraserJordanJurgaDecomposition.{u})
     (hfib : BoxLike.FengInfoSumBar.{u}) (hly : BoxLike.FengLedrappierYoung.{u})
     (hlyb : BoxLike.FengLedrappierYoungBar.{u}) (hkk : BoxLike.KittleKoglerDimension.{u})

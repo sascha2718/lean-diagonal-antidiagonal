@@ -14,6 +14,7 @@ proximal diagonal generator: `sec:entropy_eq_state` and the decomposition of
   `eq:restricted-projection-dimensions` and `eq:gibbs_proj_dim`.
 -/
 public import BoxLike.EntropyFactor
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.Literature
 
 @[expose] public section
@@ -180,7 +181,7 @@ variable (S)
 coordinate marginal of the `s`-equilibrium state, `0 < s < 2`, is the sum of two non-zero
 exact-dimensional measures, of dimensions `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and
 `min{1, -h_0(μ)/λ_2(𝖠, μ)}`. -/
-theorem marginal_decomposition_normalised (hfk : FengKaenmakiGibbs.{u})
+theorem marginal_decomposition_normalised (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hrot : S.WithRotations) (hprox : S.HasProximalDiagonal) (hsep : S.ProjExpSeparation)
     (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
@@ -190,7 +191,7 @@ theorem marginal_decomposition_normalised (hfk : FengKaenmakiGibbs.{u})
       S.marginal c μ = ν₁ + ν₂ ∧
       IsExactDim ν₁ (min 1 (-entropy μ / S.lyapunov₁ μ)) ∧
       IsExactDim ν₂ (min 1 (-entropy μ / S.lyapunov₂ μ)) := by
-  have hgibbs := hfk S (irreducible_of_hasProximalDiagonal hrot hprox) hs0 hs2 μ hinv heq
+  have hgibbs := hfk S hrot hs0 hs2 μ hinv heq
   obtain ⟨μ₁, μ₂, h⟩ := hfjj S hrot hprox hs0 hs2 μ hinv hgibbs
   obtain ⟨r, M, hS⟩ := S.exists_bounds
   have := h.prob₁

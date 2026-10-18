@@ -25,7 +25,9 @@ statements were compared with the arXiv version (v2) of the source on 2026-09-20
   `BoxLike/FengIdentityBar.lean`); the results that state them as hypotheses receive these
   proofs, and no headline statement takes them.
 * `FengLedrappierYoung`, `FengLedrappierYoungBar`: `thm:feng1`, from Feng, Theorems 1.2
-  and 1.3.
+  and 1.3. The second follows from the first (`fengLedrappierYoungBar_of_fengLedrappierYoung`
+  in `BoxLike/ProjectiveLineSystem.lean`); the results that state it as a hypothesis receive
+  this proof, and no headline statement takes it.
 -/
 public import BoxLike.DimPartitions
 
@@ -78,7 +80,11 @@ def FengLedrappierYoung : Prop :=
 /-- `thm:feng1`, second part; Feng, Theorems 1.2 and 1.3, for the self-similar system
 `Ψ` on `ℝ`: if `ν` is an ergodic invariant measure on `Σ_Z`, then `\overline{π}_*ν` is
 exact-dimensional with
-`dim \overline{π}_*ν = (\overline{h}_1(ν) - \overline{h}_0(ν)) / \overline{λ}(𝖠, ν)`. -/
+`dim \overline{π}_*ν = (\overline{h}_1(ν) - \overline{h}_0(ν)) / \overline{λ}(𝖠, ν)`.
+It follows from `FengLedrappierYoung` applied to the planar system
+`z ↦ diag(g'_j, g'_j / 2) z + (g_j(0), 0)` of `Ψ`, whose attractor lies on the horizontal axis
+(`fengLedrappierYoungBar_of_fengLedrappierYoung`, `BoxLike/ProjectiveLineSystem.lean`); the
+hypotheses `S.WithRotations` and `S.Proximal` are not needed. -/
 def FengLedrappierYoungBar : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.WithRotations → S.Proximal → ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],

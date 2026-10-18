@@ -5,24 +5,28 @@ The packing and Minkowski dimensions of a box-like self-affine set: `thm:fraser`
 to 436), the chain `\dim_H X = \dim_P X = \dim_M X = dimaff(X)` and the squeeze of the modified
 affinity dimension (tex lines 540 to 556), and tex lines 2171 to 2185 of `sec:affinity_dim`.
 
-Fraser's theorem is a `Prop`-valued definition, which enters the results as a hypothesis. It is
-stated as in the source (Fraser, "On the packing dimension of box-like
-self-affine sets in the plane", Theorem 2.3, numbering of arXiv:1108.2639v1): without a
-separation condition it bounds the upper Minkowski dimension, and it asserts that the
-Minkowski dimension exists only under the rectangular open set condition.
+Fraser's theorem is stated as in the source (Fraser, "On the packing dimension of box-like
+self-affine sets in the plane", Theorem 2.3, numbering of arXiv:1108.2639v1), as two
+`Prop`-valued definitions: without a separation condition it bounds the upper Minkowski
+dimension, and it asserts that the Minkowski dimension exists only under the rectangular open
+set condition. The library proves both (`System.fraserBound_holds` in
+`BoxLike/Fraser/UpperBound.lean`, `System.fraserROSC_holds` in `BoxLike/Fraser/Main.lean`).
+Those modules import this one, so the results here take the statements as hypotheses, and
+`Solution.lean` passes the proofs.
 
 * `System.FalconerBoxBound`, `System.falconerBoxBound`: Falconer's bound
   `\overline{\dim}_M X ≤ min{2, dimaff(X)}`, proved in `BoxLike.FalconerBound`.
-* `System.FraserBound`: `thm:fraser`, first part, `\dim_P X = \overline{\dim}_M X ≤ dimmaff(X)`.
+* `System.FraserBound`: `thm:fraser`, first part, `\dim_P X = \overline{\dim}_M X ≤ dimmaff(X)`,
+  which `System.fraserBound_holds` proves.
 * `System.FraserROSC`: `thm:fraser`, second part, `\dim_P X = \dim_M X = dimmaff(X)` under the
-  rectangular open set condition.
+  rectangular open set condition, which `System.fraserROSC_holds` proves.
 * `System.packingDim_attractor`: `\dim_P X = \overline{\dim}_M X`, the first equality of
   `thm:fraser`, proved.
 * `System.falconerBoxBound_iff`, `upperBoxDim_toLp_two`, `System.falconerBoxBound_iff_euclidean`:
   Falconer's bound is `\overline{\dim}_M X ≤ dimaff(X)`, and it reads the same for the Euclidean
   metric.
 * `System.falconerBoxBound_of_subsingleton`, `System.fraserBound_of_subsingleton`,
-  `System.fraserROSC_of_subsingleton`: the three cited statements hold for a single map.
+  `System.fraserROSC_of_subsingleton`: the three statements hold for a single map.
 * `System.FalconerBoxBound.dimH_le`, `System.FalconerBoxBound.projDim_le`,
   `System.FalconerBoxBound.dimmaff_le_dimaff`: Falconer's bound gives the Hausdorff bound
   `eq:hausdorff_affinity_upper_bound`, `s_1, s_2 ≤ dimaff(X)` and `dimmaff(X) ≤ dimaff(X)`; the
@@ -32,10 +36,11 @@ Minkowski dimension exists only under the rectangular open set condition.
   550, `dimmaff(X) = dimaff(X)`.
 * `System.FraserROSC.dimmaff_eq_dimaff`, `System.FraserROSC.dim_eq_dimaff`: `thm:fraser`, third
   part (Fraser's Corollary 2.5), derived from the second part.
-* `System.fraserBound_iff`, `System.fraserROSC_of_le`: the cited content of `thm:fraser` is
-  `\overline{\dim}_M X ≤ dimmaff(X)` and, under the rectangular open set condition,
-  `dimmaff(X) ≤ \underline{\dim}_M X`.
+* `System.fraserBound_iff`, `System.fraserROSC_of_le`: beyond `\dim_P X = \overline{\dim}_M X`,
+  `thm:fraser` asserts `\overline{\dim}_M X ≤ dimmaff(X)` and, under the rectangular open set
+  condition, `dimmaff(X) ≤ \underline{\dim}_M X`.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.MainTwo
 public import BoxLike.ModifiedAffinity
 public import Mathlib.Analysis.Normed.Lp.ProdLp
@@ -53,7 +58,7 @@ namespace System
 
 variable {ι : Type u} [Fintype ι] [Nonempty ι] (S : System ι)
 
-/-! ### The cited theorems -/
+/-! ### The statements of Falconer and Fraser -/
 
 /-- Falconer's bound (Math. Proc. Cambridge Philos. Soc. 103 (1988), cited at tex line 2171)
 for the upper Minkowski dimension: `\overline{\dim}_M X ≤ min{2, dimaff(X)}`. The article
@@ -74,14 +79,16 @@ box-like self-affine set, `\dim_P X = \overline{\dim}_B X ≤ s`, where `s = dim
 unique solution of `P(s) = 1`. The article writes `\dim_M X`; without a separation condition
 the source asserts nothing about the lower Minkowski dimension. The source assumes at least two
 maps; for a single map `X` is a point and the statement holds (`fraserBound_of_subsingleton`).
-The first conjunct is `packingDim_attractor`. -/
+The first conjunct is `packingDim_attractor`. The library proves the statement for every box-like
+system (`fraserBound_holds` in `BoxLike/Fraser/UpperBound.lean`). -/
 def FraserBound : Prop :=
   packingDim S.attractor = upperBoxDim S.attractor ∧
     upperBoxDim S.attractor ≤ ENNReal.ofReal S.dimmaff
 
 /-- `thm:fraser`, second part, Fraser, Theorem 2.3: under the rectangular open set condition
 the Minkowski dimension of `X` exists and `\dim_P X = \dim_B X = dimmaff(X)`. For a single map
-it holds (`fraserROSC_of_subsingleton`). -/
+it holds (`fraserROSC_of_subsingleton`). The library proves the statement for every box-like
+system (`fraserROSC_holds` in `BoxLike/Fraser/Main.lean`). -/
 def FraserROSC : Prop :=
   S.RectangularOpenSet →
     packingDim S.attractor = ENNReal.ofReal S.dimmaff ∧
@@ -139,15 +146,16 @@ theorem packingDim_attractor : packingDim S.attractor = upperBoxDim S.attractor 
         (S.upperBoxDim_image_phiWord _ _).symm
     _ ≤ upperBoxDim (S.attractor ∩ U) := upperBoxDim_mono hsub
 
-/-- The cited content of the first part of `thm:fraser` is the inequality
-`\overline{\dim}_M X ≤ dimmaff(X)`; the equality `\dim_P X = \overline{\dim}_M X` is
-`packingDim_attractor`. -/
+/-- Beyond the equality `\dim_P X = \overline{\dim}_M X` of `packingDim_attractor`, the first
+part of `thm:fraser` is the inequality `\overline{\dim}_M X ≤ dimmaff(X)`, which
+`upperBoxDim_attractor_le_dimmaff` proves (`BoxLike/Fraser/Upper.lean`). -/
 theorem fraserBound_iff :
     S.FraserBound ↔ upperBoxDim S.attractor ≤ ENNReal.ofReal S.dimmaff :=
   ⟨fun h => h.2, fun h => ⟨S.packingDim_attractor, h⟩⟩
 
-/-- The cited content of the second part of `thm:fraser` beyond the first part is the lower
-bound `dimmaff(X) ≤ \underline{\dim}_M X` under the rectangular open set condition. -/
+/-- Beyond the first part, the second part of `thm:fraser` is the lower bound
+`dimmaff(X) ≤ \underline{\dim}_M X` under the rectangular open set condition, which
+`dimmaff_le_lowerBoxDim` proves (`BoxLike/Fraser/LowerCover.lean`). -/
 theorem fraserROSC_of_le (hB : S.FraserBound)
     (h : S.RectangularOpenSet → ENNReal.ofReal S.dimmaff ≤ lowerBoxDim S.attractor) :
     S.FraserROSC := fun hrosc => by
@@ -283,7 +291,7 @@ theorem dimmaff_eq_dimaff_of_upperBoxDim
 
 /-- The squeeze of tex lines 548 to 550: if `\dim_H X = dimaff(X)`, then Falconer's bound and
 the first part of `thm:fraser` give `dimmaff(X) = dimaff(X)`. Neither the rectangular open set
-condition nor full projections are assumed. -/
+condition nor full projections are assumed. The hypothesis `hB` is `fraserBound_holds`. -/
 theorem dimmaff_eq_dimaff (hB : S.FraserBound)
     (hH : dimH S.attractor = ENNReal.ofReal S.dimaff) : S.dimmaff = S.dimaff :=
   dimmaff_eq_dimaff_of_upperBoxDim hB.2 S.dimmaff_le_dimaff (dim_chain hH).2.2.2
@@ -330,7 +338,7 @@ variable [MeasurableSpace ι] [MeasurableSingletonClass ι]
 box-like self-affine set with rotations satisfying the projective exponential separation
 condition with `dimaff(X) < 2`, and `dimaff(X) ≤ 2 - λ_1/λ_2` or the strong open set condition,
 `\dim_H X = \dim_P X = \dim_M X = dimaff(X)`. -/
-theorem dim_chain_main2 (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem dim_chain_main2 (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
     (hlyb : FengLedrappierYoungBar.{u}) (hrot : S.WithRotations) (hprox : S.Proximal)
@@ -345,8 +353,10 @@ theorem dim_chain_main2 (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGi
   dim_chain (S.main2 hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox hsep h2 μ hinv heq hor)
 
 /-- The squeeze of tex lines 548 to 550 under the hypotheses of `thm:main2`:
-`dimmaff(X) = dimaff(X)`, from Falconer's bound and the first part of `thm:fraser`. -/
-theorem dimmaff_eq_dimaff_main2 (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+`dimmaff(X) = dimaff(X)`, from Falconer's bound and the first part of `thm:fraser`. The
+hypothesis `hB` is `fraserBound_holds`. -/
+theorem dimmaff_eq_dimaff_main2 (hms : MorrisShmerkinLyapunov.{u})
+    (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
     (hlyb : FengLedrappierYoungBar.{u}) (hB : S.FraserBound)

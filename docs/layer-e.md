@@ -15,12 +15,20 @@ identity of Feng's Lemma 4.6 (the predicates `FengInfoSum` and `FengInfoSumBar` 
 `fengInfoSum_holds`, `fengInfoSumBar_holds`), `thm:feng_entropy_as_limit`,
 `thm:feng_entropy_zero`, the Shannon–McMillan–Breiman theorem, the Kolmogorov–Sinai generator
 theorem, `thm:feng_entropy_kolmogorov_sinai`, Kingman's subadditive ergodic theorem, the
-Furstenberg–Kesten limits and Oseledets' theorem for invertible planar cocycles. The two
+Furstenberg–Kesten limits, Oseledets' theorem for invertible planar cocycles, the Gibbs bounds,
+uniqueness and ergodicity of the equilibrium state of a box-like tuple with rotations
+(`thm:irred_eq_state` for these tuples, `equilibriumGibbs`), Feng–Käenmäki's Proposition 1.2 for
+irreducible planar tuples (`fengKaenmakiNormEquilibrium_holds`), `eq:simple_lyapunov`
+(`morrisShmerkinLyapunov_holds`) and Rossi's bound `eq:hausdorff_ergodic_lyapunov`
+(`System.rossiBound`). The two
 Ledrappier–Young formulas of Feng, `FengLedrappierYoung` and `FengLedrappierYoungBar`, are the
-`Prop`-valued hypotheses of `BoxLike/LiteratureFeng.lean`. The first is the box-like
-specialisation of the authorised `PlanarFengLedrappierYoung` of
+`Prop`-valued definitions of `BoxLike/LiteratureFeng.lean`. The first is a hypothesis, the
+box-like specialisation of the authorised `PlanarFengLedrappierYoung` of
 `BoxLike/LiteraturePlanarFeng.lean`, which states the planar formula for every planar
-self-affine set (`PlanarFengLedrappierYoung.fengLedrappierYoung`).
+self-affine set (`PlanarFengLedrappierYoung.fengLedrappierYoung`). The second follows from the
+first applied to the planar system `z ↦ diag(g'_j, g'_j / 2) z + (g_j(0), 0)` of the projective
+system, whose attractor lies on the horizontal axis
+(`fengLedrappierYoungBar_of_fengLedrappierYoung`, `BoxLike/ProjectiveLineSystem.lean`).
 
 ## 1. Definitions
 
@@ -225,13 +233,16 @@ article assumes the normalised tuple, `S.HasProximalDiagonal`; `S.ProjExpSeparat
 `s < 2`; `[IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)`;
 `S.IsEquilibriumState s μ`; `hP : S.pressure s = 0` for `s = dimaff(𝖠)`. Ergodicity of the
 equilibrium state is the hypothesis `herg : Ergodic (shift 1) μ` in the lemmas, and a theorem in
-the assembly (`System.ergodic_of_hasProximalDiagonal`). The statements hold for every invariant
+the assembly (`System.ergodic_of_hasProximalDiagonal`,
+`System.IsEquilibriumState.ergodic_of_withRotations`). The statements hold for every invariant
 equilibrium state; uniqueness is not used. `S.lyapunov₂ μ < S.lyapunov₁ μ` is a hypothesis `hlt`
 where the article assumes it and is derived from `MorrisShmerkinLyapunov` through
-`System.simple_lyapunov` in the assembly. The cited theorems enter as the hypotheses `hms`, `hfk`,
-`hfjj`, `hjr`, `hly`, `hlyb` of `docs/correspondence.md`, "Fidelity boundary"; the binders `hfi`,
-`hfib` of the library statements receive the theorems `fengInfoSum_holds`,
-`fengInfoSumBar_holds`.
+`System.simple_lyapunov` in the assembly; the library proves `MorrisShmerkinLyapunov`
+(`morrisShmerkinLyapunov_holds`). The cited theorems enter as the hypotheses `hjr`, `hly` of
+`docs/correspondence.md`, "Fidelity boundary"; the binders `hms`, `hfk`, `hfjj`, `hfi`, `hfib`,
+`hlyb` of the library statements receive the theorems `morrisShmerkinLyapunov_holds`,
+`equilibriumGibbs`, `fraserJordanJurgaDecomposition_holds`, `fengInfoSum_holds`,
+`fengInfoSumBar_holds` and `fengLedrappierYoungBar_of_fengLedrappierYoung` applied to `hly`.
 
 ## 2. Statements and where they are proved
 
@@ -245,13 +256,19 @@ where the article assumes it and is derived from `MorrisShmerkinLyapunov` throug
 | `ksEntropy`, `ksEntropy_shift_eq_entropy` | the Kolmogorov–Sinai entropy after Bowen, §2, and the generator theorem (tex lines 1965 to 1972) | `KolmogorovSinai` | proved |
 | `kingman_ae`, `kingman_ergodic` | Kingman's subadditive ergodic theorem, behind Oseledets' theorem | `Kingman` | proved, from Birkhoff |
 | `MatrixTuple.tendsto_log_norm_pastProd`, `MatrixTuple.tendsto_log_alpha₂_pastProd` | Furstenberg–Kesten along the backward products | `FurstenbergKesten` | proved, from Kingman |
+| `System.ae_tendsto_log_norm_matWord`, `System.ae_tendsto_log_alpha₂_matWord` | Furstenberg–Kesten along the forward products, for `eq:hausdorff_ergodic_lyapunov` | `Rossi` | proved, from Kingman |
 | `MatrixTuple.measure_regularSet_compl_of_ergodic` | Oseledets' theorem and Froyland–Lloyd–Quas, Theorem 4.1 (tex lines 1585 to 1607) | `Planar/OseledetsTheorem`, `Planar/OseledetsTheoremDirection` | proved for invertible planar cocycles |
 | `setLIntegral_condMeas`, `condMeas_unique`, `condMeas_atom` | Rokhlin (tex lines 1748 to 1762) | `ConditionalMeasures` | proved |
 | `System.isMeasurablePartition_xi`, `…_xiPerp`, `…_xiBar`, `PlanarSystem.isMeasurablePartition_xi` | Feng, Lemma 4.2 (tex lines 1868 to 1869) | `MeasurablePartitions`, `Planar/Partitions` | proved |
 | `integrable_condInfo` | Feng, (4.15) (tex lines 1898 to 1899) | `ConditionalMeasures` | proved |
 | `FengInfoSum`, `FengInfoSumBar` | Feng, Lemma 4.6, first identity of (4.16) | `FengIdentity`, `FengIdentityBar`, `Planar/FengIdentity` | proved: `fengInfoSum_holds`, `fengInfoSumBar_holds`, `PlanarSystem.infoSum_xi`, along Feng's Lemmas 4.4 and 4.5 |
 | `System.feng_entropy_kolmogorov_sinai`, `…_bar`, `PlanarSystem.feng_entropy_kolmogorov_sinai_general` | `thm:feng_entropy_kolmogorov_sinai`; Feng, (4.17) | `CylinderEntropy`, `Planar/OseledetsTheorem` | proved |
-| `FengLedrappierYoung`, `FengLedrappierYoungBar` | `thm:feng1`; Feng, Theorems 1.2 and 1.3 | `LiteratureFeng` | hypotheses; `FengLedrappierYoung` follows from `PlanarFengLedrappierYoung` |
+| `EquilibriumGibbsStatement`, `equilibriumGibbs`, `System.unique_of_withRotations`, `System.IsEquilibriumState.ergodic_of_withRotations` | `thm:irred_eq_state` for box-like tuples with rotations: the Gibbs bounds, uniqueness and ergodicity of the equilibrium state; Feng–Käenmäki, Proposition 1.2 | `EquilibriumGibbs`, `Support/RelativeEntropy` | proved: for `0 < s < 2` every invariant equilibrium state is `q_*μ_1`, by the relative-entropy bound on the cylinder partitions and the ergodicity of `q_*μ_1` |
+| `FengKaenmakiNormEquilibrium`, `fengKaenmakiNormEquilibrium_holds`, `fengKaenmakiGibbs_holds`, `fengKaenmakiUnique_holds`, `MatrixTuple.IsNormEquilibrium.eq_of_hasNormGibbs` | `thm:irred_eq_state` for irreducible tuples; Feng–Käenmäki, Proposition 1.2 | `QuasiMultiplicative/` | proved: the norm of an irreducible tuple is quasi-multiplicative, Bowen's construction gives an ergodic Gibbs measure of `‖·‖^q`, and every invariant `q`-equilibrium state equals it by the relative-entropy bound on the cylinder partitions |
+| `MorrisShmerkinLyapunov`, `morrisShmerkinLyapunov_holds`, `System.IsEquilibriumState.isBernoulli_of_lyapunov_eq` | `eq:simple_lyapunov`; Morris–Shmerkin, Lemmas 3.4 and 3.5 | `MorrisShmerkin` | proved, for every proximal box-like tuple with rotations |
+| `System.RossiBound`, `System.rossiBound`, `System.exists_dimH_le_of_add_energy_neg` | `eq:hausdorff_ergodic_lyapunov`; Rossi, Theorem 2.2 | `Rossi`, `RossiBound` | proved, by a covering argument with the Shannon–McMillan–Breiman theorem, the forward Furstenberg–Kesten limits and the mass distribution principle |
+| `FengLedrappierYoung`, `FengLedrappierYoungBar` | `thm:feng1`; Feng, Theorems 1.2 and 1.3 | `LiteratureFeng` | `FengLedrappierYoung` is a hypothesis and follows from `PlanarFengLedrappierYoung` |
+| `System.projectiveLineSystem`, `System.isExactDim_map_projBar_of_fengLedrappierYoung`, `fengLedrappierYoungBar_of_fengLedrappierYoung` | `thm:feng1`, the second part from the first | `ProjectiveLineSystem` | proved from `FengLedrappierYoung`: the planar system `z ↦ diag(g'_j, g'_j / 2) z + (g_j(0), 0)` has projection `(\overline{π}, 0)`, exponents `\overline{λ}` and `\overline{λ} - log 2`, partitions `ξ_2 = ξ_1` and entropies `h_i = \overline{h}_i`; neither rotations nor proximality are assumed |
 | `PlanarFengLedrappierYoung`, `PlanarSystem.feng1`, `planar_feng1` | `thm:feng1` for every planar self-affine set; Feng, Theorems 1.2 (ii) and 1.3 | `LiteraturePlanarFeng`, `Planar/FengOne` | hypothesis, authorised; `planarFengLedrappierYoung_of_fengXi` derives it from the source form for Feng's partitions |
 
 ### 2.2 Results of the article and infrastructure
@@ -268,7 +285,7 @@ where the article assumes it and is derived from `MorrisShmerkinLyapunov` throug
 | `System.dimEntropy_zero_eq_entropy`, `System.dimEntropyBar_zero_eq_entropy`, `System.dimEntropy_zero_eq_ksEntropy`, `System.dimEntropyBar_zero_eq_ksEntropy` | `h_0(μ) = h(μ)`, `\overline{h}_0(ν) = h(ν)` (tex lines 1989 to 1991) | `PastEntropy`, `CylinderEntropy` |
 | `System.partitions_xi1`, `System.partition_tau_conj` | `thm:partitions_xi1`, `thm:partition_tau_conj` | `PartitionIdentities` |
 | `System.sigma_tau_omega_positive_eq_measure`, `System.sigma_tau_omega_positive` | `thm:sigma_tau_omega_positive_eq_measure`, by the counting argument and by integration | `Aligned/SigmaTauOmega`, `SigmaMeasure` |
-| `System.ergodic_of_gibbsDecomposition`, `System.ergodic_of_hasProximalDiagonal` | ergodicity of the equilibrium state | `DimPartitions` |
+| `System.ergodic_of_gibbsDecomposition`, `System.ergodic_of_hasProximalDiagonal`, `System.IsEquilibriumState.ergodic_of_withRotations` | ergodicity of the equilibrium state | `DimPartitions`, `EquilibriumGibbs` |
 | `System.gibbs_tau_omega_positive`, `System.orientation_restrictions` | `thm:gibbs_tau_omega_positive`, `eq:orientation-restrictions` | `GibbsOrientation` |
 | `System.conditional_two_ways_normalised`, `System.conditional_two_ways` | `thm:conditional_two_ways`, along the prose and by direct transport | `Aligned/ConditionalTwoWays`, `ConditionalTwoWays` |
 | `System.overline_h1_zero`, `System.overline_h1_zero_large` | `thm:overline_h1_zero`, `thm:overline_h1_zero_large` | `AverageEntropy` |
@@ -295,13 +312,15 @@ Each line names the inputs beyond the lines before it.
    Oseledets.
 7. `shannonMcMillanBreiman`, `ksEntropy_shift_eq_entropy`, then
    `feng_entropy_kolmogorov_sinai` and the identities `h_0 = h`.
-8. `sigma_tau_omega_positive_eq_measure`: Birkhoff, `FengKaenmakiGibbs`.
+8. `equilibriumGibbs`: Bowen's theorem and the relative entropy of the cylinder partitions;
+   then `morrisShmerkinLyapunov_holds` and `sigma_tau_omega_positive_eq_measure`, with Birkhoff.
 9. `gibbs_tau_omega_positive`, `orientation_restrictions`, `conditional_two_ways_normalised`:
-   `hdec`, from `FraserJordanJurgaDecomposition`, which holds
-   (`fraserJordanJurgaDecomposition_holds`, on Bowen's theorem), and `MorrisShmerkinLyapunov`;
-   uses 2, 4, 8.
+   `hdec`, from `FraserJordanJurgaDecomposition` and `EquilibriumGibbsStatement`, which hold
+   (`fraserJordanJurgaDecomposition_holds`, on Bowen's theorem, and `equilibriumGibbs`), and
+   `MorrisShmerkinLyapunov`, which holds (`morrisShmerkinLyapunov_holds`); uses 2, 4, 8.
 10. `overline_h1_zero`, `overline_h1_zero_large`, `overline_h1_large`: `JordanRapaportDimension`,
-    `FengLedrappierYoungBar`; uses 3, 6, 7, 9.
+    `FengLedrappierYoungBar`, which holds by `fengLedrappierYoungBar_of_fengLedrappierYoung`
+    from `FengLedrappierYoung`; uses 3, 6, 7, 9.
 11. `eq_state_h1_zero`, `eq_state_h1_large`, `eq_state_h2_zero`, `orto_partition_dirac`,
     `SOSC_h2_zero`: uses 2, 6, 9, 10.
 12. `main_extended_normalised`: `FengLedrappierYoung`; uses 7 and 11. Then `main_extended` with
@@ -314,16 +333,17 @@ Under the rules of `docs/correspondence.md`, "Fidelity boundary", a cited theore
 `Prop`-valued definition that the results using it take as a hypothesis, and new ones need
 explicit authorisation. For this layer:
 
-- `FengLedrappierYoung`, `FengLedrappierYoungBar`: D.-J. Feng, *Dimension of invariant measures
-  for affine iterated function systems*, Duke Math. J. 172 (2023), Theorems 1.2 and 1.3
+- `FengLedrappierYoung`, `FengLedrappierYoungBar`: D.-J. Feng, *Dimension of invariant measures for
+  affine iterated function systems*, Duke Math. J. 172 (2023), Theorems 1.2 and 1.3
   (arXiv:1901.01691v2). The planar statement is the case `d = 2`, `s = 2`, `k_1 = k_2 = 1`; the
-  scalar statement is the case `d = 1` for `Ψ`. Feng's `Σ'` can be taken inside the box-like `Σ'`
-  and his partitions have almost everywhere the same conditional measures as the library's
+  scalar statement is the case `d = 1` for `Ψ`, and the library derives it from the planar one
+  (`fengLedrappierYoungBar_of_fengLedrappierYoung`). Feng's `Σ'` can be taken inside the box-like
+  `Σ'` and his partitions have almost everywhere the same conditional measures as the library's
   (`System.condMeas_fengXi_ae_eq`). For `Ψ` the article restricts `\overline{ξ}_i` to `Σ_Z`, which
   has full measure (tex line 1912). Degenerate instance checked by hand for both parts of
-  `thm:feng1`: a Dirac mass on a constant sequence over a diagonal generator with `|a| ≠ |b|`
-  gives `h_i = 0`, the formula gives `0`, and the projected measure is a Dirac mass of pointwise
-  dimension `0`. For `λ_1 = λ_2` the planar statement is silent through `hlt`.
+  `thm:feng1`: a Dirac mass on a constant sequence over a diagonal generator with `|a| ≠ |b|` gives
+  `h_i = 0`, the formula gives `0`, and the projected measure is a Dirac mass of pointwise dimension
+  `0`. For `λ_1 = λ_2` the planar statement is silent through `hlt`.
 - `PlanarFengLedrappierYoung`: the same theorems for `d = 2` and every planar self-affine set
   (`PlanarSystem`), with `λ_2 < λ_1`, authorised by the project owner. Feng's entropies for his
   partitions on a Borel set of full measure inside `Σ'` are the library's
@@ -333,14 +353,26 @@ explicit authorisation. For this layer:
   instances checked by hand: one letter with `A = diag(1/2, 1/4)`, zero translations with a
   Bernoulli measure, and scaled rotations, where the statement is silent.
 - Proved standard theorems: Birkhoff, Maker, Shannon–McMillan–Breiman, the Kolmogorov–Sinai
-  generator theorem, Kingman, Furstenberg–Kesten, Oseledets for invertible planar cocycles,
+  generator theorem, Kingman, Furstenberg–Kesten along the backward and the forward products,
+  Oseledets for invertible planar cocycles,
   Rokhlin's disintegration, Feng's Lemmas 2.1(v), 4.2, 4.4, 4.5 and 4.6. Mathlib supplies the
   martingale convergence theorems (`MeasureTheory.Integrable.tendsto_ae_condExp`), the
   disintegration kernel (`condExpKernel`), its uniqueness
   (`Mathlib/Probability/Kernel/Disintegration/Unique.lean`), Lusin–Souslin
   (`MeasurableSet.image_of_measurable_injOn`) and Lusin separation.
-- Morris–Shmerkin, Feng–Käenmäki, Jordan–Rapaport: the `Prop`s `MorrisShmerkinLyapunov`,
-  `FengKaenmakiGibbs` and `JordanRapaportDimension` of `BoxLike/Literature.lean`.
+- Jordan–Rapaport: the `Prop` `JordanRapaportDimension` of `BoxLike/Literature.lean`.
+- Morris–Shmerkin, Theorem 3.1, for `eq:simple_lyapunov`: the `Prop` `MorrisShmerkinLyapunov` of
+  `BoxLike/Literature.lean`, a theorem of the library (`morrisShmerkinLyapunov_holds`,
+  `BoxLike/MorrisShmerkin.lean`) along their Lemmas 3.4 and 3.5; results that take it receive
+  this proof in Solution.
+- Feng–Käenmäki, Proposition 1.2, for the Gibbs bounds of `thm:irred_eq_state`: for box-like
+  tuples with rotations the `Prop` `EquilibriumGibbsStatement`, a theorem of the library
+  (`equilibriumGibbs`, `BoxLike/EquilibriumGibbs.lean`); results that take it receive this proof
+  in Solution. The `Prop` `FengKaenmakiGibbs` of `BoxLike/Literature.lean` serves only the
+  results stated for irreducible tuples; it, `FengKaenmakiUnique` and the form of the source
+  `FengKaenmakiNormEquilibrium` are theorems of the library (`fengKaenmakiGibbs_holds`,
+  `fengKaenmakiUnique_holds`, `fengKaenmakiNormEquilibrium_holds`, `BoxLike/QuasiMultiplicative/`),
+  which Solution passes to these results.
 - Fraser–Jordan–Jurga, `thm:eq_state_is_sum`: the `Prop` `FraserJordanJurgaDecomposition` of
   `BoxLike/Literature.lean`, a theorem of the library (`fraserJordanJurgaDecomposition_holds`,
   `BoxLike/FraserJordanJurga/`) with no literature input; results that take it receive this
@@ -348,8 +380,10 @@ explicit authorisation. For this layer:
 - Feng–Hu, Theorem 2.8 (tex line 2827): contained in `JordanRapaportDimension` under separation;
   the `Prop` `FengHuExactDim` of `BoxLike/LiteratureRemarks.lean` serves the remark without
   separation.
-- Rossi, Theorem 2.2 (`eq:hausdorff_ergodic_lyapunov`): taken by no theorem, since the proof of
-  `thm:main_extended` evaluates Feng's formula to an equality.
+- Rossi, Theorem 2.2 (`eq:hausdorff_ergodic_lyapunov`): the `Prop` `System.RossiBound` of
+  `BoxLike/DimensionFormula.lean`, a theorem of the library (`System.rossiBound`,
+  `BoxLike/RossiBound.lean`, by the covering argument of `BoxLike/Rossi.lean`); taken by no
+  theorem, since the proof of `thm:main_extended` evaluates Feng's formula to an equality.
 - Falconer's bound `eq:hausdorff_affinity_upper_bound`: proved for every planar self-affine set.
 - `eq:dimension_measure_def`: proved (`System.le_dimH_attractor` and `LocalDimBounds`).
 

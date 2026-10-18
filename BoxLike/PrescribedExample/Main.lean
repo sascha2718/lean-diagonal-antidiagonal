@@ -21,6 +21,7 @@ Lyapunov exponents and the dimensions of its projections from
   exponential separation, and `dimaff(X) = s_1`).
 * `PrescribedExample.projection_double_dimensional`: `ex:projection_double_dimensional`.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.PrescribedExample.Dimensions
 public import BoxLike.PrescribedExample.Geometry
 
@@ -59,7 +60,7 @@ and a translation vector `t` with the projective exponential separation conditio
 `-h_0(μ)/λ_2(𝖠, μ) = s_2`, and by `thm:eq_state_proj_dim` both coordinate projections are
 double-dimensional with upper packing dimension `s_1`, lower Hausdorff dimension `s_2` and each
 value on a set of positive measure. -/
-theorem equilibrium_spec (hms : MorrisShmerkinLyapunov.{0}) (hfk : FengKaenmakiGibbs.{0})
+theorem equilibrium_spec (hms : MorrisShmerkinLyapunov.{0}) (hfk : EquilibriumGibbsStatement.{0})
     (hfjj : FraserJordanJurgaDecomposition.{0}) (hjr : JordanRapaportDimension.{0})
     {s₁ s₂ p : ℝ} (hs₀ : 0 < s₁) (hs₁ : s₁ ≤ 1) (hp₀ : 1 / 2 < p) (hp₁ : p < 1)
     (hratio : ratio p = s₂ / s₁) (t : Fin 8 → ℝ)
@@ -112,7 +113,7 @@ and both coordinate projections are double-dimensional with pointwise dimension 
 and `s_2`, upper packing dimension `s_1`, lower Hausdorff dimension `s_2`, and each value on a
 set of positive measure. -/
 theorem projection_double_dimensional_of_geometry (hms : MorrisShmerkinLyapunov.{0})
-    (hfk : FengKaenmakiGibbs.{0}) (hfjj : FraserJordanJurgaDecomposition.{0})
+    (hfk : EquilibriumGibbsStatement.{0}) (hfjj : FraserJordanJurgaDecomposition.{0})
     (hjr : JordanRapaportDimension.{0}) {s₁ s₂ : ℝ} (hs₂ : 0 < s₂) (h₂₁ : s₂ < s₁)
     (hs₁ : s₁ ≤ 1)
     (hgeom : ∃ p : ℝ, ∃ hp : 1 / 2 < p ∧ p < 1, ratio p = s₂ / s₁ ∧
@@ -159,10 +160,12 @@ separation and projective exponential separation, with `dimaff(X) = s_1`. Its
 `-h_0(μ)/λ_2(𝖠, μ) = s_2`; both coordinate projections `ν_x`, `ν_y` are double-dimensional with
 pointwise dimension values `s_1` and `s_2`, `\overline{dim}_p(ν_x) = \overline{dim}_p(ν_y) = s_1`,
 `\underline{dim}_H(ν_x) = \underline{dim}_H(ν_y) = s_2`, and each value occurs on a set of
-positive measure in each projection. The literature inputs are those of `thm:eq_state_proj_dim`:
-Morris–Shmerkin, Feng–Käenmäki, Fraser–Jordan–Jurga and Jordan–Rapaport. -/
+positive measure in each projection. The hypotheses are those of `thm:eq_state_proj_dim`: the
+statements `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement` and
+`FraserJordanJurgaDecomposition`, which the library proves, and the cited theorem of
+Jordan–Rapaport. -/
 theorem projection_double_dimensional (hms : MorrisShmerkinLyapunov.{0})
-    (hfk : FengKaenmakiGibbs.{0}) (hfjj : FraserJordanJurgaDecomposition.{0})
+    (hfk : EquilibriumGibbsStatement.{0}) (hfjj : FraserJordanJurgaDecomposition.{0})
     (hjr : JordanRapaportDimension.{0}) {s₁ s₂ : ℝ} (hs₂ : 0 < s₂) (h₂₁ : s₂ < s₁)
     (hs₁ : s₁ ≤ 1) :
     ∃ p : ℝ, ∃ hp : 1 / 2 < p ∧ p < 1, ratio p = s₂ / s₁ ∧

@@ -17,7 +17,9 @@ slow subspace is vertical, its partition `ξ_1` is the partition of the diagonal
 past and the coordinate `c` of the coded point, and its partition `ξ_2` equals `ξ_1`, since the
 vertical coordinate vanishes. The planar formula then reads `d_c = (H_n - q_c) / χ_{c,n}`. This is
 the scalar Feng interface for the actual subsystem, derived from the existing statement
-`FengLedrappierYoung` with no new premise.
+`FengLedrappierYoung` with no new premise. `BoxLike/ProjectiveLineSystem.lean` applies the same
+construction to the projective system of every box-like system
+(`System.isExactDim_map_projBar_of_fengLedrappierYoung`).
 
 The conditional entropies `q_{x,n}` and `q_{y,n}` are taken given the past and the coordinate
 of the coded point, which are the entropies of Feng's formula; for the Bernoulli measure `ν_n`

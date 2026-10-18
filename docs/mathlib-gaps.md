@@ -37,10 +37,10 @@ the fidelity boundary.
 |---|---|---|
 | A | `sec:box_like_self_affine`, `sec:irreducibility`, `sec:subshift`, `sec:projective_system`: matrices, `ε_n`, `Σ_Z`, `τ`, `ω`, `Ψ`, `π`, `\overline{π}`, the commutative diagram, topological mixing, changes of basis | elementary, proved in full |
 | B | `sec:exponential_separation`, `sec:Singular_value_function`, `sec:affinity_dim`, `sec:normalisation` (algebraic part): `Δ_n^Ψ`, the projective exponential separation condition, `φ^s`, pressure by Fekete for box-like systems and for general tuples, affinity dimension, Falconer's bound for every planar self-affine set, second iterates | elementary to moderate, proved in full |
-| C | `sec:ledrappier_young_formula`: pointwise dimension, exact- and double-dimensional measures, `thm:exact-dimensional-mixture`, `eq:dimension_measure_def`, `eq:haus_dim_sum` | measure theory on Mathlib's differentiation theorem, proved in full |
+| C | `sec:ledrappier_young_formula`: pointwise dimension, exact- and double-dimensional measures, `thm:exact-dimensional-mixture`, `eq:dimension_measure_def`, `eq:haus_dim_sum`, Rossi's bound `eq:hausdorff_ergodic_lyapunov` | measure theory on Mathlib's differentiation theorem, proved in full; Rossi's bound by a covering argument with the entropy and Lyapunov limits of layer E |
 | D | `sec:dimension_of_projections`, `sec:dimension_result_proof`: `thm:eq_state_proj_dim` and `thm:main1` for every `s > 0` (with the orientation lift for `s ≥ 2`), `ex:projection_double_dimensional`, `thm:main_extended`, `thm:main2` along the prose, `\dim_H X = min{2, dimaff(X)}` | proved from the literature hypotheses and layer E; the case `s ≥ 2` of `thm:main_extended` with no literature hypothesis |
-| E | `sec:lyapunov_exponents`, `sec:conditional`, `sec:entropies`, `sec:gibbs_measures`, `sec:average_gibbs` to `sec:higher_dimensional_entropies`: `Σ'` and the Oseledets filtration, measurable partitions, conditional measures, the entropies `h_i`, Gibbs measures, `P_Z(f)` | Birkhoff, Maker, Shannon–McMillan–Breiman, Kolmogorov–Sinai, Kingman, Furstenberg–Kesten, Oseledets, Rokhlin's disintegration, Feng's identity, Bowen's existence of Gibbs measures and the Fraser–Jordan–Jurga decomposition `thm:eq_state_is_sum` are built here; Feng's Ledrappier–Young formulas are hypotheses; design in [`layer-e.md`](layer-e.md) |
-| F | off the main line: `thm:fraser` and the dimension chain, `thm:A_classification`, `prop:ssc_no_overlap_not_pesc`, the rational example `Example.sys`, the natural extension, `thm:irred_eq_state` for box-like systems and for general tuples, the claims of the prose (`Support`) | proved; cited theorems enter as `Prop` hypotheses, among them the general forms `FengKaenmakiNormEquilibrium` and `PlanarFengLedrappierYoung`; the one proposal in `BoxLike/Proposals/` is used by no result |
+| E | `sec:lyapunov_exponents`, `sec:conditional`, `sec:entropies`, `sec:gibbs_measures`, `sec:average_gibbs` to `sec:higher_dimensional_entropies`: `Σ'` and the Oseledets filtration, measurable partitions, conditional measures, the entropies `h_i`, Gibbs measures, `P_Z(f)` | Birkhoff, Maker, Shannon–McMillan–Breiman, Kolmogorov–Sinai, Kingman, Furstenberg–Kesten, Oseledets, Rokhlin's disintegration, Feng's identity, Bowen's existence of Gibbs measures, the Fraser–Jordan–Jurga decomposition `thm:eq_state_is_sum`, `thm:irred_eq_state` for tuples with rotations and `eq:simple_lyapunov` are built here; Feng's planar Ledrappier–Young formula is a hypothesis, and the scalar one follows from it through the planar system `z ↦ diag(g'_j, g'_j / 2) z + (g_j(0), 0)` of the projective system (`fengLedrappierYoungBar_of_fengLedrappierYoung`); design in [`layer-e.md`](layer-e.md) |
+| F | off the main line: `thm:fraser` and the dimension chain, `thm:A_classification`, `prop:ssc_no_overlap_not_pesc`, the rational example `Example.sys`, the natural extension, `thm:irred_eq_state` for irreducible box-like systems and for general tuples, the claims of the prose (`Support`) | proved; Fraser's Theorem 2.3 and Feng–Käenmäki's Proposition 1.2 in the form of the source, `FengKaenmakiNormEquilibrium`, are theorems of the library; Bárány–Käenmäki's theorem and the general form `PlanarFengLedrappierYoung` of Feng's formula enter as `Prop` hypotheses |
 
 ## 3. What Mathlib does not have
 
@@ -96,10 +96,28 @@ Each item is a piece of the paper that the library builds itself. Labels such as
   this image, and the four decompositions from `Σ_Z = τ(Σ) ⊔ ω(Σ)`
   (`FraserJordanJurga/Decomposition`); the Lyapunov identities from Birkhoff's theorem along the
   two lifts and a relative-entropy comparison (`FraserJordanJurga/Lyapunov`); and the assembly
-  `fraserJordanJurgaDecomposition_holds` (`FraserJordanJurga/Main`). The Bernoulli equilibrium
-  state for `s ≥ 2` is in `BernoulliEquilibrium`, `BernoulliEntropy` and `PressureLarge`, and the
-  orientation lift of a Bernoulli measure as a mixing stationary Markov measure in
-  `OrientationLift`.
+  `fraserJordanJurgaDecomposition_holds` (`FraserJordanJurga/Main`). For a tuple with rotations
+  and `0 < s < 2` every invariant equilibrium state is the image of `μ_1` under forgetting the
+  axis (`EquilibriumGibbs`), since the relative entropy of the cylinder partitions is bounded and
+  bounded relative entropy implies absolute continuity (`Support/RelativeEntropy`). This gives
+  `thm:irred_eq_state` for tuples with rotations. Morris–Shmerkin's Lemma 3.4 and
+  `eq:simple_lyapunov` are in `MorrisShmerkin`. Feng–Käenmäki's Proposition 1.2 for irreducible
+  planar tuples, the quasi-multiplicative Gibbs theory of the norm potential `‖·‖^q`, is built in
+  `QuasiMultiplicative/`: the quasi-multiplicativity of the norm of an irreducible tuple, with
+  connecting words of length at most one, by compactness of the unit sphere of the matrices
+  (`QuasiMultiplicative/Irreducible`); the bounds `e^{nP} ≤ Z_n ≤ K e^{nP}` on the partition sums,
+  from Fekete's lemma and a super-multiplicative form of it for words joined through connecting
+  words (`QuasiMultiplicative/GibbsMeasurePressure`); the weighted periodic-orbit measures, which
+  satisfy the Gibbs bounds for every fixed word once their period is large
+  (`QuasiMultiplicative/GibbsMeasurePeriodic`); a weak-star limit point
+  (`QuasiMultiplicative/GibbsMeasure`); the ergodicity of every invariant Gibbs measure from a
+  quasi-Bernoulli lower bound whose gap varies with the words
+  (`QuasiMultiplicative/GibbsMeasureErgodic`); the equality of every invariant equilibrium state
+  with the Gibbs measure, by the bound on the relative entropy of the cylinder partitions
+  (`QuasiMultiplicative/Uniqueness`); and the passage to the one-sided shift through the natural
+  extension (`QuasiMultiplicative/Main`). The Bernoulli equilibrium state for `s ≥ 2` is in
+  `BernoulliEquilibrium`, `BernoulliEntropy` and `PressureLarge`, and the orientation lift of a
+  Bernoulli measure as a mixing stationary Markov measure in `OrientationLift`.
 - **Entropy.** Mathlib has no Kolmogorov–Sinai entropy and no conditional entropy. Block
   entropies and the entropy rate (`Entropy`), the entropy of finite partitions, the conditional
   entropy calculus, the Kolmogorov–Sinai entropy as a supremum over finite Borel partitions and
@@ -116,10 +134,10 @@ Each item is a piece of the paper that the library builds itself. Labels such as
   subadditive ergodic theorem and no multiplicative ergodic theorem. Birkhoff's theorem is proved
   through the maximal ergodic theorem (`Birkhoff`); Kingman's subadditive ergodic theorem from it
   by the stopping-time method (`Kingman`); the Furstenberg–Kesten limits along backward products
-  from Kingman's theorem (`FurstenbergKesten`); and Oseledets' theorem for invertible planar
-  cocycles from these and a deterministic planar argument for the slow directions
-  (`Planar/OseledetsTheoremDirection`, `Planar/OseledetsTheorem`). Mixing on cylinders implies
-  ergodicity (`OrientationLift`).
+  (`FurstenbergKesten`) and along forward products (`Rossi`) from Kingman's theorem; and
+  Oseledets' theorem for invertible planar cocycles from these and a deterministic planar argument
+  for the slow directions (`Planar/OseledetsTheoremDirection`, `Planar/OseledetsTheorem`). Mixing
+  on cylinders implies ergodicity (`OrientationLift`).
 - **Measurable partitions and conditional measures.** Mathlib has `condExpKernel` on a standard
   Borel space but no Rokhlin theory of measurable partitions. Partitions as atom maps, the
   `σ`-algebra `\widehat{ξ}`, conditional measures along a partition with their uniqueness, the
@@ -137,14 +155,29 @@ Each item is a piece of the paper that the library builds itself. Labels such as
   component orthogonal to the long axis by `α_2(A)`, so the ellipse `A(B(0, R))` lies in a
   rectangle with sides `2 α_1(A) R` and `2 α_2(A) R` and is covered by `⌈α_1/α_2⌉` balls. For
   box-like sets a covering in the supremum metric gives the same bound (`FalconerBound`). The
-  modified affinity dimension with `dimmaff(X) ≤ dimaff(X)` is in `ModifiedAffinity`; the
+  modified affinity dimension with `dimmaff(X) ≤ dimaff(X)` is in `ModifiedAffinity`. Fraser's box
+  dimension theory, his Theorem 2.3, is built along his Section 5 in `Fraser/`: covering numbers of
+  finite unions and of planar sets with one coordinate in an interval, the bound
+  `N_r(E) ≤ C r^{-t}` from `\overline{\dim}_M E < t`, his Lemma 5.1 (1) and the cover of `X` by the
+  copies `φ_𝐢(X)` of the stopping words, which give `\overline{\dim}_M X ≤ dimmaff(X)`
+  (`Fraser/Upper`, `Fraser/UpperBound`); the `δ`-stoppings as sums over a tree of words, with two
+  tree inequalities in place of the combinatorics of prefix codes, and his Lemma 5.1 (2)
+  (`Fraser/LowerStop`); the lower bound `dimmaff(X) ≤ \underline{\dim}_M X` under the rectangular
+  open set condition, by an area count for the disjoint rectangles `φ_𝐢(R)` near a square
+  (`Fraser/LowerCover`); and the assembly (`Fraser/Lower`, `Fraser/Main`). The
   invariance of the dimensions under linear changes of coordinates is in `Planar/ChangeOfBasis`.
 - **Dimension theory of measures.** Mathlib has no pointwise dimension. Upper and lower pointwise
   dimensions, exact- and double-dimensional measures, `thm:exact-dimensional-mixture` from
   Besicovitch's differentiation theorem, the upper packing and lower Hausdorff dimensions of a
   measure with both lines of `eq:dimension_measure_def` and `eq:haus_dim_sum`, and the mass
   distribution principle are in `MeasureDim`, `MeasureDimBounds`, `LocalDimBounds`,
-  `PackingDimMeasure`, `MassDistribution` and `Aligned/MeasureDimSets`.
+  `PackingDimMeasure`, `MassDistribution` and `Aligned/MeasureDimSets`. Rossi's covering bound
+  `eq:hausdorff_ergodic_lyapunov` is in `Rossi` and `RossiBound`: for `t ≤ 2` with
+  `h_0(μ) + Λ(𝖠, μ, t) < 0`, the Shannon–McMillan–Breiman theorem and the forward
+  Furstenberg–Kesten limits bound the number of typical words of length `n` and the sides of the
+  rectangles that contain their copies of `X`; the squares covering these rectangles give a Borel
+  set of full `π_*μ`-measure and Hausdorff dimension at most `t`, and a set of full measure with
+  Hausdorff dimension at most `t` bounds the lower pointwise dimension by `t` almost everywhere.
 - **Linear algebra of planar tuples.** The projective line as a type of lines, irreducibility,
   strong irreducibility and proximality of a tuple, and the classification
   `thm:A_classification` with its counterexamples, are in `Classification` and `Proximal`; the

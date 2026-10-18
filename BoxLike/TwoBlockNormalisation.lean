@@ -23,15 +23,17 @@ system with rotations, `Φ^(2)` its second iterate with linear parts `𝖠²`, `
   Bernoulli for `0 < s < 2`, through `𝖠²` and the grouping of Bernoulli measures when `𝖠` has
   no proximal diagonal generator, as in tex lines 2362 to 2369.
 
-The uniqueness and the ergodicity of `μ^(2)` come from `thm:irred_eq_state` for the irreducible
-tuple `𝖠²`, as in the prose (`System.unique_of_irreducible`,
-`System.IsEquilibriumState.ergodic_of_irreducible`). The literature input is
-`FengKaenmakiUnique`, used for `0 < s < 2` only.
+The uniqueness and the ergodicity of `μ^(2)` come from `thm:irred_eq_state` for the tuple `𝖠²`,
+as in the prose; `𝖠²` has rotations, and the library proves `thm:irred_eq_state` for tuples with
+rotations with no literature premise (`System.unique_of_withRotations`,
+`System.IsEquilibriumState.ergodic_of_withRotations`). The Gibbs bounds of the last item are
+`EquilibriumGibbsStatement`, which the library proves (`equilibriumGibbs`).
 -/
 public import BoxLike.AffinityDim
 public import BoxLike.BernoulliGrouping
+public import BoxLike.EquilibriumGibbs
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.General
-public import BoxLike.IrreducibleEquilibrium
 public import BoxLike.SeparationConditions
 
 @[expose] public section
@@ -102,9 +104,10 @@ separation, strong open set and projective exponential separation conditions pas
 to `Φ^(2)`; `μ^(2)` is an invariant probability measure and the unique ergodic
 `s`-equilibrium state of `𝖠²`; `P(𝖠², t) = 2 P(𝖠, t)` for `t ≥ 0`,
 `h_0(μ^(2)) = 2 h_0(μ)`, `λ_i(𝖠², μ^(2)) = 2 λ_i(𝖠, μ)` for `i ∈ {1, 2}`, and
-`π^(2)_*μ^(2) = π_*μ`. Uniqueness and ergodicity come from `thm:irred_eq_state` for the
-irreducible tuple `𝖠²`; the literature input `FengKaenmakiUnique` is used for `0 < s < 2`. -/
-theorem two_block_normalisation (hfku : FengKaenmakiUnique.{u}) (hrot : S.WithRotations)
+`π^(2)_*μ^(2) = π_*μ`. Uniqueness and ergodicity come from `thm:irred_eq_state` for the tuple
+`𝖠²`, which has rotations (`System.unique_of_withRotations`,
+`System.IsEquilibriumState.ergodic_of_withRotations`); no literature premise is used. -/
+theorem two_block_normalisation (hrot : S.WithRotations)
     (hprox : S.Proximal) (hs0 : 0 < s) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState s μ) :
     S.sq.attractor = S.attractor ∧
@@ -126,15 +129,15 @@ theorem two_block_normalisation (hfku : FengKaenmakiUnique.{u}) (hrot : S.WithRo
   have := nonempty_of_measure μ
   have hinv₂ := measurePreserving_shift_map_group hinv
   have heq₂ := heq.map_group hinv hs0.le
-  have hirr₂ := S.sq_irreducible hrot hprox
-  refine ⟨S.attractor_sq, S.sq_withRotations hrot, hprox.sq_hasProximalDiagonal,
+  have hrot₂ := S.sq_withRotations hrot
+  refine ⟨S.attractor_sq, hrot₂, hprox.sq_hasProximalDiagonal,
     StrongSeparation.sq S, StrongOpenSet.sq S, ProjExpSeparation.sq S,
     ⟨inferInstance, hinv₂, heq₂, fun ν hν hνinv hνeq => ?_,
-      heq₂.ergodic_of_irreducible hfku hirr₂ hs0 hinv₂⟩,
+      heq₂.ergodic_of_withRotations hrot₂ hs0 hinv₂⟩,
     fun t ht => S.pressure_sq ht, entropy_map_group hinv,
     S.lyapunov₁_sq_map_group (S.tendsto_lyapunov₁ hinv),
     S.lyapunov₂_sq_map_group (S.tendsto_lyapunov₂ hinv), S.map_proj_sq_map_group μ⟩
-  exact S.sq.unique_of_irreducible hfku hirr₂ hs0 ν (μ.map group) hνinv hinv₂ hνeq heq₂
+  exact S.sq.unique_of_withRotations hrot₂ hs0 ν (μ.map group) hνinv hinv₂ hνeq heq₂
 
 /-- The consequences of `thm:two-block-normalisation` stated after it (tex lines 2349 to 2351)
 and in tex lines 2367 to 2368: the affinity dimension of `𝖠²` is that of `𝖠`, the Lyapunov
@@ -161,18 +164,17 @@ rotations and `0 < s < 2` the `s`-equilibrium state `μ` is not Bernoulli. If `�
 proximal diagonal generator, the Gibbs bounds of `μ` exclude a Bernoulli measure; otherwise the
 same argument applies to `𝖠²` and `μ^(2)` by `thm:two-block-normalisation`, and since grouping
 a Bernoulli measure in pairs gives a Bernoulli measure, `μ` is not Bernoulli either. The Gibbs
-bounds come from `FengKaenmakiGibbs`. -/
-theorem IsEquilibriumState.not_isBernoulli_of_two_block (hfk : FengKaenmakiGibbs.{u})
+bounds come from `EquilibriumGibbsStatement`, which the library proves (`equilibriumGibbs`). -/
+theorem IsEquilibriumState.not_isBernoulli_of_two_block (hfk : EquilibriumGibbsStatement.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 < s) (hs2 : s < 2)
     {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) : ¬ IsBernoulli μ := by
   rcases hprox.hasProximalDiagonal_or_sq with h | h
-  · exact S.not_isBernoulli hrot h.proximal hs0 hs2
-      (hfk S (irreducible_of_hasProximalDiagonal hrot h) hs0 hs2 μ hinv heq)
+  · exact S.not_isBernoulli hrot h.proximal hs0 hs2 (hfk S hrot hs0 hs2 μ hinv heq)
   · have := nonempty_of_measure μ
     refine not_isBernoulli_of_map_group ?_
     exact S.sq.not_isBernoulli (S.sq_withRotations hrot) h.proximal hs0 hs2
-      (hfk S.sq (irreducible_of_hasProximalDiagonal (S.sq_withRotations hrot) h) hs0 hs2 _
+      (hfk S.sq (S.sq_withRotations hrot) hs0 hs2 _
         (measurePreserving_shift_map_group hinv) (heq.map_group hinv hs0.le))
 
 end System

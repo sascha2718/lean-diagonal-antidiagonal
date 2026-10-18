@@ -26,6 +26,7 @@ open sets `φ_a(U)` then separate `π(𝐢)` from `π(𝐣)` for every `𝐣` wi
 * `System.xi_two_subset_singleton`: `ξ_2(𝐢) = {𝐢}` on the set of the geometric step.
 * `System.SOSC_h2_zero`: `thm:SOSC_h2_zero`.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.FengEntropy
 public import BoxLike.General
 public import BoxLike.SeparationConditions
@@ -330,11 +331,11 @@ theorem HasGibbsBounds.measure_cylinder_pos_of_pos {S : System ι} {μ : Measure
 `s`-equilibrium state, `0 < s < 2`, of a proximal box-like tuple with rotations. Neither
 projective exponential separation nor a proximal diagonal generator is assumed.
 Depends on: `thm:irred_eq_state` (ergodicity as `herg`; full support through the Gibbs bounds
-of Feng–Käenmäki, `FengKaenmakiGibbs`), `eq:simple_lyapunov`, `measure_SigmaPrime_compl`,
+of `EquilibriumGibbsStatement`), `eq:simple_lyapunov`, `measure_SigmaPrime_compl`,
 `ae_frequently_shift_mem` (the recurrence that the article attributes to ergodicity),
 `System.Bounds.proj_eq`, `condMeas_atom`, `thm:feng_entropy_zero`,
 `eq:ergodic_entropy_constant`. -/
-theorem SOSC_h2_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem SOSC_h2_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfi : FengInfoSum.{u}) (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsosc : S.StrongOpenSet) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
@@ -342,7 +343,7 @@ theorem SOSC_h2_zero (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs
     S.dimEntropy μ 2 = 0 := by
   obtain ⟨U, hU, hne, hsub, hdisj⟩ := hsosc
   have hlt := S.simple_lyapunov hms hrot hprox hs0 hs2 μ hinv heq
-  have hgibbs := hfk S (S.irreducible_of_proximal hrot hprox) hs0 hs2 μ hinv heq
+  have hgibbs := hfk S hrot hs0 hs2 μ hinv heq
   -- A cylinder of positive measure coded into `U`, visited infinitely often.
   obtain ⟨x₀, n, hn, hcyl⟩ := S.exists_cylinder_proj_mem hU hne
   have hrec := ae_frequently_shift_mem herg (measurableSet_cylinder (block n x₀))

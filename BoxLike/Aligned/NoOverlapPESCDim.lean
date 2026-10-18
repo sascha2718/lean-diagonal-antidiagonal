@@ -11,6 +11,7 @@ the source, `NoOverlap.BaranyKaenmakiTheorem`.
   `NoOverlap.prop_ssc_no_overlap_not_pesc`.
 -/
 public import BoxLike.Aligned.NoOverlapPESC
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.MainTwoFree
 
 @[expose] public section
@@ -22,9 +23,9 @@ namespace BoxLike
 hence the strong open set condition, its projective system has no exact overlaps, it fails the
 projective exponential separation condition, and `dimaff(X) < 2` since `∑_i |det A_i| < 1`.
 The theorem of Bárány and Käenmäki enters as the hypothesis `NoOverlap.BaranyKaenmakiTheorem`,
-the form of the source; the other hypotheses are the cited theorems that `thm:main2` uses. -/
+the form of the source; the other hypotheses are those of `thm:main2`. -/
 theorem NoOverlap.dimH_eq_dimaff_of_baranyKaenmakiTheorem (h : NoOverlap.BaranyKaenmakiTheorem)
-    (hms : MorrisShmerkinLyapunov.{0}) (hfk : FengKaenmakiGibbs.{0})
+    (hms : MorrisShmerkinLyapunov.{0}) (hfk : EquilibriumGibbsStatement.{0})
     (hfjj : FraserJordanJurgaDecomposition.{0}) (hfib : FengInfoSumBar.{0})
     (hly : FengLedrappierYoung.{0}) (hlyb : FengLedrappierYoungBar.{0})
     (hkk : KittleKoglerDimension.{0}) :

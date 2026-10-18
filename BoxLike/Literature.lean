@@ -12,10 +12,16 @@ left shift `shift 1`; the alphabet `ι` is finite with the discrete `σ`-algebra
 
 * `MorrisShmerkinLyapunov`: `eq:simple_lyapunov` in the normalised case, from
   Morris–Shmerkin, Trans. Amer. Math. Soc. 371 (2019), Theorem 3.1, which combines their
-  Proposition 3.3 and Lemmas 3.4 and 3.5 (numbering of arXiv:1602.08789v3).
+  Proposition 3.3 and Lemmas 3.4 and 3.5 (numbering of arXiv:1602.08789v3). The library proves
+  it (`morrisShmerkinLyapunov_holds` in `BoxLike/MorrisShmerkin.lean`).
 * `FengKaenmakiGibbs`: the Gibbs bounds of `thm:irred_eq_state`, from Feng–Käenmäki, Discrete
   Contin. Dyn. Syst. 30 (2011), Proposition 1.2, applied with `q = s` for `0 < s ≤ 1` and to a
-  rescaled tuple with `q = 2 - s` for `1 < s < 2`.
+  rescaled tuple with `q = 2 - s` for `1 < s < 2`. The library proves it
+  (`fengKaenmakiGibbs_holds` in `BoxLike/QuasiMultiplicative/Main.lean`), and the conclusion for
+  tuples with rotations, which need not be irreducible (`equilibriumGibbs` in
+  `BoxLike/EquilibriumGibbs.lean`); the main line takes that statement,
+  `EquilibriumGibbsStatement`, and results stated for irreducible tuples take
+  `FengKaenmakiGibbs`.
 * `FraserJordanJurgaDecomposition`: `thm:eq_state_is_sum`, from Fraser–Jordan–Jurga,
   J. Fractal Geom. 7 (2020), Lemma 1.3 and Corollaries 1.5 and 1.6, together with the existence
   of ergodic Gibbs measures on a mixing sub-shift of finite type (Bowen). The library proves it
@@ -54,7 +60,9 @@ universe u
 generator with `|a_i| ≠ |b_i|` is hyperbolic, and together with an anti-diagonal generator it
 makes the tuple irreducible. The source works on the one-sided shift with the products
 `A_{x_n} ⋯ A_{x_1}`; it applies to the transposed tuple, which has the same norms of products,
-the same pressure and the same equilibrium states. -/
+the same pressure and the same equilibrium states. The library proves the statement
+(`morrisShmerkinLyapunov_holds`), along Morris–Shmerkin's Lemmas 3.4 and 3.5 with the Gibbs
+bounds of `equilibriumGibbs`. -/
 def MorrisShmerkinLyapunov : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.WithRotations → S.HasProximalDiagonal → ∀ {s : ℝ}, 0 < s → s < 2 →
@@ -69,8 +77,12 @@ value function is `‖·‖^s` and `q = s`. For `1 < s < 2` and planar matrices
 `φ^s(A) = |det A|^{s-1} ‖A‖^{2-s} = ‖A'‖^{2-s}` with the rescaled tuple
 `A'_i = |det A_i|^{(s-1)/(2-s)} A_i`, which is irreducible when `𝖠` is, so the proposition
 applies with `q = 2 - s`. The article states `thm:irred_eq_state` for every `s > 0`, with
-uniqueness and ergodicity; the statement covers the range `0 < s < 2` and the Gibbs bounds,
-which is what `thm:main1` uses. -/
+uniqueness and ergodicity; the statement covers the range `0 < s < 2` and the Gibbs bounds. The
+library proves the statement (`fengKaenmakiGibbs_holds` in
+`BoxLike/QuasiMultiplicative/Main.lean`), and its conclusion for tuples with rotations, which
+need not be irreducible (`System.IsEquilibriumState.hasGibbsBounds_of_withRotations`,
+`equilibriumGibbs`); the main line takes that statement, `EquilibriumGibbsStatement`, and results
+stated for irreducible tuples take `FengKaenmakiGibbs`. -/
 def FengKaenmakiGibbs : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.Irreducible → ∀ {s : ℝ}, 0 < s → s < 2 →

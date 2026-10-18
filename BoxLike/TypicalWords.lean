@@ -32,6 +32,7 @@ Gibbs bounds and the Birkhoff averages of `f_{1,1}`, `f_{2,1}` give the cardinal
 * `System.exists_typical_words`: the typical words of the equilibrium state, tex line 3648 to
   3683.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.FengEntropy
 public import BoxLike.PressureZ
 public import Mathlib.Combinatorics.Pigeonhole
@@ -636,13 +637,13 @@ planar matrix `A_w = diag(a_m, b_m)`, such that `log #W_m / n_m → h_0(μ)`,
 from the Gibbs measure `μ_1` of `thm:eq_state_is_sum`, whose Gibbs constant is `P(𝖠, s) = 0`
 and whose integrals of `f_{1,1}` and `f_{2,1}` are the Lyapunov exponents; the entropy enters
 through `eq:eq_state_def`, `h_0(μ) = -Λ(𝖠, μ, s)`.
-Depends on: `FengKaenmakiGibbs` (`thm:irred_eq_state`), `FraserJordanJurgaDecomposition`
+Depends on: `EquilibriumGibbsStatement` (`thm:irred_eq_state`), `FraserJordanJurgaDecomposition`
 (`thm:eq_state_is_sum`), `System.GibbsDecomposition.isGibbsAt₁`,
 `System.GibbsDecomposition.lyapunov₁_eq_integral`,
 `System.GibbsDecomposition.lyapunov₂_eq_integral_potential₂`, `birkhoff_ergodic`. -/
 theorem exists_typical_words {ι : Type u} [Fintype ι] [MeasurableSpace ι]
     [MeasurableSingletonClass ι] (S : System ι) {s : ℝ}
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2)
     (hP : S.pressure s = 0) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState s μ) :
@@ -652,7 +653,7 @@ theorem exists_typical_words {ι : Type u} [Fintype ι] [MeasurableSpace ι]
       Tendsto (fun m => Real.log (W m).card / n m) atTop (𝓝 (entropy μ)) ∧
       Tendsto (fun m => Real.log |a m| / n m) atTop (𝓝 (S.lyapunov₁ μ)) ∧
       Tendsto (fun m => Real.log |b m| / n m) atTop (𝓝 (S.lyapunov₂ μ)) := by
-  have hgibbs := hfk S (irreducible_of_hasProximalDiagonal hrot hdiag) hs0 hs2 μ hinv heq
+  have hgibbs := hfk S hrot hs0 hs2 μ hinv heq
   obtain ⟨μ₁, μ₂, hdec⟩ := hfjj S hrot hdiag hs0 hs2 μ hinv hgibbs
   have := hdec.prob₁
   have hG := hdec.isGibbsAt₁ hs0 hs2

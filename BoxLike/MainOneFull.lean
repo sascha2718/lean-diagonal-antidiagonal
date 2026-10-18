@@ -14,6 +14,7 @@ threshold `2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)` is one. For `0 < s < 2` the statem
   `s`-equilibrium state.
 -/
 public import BoxLike.AffinityMain
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.ProjectionLarge
 
 @[expose] public section
@@ -63,7 +64,7 @@ self-affine set with rotations satisfying the projective exponential separation 
 `s`-equilibrium state. Then the coordinate projections of `μ` are double-dimensional; they fail
 to be exact-dimensional precisely when `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`; at equality and above
 they are exact-dimensional of dimension one. -/
-theorem main1_all (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem main1_all (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation) (hs0 : 0 < s)
     (hP : S.pressure s = 0) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
@@ -85,7 +86,7 @@ exact-dimensional, with any dimension, precisely when `s < 2 - λ_1(𝖠, μ)/λ
 equality and above, both projections are exact-dimensional of dimension one. The conclusion
 holds for every invariant `s`-equilibrium state. This is the library form of
 `Challenge.audit_main1`. -/
-theorem main1_dimaff_all (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
+theorem main1_dimaff_all (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]

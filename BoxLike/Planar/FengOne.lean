@@ -4,7 +4,8 @@ module
 `thm:feng1` of `sec:ledrappier_young_formula` at the article's scope, from the cited theorems of
 Feng: the first part for every planar self-affine set from `PlanarFengLedrappierYoung`
 (`BoxLike/LiteraturePlanarFeng.lean`), the second part for proximal box-like systems with rotations
-from `FengLedrappierYoungBar` (`BoxLike/LiteratureFeng.lean`).
+from `FengLedrappierYoungBar` (`BoxLike/LiteratureFeng.lean`), which follows from the first part
+(`fengLedrappierYoungBar_of_fengLedrappierYoung`, `BoxLike/ProjectiveLineSystem.lean`).
 
 * `PlanarSystem.feng1`: the first part for a planar self-affine set.
 * `planar_feng1`: both parts.
@@ -44,8 +45,9 @@ parts, at the article's scope. First part: for every planar self-affine set and 
 `dim π_*μ = (h_1(μ) - h_0(μ)) / λ_1(𝖠, μ) + (h_2(μ) - h_1(μ)) / λ_2(𝖠, μ)`. Second part: for
 every proximal box-like self-affine set with rotations and every ergodic `ν` on `Σ_Z`,
 `\overline{π}_*ν` is exact-dimensional with
-`dim \overline{π}_*ν = (\overline{h}_1(ν) - \overline{h}_0(ν)) / \overline{λ}(𝖠, ν)`; this is the
-authorised `FengLedrappierYoungBar`. -/
+`dim \overline{π}_*ν = (\overline{h}_1(ν) - \overline{h}_0(ν)) / \overline{λ}(𝖠, ν)`; this is
+`FengLedrappierYoungBar`, which follows from `FengLedrappierYoung`
+(`fengLedrappierYoungBar_of_fengLedrappierYoung`). -/
 theorem planar_feng1 (hly : PlanarFengLedrappierYoung.{u})
     (hlyb : FengLedrappierYoungBar.{u}) :
     (∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]

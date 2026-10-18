@@ -7,7 +7,10 @@ in the form of the source: the potential `‖·‖^q` on the one-sided shift. A 
 takes it as a hypothesis. `docs/correspondence.md`, "Fidelity boundary", states the rules; the
 project owner authorised this statement. The predicates `FengKaenmakiGibbs` and
 `FengKaenmakiUnique` of `BoxLike/Literature.lean` and `BoxLike/LiteratureRemarks.lean` are its
-box-like specialisations.
+box-like specialisations. The library proves the statement (`fengKaenmakiNormEquilibrium_holds`
+in `BoxLike/QuasiMultiplicative/Main.lean`) and with it the two box-like predicates
+(`fengKaenmakiGibbs_holds`, `fengKaenmakiUnique_holds`). That module imports this one, so the
+results that use the statement take it as a hypothesis, and `Solution.lean` passes the proof.
 
 * `FengKaenmakiNormEquilibrium`: Feng–Käenmäki, Proposition 1.2, for real planar invertible
   tuples, with its source boundary record.
@@ -84,7 +87,13 @@ this statement (`FengKaenmakiNormEquilibrium.fengKaenmakiGibbs`,
 rescaling `A'_i = |det A_i|^{(s-1)/(2-s)} A_i` of tex lines 2235 to 2239, both proved in
 `BoxLike/TupleEquilibriumNorm.lean`. The statement covers all irreducible invertible planar
 tuples, the scope at which the article states `thm:irred_eq_state`. Downstream use:
-`MatrixTuple.irred_eq_state_of_fengKaenmaki`. -/
+`MatrixTuple.irred_eq_state_of_fengKaenmaki`.
+
+Proof in the library. `fengKaenmakiNormEquilibrium_holds` (`BoxLike/QuasiMultiplicative/Main.lean`)
+proves the statement: the norm of an irreducible tuple is quasi-multiplicative
+(`MatrixTuple.normQuasiMultiplicative_of_irreducible`), the potential `‖·‖^q` has an ergodic
+Gibbs measure on the two-sided shift (`normGibbsExistence`), and every invariant
+`q`-equilibrium state equals it (`MatrixTuple.IsNormEquilibrium.eq_of_hasNormGibbs`). -/
 def FengKaenmakiNormEquilibrium : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
     (A : ι → Matrix (Fin 2) (Fin 2) ℝ), (∀ i, (A i).det ≠ 0) → TupleIrreducible A →

@@ -56,6 +56,7 @@ sets `Σ^τ`, `Σ^ω` for this choice, and agree with them modulo `μ`-null sets
 * `System.sigma_tau_omega_positive_oseledets`: `thm:sigma_tau_omega_positive_eq_measure` for the
   article's sets.
 -/
+public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.SigmaMeasure
 public import BoxLike.MatrixTuple
 public import Mathlib.Analysis.InnerProductSpace.PiL2
@@ -1000,14 +1001,14 @@ variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonCla
 of `Σ'`: `μ(Σ^τ) > 0` and `μ(Σ^ω) > 0`, transferred from `System.sigma_tau_omega_positive`
 through `measure_sigmaTau`, `measure_sigmaOmega`. The hypothesis `hlt` is the simple Lyapunov
 spectrum `eq:simple_lyapunov` under which the article chooses `Σ'`. -/
-theorem sigma_tau_omega_positive_oseledets (hfk : FengKaenmakiGibbs.{u})
-    (hrot : S.WithRotations) (hprox : S.Proximal) {s : ℝ} (hs0 : 0 < s) (hs2 : s < 2)
+theorem sigma_tau_omega_positive_oseledets (hfk : EquilibriumGibbsStatement.{u})
+    (hrot : S.WithRotations) {s : ℝ} (hs0 : 0 < s) (hs2 : s < 2)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ)
     (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) (O : MatrixTuple.OseledetsSet S.mat μ) :
     0 < μ O.sigmaTau ∧ 0 < μ O.sigmaOmega := by
   rw [measure_sigmaTau O hlt, measure_sigmaOmega O hlt]
-  exact S.sigma_tau_omega_positive hfk hrot hprox hs0 hs2 μ hinv herg heq
+  exact S.sigma_tau_omega_positive hfk hrot hs0 hs2 μ hinv herg heq
 
 end Positive
 

@@ -31,8 +31,8 @@ variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonCla
 /-- The four conditional-past entropy identities underlying `thm:entropy_eq_gibbs`.
 The hypothesis `hdec` is internal proof infrastructure, not an external literature axiom:
 for the normalized equilibrium state of the manuscript it is constructed using
-`FengKaenmakiGibbs` (Feng–Käenmäki, Proposition 1.2) and
-`FraserJordanJurgaDecomposition` (Fraser–Jordan–Jurga, Lemma 1.3 and Corollaries 1.5, 1.6).
+`EquilibriumGibbsStatement` (the Gibbs bounds of `thm:irred_eq_state`) and
+`FraserJordanJurgaDecomposition` (`thm:eq_state_is_sum`), both proved in the library.
 Once it is supplied, no rotations, proximality, range condition on `s`, or further cited
 hypothesis is needed. Its factor decomposition gives ergodicity of `μ` and hence the
 conullness of `Σ'`. The proof follows the two-to-one coding argument for entropy rates,
@@ -54,8 +54,8 @@ theorem GibbsDecomposition.zero_entropy_identities
   exact ⟨h₀.trans h₁.symm, h₀.trans h₂.symm, h₁, h₂⟩
 
 /-- Proposition 4.3, `thm:entropy_eq_gibbs`, in its literal conditional-past entropy
-vocabulary. `hdec` is obtained from Feng–Käenmäki and Fraser–Jordan–Jurga as described in
-`GibbsDecomposition.zero_entropy_identities`; this assembly uses no further literature.
+vocabulary. `hdec` is obtained from `thm:irred_eq_state` and `thm:eq_state_is_sum` as described
+in `GibbsDecomposition.zero_entropy_identities`; this assembly uses no literature.
 The proof combines the two-to-one coding argument with the proved past-entropy bridge. -/
 theorem GibbsDecomposition.dimEntropy_zero_eq_gibbs
     (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
