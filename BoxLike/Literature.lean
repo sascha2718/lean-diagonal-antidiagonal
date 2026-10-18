@@ -18,7 +18,8 @@ left shift `shift 1`; the alphabet `ι` is finite with the discrete `σ`-algebra
   rescaled tuple with `q = 2 - s` for `1 < s < 2`.
 * `FraserJordanJurgaDecomposition`: `thm:eq_state_is_sum`, from Fraser–Jordan–Jurga,
   J. Fractal Geom. 7 (2020), Lemma 1.3 and Corollaries 1.5 and 1.6, together with the existence
-  of ergodic Gibbs measures on a mixing sub-shift of finite type (Bowen).
+  of ergodic Gibbs measures on a mixing sub-shift of finite type (Bowen). The library proves it
+  (`fraserJordanJurgaDecomposition_holds` in `BoxLike/FraserJordanJurga/Main.lean`).
 * `JordanRapaportDimension`: the dimension formula used in `eq:gibbs_proj_dim`, from
   Jordan–Rapaport, Proc. Lond. Math. Soc. (3) 122 (2021), Theorem 1.1.
 * `KittleKoglerDimension`: the dimension of self-similar measures on the line without exact
@@ -86,7 +87,8 @@ the existence of the ergodic Gibbs measures on the mixing sub-shift `Σ_Z`. The 
 non-negative entries on the one-sided shift and states the first decomposition; all
 quantities here depend on the entries through their moduli, and the other three
 decompositions follow from the symmetry exchanging the two axes. The identity
-`P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s})` of the proposition is not part of the statement. -/
+`P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s})` of the proposition is not part of the statement. The
+library proves the statement (`fraserJordanJurgaDecomposition_holds`). -/
 def FraserJordanJurgaDecomposition : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.WithRotations → S.HasProximalDiagonal → ∀ {s : ℝ}, 0 < s → s < 2 →
@@ -107,7 +109,7 @@ def JordanRapaportDimension : Prop :=
 
 /-- Kittle–Kogler, *The exact overlaps conjecture for self-similar measures on the real line*,
 arXiv:2610.10511 (7 October 2026), Theorem 1.1, in the form the article uses in the proof of
-`thm:main2` (tex lines 3888 to 3894). The source: let `μ = ∑_j p_j δ_{g_j}` be a probability
+`thm:main2` (tex lines 3702 to 3712). The source: let `μ = ∑_j p_j δ_{g_j}` be a probability
 measure on finitely many distinct contracting similarities `g_j(x) = r_j x + t_j` of `ℝ`, with
 `0 < |r_j| < 1` of either sign and `p_j > 0`; then the self-similar measure `ν`, the unique
 probability measure with `∑_j p_j (g_j)_* ν = ν`, satisfies `dim ν = min{1, h_μ / |χ_μ|}`,

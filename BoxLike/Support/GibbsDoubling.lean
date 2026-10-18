@@ -2,7 +2,7 @@ module
 
 /-
 Gibbs measures on the sub-shift `Σ_Z` for arbitrary bounded potentials, and the metric doubling
-property of `sec:gibbs_measures` (tex lines 2528 to 2536): "the measure of any ball is at most a
+property of `sec:gibbs_measures` (tex lines 2493 to 2501): "the measure of any ball is at most a
 constant times the measure of the corresponding ball with half the radius". The balls are those
 of the standard metric `d(𝐢, 𝐣) = 2^{-min{|n| : i_n ≠ j_n}}` of the two-sided shift, which are
 the cylinders `[i_{-m} ⋯ i_m]` extended both to the future and to the past.
@@ -241,8 +241,8 @@ theorem isOpen_symBall (x : ℤ → α) {r : ℝ} (hr : 0 < r) : IsOpen (symBall
   · rw [symBall_eq_univ x hr1]
     exact isOpen_univ
 
-/-- The standard metric induces the product topology of the two-sided shift (tex lines 836 to
-838 and 2532 to 2534): a set is open exactly when it contains a ball of positive radius around
+/-- The standard metric induces the product topology of the two-sided shift (tex lines 800 to
+802 and 2497 to 2499): a set is open exactly when it contains a ball of positive radius around
 each of its points. Hence the cylinders `[i_{-m} ⋯ i_m]` are the balls of the shift. -/
 theorem isOpen_iff_forall_symBall {U : Set (ℤ → α)} :
     IsOpen U ↔ ∀ x ∈ U, ∃ r : ℝ, 0 < r ∧ symBall x r ⊆ U := by
@@ -309,7 +309,7 @@ theorem IsGibbsPotential.one_le (h : IsGibbsPotential o f ν P C) {y : ℤ → �
   have h2 : 1 < C⁻¹ := (one_lt_inv₀ hC).2 (not_le.1 hlt)
   linarith
 
-/-- The displayed comparison of tex lines 2529 to 2531, in its sharp form:
+/-- The displayed comparison of tex lines 2494 to 2496, in its sharp form:
 `ν([𝐢|_n]) ≤ C² exp(P - f(σ^n 𝐢)) ν([𝐢|_{n+1}])` for `𝐢 ∈ Σ_Z` and `n ≥ 1`. -/
 theorem IsGibbsPotential.measureReal_cylinder_le_succ (h : IsGibbsPotential o f ν P C)
     {y : ℤ → ι × ZMod 2} (hy : y ∈ subshift o) {n : ℕ} (hn : 0 < n) :
@@ -338,7 +338,7 @@ theorem IsGibbsPotential.measureReal_cylinder_le_succ (h : IsGibbsPotential o f 
     _ = C ^ 2 * Real.exp (P - f ((shift 1)^[n] y)) *
           ν.real (cylinder fun k : Fin (n + 1) => y k) := by ring
 
-/-- The extension to the past of tex lines 2532 to 2534, for an invariant Gibbs measure:
+/-- The extension to the past of tex lines 2497 to 2499, for an invariant Gibbs measure:
 `ν([(σ𝐢)|_n]) ≤ C² exp(P - f(𝐢)) ν([𝐢|_{n+1}])` for `𝐢 ∈ Σ_Z` and `n ≥ 1`; by invariance the
 left side is the measure of the cylinder `[i_1 ⋯ i_n]` and the right side adds the symbol `i_0`
 in the past. -/
@@ -419,7 +419,7 @@ theorem measureReal_symCyl (hinv : MeasurePreserving (shift 1) ν ν) (y : ℤ �
 /-- Doubling of the cylinders `[i_{-m} ⋯ i_m]` for an invariant Gibbs probability measure with
 `-f ≤ B` on `Σ_Z`: `ν([i_{-m} ⋯ i_m]) ≤ D ν([i_{-m-1} ⋯ i_{m+1}])` with
 `D = (C² exp(P + B))²`; the cylinder is extended by one symbol to the future and, by invariance,
-by one symbol to the past (tex lines 2528 to 2536). -/
+by one symbol to the past (tex lines 2493 to 2501). -/
 theorem IsGibbsPotential.measureReal_symCyl_le_succ [IsProbabilityMeasure ν]
     (h : IsGibbsPotential o f ν P C) (hinv : MeasurePreserving (shift 1) ν ν) {B : ℝ}
     (hB : ∀ z ∈ subshift o, -f z ≤ B) {y : ℤ → ι × ZMod 2} (hy : y ∈ subshift o) (m : ℕ) :
@@ -455,7 +455,7 @@ theorem IsGibbsPotential.measureReal_symCyl_le_succ [IsProbabilityMeasure ν]
         rw [← mul_assoc, ← sq]
         rfl
 
-/-- Tex lines 2531 to 2539: an invariant Gibbs probability measure for a potential with `-f ≤ B`
+/-- Tex lines 2497 to 2501: an invariant Gibbs probability measure for a potential with `-f ≤ B`
 on `Σ_Z` is doubling, `ν(B(𝐢, r)) ≤ D ν(B(𝐢, r/2))` for every `𝐢 ∈ Σ_Z` and every `r > 0`, with
 `D = (C² exp(P + B))²`, for the balls of the standard metric of the two-sided shift. -/
 theorem IsGibbsPotential.doubling [IsProbabilityMeasure ν] (h : IsGibbsPotential o f ν P C)
@@ -532,7 +532,7 @@ theorem IsGibbsPotential.doubling_subshift [IsProbabilityMeasure ν] (h : IsGibb
   simp only [measureReal_def, measure_inter_conull hν]
   exact h.doubling hinv hB hy hr
 
-/-- Tex lines 2531 to 2539 for the one-symbol potentials of the library: an invariant Gibbs
+/-- Tex lines 2497 to 2501 for the one-symbol potentials of the library: an invariant Gibbs
 probability measure `ν` of `IsGibbs` over a finite alphabet is doubling,
 `ν(B(𝐢, r)) ≤ D ν(B(𝐢, r/2))` for every `𝐢 ∈ Σ_Z` and every `r > 0`. -/
 theorem IsGibbs.doubling_symBall [Fintype ι] [IsProbabilityMeasure ν] {φ : ι × ZMod 2 → ℝ}

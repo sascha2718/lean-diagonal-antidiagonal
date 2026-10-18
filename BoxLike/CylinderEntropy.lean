@@ -23,12 +23,12 @@ The scalar partition `\overline{ξ}_0` of `Σ_Z` is of the same form with `D = �
   every `𝐢 ∈ Σ'`.
 * `System.dimEntropy_zero_eq_entropy_of_feng_entropy_kolmogorov_sinai`,
   `System.dimEntropy_zero_eq_ksEntropy_of_feng_entropy_kolmogorov_sinai`: "the lemma identifies
-  `h_0(μ)` with the Kolmogorov–Sinai entropy `h(μ)`" (tex line 2024), through the lemma and
+  `h_0(μ)` with the Kolmogorov–Sinai entropy `h(μ)`" (tex line 1989), through the lemma and
   the Shannon–McMillan–Breiman theorem, for the entropy rate and for the supremum over finite
   Borel partitions.
 * `System.dimEntropy_zero_eq_ksEntropy`, `System.dimEntropyBar_zero_eq_ksEntropy`:
-  `h_0(μ) = h(μ)` and `\overline{h}_0(ν) = h(ν)` for every invariant measure (tex lines 2024 to
-  2026), with the Kolmogorov–Sinai entropy of tex lines 2000 to 2007.
+  `h_0(μ) = h(μ)` and `\overline{h}_0(ν) = h(ν)` for every invariant measure (tex lines 1989 to
+  1991), with the Kolmogorov–Sinai entropy of tex lines 1965 to 1972.
 * `System.feng_entropy_kolmogorov_sinai_bar`: the form of Feng's (4.17) for the projective
   system, for every invariant measure on `Σ_Z`:
   `\overline{h}_0(ν, 𝐢) = -lim n⁻¹ log ν(\overline{𝒫}_0^{n-1}(𝐢))`.
@@ -72,7 +72,7 @@ variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonCla
   (S : System ι)
 
 omit [Fintype ι] [MeasurableSingletonClass ι] in
-/-- The partition `ξ_0` of `sec:entropies` (tex lines 1893 to 1897) is the partition of `Σ'` by
+/-- The partition `ξ_0` of `sec:entropies` (tex lines 1858 to 1862) is the partition of `Σ'` by
 the past `𝐢^-`, extended by the atom `Σ ∖ Σ'`: the condition `π(𝐣) - π(𝐢) ∈ V_𝐢^0 = ℝ²` is
 void. -/
 theorem xi_zero_eq (μ : Measure (ℤ → ι)) :
@@ -119,7 +119,7 @@ theorem feng_entropy_kolmogorov_sinai (μ : Measure (ℤ → ι)) [IsProbability
   (S.feng_entropy_kolmogorov_sinai' μ herg hlt).mono fun _ hx _ => hx
 
 /-- "The lemma identifies `h_0(μ)` with the Kolmogorov–Sinai entropy `h(μ)`" (`sec:entropies`,
-tex line 2024): by `thm:feng_entropy_kolmogorov_sinai`, `eq:ergodic_entropy_constant` and the
+tex line 1989): by `thm:feng_entropy_kolmogorov_sinai`, `eq:ergodic_entropy_constant` and the
 Shannon–McMillan–Breiman theorem, the almost sure limit of `-n⁻¹ log μ(𝒫_0^{n-1}(𝐢))` is both
 `h_0(μ)` and `h(μ)`. The library also proves the identity directly, without the lemma, as
 `System.dimEntropy_zero_eq_entropy`. -/
@@ -134,7 +134,7 @@ theorem dimEntropy_zero_eq_entropy_of_feng_entropy_kolmogorov_sinai (μ : Measur
   exact tendsto_nhds_unique hx1 hx3
 
 /-- "The lemma identifies `h_0(μ)` with the Kolmogorov–Sinai entropy `h(μ)`" (`sec:entropies`,
-tex line 2024), with `h(μ)` the supremum over finite Borel partitions of tex lines 2000 to 2007:
+tex line 1989), with `h(μ)` the supremum over finite Borel partitions of tex lines 1965 to 1972:
 by `thm:feng_entropy_kolmogorov_sinai`, `eq:ergodic_entropy_constant` and the
 Shannon–McMillan–Breiman theorem. -/
 theorem dimEntropy_zero_eq_ksEntropy_of_feng_entropy_kolmogorov_sinai (μ : Measure (ℤ → ι))
@@ -143,16 +143,16 @@ theorem dimEntropy_zero_eq_ksEntropy_of_feng_entropy_kolmogorov_sinai (μ : Meas
   rw [ksEntropy_shift_eq_entropy herg.toMeasurePreserving]
   exact S.dimEntropy_zero_eq_entropy_of_feng_entropy_kolmogorov_sinai μ herg hlt
 
-/-- `sec:entropies`, tex lines 2024 to 2026: `h_0(μ) = h(μ)` with the Kolmogorov–Sinai entropy
-`h(μ)` of tex lines 2000 to 2007, for every invariant probability measure with `μ(Σ') = 1`. -/
+/-- `sec:entropies`, tex lines 1989 to 1991: `h_0(μ) = h(μ)` with the Kolmogorov–Sinai entropy
+`h(μ)` of tex lines 1965 to 1972, for every invariant probability measure with `μ(Σ') = 1`. -/
 theorem dimEntropy_zero_eq_ksEntropy (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (hfull : μ (S.SigmaPrime μ)ᶜ = 0) :
     S.dimEntropy μ 0 = ksEntropy μ (shift 1) := by
   rw [ksEntropy_shift_eq_entropy hinv]
   exact S.dimEntropy_zero_eq_entropy' μ hinv hfull
 
-/-- `sec:entropies`, tex lines 2024 to 2026: `\overline{h}_0(ν) = h(ν)` with the
-Kolmogorov–Sinai entropy of tex lines 2000 to 2007, for every invariant probability measure on
+/-- `sec:entropies`, tex lines 1989 to 1991: `\overline{h}_0(ν) = h(ν)` with the
+Kolmogorov–Sinai entropy of tex lines 1965 to 1972, for every invariant probability measure on
 `{1, …, 2N}^ℤ` giving full measure to `Σ_Z`. -/
 theorem dimEntropyBar_zero_eq_ksEntropy (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν]
     (hinv : MeasurePreserving (shift 1) ν ν) (hsupp : ν (subshift S.o)ᶜ = 0) :
@@ -161,13 +161,13 @@ theorem dimEntropyBar_zero_eq_ksEntropy (ν : Measure (ℤ → ι × ZMod 2)) [I
   exact S.dimEntropyBar_zero_eq_entropy' ν hinv hsupp
 
 omit [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] in
-/-- The partition `\overline{ξ}_0` of `sec:entropies` (tex lines 1950 to 1955) is the partition
+/-- The partition `\overline{ξ}_0` of `sec:entropies` (tex lines 1915 to 1920) is the partition
 of `Σ_Z` by the past, extended by the atom `{1, …, 2N}^ℤ ∖ Σ_Z`. -/
 theorem xiBar_zero_eq : S.xiBar 0 = atomsOn (subshift S.o) fun y => {z | SamePast z y} := rfl
 
 /-- The form of Feng's (4.17) for the projective system `Ψ` (Feng, Lemma 4.6, for `Ψ`; the scalar
 counterpart of `thm:feng_entropy_kolmogorov_sinai` used through `\overline{h}_0(ν) = h(ν)`, tex
-lines 2024 to 2026): for every invariant probability measure `ν` on `{1, …, 2N}^ℤ` giving full
+lines 1989 to 1991): for every invariant probability measure `ν` on `{1, …, 2N}^ℤ` giving full
 measure to `Σ_Z`, `-n⁻¹ log ν(\overline{𝒫}_0^{n-1}(𝐢)) → \overline{h}_0(ν, 𝐢)` for `ν`-almost
 every `𝐢`. Neither ergodicity nor the hypotheses on the system are used. -/
 theorem feng_entropy_kolmogorov_sinai_bar (ν : Measure (ℤ → ι × ZMod 2))

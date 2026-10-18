@@ -2,7 +2,7 @@ module
 
 /-
 The translation cube and strong separation of `ex:projection_double_dimensional`, tex lines
-3009 to 3018: with `R = 2/(1 - 2a)` and `B = (0, R, 0, R, 0, 0, R, R) + [0, 1]^8`, every
+2956 to 2965: with `R = 2/(1 - 2a)` and `B = (0, R, 0, R, 0, 0, R, R) + [0, 1]^8`, every
 `t ∈ B` makes the four maps send `[0, 2R]^2` into itself, each coordinate of an image rectangle
 lies in `[0, R - 1]` or in `[R, 2R - 1]`, the four image rectangles are at mutual distance at
 least one, and the strong separation condition holds.

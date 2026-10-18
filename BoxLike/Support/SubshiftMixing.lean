@@ -1,8 +1,8 @@
 module
 
 /-
-Topological mixing of the sub-shift of finite type `Σ_Z` of `sec:subshift` (tex lines 934 and
-935): "Since `Z²` is a positive matrix, `Σ_Z` is mixing". The article's standing hypothesis in
+Topological mixing of the sub-shift of finite type `Σ_Z` of `sec:subshift` (tex lines 898 and
+899): "Since `Z²` is a positive matrix, `Σ_Z` is mixing". The article's standing hypothesis in
 `sec:subshift` is that the tuple is box-like with rotations, so that both orientations occur;
 proximality is not used. The alphabet `ι × ZMod 2` of `Σ_Z` and the transition rule `Trans` are
 those of `BoxLike/Coding.lean`.
@@ -51,7 +51,7 @@ theorem zmodTwo_eq_zero_of_ne_one {c : ZMod 2} (h : c ≠ 1) : c = 0 := by
 
 /-- A self-map `f` of a topological space is topologically mixing: for all non-empty open sets
 `U` and `V` there is `N` with `U ∩ f^{-n}(V) ≠ ∅` for every `n ≥ N`. This is the notion of the
-sentence "`Σ_Z` is mixing" of `sec:subshift` (tex lines 934 and 935), the hypothesis of the
+sentence "`Σ_Z` is mixing" of `sec:subshift` (tex lines 898 and 899), the hypothesis of the
 theorem of Bowen cited in `sec:gibbs_measures`. -/
 def IsTopologicallyMixing {X : Type*} [TopologicalSpace X] (f : X → X) : Prop :=
   ∀ U V : Set X, IsOpen U → U.Nonempty → IsOpen V → V.Nonempty →
@@ -97,7 +97,7 @@ theorem exists_transMatrix_pow_pos [Nonempty ι] (n : ℕ) (p : ι × ZMod 2) :
     rw [h1, one_mul]
     exact hq
 
-/-- `Z²` is a positive matrix when both orientations occur (tex line 934). -/
+/-- `Z²` is a positive matrix when both orientations occur (tex line 898). -/
 theorem transMatrix_sq_pos (h0 : ∃ i, o i = 0) (h1 : ∃ i, o i = 1) (p q : ι × ZMod 2) :
     0 < (transMatrix o ^ 2) p q := by
   obtain ⟨r, hpr, hrq⟩ := exists_trans_trans o h0 h1 p q
@@ -127,7 +127,7 @@ section Shift
 
 variable {ι : Type*} (o : ι → ZMod 2)
 
-/-- The left shift `σ` acting on `Σ_Z` (tex line 934). -/
+/-- The left shift `σ` acting on `Σ_Z` (tex line 898). -/
 def subshiftShift (y : subshift o) : subshift o :=
   ⟨shift 1 y.1, shift_mem_subshift o y.2 1⟩
 
@@ -210,7 +210,7 @@ variable {ι : Type*} [TopologicalSpace ι] {o : ι → ZMod 2}
 
 /-- Every open subset `U` of `Σ_Z` contains, with each of its points `y`, every point of `Σ_Z`
 that agrees with `y` on the coordinates `|k| ≤ M`, for some `M`: the cylinders form a basis of
-the topology (tex lines 836 to 838 and 932 to 934). -/
+the topology (tex lines 800 to 802 and 896 to 898). -/
 theorem exists_forall_abs_le_mem {U : Set (subshift o)} (hU : IsOpen U) {y : subshift o}
     (hy : y ∈ U) : ∃ M : ℕ, ∀ z : subshift o,
       (∀ k : ℤ, |k| ≤ M → (z : ℤ → ι × ZMod 2) k = (y : ℤ → ι × ZMod 2) k) → z ∈ U := by
@@ -232,7 +232,7 @@ section Mixing
 variable {ι : Type*} [TopologicalSpace ι] (o : ι → ZMod 2)
 
 /-- `Σ_Z` is topologically mixing when both orientations occur, that is, when the tuple is
-box-like with rotations (tex lines 934 and 935): `Z² > 0` supplies the bridge between any two
+box-like with rotations (tex lines 898 and 899): `Z² > 0` supplies the bridge between any two
 admissible blocks at every distance at least two. For open sets determined by the coordinates
 `|k| ≤ L`, every `n ≥ 2L + 2` works. -/
 theorem isTopologicallyMixing_subshiftShift (h0 : ∃ i, o i = 0) (h1 : ∃ i, o i = 1) :
@@ -332,7 +332,7 @@ theorem not_isTopologicallyMixing_of_forall_eq_one [Nonempty ι] (h : ∀ i, o i
 
 /-- Over a non-empty alphabet, `Σ_Z` is topologically mixing exactly when both orientations
 occur: the hypothesis "box-like with rotations" of `sec:subshift` is necessary for the mixing
-claim of tex lines 934 and 935. -/
+claim of tex lines 898 and 899. -/
 theorem isTopologicallyMixing_subshiftShift_iff [Nonempty ι] :
     IsTopologicallyMixing (subshiftShift o) ↔ (∃ i, o i = 0) ∧ ∃ i, o i = 1 := by
   refine ⟨fun hmix => ⟨?_, ?_⟩, fun h => isTopologicallyMixing_subshiftShift o h.1 h.2⟩

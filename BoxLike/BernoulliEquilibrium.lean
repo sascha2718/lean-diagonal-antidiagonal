@@ -19,7 +19,7 @@ Bernoulli measure with the weights `p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2
   Bernoulli measure is `∑_i -p_i log p_i`.
 * `weightMeasure`, `measureReal_weightMeasure_singleton`, `isProbabilityMeasure_weightMeasure`,
   `eq_bernoulli_weightMeasure_of_measureReal_cylinder`: a probability vector as a measure on the
-  alphabet, and the definition of a Bernoulli measure of tex lines 2451 to 2455 in terms of a
+  alphabet, and the definition of a Bernoulli measure of tex lines 2355 to 2360 in terms of a
   probability vector.
 * `System.detWeight`, `System.detWeightMeasure`, `System.measureReal_detWeightMeasure_singleton`:
   the probability vector `p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}` as a measure on `ι`.
@@ -49,8 +49,8 @@ section Bernoulli
 
 variable {ι : Type*} [MeasurableSpace ι]
 
-/-- The Bernoulli measure on `Σ = ℤ → ι` with the one-symbol distribution `p`, tex lines 2451 to
-2455: the product of copies of `p` over `ℤ`. It is used for a probability measure `p`. -/
+/-- The Bernoulli measure on `Σ = ℤ → ι` with the one-symbol distribution `p`, tex lines 2355 to
+2360: the product of copies of `p` over `ℤ`. It is used for a probability measure `p`. -/
 noncomputable def bernoulli (p : Measure ι) : Measure (ℤ → ι) :=
   Measure.infinitePi fun _ : ℤ => p
 
@@ -61,7 +61,7 @@ instance isProbabilityMeasure_bernoulli (p : Measure ι) [IsProbabilityMeasure p
   infer_instance
 
 /-- The Bernoulli measure is invariant under every `σ^m`, `m ∈ ℤ`; it belongs to `𝓜_σ(Σ)`, tex
-line 2456. -/
+line 2361. -/
 theorem measurePreserving_shift_bernoulli (p : Measure ι) [IsProbabilityMeasure p] (m : ℤ) :
     MeasurePreserving (shift m) (bernoulli p) (bernoulli p) := by
   refine ⟨measurable_shift m, ?_⟩
@@ -100,7 +100,7 @@ theorem bernoulli_inter_preimage_shift (p : Measure ι) [IsProbabilityMeasure p]
   rw [hpre] at hmp ⊢
   exact h.trans (congrArg _ hmp)
 
-/-- A Bernoulli measure is ergodic, tex line 2456; see Walters, An Introduction to Ergodic Theory,
+/-- A Bernoulli measure is ergodic, tex line 2361; see Walters, An Introduction to Ergodic Theory,
 Section 1.5. An invariant set `A` is approximated by a set `B` depending on finitely many
 coordinates, the far translate `σ^{-m} B` approximates `σ^{-m} A = A` equally well and is
 independent of `B`, so `μ(A) = μ(A)²`. -/
@@ -181,7 +181,7 @@ theorem ergodic_shift_bernoulli (p : Measure ι) [IsProbabilityMeasure p] :
 
 variable [MeasurableSingletonClass ι]
 
-/-- The defining property of the Bernoulli measure, tex lines 2451 to 2455: the cylinder
+/-- The defining property of the Bernoulli measure, tex lines 2355 to 2360: the cylinder
 `[i_k ⋯ i_ℓ] = {x : x_k ⋯ x_{k+n-1} = w}` at the position `k ∈ ℤ`, which is `σ^{-k}[w]`, has
 measure `p_{w_0} ⋯ p_{w_{n-1}}`. -/
 theorem bernoulli_cylinder (p : Measure ι) [IsProbabilityMeasure p] (k : ℤ) {n : ℕ}
@@ -262,7 +262,7 @@ theorem measure_ext_of_cylinder {μ ν : Measure (ℤ → ι)} [IsFiniteMeasure 
   · rw [Set.not_nonempty_iff_eq_empty.1 hne, measure_empty, measure_empty]
 
 /-- A measure whose cylinders at every position have the measure `p_{w_0} ⋯ p_{w_{n-1}}` of tex
-lines 2451 to 2455 is the Bernoulli measure with the one-symbol distribution `p`. The empty word
+lines 2355 to 2360 is the Bernoulli measure with the one-symbol distribution `p`. The empty word
 gives `μ(Σ) = 1`. -/
 theorem eq_bernoulli_of_cylinder (p : Measure ι) [IsProbabilityMeasure p] {μ : Measure (ℤ → ι)}
     (h : ∀ (k : ℤ) (n : ℕ) (w : Fin n → ι),
@@ -314,7 +314,7 @@ theorem blockEntropy_bernoulli (p : Measure ι) [IsProbabilityMeasure p] (n : �
       simp
 
 /-- The entropy of the Bernoulli measure with weights `p` is the entropy `∑_i -p_i log p_i` of
-the one-symbol distribution, the equality case of tex lines 2477 and 2478. -/
+the one-symbol distribution, the equality case of tex lines 2387 and 2388. -/
 theorem entropy_bernoulli (p : Measure ι) [IsProbabilityMeasure p] :
     entropy (bernoulli p) = ∑ i, Real.negMulLog (p.real {i}) := by
   refine Tendsto.limUnder_eq (tendsto_const_nhds.congr' ?_)
@@ -324,7 +324,7 @@ theorem entropy_bernoulli (p : Measure ι) [IsProbabilityMeasure p] :
 /-! ### Probability vectors -/
 
 /-- The measure `∑_i p_i δ_i` on the alphabet with the weights `p_i`. It is used for a probability
-vector `(p_1, …, p_N)`, tex line 2452. -/
+vector `(p_1, …, p_N)`, tex line 2356. -/
 noncomputable def weightMeasure (p : ι → ℝ) : Measure ι :=
   ∑ i, ENNReal.ofReal (p i) • Measure.dirac i
 
@@ -348,7 +348,7 @@ theorem isProbabilityMeasure_weightMeasure {p : ι → ℝ} (hp : ∀ i, 0 ≤ p
     rw [← ENNReal.ofReal_sum_of_nonneg fun i _ => hp i, hsum, ENNReal.ofReal_one]
   simpa [weightMeasure] using h
 
-/-- The definition of a Bernoulli measure of tex lines 2451 to 2455 determines the measure: a
+/-- The definition of a Bernoulli measure of tex lines 2355 to 2360 determines the measure: a
 probability measure `μ` with `μ([i_k ⋯ i_ℓ]) = p_{i_k} ⋯ p_{i_ℓ}` for a probability vector `p`
 and every cylinder `[i_k ⋯ i_ℓ] = σ^{-k}[w]` is the product measure with the one-symbol
 distribution `∑_i p_i δ_i`. -/
@@ -379,7 +379,7 @@ theorem rpow_abs_det_mat_pos (t : ℝ) (i : ι) : 0 < |(S.mat i).det| ^ t := by
   rw [mat, abs_det_boxMat]
   exact mul_pos (abs_pos.2 (S.a_ne_zero i)) (abs_pos.2 (S.b_ne_zero i))
 
-/-- The weights `p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}` of tex line 2475. -/
+/-- The weights `p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}` of tex line 2380. -/
 noncomputable def detWeight (i : ι) : ℝ :=
   |(S.mat i).det| ^ (s / 2) / ∑ j, |(S.mat j).det| ^ (s / 2)
 
@@ -397,7 +397,7 @@ theorem sum_detWeight [Nonempty ι] : ∑ i, S.detWeight s i = 1 := by
 
 variable [MeasurableSpace ι]
 
-/-- The probability vector `(p_i)` of tex line 2475 as the measure `∑_i p_i δ_i` on the
+/-- The probability vector `(p_i)` of tex line 2380 as the measure `∑_i p_i δ_i` on the
 alphabet. -/
 noncomputable def detWeightMeasure : Measure ι := weightMeasure (S.detWeight s)
 
@@ -417,8 +417,8 @@ theorem measureReal_detWeightMeasure_singleton (i : ι) :
 variable {s}
 
 /-- For `s ≥ 2` the Bernoulli measure with the weights
-`p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}` is an `s`-equilibrium state, tex lines 2473 to
-2476: its entropy is `∑_i -p_i log p_i`, its energy is `∑_i p_i log |det A_i|^{s/2}`, and the
+`p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}` is an `s`-equilibrium state, tex lines 2377 to
+2381: its entropy is `∑_i -p_i log p_i`, its energy is `∑_i p_i log |det A_i|^{s/2}`, and the
 sum is `log ∑_i |det A_i|^{s/2} = P(𝖠, s)`. -/
 theorem isEquilibriumState_bernoulli [Nonempty ι] (hs : 2 ≤ s) :
     S.IsEquilibriumState s (bernoulli (S.detWeightMeasure s)) := by
@@ -451,7 +451,7 @@ theorem isEquilibriumState_bernoulli [Nonempty ι] (hs : 2 ≤ s) :
 variable {S}
 
 /-- For `s ≥ 2` every invariant `s`-equilibrium state is the Bernoulli measure with the weights
-`p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}`, tex lines 2477 to 2479: the entropy is at most the
+`p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}`, tex lines 2386 to 2394: the entropy is at most the
 entropy of the one-symbol distribution, with equality only for a Bernoulli measure, and the
 variational expression of this distribution is maximised only by `(p_i)`. -/
 theorem IsEquilibriumState.eq_bernoulli {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ]
@@ -490,7 +490,7 @@ theorem IsEquilibriumState.ergodic_of_two_le {μ : Measure (ℤ → ι)} [IsProb
 variable (S)
 
 /-- For `s ≥ 2` there is exactly one invariant probability measure that is an
-`s`-equilibrium state, tex lines 2471 to 2479. -/
+`s`-equilibrium state, tex lines 2377 to 2394. -/
 theorem existsUnique_isEquilibriumState_of_two_le [Nonempty ι] (hs : 2 ≤ s) :
     ∃! μ : Measure (ℤ → ι), IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ ∧
       S.IsEquilibriumState s μ :=

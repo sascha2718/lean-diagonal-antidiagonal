@@ -2,10 +2,10 @@ module
 
 /-
 Uniqueness of the ergodic Gibbs measure of a potential of bounded distortion, in particular of a
-Hölder potential, on `Σ_Z` (`sec:gibbs_measures`, tex lines 2536 to 2538: "for each Hölder
+Hölder potential, on `Σ_Z` (`sec:gibbs_measures`, tex lines 2501 to 2503: "for each Hölder
 continuous potential `f` there exists a unique ergodic Gibbs measure"). Uniqueness is proved
-here; existence is the theorem of Bowen that the article cites, and it is recorded as a
-proposed literature premise in `BoxLike/Proposals/IBowenGibbs.lean`.
+here; existence is Bowen's theorem, which the article cites and which the library proves in
+`BoxLike/Bowen/Main.lean` (`bowenGibbsExistence`).
 
 Two Gibbs measures for the same potential have the same constant `P` (both are
 `lim_n n⁻¹ log ∑_{|w| = n} exp(sup_{[w]} S_n f)`), so their values on cylinders are comparable,
@@ -259,7 +259,7 @@ theorem IsGibbsPotential.measure_cylinder_le [IsProbabilityMeasure ν] [IsProbab
     rw [measure_mono_null hsub hν']
     exact zero_le
 
-/-- Uniqueness of the ergodic Gibbs measure (tex lines 2536 to 2538), for a potential of bounded
+/-- Uniqueness of the ergodic Gibbs measure (tex lines 2501 to 2503), for a potential of bounded
 distortion: an invariant Gibbs probability measure carried by `Σ_Z` equals every ergodic Gibbs
 probability measure carried by `Σ_Z` for the same potential. -/
 theorem IsGibbsPotential.eq_of_ergodic [IsProbabilityMeasure ν] [IsProbabilityMeasure ν']
@@ -275,7 +275,7 @@ theorem IsGibbsPotential.eq_of_ergodic [IsProbabilityMeasure ν] [IsProbabilityM
   exact measure_mono_null hAA' (le_antisymm ((hle hA'm).trans (by rw [hA'0, mul_zero]))
     zero_le)
 
-/-- Uniqueness of the ergodic Gibbs measure of a Hölder potential (tex lines 2536 to 2538): an
+/-- Uniqueness of the ergodic Gibbs measure of a Hölder potential (tex lines 2501 to 2503): an
 invariant Gibbs probability measure carried by `Σ_Z` equals every ergodic Gibbs probability
 measure carried by `Σ_Z` for the same Hölder potential. In particular two ergodic Gibbs measures
 for the same Hölder potential coincide. -/
@@ -300,7 +300,7 @@ theorem IsGibbs.eq_of_ergodic [IsProbabilityMeasure ν] [IsProbabilityMeasure ν
   exact ((isGibbsPotential_iff_isGibbsWith φ).2 hPC).eq_of_ergodic_of_isHolder hν hν'
     ((isGibbsPotential_iff_isGibbsWith φ).2 hPC') (isHolderPotential_apply_zero φ) herg hinv'
 
-/-- Tex lines 2608 and 2609: the `s`-Gibbs measure `μ_1` of a decomposition of
+/-- Tex lines 2572 and 2573: the `s`-Gibbs measure `μ_1` of a decomposition of
 `thm:eq_state_is_sum` is the only invariant Gibbs probability measure carried by `Σ_Z` for the
 potential `f_{1,s}`, so "the Gibbs measure associated to `f_{1,s}`" is well defined. -/
 theorem System.GibbsDecomposition.eq_mu₁ {S : System ι} {s : ℝ} {μ : Measure (ℤ → ι)}
@@ -310,7 +310,7 @@ theorem System.GibbsDecomposition.eq_mu₁ {S : System ι} {s : ℝ} {μ : Measu
   have := h.prob₁
   exact IsGibbs.eq_of_ergodic h.supp₁ hν' h.gibbs₁ hg h.ergodic₁ hinv'
 
-/-- Tex lines 2608 and 2609: the `s`-Gibbs measure `μ_2` of a decomposition of
+/-- Tex lines 2572 and 2573: the `s`-Gibbs measure `μ_2` of a decomposition of
 `thm:eq_state_is_sum` is the only invariant Gibbs probability measure carried by `Σ_Z` for the
 potential `f_{2,s}`. -/
 theorem System.GibbsDecomposition.eq_mu₂ {S : System ι} {s : ℝ} {μ : Measure (ℤ → ι)}

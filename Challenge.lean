@@ -29,7 +29,7 @@ The paper's notation reads as follows: `X = π(Σ)` is `S.attractor` with `π = 
 projections `(proj_x)_*(π_*μ)` and `(proj_y)_*(π_*μ)` are `S.marginal 0 μ` and
 `S.marginal 1 μ`, and `dim_H` is Mathlib's Hausdorff dimension `dimH`, with values in `ℝ≥0∞`.
 
-These three statements use seven named literature hypotheses. They are the `Prop`s of the
+These three statements use six named literature hypotheses. They are the `Prop`s of the
 section "Cited theorems", stated about the objects defined here, with the exact citations in
 their doc comments. The headline theorems take them as explicit hypotheses.
 -/
@@ -76,8 +76,6 @@ def tau (x : ℤ → ι) : ℤ → ι × ZMod 2 := fun n => (x n, eps o x n)
 /-- The coding `ω` of `eq:def_of_tau_omega`: `ω_n(𝐢) = i_n + N (1 - ε_n(𝐢))`. -/
 def omega (x : ℤ → ι) : ℤ → ι × ZMod 2 := fun n => (x n, eps o x n + 1)
 
-/-- The common inverse `\overline{τ}`, `\overline{ω}` of the codings: forget the axis. -/
-def unCode (y : ℤ → ι × ZMod 2) : ℤ → ι := fun n => (y n).1
 
 end Coding
 
@@ -464,16 +462,6 @@ open scoped Matrix.Norms.L2Operator
 
 variable {ι : Type*} [MeasurableSpace ι]
 
-/-- A Gibbs measure on `Σ_Z` for the one-symbol potential `φ`, as in `sec:gibbs_measures`:
-`C⁻¹ exp(-nP + S_n φ(𝐣)) ≤ ν([𝐣|_n]) ≤ C exp(-nP + S_n φ(𝐣))` for all `𝐣 ∈ Σ_Z` and `n ≥ 1`.
-The constant `P` is the pressure `P_Z(φ)`; the bounds determine it. -/
-def IsGibbs (o : ι → ZMod 2) (φ : ι × ZMod 2 → ℝ) (ν : Measure (ℤ → ι × ZMod 2)) : Prop :=
-  ∃ P C : ℝ, 0 < C ∧ ∀ y ∈ subshift o, ∀ n : ℕ, 0 < n →
-    C⁻¹ * Real.exp (-(n * P) + ∑ k ∈ Finset.range n, φ (y k)) ≤
-        ν.real (cylinder fun k : Fin n => y k) ∧
-      ν.real (cylinder fun k : Fin n => y k) ≤
-        C * Real.exp (-(n * P) + ∑ k ∈ Finset.range n, φ (y k))
-
 namespace System
 
 variable (S : System ι)
@@ -513,40 +501,6 @@ def HasGibbsBounds [Fintype ι] (s : ℝ) (μ : Measure (ℤ → ι)) : Prop :=
         μ.real (cylinder w) ∧
       μ.real (cylinder w) ≤
         C * (Real.exp (-(n * S.pressure s)) * svf s (S.matWord (List.ofFn w)))
-
-/-- The potential `f_{1,s}` of `sec:gibbs_measures`, as a function of the symbol `j_0`. -/
-noncomputable def potential₁ (s : ℝ) (p : ι × ZMod 2) : ℝ :=
-  if s < 1 then s * Real.log |S.ratio p|
-  else Real.log |S.ratio p| + (s - 1) * Real.log |S.ratio (p.1, p.2 + 1)|
-
-/-- The potential `f_{2,s}` of `sec:gibbs_measures`: `f_{2,s}(j_0) = f_{1,s}` of the symbol on
-the other axis. -/
-noncomputable def potential₂ (s : ℝ) (p : ι × ZMod 2) : ℝ := S.potential₁ s (p.1, p.2 + 1)
-
-/-- The conclusion of `thm:eq_state_is_sum` for the `s`-equilibrium state `μ`: the `s`-Gibbs
-measures `μ_1`, `μ_2`, the four decompositions of `μ`, and the Lyapunov exponents. The
-push-forward `\overline{τ}_*ν` of the restriction `ν|_{τ(Σ)}` is
-`(ν.restrict (Set.range (tau S.o))).map unCode`. -/
-structure GibbsDecomposition (s : ℝ) (μ : Measure (ℤ → ι))
-    (μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)) : Prop where
-  prob₁ : IsProbabilityMeasure μ₁
-  prob₂ : IsProbabilityMeasure μ₂
-  ergodic₁ : Ergodic (shift 1) μ₁
-  ergodic₂ : Ergodic (shift 1) μ₂
-  supp₁ : μ₁ (subshift S.o)ᶜ = 0
-  supp₂ : μ₂ (subshift S.o)ᶜ = 0
-  gibbs₁ : IsGibbs S.o (S.potential₁ s) μ₁
-  gibbs₂ : IsGibbs S.o (S.potential₂ s) μ₂
-  eq_tau : μ = (μ₁.restrict (Set.range (tau S.o))).map unCode +
-    (μ₂.restrict (Set.range (tau S.o))).map unCode
-  eq_omega : μ = (μ₁.restrict (Set.range (omega S.o))).map unCode +
-    (μ₂.restrict (Set.range (omega S.o))).map unCode
-  eq₁ : μ = (μ₁.restrict (Set.range (tau S.o))).map unCode +
-    (μ₁.restrict (Set.range (omega S.o))).map unCode
-  eq₂ : μ = (μ₂.restrict (Set.range (tau S.o))).map unCode +
-    (μ₂.restrict (Set.range (omega S.o))).map unCode
-  lyapunov₁_eq : S.lyapunov₁ μ = S.lyapBar μ₁
-  lyapunov₂_eq : S.lyapunov₂ μ = S.lyapBar μ₂
 
 /-- The coordinate marginals `ν_x = (proj_x)_*(π_*μ)` for `c = 0` and `ν_y = (proj_y)_*(π_*μ)`
 for `c = 1` of `sec:dimension_of_projections`. -/
@@ -679,7 +633,7 @@ end DimPartitions
 
 /-! ## Cited theorems
 
-The headlines use seven theorems from the literature that the paper cites without proof. Each
+The headlines use six theorems from the literature that the paper cites without proof. Each
 is stated here as a `Prop` about the objects defined above, quantified over every finite
 alphabet `ι : Type u` with the discrete `σ`-algebra and every system, with the hypotheses under
 which the paper uses it; the doc comments give the exact citations and the reductions between each source and its statement. The
@@ -726,23 +680,6 @@ def FengKaenmakiGibbs : Prop :=
     S.Irreducible → ∀ {s : ℝ}, 0 < s → s < 2 →
     ∀ (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ], MeasurePreserving (shift 1) μ μ →
     S.IsEquilibriumState s μ → S.HasGibbsBounds s μ
-
-/-- `thm:eq_state_is_sum`. Fraser–Jordan–Jurga, Lemma 1.3 and Corollaries 1.5 and 1.6: for a
-box-like tuple with rotations containing a proximal diagonal generator and `0 < s < 2`, the
-invariant measure `μ` with the Gibbs bounds of `thm:irred_eq_state` is the sum of the
-push-forwards of the restrictions of the two ergodic `s`-Gibbs measures `μ_1`, `μ_2` on `Σ_Z`,
-in each of the four ways of `thm:eq_state_is_sum`, and `λ_1(𝖠, μ) = \overline{λ}(𝖠, μ_1)`,
-`λ_2(𝖠, μ) = \overline{λ}(𝖠, μ_2)`. No separation condition is assumed. The statement includes
-the existence of the ergodic Gibbs measures on the mixing sub-shift `Σ_Z`. The source assumes
-non-negative entries on the one-sided shift and states the first decomposition; all
-quantities here depend on the entries through their moduli, and the other three
-decompositions follow from the symmetry exchanging the two axes. The identity
-`P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s})` of the proposition is not part of the statement. -/
-def FraserJordanJurgaDecomposition : Prop :=
-  ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
-    S.WithRotations → S.HasProximalDiagonal → ∀ {s : ℝ}, 0 < s → s < 2 →
-    ∀ (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ], MeasurePreserving (shift 1) μ μ →
-    S.HasGibbsBounds s μ → ∃ μ₁ μ₂ : Measure (ℤ → ι × ZMod 2), S.GibbsDecomposition s μ μ₁ μ₂
 
 /-- Jordan–Rapaport, Theorem 1.1, for the projective system `Ψ`: if the self-similar system
 `Ψ = (g_j)` on `ℝ`, with ratios `0 < |r_j| < 1` of either sign, is exponentially separated,
@@ -813,10 +750,10 @@ It fails to be exact-dimensional, with any dimension, precisely when
 `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`; at equality and above it is exact-dimensional of dimension one.
 The conclusion holds for every `s`-equilibrium state, so the uniqueness of the equilibrium state
 in the paper is not needed. The proof uses the cited theorems of Morris–Shmerkin,
-Feng–Käenmäki, Fraser–Jordan–Jurga and Jordan–Rapaport. -/
+Feng–Käenmäki and Jordan–Rapaport. -/
 theorem audit_main1 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
     (S : System ι) (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
-    (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
+    (hjr : JordanRapaportDimension.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ) (c : ZMod 2) :
@@ -833,11 +770,11 @@ whose projective system has no exact overlaps, and let `μ` be an
 `s`-equilibrium state for `s = dimaff(X)`. If
 `dimaff(X) ≤ 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`, or if `X` satisfies the strong open set condition, then
 `dim_H(X) = dimaff(X)`. Any `s`-equilibrium state may serve as `μ`. The proof uses the cited
-theorems of Morris–Shmerkin, Feng–Käenmäki, Fraser–Jordan–Jurga, Feng (the planar
-Ledrappier–Young formula) and Kittle–Kogler. -/
+theorems of Morris–Shmerkin, Feng–Käenmäki, Feng (the planar Ledrappier–Young formula)
+and Kittle–Kogler. -/
 theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
     (S : System ι) (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : FengKaenmakiGibbs.{u})
     (hly : FengLedrappierYoung.{u}) (hkk : KittleKoglerDimension.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hfree : S.NoExactOverlaps) (μ : Measure (ℤ → ι))
@@ -851,11 +788,11 @@ rotations satisfying the projective exponential separation condition, and let `�
 `s`-equilibrium state for `s = dimaff(𝖠)`. If `h_0(μ) ≤ -λ_2(𝖠, μ)` or `X` satisfies the strong
 open set condition, then `π_*μ` is exact-dimensional with `dim(π_*μ) = min{2, dimaff(𝖠)}`. The
 conclusion holds for every `s`-equilibrium state, so its uniqueness in the paper is not needed.
-The proof uses the cited theorems of Morris–Shmerkin, Feng–Käenmäki, Fraser–Jordan–Jurga,
-Jordan–Rapaport and Feng (the two Ledrappier–Young formulas). -/
+The proof uses the cited theorems of Morris–Shmerkin, Feng–Käenmäki, Jordan–Rapaport and
+Feng (the two Ledrappier–Young formulas). -/
 theorem audit_main_extended {ι : Type u} [Fintype ι] [MeasurableSpace ι]
     [MeasurableSingletonClass ι] (S : System ι) (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : FengKaenmakiGibbs.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+    (hfk : FengKaenmakiGibbs.{u})
     (hjr : JordanRapaportDimension.{u})
     (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)

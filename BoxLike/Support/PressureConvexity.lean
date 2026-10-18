@@ -2,7 +2,7 @@ module
 
 /-
 The singular value pressure `P(𝖠, s)` of an arbitrary tuple `𝖠 ∈ GL_2(ℝ)^N` (`sec:affinity_dim`,
-tex lines 2180 to 2192): the limit defining it exists by Fekete's lemma, the function
+tex lines 2145 to 2157): the limit defining it exists by Fekete's lemma, the function
 `s ↦ P(𝖠, s)` is continuous on `[0, ∞)` and convex between consecutive integers, and, when
 `max_i ‖A_i‖ < 1`, it is strictly decreasing with `P(𝖠, 0) = log N ≥ 0` and
 `P(𝖠, s) → -∞`, so that `dimaff(𝖠)` is well defined. Invertibility of the matrices is the
@@ -16,7 +16,7 @@ limit of these convex functions divided by `n`.
 
 * `MatrixTuple.abs_det_le_norm_sq`: `|det A| = α_1(A) α_2(A) ≤ α_1(A)²` with `α_1(A) = ‖A‖`.
 * `MatrixTuple.norm_adjugate`, `MatrixTuple.inv_norm_inv_eq_abs_det_div_norm`: `‖adj A‖ = ‖A‖`
-  and `α_2(A) = ‖A⁻¹‖⁻¹ = |det A| / ‖A‖` (tex lines 1580 to 1584).
+  and `α_2(A) = ‖A⁻¹‖⁻¹ = |det A| / ‖A‖` (tex lines 1544 to 1548).
 * `MatrixTuple.svf_eq_rpow_mul_rpow`: `φ^s(A) = α_1(A)^{p(s)} α_2(A)^{s - p(s)}`, with
   `α_2(A) = |det A| / ‖A‖` and `p(s)` the exponent `svfExp s` of `BoxLike/AffinityDim.lean`.
 * `MatrixTuple.Convexity.svf_add_le`, `MatrixTuple.Convexity.le_svf_add`:
@@ -31,7 +31,7 @@ limit of these convex functions divided by `n`.
   `ρ ≤ α_2(A_i)` and `α_1(A_i) ≤ R`; hence `P(𝖠, ·)` is continuous on `[0, ∞)`.
 * `MatrixTuple.pressure_at_zero`, `MatrixTuple.pressure_strictAntiOn_Ici`,
   `MatrixTuple.pressure_tendsto_atBot`, `MatrixTuple.pressure_existsUnique_eq_zero`: the
-  remaining assertions of tex lines 2189 to 2192 under `max_i ‖A_i‖ < 1`.
+  remaining assertions of tex lines 2154 to 2157 under `max_i ‖A_i‖ < 1`.
 * `System.pressure_convexOn_Icc_nat`, `System.pressure_convexOn_Ici_two`: the box-like
   specialisation.
 -/
@@ -138,7 +138,7 @@ theorem norm_inv_eq_norm_div_abs_det (A : Matrix (Fin 2) (Fin 2) ℝ) :
   rw [inv_def, Ring.inverse_eq_inv', norm_smul, norm_inv, Real.norm_eq_abs, norm_adjugate,
     div_eq_inv_mul]
 
-/-- Tex lines 1580 to 1584: `α_2(A) = ‖A⁻¹‖⁻¹`, where the library's second singular value is
+/-- Tex lines 1544 to 1548: `α_2(A) = ‖A⁻¹‖⁻¹`, where the library's second singular value is
 `|det A| / ‖A‖`; together with `α_1(A) = ‖A‖` this gives `|det A| = α_1(A) α_2(A)` for an
 invertible matrix. -/
 theorem inv_norm_inv_eq_abs_det_div_norm (A : Matrix (Fin 2) (Fin 2) ℝ) :
@@ -495,14 +495,14 @@ theorem svf_eq_exp_of_mem_Ici_two {B : Matrix (Fin 2) (Fin 2) ℝ} (hB : B.det �
   congr 1
   ring
 
-/-- The pressure of an invertible tuple is convex on `[0, 1]` (tex line 2188). -/
+/-- The pressure of an invertible tuple is convex on `[0, 1]` (tex line 2153). -/
 theorem pressure_convexOn_Icc_zero_one (hA : ∀ i, (A i).det ≠ 0) :
     ConvexOn ℝ (Icc 0 1) (pressure A) :=
   pressure_convexOn_of_svf_eq_exp hA (convex_Icc 0 1) (fun _ hs => hs.1) (fun _ => 0)
     (fun B => Real.log ‖B‖)
     (fun _ hs w => svf_eq_exp_of_mem_Icc_zero_one (Convexity.det_word_ne_zero hA w) hs)
 
-/-- The pressure of an invertible tuple is convex on `[1, 2]` (tex line 2188). -/
+/-- The pressure of an invertible tuple is convex on `[1, 2]` (tex line 2153). -/
 theorem pressure_convexOn_Icc_one_two (hA : ∀ i, (A i).det ≠ 0) :
     ConvexOn ℝ (Icc 1 2) (pressure A) :=
   pressure_convexOn_of_svf_eq_exp hA (convex_Icc 1 2)
@@ -518,7 +518,7 @@ theorem pressure_convexOn_Ici_two (hA : ∀ i, (A i).det ≠ 0) :
     (fun _ hs => zero_le_two.trans hs) (fun _ => 0) (fun B => Real.log |B.det| / 2)
     (fun _ hs w => svf_eq_exp_of_mem_Ici_two (Convexity.det_word_ne_zero hA w) hs)
 
-/-- Tex lines 2190 and 2191: the pressure `s ↦ P(𝖠, s)` of a tuple `𝖠 ∈ GL_2(ℝ)^N` is convex
+/-- Tex lines 2153 and 2154: the pressure `s ↦ P(𝖠, s)` of a tuple `𝖠 ∈ GL_2(ℝ)^N` is convex
 between consecutive integers, that is, on every interval `[k, k + 1]` with `k ∈ ℕ`. -/
 theorem pressure_convexOn_Icc_nat (hA : ∀ i, (A i).det ≠ 0) (k : ℕ) :
     ConvexOn ℝ (Icc (k : ℝ) (k + 1)) (pressure A) := by
@@ -606,7 +606,7 @@ theorem pressure_increment_bounds [Nonempty ι] (hA : ∀ i, (A i).det ≠ 0) {�
     have := le_of_tendsto_of_tendsto (htend _ hsδ) (tendsto_const_nhds.add (htend s hs)) hle
     linarith
 
-/-- Tex lines 2190 and 2191: the pressure `s ↦ P(𝖠, s)` of a tuple `𝖠 ∈ GL_2(ℝ)^N` is continuous
+/-- Tex lines 2153 and 2154: the pressure `s ↦ P(𝖠, s)` of a tuple `𝖠 ∈ GL_2(ℝ)^N` is continuous
 on `[0, ∞)`; it is Lipschitz there. -/
 theorem pressure_continuousOn_Ici (hA : ∀ i, (A i).det ≠ 0) :
     ContinuousOn (pressure A) (Ici 0) := by
@@ -653,7 +653,7 @@ theorem pressure_continuousOn_Ici (hA : ∀ i, (A i).det ≠ 0) :
   · rw [abs_sub_comm, abs_sub_comm x y]
     exact habs y x hy hxy
 
-/-- `P(𝖠, 0) = log N`, so `P(𝖠, 0) ≥ 0` for a non-empty alphabet (tex line 2190); no hypothesis on
+/-- `P(𝖠, 0) = log N`, so `P(𝖠, 0) ≥ 0` for a non-empty alphabet (tex line 2155); no hypothesis on
 the matrices is needed, since `φ^0 = 1`. -/
 theorem pressure_at_zero : pressure A 0 = Real.log (Fintype.card ι) := by
   have hsum : ∀ n : ℕ, svfSum A 0 n = (Fintype.card ι : ℝ) ^ n := fun n => by
@@ -670,7 +670,7 @@ theorem pressure_at_zero : pressure A 0 = Real.log (Fintype.card ι) := by
       exact ⟨1, le_rfl, by rw [hsum 1, pow_one, Nat.cast_one, div_one]⟩
   rw [pressure, himg, csInf_singleton]
 
-/-- Tex lines 2192 and 2193: if `max_i ‖A_i‖ < 1`, the pressure is strictly decreasing on
+/-- Tex lines 2154 and 2155: if `max_i ‖A_i‖ < 1`, the pressure is strictly decreasing on
 `[0, ∞)`. -/
 theorem pressure_strictAntiOn_Ici [Nonempty ι] (hA : ∀ i, (A i).det ≠ 0)
     (hlt : ∀ i, ‖A i‖ < 1) : StrictAntiOn (pressure A) (Ici 0) := by
@@ -685,7 +685,7 @@ theorem pressure_strictAntiOn_Ici [Nonempty ι] (hA : ∀ i, (A i).det ≠ 0)
   have hneg : (t - s) * Real.log ‖A i₁‖ < 0 := mul_neg_of_pos_of_neg (sub_pos.2 hst) hlogR
   linarith
 
-/-- Tex line 2193: if `max_i ‖A_i‖ < 1`, then `P(𝖠, s) → -∞` as `s → ∞`. -/
+/-- Tex line 2155: if `max_i ‖A_i‖ < 1`, then `P(𝖠, s) → -∞` as `s → ∞`. -/
 theorem pressure_tendsto_atBot [Nonempty ι] (hA : ∀ i, (A i).det ≠ 0)
     (hlt : ∀ i, ‖A i‖ < 1) : Tendsto (pressure A) atTop atBot := by
   obtain ⟨ρ, R, hρ, hρR, hρA, hRA⟩ := Convexity.exists_singular_bounds hA
@@ -702,7 +702,7 @@ theorem pressure_tendsto_atBot [Nonempty ι] (hA : ∀ i, (A i).det ≠ 0)
   rw [sub_zero] at h'
   linarith
 
-/-- Tex lines 2193 to 2196: if `max_i ‖A_i‖ < 1`, the pressure has a unique zero on `[0, ∞)`,
+/-- Tex lines 2155 to 2157: if `max_i ‖A_i‖ < 1`, the pressure has a unique zero on `[0, ∞)`,
 which defines the affinity dimension `dimaff(𝖠)`. -/
 theorem pressure_existsUnique_eq_zero [Nonempty ι] (hA : ∀ i, (A i).det ≠ 0)
     (hlt : ∀ i, ‖A i‖ < 1) : ∃! s : ℝ, 0 ≤ s ∧ pressure A s = 0 := by
@@ -737,7 +737,7 @@ theorem mat_det_ne_zero (i : ι) : (S.mat i).det ≠ 0 := by
 theorem pressure_eq_tuple_fun : S.pressure = MatrixTuple.pressure S.mat := rfl
 
 /-- The pressure of a box-like system is convex between consecutive integers (tex line
-2188). -/
+2153). -/
 theorem pressure_convexOn_Icc_nat (k : ℕ) : ConvexOn ℝ (Icc (k : ℝ) (k + 1)) S.pressure := by
   rw [pressure_eq_tuple_fun]
   exact MatrixTuple.pressure_convexOn_Icc_nat S.mat_det_ne_zero k

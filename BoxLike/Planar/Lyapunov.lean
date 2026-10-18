@@ -2,7 +2,7 @@ module
 
 /-
 The Lyapunov exponents of `sec:lyapunov_exponents` for an arbitrary tuple of invertible planar
-matrices and for a planar self-affine system (tex lines 1608 to 1617): the limits defining
+matrices and for a planar self-affine system (tex lines 1572 to 1582): the limits defining
 `λ_1(𝖠, μ)` and `λ_2(𝖠, μ)` exist by Fekete's lemma, since `α_1` is sub-multiplicative, `α_2`
 is super-multiplicative and `μ` is invariant, and `-∞ < λ_2(𝖠, μ) ≤ λ_1(𝖠, μ)`; for contracting
 linear parts `λ_1(𝖠, μ) < 0`. The exponents in the hypotheses of `thm:feng_entropy_as_limit`,
@@ -166,7 +166,7 @@ theorem exists_log_abs_det_div_norm_word_le [Fintype ι] (hA : ∀ i, (A i).det 
 variable [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ]
 
-/-- `sec:lyapunov_exponents`, tex lines 1614 to 1616: the limit defining `λ_1(𝖠, μ)` exists for
+/-- `sec:lyapunov_exponents`, tex lines 1579 to 1581: the limit defining `λ_1(𝖠, μ)` exists for
 an invertible tuple and an invariant `μ`, by Fekete's lemma. -/
 theorem tendsto_lyapunov₁_of_det_ne_zero (hA : ∀ i, (A i).det ≠ 0)
     (hμ : MeasurePreserving (shift 1) μ μ) :
@@ -178,7 +178,7 @@ theorem tendsto_lyapunov₁_of_det_ne_zero (hA : ∀ i, (A i).det ≠ 0)
   rw [lyapunov₁, hL.limUnder_eq]
   exact hL
 
-/-- `sec:lyapunov_exponents`, tex lines 1614 to 1616: the limit defining `λ_2(𝖠, μ)` exists for
+/-- `sec:lyapunov_exponents`, tex lines 1579 to 1581: the limit defining `λ_2(𝖠, μ)` exists for
 an invertible tuple and an invariant `μ`, by Fekete's lemma. -/
 theorem tendsto_lyapunov₂_of_det_ne_zero (hA : ∀ i, (A i).det ≠ 0)
     (hμ : MeasurePreserving (shift 1) μ μ) :
@@ -192,7 +192,7 @@ theorem tendsto_lyapunov₂_of_det_ne_zero (hA : ∀ i, (A i).det ≠ 0)
   rw [lyapunov₂, hL.limUnder_eq]
   exact hL
 
-/-- `sec:lyapunov_exponents`, tex line 1617: `λ_2(𝖠, μ) ≤ λ_1(𝖠, μ)` for an invertible tuple and
+/-- `sec:lyapunov_exponents`, tex line 1581: `λ_2(𝖠, μ) ≤ λ_1(𝖠, μ)` for an invertible tuple and
 an invariant `μ`. The bound `α_2(A) ≤ 2 α_1(A)` used here suffices, since the constant
 disappears in the limit. -/
 theorem lyapunov₂_le_lyapunov₁_of_det_ne_zero (hA : ∀ i, (A i).det ≠ 0)
@@ -247,7 +247,7 @@ theorem lyapunov₂_le_lyapunov₁ (hμ : MeasurePreserving (shift 1) μ μ) :
     P.lyapunov₂ μ ≤ P.lyapunov₁ μ :=
   MatrixTuple.lyapunov₂_le_lyapunov₁_of_det_ne_zero P.det_ne_zero hμ
 
-/-- `λ_1(𝖠, μ) < 0` for a planar self-affine system (tex line 1617): every `‖A_i‖ < 1`. -/
+/-- `λ_1(𝖠, μ) < 0` for a planar self-affine system (tex line 1582): every `‖A_i‖ < 1`. -/
 theorem lyapunov₁_neg (hμ : MeasurePreserving (shift 1) μ μ) : P.lyapunov₁ μ < 0 := by
   have : Nonempty ι := ⟨(nonempty_of_isProbabilityMeasure μ).some 0⟩
   obtain ⟨i₁, -, h₁⟩ := Finset.exists_max_image Finset.univ (fun i => ‖P.mat i‖)

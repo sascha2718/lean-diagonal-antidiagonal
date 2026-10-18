@@ -1,9 +1,9 @@
 module
 
 /-
-The packing and Minkowski dimensions of a box-like self-affine set: `thm:fraser` (tex lines 469
-to 483), the chain `\dim_H X = \dim_P X = \dim_M X = dimaff(X)` and the squeeze of the modified
-affinity dimension (tex lines 571 to 585), and tex lines 2264 to 2278 of `sec:affinity_dim`.
+The packing and Minkowski dimensions of a box-like self-affine set: `thm:fraser` (tex lines 422
+to 436), the chain `\dim_H X = \dim_P X = \dim_M X = dimaff(X)` and the squeeze of the modified
+affinity dimension (tex lines 540 to 556), and tex lines 2171 to 2185 of `sec:affinity_dim`.
 
 Fraser's theorem is a `Prop`-valued definition, which enters the results as a hypothesis. It is
 stated as in the source (Fraser, "On the packing dimension of box-like
@@ -27,9 +27,9 @@ Minkowski dimension exists only under the rectangular open set condition.
   `System.FalconerBoxBound.dimmaff_le_dimaff`: Falconer's bound gives the Hausdorff bound
   `eq:hausdorff_affinity_upper_bound`, `s_1, s_2 ≤ dimaff(X)` and `dimmaff(X) ≤ dimaff(X)`; the
   last two hold without it (`System.projDim_le_dimaff`, `System.dimmaff_le_dimaff`).
-* `System.dim_chain`, `System.dim_chain_main2`: the chain of tex lines 575 to 577.
-* `System.dimmaff_eq_dimaff`, `System.dimmaff_eq_dimaff_main2`: the squeeze of tex lines 578 to
-  581, `dimmaff(X) = dimaff(X)`.
+* `System.dim_chain`, `System.dim_chain_main2`: the chain of tex lines 543 to 547.
+* `System.dimmaff_eq_dimaff`, `System.dimmaff_eq_dimaff_main2`: the squeeze of tex lines 548 to
+  550, `dimmaff(X) = dimaff(X)`.
 * `System.FraserROSC.dimmaff_eq_dimaff`, `System.FraserROSC.dim_eq_dimaff`: `thm:fraser`, third
   part (Fraser's Corollary 2.5), derived from the second part.
 * `System.fraserBound_iff`, `System.fraserROSC_of_le`: the cited content of `thm:fraser` is
@@ -55,9 +55,9 @@ variable {ι : Type u} [Fintype ι] [Nonempty ι] (S : System ι)
 
 /-! ### The cited theorems -/
 
-/-- Falconer's bound (Math. Proc. Cambridge Philos. Soc. 103 (1988), cited at tex line 2264)
+/-- Falconer's bound (Math. Proc. Cambridge Philos. Soc. 103 (1988), cited at tex line 2171)
 for the upper Minkowski dimension: `\overline{\dim}_M X ≤ min{2, dimaff(X)}`. The article
-uses it in tex lines 573 to 574, "the affinity dimension is an upper bound for the Minkowski
+uses it in tex lines 542 to 543, "the affinity dimension is an upper bound for the Minkowski
 dimension"; `eq:hausdorff_affinity_upper_bound` is its consequence for the Hausdorff dimension
 (`FalconerBoxBound.dimH_le`). It holds for every box-like system (`falconerBoxBound`). The
 plane carries the sup metric; the statement for the Euclidean metric is the same
@@ -247,14 +247,14 @@ theorem FalconerBoxBound.projDim_le (hF : S.FalconerBoxBound) (c : ZMod 2) :
   have h' := ENNReal.toReal_mono ENNReal.ofReal_ne_top h
   rwa [ENNReal.toReal_ofReal S.dimaff_nonneg] at h'
 
-/-- `dimmaff(X) ≤ dimaff(X)`, tex lines 578 to 579 and 2277, from Falconer's bound through
+/-- `dimmaff(X) ≤ dimaff(X)`, tex lines 548 to 549 and 2184, from Falconer's bound through
 `s_1, s_2 ≤ dimaff(X)`. The inequality also holds without it (`dimmaff_le_dimaff`). -/
 theorem FalconerBoxBound.dimmaff_le_dimaff (hF : S.FalconerBoxBound) : S.dimmaff ≤ S.dimaff :=
   S.dimmaff_le_dimaff_of_projDim_le hF.projDim_le
 
 /-! ### The chain of equalities -/
 
-/-- The chain of tex lines 575 to 577: if `\dim_H X = dimaff(X)`, the conclusion of
+/-- The chain of tex lines 543 to 547: if `\dim_H X = dimaff(X)`, the conclusion of
 `thm:main2`, then Falconer's bound for the upper Minkowski dimension (`falconerBoxBound`)
 forces `\dim_H X = \dim_P X = \underline{\dim}_M X = \overline{\dim}_M X = dimaff(X)`. In
 particular the Minkowski dimension of `X` exists. -/
@@ -272,7 +272,7 @@ theorem dim_chain (hH : dimH S.attractor = ENNReal.ofReal S.dimaff) :
     le_antisymm ((lowerBoxDim_le_upperBoxDim _).trans hU) hL,
     le_antisymm hU (hL.trans (lowerBoxDim_le_upperBoxDim _))⟩
 
-/-- The squeeze of tex lines 578 to 581 in general form: if
+/-- The squeeze of tex lines 548 to 550 in general form: if
 `\overline{\dim}_M X ≤ dimmaff(X) ≤ dimaff(X)` and `\overline{\dim}_M X = dimaff(X)`, then
 `dimmaff(X) = dimaff(X)`. -/
 theorem dimmaff_eq_dimaff_of_upperBoxDim
@@ -281,7 +281,7 @@ theorem dimmaff_eq_dimaff_of_upperBoxDim
   rw [hU] at hB
   exact le_antisymm hle ((ENNReal.ofReal_le_ofReal_iff S.dimmaff_nonneg).1 hB)
 
-/-- The squeeze of tex lines 578 to 581: if `\dim_H X = dimaff(X)`, then Falconer's bound and
+/-- The squeeze of tex lines 548 to 550: if `\dim_H X = dimaff(X)`, then Falconer's bound and
 the first part of `thm:fraser` give `dimmaff(X) = dimaff(X)`. Neither the rectangular open set
 condition nor full projections are assumed. -/
 theorem dimmaff_eq_dimaff (hB : S.FraserBound)
@@ -326,7 +326,7 @@ section MainTwo
 
 variable [MeasurableSpace ι] [MeasurableSingletonClass ι]
 
-/-- The chain of tex lines 575 to 577 under the hypotheses of `thm:main2`: for a proximal
+/-- The chain of tex lines 543 to 547 under the hypotheses of `thm:main2`: for a proximal
 box-like self-affine set with rotations satisfying the projective exponential separation
 condition with `dimaff(X) < 2`, and `dimaff(X) ≤ 2 - λ_1/λ_2` or the strong open set condition,
 `\dim_H X = \dim_P X = \dim_M X = dimaff(X)`. -/
@@ -344,7 +344,7 @@ theorem dim_chain_main2 (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGi
       upperBoxDim S.attractor = ENNReal.ofReal S.dimaff :=
   dim_chain (S.main2 hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox hsep h2 μ hinv heq hor)
 
-/-- The squeeze of tex lines 578 to 581 under the hypotheses of `thm:main2`:
+/-- The squeeze of tex lines 548 to 550 under the hypotheses of `thm:main2`:
 `dimmaff(X) = dimaff(X)`, from Falconer's bound and the first part of `thm:fraser`. -/
 theorem dimmaff_eq_dimaff_main2 (hms : MorrisShmerkinLyapunov.{u}) (hfk : FengKaenmakiGibbs.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})

@@ -50,7 +50,7 @@ def RectangularOpenSet : Prop :=
 
 /-- A non-empty compact set `L` with `φ_i(L) ⊆ L` for all `i` contains the self-affine set
 `X`. It is the step "`X ⊆ [0,1]²`" of `ex:projection_double_dimensional` and the step
-"`X ⊆ R`" of `prop:ssc_no_overlap_not_pesc` (tex line 1540). -/
+"`X ⊆ R`" of `prop:ssc_no_overlap_not_pesc` (tex line 1473). -/
 theorem attractor_subset_of_invariant [Finite ι] {L : Set (ℝ × ℝ)} (hL : IsCompact L)
     (hLne : L.Nonempty) (hLsub : ∀ i, S.phi i '' L ⊆ L) : S.attractor ⊆ L := by
   obtain ⟨r, M, hS⟩ := S.exists_bounds
@@ -58,8 +58,8 @@ theorem attractor_subset_of_invariant [Finite ι] {L : Set (ℝ × ℝ)} (hL : I
 
 /-- If a non-empty compact set `L` satisfies `φ_i(L) ⊆ L` for all `i` and the images `φ_i(L)`
 are pairwise disjoint, then the strong separation condition holds, as in
-`ex:projection_double_dimensional` and `prop:ssc_no_overlap_not_pesc` (tex lines 1534 to
-1541). -/
+`ex:projection_double_dimensional` and `prop:ssc_no_overlap_not_pesc` (tex lines 1473 to
+1480). -/
 theorem strongSeparation_of_invariant [Finite ι] {L : Set (ℝ × ℝ)} (hL : IsCompact L)
     (hLne : L.Nonempty) (hLsub : ∀ i, S.phi i '' L ⊆ L)
     (hdisj : Pairwise fun i j => Disjoint (S.phi i '' L) (S.phi j '' L)) :

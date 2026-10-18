@@ -10,7 +10,7 @@ them for box-like systems: the Gibbs bounds `FengKaenmakiGibbs` and the uniquene
 determinant calculation of `thm:bernoulli_equilibrium`; ergodicity follows from uniqueness,
 since the extreme points of the set of equilibrium states are ergodic
 (`System.ergodic_of_unique`). The general irreducible tuple of the article is treated in
-`BoxLike/Proposals/EFengKaenmakiTuple.lean`.
+`BoxLike/IrreducibleEquilibriumTuple.lean`.
 
 * `System.Irreducible.nonempty`: an irreducible tuple has a letter.
 * `System.unique_of_irreducible`: two invariant `s`-equilibrium states of an irreducible tuple

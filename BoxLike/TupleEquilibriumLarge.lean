@@ -2,8 +2,8 @@ module
 
 /-
 `thm:irred_eq_state` for `s ≥ 2` and an arbitrary tuple `𝖠 = (A_1, …, A_N)` of invertible
-planar matrices, by the determinant calculation of `thm:bernoulli_equilibrium` (tex lines 2411
-to 2430). For `s ≥ 2` the singular value function `φ^s(A) = |det A|^{s/2}` is multiplicative,
+planar matrices, by the determinant calculation of `thm:bernoulli_equilibrium` (tex lines 2376
+to 2395). For `s ≥ 2` the singular value function `φ^s(A) = |det A|^{s/2}` is multiplicative,
 the pressure is `log ∑_i |det A_i|^{s/2}`, and the unique `s`-equilibrium state is the Bernoulli
 measure with the weights `p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}`; it is ergodic and has
 the Gibbs bounds with the constant `C = 1`. Irreducibility is not needed.
@@ -60,7 +60,7 @@ theorem svfSum_of_two_le (hs : 2 ≤ s) (n : ℕ) :
   | zero => simp [svfSum, svf_of_two_le hs]
   | succ n ih => rw [svfSum_add_of_two_le A hs, ih, svfSum_one_of_two_le A hs, pow_succ]
 
-/-- For `s ≥ 2` the pressure is `log ∑_i |det A_i|^{s/2}`, tex line 2412. -/
+/-- For `s ≥ 2` the pressure is `log ∑_i |det A_i|^{s/2}`, tex line 2377. -/
 theorem pressure_of_two_le (hs : 2 ≤ s) :
     pressure A s = Real.log (∑ i, |(A i).det| ^ (s / 2)) := by
   have h : (fun n : ℕ => Real.log (svfSum A s n) / n) '' Set.Ici 1 =
@@ -141,7 +141,7 @@ namespace MatrixTuple
 
 variable {ι : Type*} [Fintype ι] (A : ι → Matrix (Fin 2) (Fin 2) ℝ) (s : ℝ)
 
-/-- The weights `p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}` of tex line 2415. -/
+/-- The weights `p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}` of tex line 2380. -/
 noncomputable def detWeight (i : ι) : ℝ :=
   |(A i).det| ^ (s / 2) / ∑ j, |(A j).det| ^ (s / 2)
 
@@ -185,7 +185,7 @@ theorem measureReal_detWeightMeasure_singleton (hA : ∀ i, (A i).det ≠ 0) (i 
 variable {s}
 
 /-- For `s ≥ 2` the Bernoulli measure with the weights `p_i` is an `s`-equilibrium state, tex
-lines 2420 to 2429: its entropy is `∑_i -p_i log p_i`, its energy `∑_i p_i log |det A_i|^{s/2}`,
+lines 2385 to 2394: its entropy is `∑_i -p_i log p_i`, its energy `∑_i p_i log |det A_i|^{s/2}`,
 and the sum is `log ∑_i |det A_i|^{s/2} = P(𝖠, s)`. -/
 theorem isEquilibriumState_bernoulli [Nonempty ι] (hA : ∀ i, (A i).det ≠ 0) (hs : 2 ≤ s) :
     IsEquilibriumState A s (bernoulli (detWeightMeasure A s)) := by
@@ -217,7 +217,7 @@ theorem isEquilibriumState_bernoulli [Nonempty ι] (hA : ∀ i, (A i).det ≠ 0)
   linarith
 
 /-- For `s ≥ 2` every invariant `s`-equilibrium state is the Bernoulli measure with the weights
-`p_i`, tex lines 2421 to 2429: the entropy is at most the entropy of the one-symbol
+`p_i`, tex lines 2386 to 2394: the entropy is at most the entropy of the one-symbol
 distribution, with equality only for a Bernoulli measure, and Gibbs' inequality is an equality
 only for `(p_i)`. -/
 theorem IsEquilibriumState.eq_bernoulli (hA : ∀ i, (A i).det ≠ 0) {μ : Measure (ℤ → ι)}

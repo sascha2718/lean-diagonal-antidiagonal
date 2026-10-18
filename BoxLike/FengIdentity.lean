@@ -3,7 +3,7 @@ module
 /-
 Feng's information-sum identity, D.-J. Feng, *Dimension of invariant measures for affine iterated
 function systems*, Duke Math. J. 172 (2023), arXiv:1901.01691v2, Lemma 4.6, first identity of
-(4.16), proved for the planar partitions `ξ_i` of `sec:entropies` (tex lines 1889 to 1906). The
+(4.16), proved for the planar partitions `ξ_i` of `sec:entropies` (tex lines 1854 to 1871). The
 proof is Feng's, with `n = 1` in his Lemmas 4.4 and 4.5: Lemma 4.4(1), the invariance property
 `ξ(𝐢) ∩ [i_0] = σ^{-1}(ξ(σ 𝐢))`; Lemma 4.5(1), the transport
 `μ_𝐢^{σ^{-1}ξ}(A) = μ_{σ 𝐢}^ξ(σ A)`; Lemma 4.5(2), the chain rule
@@ -473,7 +473,7 @@ theorem coord_phi_sub_phi (c : ZMod 2) (j : ι) (z z' : ℝ × ℝ) :
   ring
 
 /-- The invariance of the filtration used by the partitions `ξ_i` (`sec:entropies`, tex lines
-1895 to 1897; Feng, (4.11) in the proof of Lemma 4.4, with `n = 1`): for `𝐢 ∈ Σ'`, `λ_2 < λ_1`
+1860 to 1862; Feng, (4.11) in the proof of Lemma 4.4, with `n = 1`): for `𝐢 ∈ Σ'`, `λ_2 < λ_1`
 and `j_0 = i_0`,
 `π(σ 𝐣) - π(σ 𝐢) ∈ V_{σ 𝐢}^i` exactly when `π(𝐣) - π(𝐢) ∈ V_𝐢^i`. The difference
 `π(𝐣) - π(𝐢)` is `A_{i_0}(π(σ 𝐣) - π(σ 𝐢))`, and `A_{i_0}` maps `V_{σ 𝐢}^i` onto `V_𝐢^i`. -/
@@ -532,7 +532,7 @@ every invariant probability measure `μ` with `λ_2(𝖠, μ) < λ_1(𝖠, μ)` 
 `i`, `-log μ_𝐢^{ξ_i}(𝒫_0^{n-1}(𝐢)) = ∑_{k<n} I_μ(𝒫 | \widehat{ξ}_i)(σ^k 𝐢)` for all `n`, for
 `μ`-almost every `𝐢`. Ergodicity enters only through `μ(Σ') = 1`. This is the identity behind
 `thm:feng_entropy_as_limit` and the one cited in the proof of `thm:feng_entropy_zero` (tex lines
-2049 to 2054). -/
+2014 to 2019). -/
 theorem infoSum_xi [Fintype ι] [MeasurableSingletonClass ι] (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) (hfull : μ (S.SigmaPrime μ)ᶜ = 0) (i : ℕ) :

@@ -19,7 +19,7 @@ For the planar partitions the atoms have fixed past on `Σ'`. The set `Σ'` is i
 ergodic measure gives it mass `0` or `1`. If `μ(Σ') = 0` the partition is trivial modulo `μ`,
 the conditional measures are `μ` itself, and an invariant measure giving mass one to all
 cylinders `[x|_n]` of one point is the Dirac mass at a constant sequence. By
-`sec:lyapunov_exponents`, tex line 1677 (`System.measure_SigmaPrime_compl`), the case
+`sec:lyapunov_exponents`, tex line 1599 (`System.measure_SigmaPrime_compl`), the case
 `μ(Σ') = 0` does not occur; treating it keeps this module independent of that result.
 
 * `condMeas_pos_of_mem`, `condMeas_cylinder_pos`: `μ_x^ξ(A) > 0` for almost every `x ∈ A`.

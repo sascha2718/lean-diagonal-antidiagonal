@@ -2,7 +2,7 @@ module
 
 /-
 The dimensions of the coordinate projections of the equilibrium state in
-`ex:projection_double_dimensional`, tex lines 3090 to 3111: the exponents
+`ex:projection_double_dimensional`, tex lines 3042 to 3063: the exponents
 `λ_1(𝖠, μ) = -(log 2 + H(p))/s` and `λ_2(𝖠, μ) = -(log 2 + J(p))/s`, the ratios
 `-h_0(μ)/λ_1(𝖠, μ) = s` and `-h_0(μ)/λ_2(𝖠, μ) = s (log 2 + H(p))/(log 2 + J(p))`, and the
 double-dimensionality of both coordinate projections from `thm:eq_state_proj_dim`.
@@ -17,14 +17,14 @@ exponent satisfies `0 < s ≤ 1` and `2 a^s + 2 b^s = 1`, and `p = 2 a^s`. The t
   `0 < (log 2 + H(p))/(log 2 + J(p)) < 1` for `1/2 < p < 1`.
 * `Gibbs.half_lt_prob`: `p = 2 a^s > 1/2`, since `a > b`.
 * `Gibbs.mul_log_a`, `Gibbs.mul_log_b`, `Gibbs.lyap₁_value`, `Gibbs.lyap₂_value`: the display of
-  tex lines 3093 to 3096.
+  tex lines 3045 to 3048.
 * `Gibbs.isEquilibriumState_ratios`: `-h_0(μ)/λ_1(𝖠, μ) = s` and
-  `-h_0(μ)/λ_2(𝖠, μ) = s (log 2 + H(p))/(log 2 + J(p))`, tex lines 3097 to 3103.
+  `-h_0(μ)/λ_2(𝖠, μ) = s (log 2 + H(p))/(log 2 + J(p))`, tex lines 3049 to 3055.
 * `Gibbs.measure_hasLocalDim_pos_of_isDoubleDim`: a double-dimensional measure with distinct
   values `d_2 < d_1`, upper packing dimension `d_1` and lower Hausdorff dimension `d_2` takes each
   value on a set of positive measure.
 * `Gibbs.marginal_spec`: `thm:eq_state_proj_dim` for the example, with the values `s` and
-  `s (log 2 + H(p))/(log 2 + J(p))`, each on a set of positive measure, tex lines 3104 to 3111.
+  `s (log 2 + H(p))/(log 2 + J(p))`, each on a set of positive measure, tex lines 3056 to 3063.
 -/
 public import BoxLike.General
 public import BoxLike.PrescribedExample.Measure
@@ -109,7 +109,7 @@ theorem mul_log_b (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
     s * Real.log P.b = Real.log ((1 - prob P s) / 2) := by
   rw [show (1 - prob P s) / 2 = P.b ^ s by unfold prob; linarith, Real.log_rpow P.b_pos]
 
-/-- `λ_1 = p log a + (1 - p) log b = -(log 2 + H(p))/s`, tex line 3094. -/
+/-- `λ_1 = p log a + (1 - p) log b = -(log 2 + H(p))/s`, tex line 3046. -/
 theorem lyap₁_value (hs0 : 0 < s) (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
     prob P s * Real.log P.a + (1 - prob P s) * Real.log P.b =
       -(Real.log 2 + H (prob P s)) / s := by
@@ -121,7 +121,7 @@ theorem lyap₁_value (hs0 : 0 < s) (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
   rw [eq_div_iff hs0.ne', H]
   linear_combination prob P s * ha + (1 - prob P s) * hb
 
-/-- `λ_2 = p log b + (1 - p) log a = -(log 2 + J(p))/s`, tex line 3095. -/
+/-- `λ_2 = p log b + (1 - p) log a = -(log 2 + J(p))/s`, tex line 3047. -/
 theorem lyap₂_value (hs0 : 0 < s) (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
     prob P s * Real.log P.b + (1 - prob P s) * Real.log P.a =
       -(Real.log 2 + J (prob P s)) / s := by
@@ -135,8 +135,8 @@ theorem lyap₂_value (hs0 : 0 < s) (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
 
 variable (t : Fin 8 → ℝ)
 
-/-- The two exponents and the two ratios of `ex:projection_double_dimensional`, tex lines 3090
-to 3103: for every invariant `s`-equilibrium state `μ`,
+/-- The two exponents and the two ratios of `ex:projection_double_dimensional`, tex lines 3042
+to 3055: for every invariant `s`-equilibrium state `μ`,
 `λ_1(𝖠, μ) = -(log 2 + H(p))/s`, `λ_2(𝖠, μ) = -(log 2 + J(p))/s`, `-h_0(μ)/λ_1(𝖠, μ) = s` and
 `-h_0(μ)/λ_2(𝖠, μ) = s (log 2 + H(p))/(log 2 + J(p))`. The entropy and the exponents are those of
 `isEquilibriumState_spec`, computed through `thm:entropy_eq_gibbs` and
@@ -186,7 +186,7 @@ theorem measure_hasLocalDim_pos_of_isDoubleDim {X : Type*} [PseudoMetricSpace X]
     have := hex.lowerHausdorffDim_eq hne
     linarith
 
-/-- `thm:eq_state_proj_dim` for `ex:projection_double_dimensional`, tex lines 3104 to 3111:
+/-- `thm:eq_state_proj_dim` for `ex:projection_double_dimensional`, tex lines 3056 to 3063:
 under the projective exponential separation condition, for every invariant `s`-equilibrium state
 `μ` with `0 < s ≤ 1`, `2 a^s + 2 b^s = 1` and `p = 2 a^s`, both coordinate projections
 `(proj_c)_*(π_*μ)` are double-dimensional with the values `s` and

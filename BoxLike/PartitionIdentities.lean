@@ -1,8 +1,8 @@
 module
 
 /-
-The behaviour of `Σ^τ`, `Σ^ω` and `Σ'` under the shift (`sec:lyapunov_exponents`, tex lines 1678
-to 1679, and `eq:sigma_tau_omega_positive_eq_measure1` in the proof of
+The behaviour of `Σ^τ`, `Σ^ω` and `Σ'` under the shift (`sec:lyapunov_exponents`, tex lines 1598
+to 1599, and `eq:sigma_tau_omega_positive_eq_measure1` in the proof of
 `thm:sigma_tau_omega_positive_eq_measure` in `sec:normalisation`), and the identification of the
 planar partitions `ξ_1`, `ξ_1^⊥` with the scalar partition `\overline{ξ}_1` through the codings
 `τ`, `ω` at the end of `sec:entropies` (`thm:partitions_xi1`, `thm:partition_tau_conj`).
@@ -39,7 +39,7 @@ open MeasureTheory Filter Topology Set
 /-! ### The backward rate under the shift -/
 
 /-- The word `i_{-n} ⋯ i_{-1} i_0` of the past of `σ(𝐢)` is the word `i_{-n} ⋯ i_{-1}` of the
-past of `𝐢` followed by `i_0`. In `sec:lyapunov_exponents`, tex lines 1678 to 1679, this is
+past of `𝐢` followed by `i_0`. In `sec:lyapunov_exponents`, tex lines 1598 to 1599, this is
 "appending one matrix on the right". -/
 theorem pastWord_shift_one {α : Type*} (y : ℤ → α) (n : ℕ) :
     pastWord (shift 1 y) (n + 1) = pastWord y n ++ [y 0] := by
@@ -109,7 +109,7 @@ section Shift
 variable {ι : Type*} [MeasurableSpace ι] (S : System ι)
 
 /-- `eq:sigma_tau_omega_positive_eq_measure1` and the shift-invariance of `Σ'`
-(`sec:lyapunov_exponents`, tex lines 1678 to 1679): appending `A_{i_0}` on the right keeps the
+(`sec:lyapunov_exponents`, tex lines 1598 to 1599): appending `A_{i_0}` on the right keeps the
 two backward rates when `A_{i_0}` is diagonal and exchanges them when it is anti-diagonal.
 Depends on: `eq:tau_omega_sigma_commutative1`, through `thm:tau_omega_sigma_commutative`. -/
 theorem shift_mem_SigmaTau_iff (μ : Measure (ℤ → ι)) (x : ℤ → ι) :
@@ -132,7 +132,7 @@ theorem shift_mem_SigmaTau_iff (μ : Measure (ℤ → ι)) (x : ℤ → ι) :
       false_or]
     exact ⟨and_comm, and_comm⟩
 
-/-- `σ(Σ') = Σ'` (`sec:lyapunov_exponents`, tex lines 1678 to 1679): the set `Σ'` is
+/-- `σ(Σ') = Σ'` (`sec:lyapunov_exponents`, tex lines 1598 to 1599): the set `Σ'` is
 shift-invariant. -/
 theorem shift_mem_SigmaPrime_iff (μ : Measure (ℤ → ι)) (x : ℤ → ι) :
     shift 1 x ∈ S.SigmaPrime μ ↔ x ∈ S.SigmaPrime μ := by
@@ -323,8 +323,8 @@ section Planar
 
 variable {ι : Type*} [MeasurableSpace ι] (S : System ι)
 
-/-- `Σ'` is saturated with respect to the past (`sec:lyapunov_exponents`, tex lines 1680 to
-1681). -/
+/-- `Σ'` is saturated with respect to the past (`sec:lyapunov_exponents`, tex lines 1617 to
+1618). -/
 theorem mem_SigmaPrime_of_samePast (μ : Measure (ℤ → ι)) {x y : ℤ → ι} (h : SamePast x y)
     (hx : x ∈ S.SigmaPrime μ) : y ∈ S.SigmaPrime μ :=
   hx.imp (S.mem_SigmaTau_of_samePast μ h) (S.mem_SigmaOmega_of_samePast μ h)

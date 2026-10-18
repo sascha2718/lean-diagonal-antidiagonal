@@ -2,10 +2,10 @@ module
 
 /-
 Topological and measure-theoretic claims about the coding maps that the article states without
-a label: the natural projection `η : Σ → Σ^+` of `sec:two_sided_shift_space` (tex lines 850 to
-899), the codings `τ`, `ω` of `sec:subshift` as homeomorphisms onto their images (tex lines 983
-to 992), and the grouping map `β` of `sec:normalisation` as a homeomorphism that conjugates
-`σ²` to the shift (tex lines 2402 and 2403).
+a label: the natural projection `η : Σ → Σ^+` of `sec:two_sided_shift_space` (tex lines 808 to
+853), the codings `τ`, `ω` of `sec:subshift` as homeomorphisms onto their images (tex lines 932
+to 939), and the grouping map `β` of `sec:normalisation` as a homeomorphism that conjugates
+`σ²` to the shift (tex lines 2313 and 2314).
 
 The alphabet `ι` of the codings carries the discrete topology. The statements about `η` hold
 for an arbitrary measurable alphabet `α`, with the product `σ`-algebra on `ℤ → α` and `ℕ → α`;
@@ -56,29 +56,29 @@ section Coding
 variable {ι : Type*} [TopologicalSpace ι]
 
 /-- The common inverse `\overline{τ}`, `\overline{ω}` of the codings is continuous: it leaves the
-symbols `i ≤ N` unchanged and sends each symbol `i > N` to `i - N` (tex lines 990 to 992). -/
+symbols `i ≤ N` unchanged and sends each symbol `i > N` to `i - N` (tex lines 937 to 939). -/
 theorem continuous_unCode : Continuous (unCode : (ℤ → ι × ZMod 2) → ℤ → ι) :=
   continuous_pi fun n => continuous_fst.comp (continuous_apply n)
 
 variable [DiscreteTopology ι] (o : ι → ZMod 2)
 
-/-- The coding `τ` is a homeomorphism onto its image, and the image is closed (tex lines 990
-to 992). -/
+/-- The coding `τ` is a homeomorphism onto its image, and the image is closed (tex lines 937
+to 939). -/
 theorem isClosedEmbedding_tau : IsClosedEmbedding (tau o) :=
   Function.LeftInverse.isClosedEmbedding (f := unCode) unCode_tau continuous_unCode
     (System.continuous_tau o)
 
-/-- The coding `ω` is a homeomorphism onto its image, and the image is closed (tex lines 990
-to 992). -/
+/-- The coding `ω` is a homeomorphism onto its image, and the image is closed (tex lines 937
+to 939). -/
 theorem isClosedEmbedding_omega : IsClosedEmbedding (omega o) :=
   Function.LeftInverse.isClosedEmbedding (f := unCode) unCode_omega continuous_unCode
     (System.continuous_omega o)
 
-/-- The set `τ(Σ) = ⋃_{i ≤ N} [i]` of tex line 986 is closed. -/
+/-- The set `τ(Σ) = ⋃_{i ≤ N} [i]` of tex line 934 is closed. -/
 theorem isClosed_range_tau : IsClosed (Set.range (tau o)) :=
   (isClosedEmbedding_tau o).isClosed_range
 
-/-- The set `ω(Σ) = ⋃_{i > N} [i]` of tex line 988 is closed. -/
+/-- The set `ω(Σ) = ⋃_{i > N} [i]` of tex line 934 is closed. -/
 theorem isClosed_range_omega : IsClosed (Set.range (omega o)) :=
   (isClosedEmbedding_omega o).isClosed_range
 
@@ -87,7 +87,7 @@ theorem isClosed_subshift : IsClosed (subshift o) := by
   rw [← range_tau_union_range_omega]
   exact (isClosed_range_tau o).union (isClosed_range_omega o)
 
-/-- The homeomorphism `τ : Σ → τ(Σ)` of tex lines 990 to 992; its inverse is
+/-- The homeomorphism `τ : Σ → τ(Σ)` of tex lines 937 to 939; its inverse is
 `\overline{τ} = unCode`. -/
 def tauHomeomorph : (ℤ → ι) ≃ₜ Set.range (tau o) where
   toFun x := ⟨tau o x, Set.mem_range_self x⟩
@@ -99,7 +99,7 @@ def tauHomeomorph : (ℤ → ι) ≃ₜ Set.range (tau o) where
   continuous_toFun := (System.continuous_tau o).subtype_mk _
   continuous_invFun := continuous_unCode.comp continuous_subtype_val
 
-/-- The homeomorphism `ω : Σ → ω(Σ)` of tex lines 990 to 992; its inverse is
+/-- The homeomorphism `ω : Σ → ω(Σ)` of tex lines 937 to 939; its inverse is
 `\overline{ω} = unCode`. -/
 def omegaHomeomorph : (ℤ → ι) ≃ₜ Set.range (omega o) where
   toFun x := ⟨omega o x, Set.mem_range_self x⟩
@@ -139,7 +139,7 @@ variable (ι : Type*) [TopologicalSpace ι] [DiscreteTopology ι] [Countable ι]
   [MeasurableSingletonClass ι]
 
 /-- For a countable discrete alphabet the product `σ`-algebra of `Σ` is the Borel `σ`-algebra of
-the product topology, so the measures on `Σ` are the Borel measures of tex line 873. -/
+the product topology, so the measures on `Σ` are the Borel measures of tex line 826. -/
 theorem borelSpace_twoSided : BorelSpace (ℤ → ι) := inferInstance
 
 /-- For a countable discrete alphabet the product `σ`-algebra of `Σ^+` is the Borel `σ`-algebra
@@ -193,7 +193,7 @@ theorem continuous_ungroup : Continuous (ungroup : (ℤ → α × α) → ℤ �
   · simp only [ungroup, h, ite_false]
     exact continuous_snd.comp (continuous_apply _)
 
-/-- The grouping map `β` of `sec:normalisation` is a homeomorphism (tex line 2402). -/
+/-- The grouping map `β` of `sec:normalisation` is a homeomorphism (tex line 2313). -/
 def groupHomeomorph : (ℤ → α) ≃ₜ (ℤ → α × α) where
   toFun := group
   invFun := ungroup
@@ -211,7 +211,7 @@ def groupHomeomorph : (ℤ → α) ≃ₜ (ℤ → α × α) where
     ((groupHomeomorph (α := α)).symm : (ℤ → α × α) → ℤ → α) = ungroup := rfl
 
 /-- The homeomorphism `β` conjugates `σ²` to the shift `σ^(2)` of the paired alphabet:
-`β ∘ σ² = σ^(2) ∘ β` (tex line 2403). -/
+`β ∘ σ² = σ^(2) ∘ β` (tex line 2314). -/
 theorem groupHomeomorph_shift_two :
     (groupHomeomorph : (ℤ → α) → ℤ → α × α) ∘ shift 2 = shift 1 ∘ groupHomeomorph :=
   funext group_shift_two
@@ -224,13 +224,13 @@ section Eta
 
 variable {α : Type*}
 
-/-- The natural projection `η : Σ → Σ^+`, `η(𝐢) = 𝐢^+`, of tex line 857. -/
+/-- The natural projection `η : Σ → Σ^+`, `η(𝐢) = 𝐢^+`, of tex line 810. -/
 def eta (x : ℤ → α) : ℕ → α := fun k => x k
 
 /-- The `k`-th symbol of `η(𝐢)` is `i_k`. -/
 @[simp] theorem eta_apply (x : ℤ → α) (k : ℕ) : eta x k = x k := rfl
 
-/-- The left shift `σ^+` of the one-sided full shift `Σ^+` of tex line 846. -/
+/-- The left shift `σ^+` of the one-sided full shift `Σ^+` of tex line 799. -/
 def shiftPlus (y : ℕ → α) : ℕ → α := fun k => y (k + 1)
 
 /-- The `k`-th symbol of `σ^+(𝐢)` is `i_{k+1}`. -/
@@ -243,7 +243,7 @@ theorem iterate_shiftPlus_apply (j : ℕ) (y : ℕ → α) (k : ℕ) :
   | zero => rfl
   | succ j ih => rw [Function.iterate_succ_apply, ih, shiftPlus_apply, add_assoc]
 
-/-- `η ∘ σ = σ^+ ∘ η` (tex line 858). -/
+/-- `η ∘ σ = σ^+ ∘ η` (tex line 811). -/
 theorem eta_shift (x : ℤ → α) : eta (shift 1 x) = shiftPlus (eta x) := by
   funext k
   simp [add_comm]
@@ -252,7 +252,7 @@ theorem eta_shift (x : ℤ → α) : eta (shift 1 x) = shiftPlus (eta x) := by
 theorem eta_surjective : Function.Surjective (eta : (ℤ → α) → ℕ → α) := fun y =>
   ⟨fun k => y k.toNat, funext fun k => by simp⟩
 
-/-- The embedding `e : Σ^+ → Σ`, `e(i_0 i_1 ⋯) = ⋯ a a i_0 i_1 ⋯`, of tex line 850, where the
+/-- The embedding `e : Σ^+ → Σ`, `e(i_0 i_1 ⋯) = ⋯ a a i_0 i_1 ⋯`, of tex line 804, where the
 article takes `a = 1`. -/
 def embed (a : α) (y : ℕ → α) : ℤ → α := fun k => if 0 ≤ k then y k.toNat else a
 
@@ -267,7 +267,7 @@ theorem embed_shiftPlus_ne {a : α} {y : ℕ → α} (h : y 0 ≠ a) :
     embed a (shiftPlus y) ≠ shift 1 (embed a y) := fun he =>
   h (by simpa [embed] using (congrFun he (-1)).symm)
 
-/-- The embedding `e` is not a conjugacy, `e ∘ σ^+ ≠ σ ∘ e` (tex line 852), when the alphabet
+/-- The embedding `e` is not a conjugacy, `e ∘ σ^+ ≠ σ ∘ e` (tex line 805), when the alphabet
 has a symbol other than the padding symbol, that is, when `N ≥ 2`. -/
 theorem embed_comp_shiftPlus_ne {a b : α} (h : b ≠ a) :
     embed a ∘ shiftPlus ≠ shift 1 ∘ embed a := fun he =>
@@ -315,7 +315,7 @@ theorem continuous_embed (a : α) : Continuous (embed a) := by
     exact continuous_const
 
 /-- The embedding `e : Σ^+ → Σ` is injective and continuous, and it is a topological embedding
-with closed image (tex lines 852 and 853). -/
+with closed image (tex lines 805 and 806). -/
 theorem isClosedEmbedding_embed [T2Space α] (a : α) : IsClosedEmbedding (embed a) :=
   Function.LeftInverse.isClosedEmbedding (f := eta) (eta_embed a) continuous_eta
     (continuous_embed a)
@@ -336,7 +336,7 @@ theorem measurable_eta : Measurable (eta : (ℤ → α) → ℕ → α) :=
 theorem measurable_shiftPlus : Measurable (shiftPlus : (ℕ → α) → ℕ → α) :=
   Measurable.of_eval fun k => measurable_pi_apply (k + 1)
 
-/-- If `μ ∈ ℳ_σ(Σ)`, then `η_*μ ∈ ℳ_σ(Σ^+)` (tex lines 877 to 883). -/
+/-- If `μ ∈ ℳ_σ(Σ)`, then `η_*μ ∈ ℳ_σ(Σ^+)` (tex lines 830 to 836). -/
 theorem measurePreserving_shiftPlus_map_eta {μ : Measure (ℤ → α)}
     (hμ : MeasurePreserving (shift 1) μ μ) :
     MeasurePreserving shiftPlus (μ.map eta) (μ.map eta) :=
@@ -347,7 +347,7 @@ theorem measurable_etaFrom (m : ℕ) : Measurable (etaFrom m : (ℤ → α) → 
   Measurable.of_eval fun k => measurable_pi_apply (-(m : ℤ) + k)
 
 /-- The sets that depend on the coordinates `k ≥ -m` only, for some `m ∈ ℕ`. They contain the
-cylinders `[i_k ⋯ i_ℓ]` of tex line 849. -/
+cylinders `[i_k ⋯ i_ℓ]` of tex line 802. -/
 def futureSets (α : Type*) [MeasurableSpace α] : Set (Set (ℤ → α)) :=
   {C | ∃ (m : ℕ) (B : Set (ℕ → α)), MeasurableSet B ∧ C = etaFrom m ⁻¹' B}
 
@@ -398,7 +398,7 @@ theorem measure_preimage_etaFrom {μ : Measure (ℤ → α)} (hμ : MeasurePrese
   ext x
   simp only [mem_preimage, etaFrom_shift]
 
-/-- The push-forward `η_* : ℳ_σ(Σ) → ℳ_σ(Σ^+)` is injective (tex lines 893 and 894): two finite
+/-- The push-forward `η_* : ℳ_σ(Σ) → ℳ_σ(Σ^+)` is injective (tex lines 846 and 847): two finite
 invariant measures with the same image under `η` agree on the sets that depend on the
 coordinates `k ≥ -m`, and these form a `π`-system that generates the `σ`-algebra. -/
 theorem map_eta_injective {μ μ' : Measure (ℤ → α)} [IsFiniteMeasure μ]
@@ -456,7 +456,7 @@ theorem exists_preimage_eta_ae_eq {μ : Measure (ℤ → α)} [IsFiniteMeasure �
   exact measure_symmDiff_eq_zero_iff.1 (measure_mono_null hsub (measure_limsup_atTop_eq_zero hsum))
 
 /-- For a finite `σ`-invariant measure `μ` on `Σ`, the measure `η_*μ` is ergodic if and only if
-`μ` is ergodic (tex lines 894 and 895). -/
+`μ` is ergodic (tex lines 848 and 849). -/
 theorem ergodic_map_eta_iff {μ : Measure (ℤ → α)} [IsFiniteMeasure μ]
     (hμ : MeasurePreserving (shift 1) μ μ) :
     Ergodic shiftPlus (μ.map eta) ↔ Ergodic (shift 1) μ := by

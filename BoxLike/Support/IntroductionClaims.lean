@@ -1,7 +1,7 @@
 module
 
 /-
-The comments after `thm:main2` in the introduction (tex lines 531 to 537): "When `s < 2`, the
+The comments after `thm:main2` in the introduction (tex lines 491 to 497): "When `s < 2`, the
 exponents are distinct and the threshold lies strictly between `1` and `2`. For `s ≥ 2`, the
 exponents coincide and the threshold is one. In particular, the absence of projective exact
 overlaps suffices whenever `dimaff(X) ≤ 1`, and the strong open set condition is needed only
@@ -62,7 +62,7 @@ namespace System
 variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   (S : System ι)
 
-/-- Tex lines 531 to 532: for `0 < s < 2` the Lyapunov exponents of the `s`-equilibrium state of a
+/-- Tex lines 491 to 492: for `0 < s < 2` the Lyapunov exponents of the `s`-equilibrium state of a
 proximal box-like tuple with rotations are distinct (`eq:simple_lyapunov`, from
 Morris–Shmerkin) and the threshold `2 - λ_1/λ_2` lies strictly between `1` and `2`. -/
 theorem threshold_mem_Ioo_of_lt_two (hms : MorrisShmerkinLyapunov.{u}) (hrot : S.WithRotations)
@@ -75,7 +75,7 @@ theorem threshold_mem_Ioo_of_lt_two (hms : MorrisShmerkinLyapunov.{u}) (hrot : S
   have h1 := S.lyapunov₁_neg hinv
   exact ⟨hl, one_lt_threshold hl h1, threshold_lt_two hl.le h1⟩
 
-/-- Tex lines 531 to 532 at `s = dimaff(X) < 2`, the case of `thm:main2`: `dimaff(X) > 0`, since
+/-- Tex lines 491 to 492 at `s = dimaff(X) < 2`, the case of `thm:main2`: `dimaff(X) > 0`, since
 a tuple with rotations has at least two maps. -/
 theorem threshold_mem_Ioo_dimaff (hms : MorrisShmerkinLyapunov.{u}) [Nonempty ι]
     (hrot : S.WithRotations) (hprox : S.Proximal) (hs2 : S.dimaff < 2) (μ : Measure (ℤ → ι))
@@ -86,7 +86,7 @@ theorem threshold_mem_Ioo_dimaff (hms : MorrisShmerkinLyapunov.{u}) [Nonempty ι
   have := S.nontrivial_of_withRotations hrot
   exact S.threshold_mem_Ioo_of_lt_two hms hrot hprox S.dimaff_pos hs2 μ hinv heq
 
-/-- Tex lines 532 to 533: for `s ≥ 2` the Lyapunov exponents of the `s`-equilibrium state of a
+/-- Tex lines 492 to 493: for `s ≥ 2` the Lyapunov exponents of the `s`-equilibrium state of a
 box-like tuple with rotations coincide and the threshold is one. The equality of the exponents
 is `System.IsEquilibriumState.lyapunov_eq_of_two_le`, from the Bernoulli form of the equilibrium
 state. -/
@@ -101,14 +101,14 @@ theorem threshold_eq_one_of_two_le (hrot : S.WithRotations) {s : ℝ} (hs : 2 �
   rw [he, div_self hne]
   norm_num
 
-/-- Tex line 534: `dimaff(X) ≤ 1` lies below the threshold, since `λ_2 ≤ λ_1 < 0` gives
+/-- Tex line 494: `dimaff(X) ≤ 1` lies below the threshold, since `λ_2 ≤ λ_1 < 0` gives
 `2 - λ_1/λ_2 ≥ 1` for every invariant `μ`. -/
 theorem dimaff_le_threshold_of_le_one [Nonempty ι] (h1 : S.dimaff ≤ 1) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ) :
     S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ :=
   h1.trans (one_le_threshold (S.lyapunov₂_le_lyapunov₁ hinv) (S.lyapunov₁_neg hinv))
 
-/-- Tex line 534, "the absence of projective exact overlaps suffices whenever `dimaff(X) ≤ 1`":
+/-- Tex line 494, "the absence of projective exact overlaps suffices whenever `dimaff(X) ≤ 1`":
 under the hypotheses of `thm:main2` other than the alternative, `dimaff(X) ≤ 1` gives
 `dim_H X = dimaff(X)`. This applies `thm:main2` (`System.main2_noExactOverlaps_all`) and takes
 its literature hypotheses. -/
@@ -123,14 +123,14 @@ theorem main2_of_dimaff_le_one (hms : MorrisShmerkinLyapunov.{u})
   S.main2_noExactOverlaps_all hms hfk hfjj hfib hly hlyb hkk hrot hprox hfree μ hinv heq
     (Or.inl (S.dimaff_le_threshold_of_le_one h1 μ hinv))
 
-/-- Tex lines 535 to 536: the first alternative of `thm:main2` forces `dimaff(X) < 2`, since the
+/-- Tex lines 495 to 496: the first alternative of `thm:main2` forces `dimaff(X) < 2`, since the
 threshold is less than two. -/
 theorem dimaff_lt_two_of_le_threshold [Nonempty ι] (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (h : S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ) : S.dimaff < 2 :=
   h.trans_lt (threshold_lt_two (S.lyapunov₂_le_lyapunov₁ hinv) (S.lyapunov₁_neg hinv))
 
-/-- Tex lines 535 to 536: the hypotheses of `thm:main2` force `dimaff(X) ≤ 2`. The first
+/-- Tex lines 495 to 496: the hypotheses of `thm:main2` force `dimaff(X) ≤ 2`. The first
 alternative gives `dimaff(X) < 2`; under the strong open set condition `∑_i |det A_i| ≤ 1`, so
 `dimaff(X) ≥ 2` forces `dimaff(X) = 2` (`System.StrongOpenSet.dimaff_eq_two`). -/
 theorem dimaff_le_two_of_main2_hypotheses [Nonempty ι] (μ : Measure (ℤ → ι))
@@ -142,7 +142,7 @@ theorem dimaff_le_two_of_main2_hypotheses [Nonempty ι] (μ : Measure (ℤ → �
     · exact h2
     · exact (h.dimaff_eq_two S h2.le).le
 
-/-- Tex lines 536 to 537: at `dimaff(X) = 2` the hypotheses of `thm:main2` reduce to the strong
+/-- Tex lines 496 to 497: at `dimaff(X) = 2` the hypotheses of `thm:main2` reduce to the strong
 open set condition, since the threshold is one there. -/
 theorem strongOpenSet_of_dimaff_eq_two [Nonempty ι] (hrot : S.WithRotations)
     (h2 : S.dimaff = 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
@@ -153,7 +153,7 @@ theorem strongOpenSet_of_dimaff_eq_two [Nonempty ι] (hrot : S.WithRotations)
   rw [(S.threshold_eq_one_of_two_le hrot h2.ge μ hinv heq).2, h2] at h
   norm_num at h
 
-/-- Tex lines 536 to 537, "the case `s = 2` follows from the strong open set condition alone": the
+/-- Tex lines 496 to 497, "the case `s = 2` follows from the strong open set condition alone": the
 strong open set condition and `dimaff(X) = 2` give `dim_H X = dimaff(X)`, without rotations,
 proximality, the absence of exact overlaps or a literature hypothesis
 (`System.dimH_attractor_of_two_le`). -/
@@ -162,7 +162,7 @@ theorem dimH_attractor_of_dimaff_eq_two [Nonempty ι] (hsosc : S.StrongOpenSet)
   rw [S.dimH_attractor_of_two_le hsosc h2.ge, h2]
   norm_num
 
-/-- Tex lines 535 to 537: `thm:main2` at `dimaff(X) = 2` without literature hypotheses and without
+/-- Tex lines 495 to 497: `thm:main2` at `dimaff(X) = 2` without literature hypotheses and without
 proximality or the absence of exact overlaps. -/
 theorem main2_of_dimaff_eq_two [Nonempty ι] (hrot : S.WithRotations) (h2 : S.dimaff = 2)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)

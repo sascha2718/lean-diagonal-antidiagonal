@@ -66,7 +66,7 @@ theorem isBoundedUnder_ge_log_div_log [IsFiniteMeasure μ] (x : X) :
   isBoundedUnder_of_eventually_ge (eventually_neg_le_log_div_log x one_pos)
 
 /-- The lower pointwise dimension of a finite measure is non-negative almost everywhere; see
-lines 2744 to 2749 of the article. The bound holds at every point, by `lowerLocalDim_nonneg`. -/
+lines 2649 to 2655 of the article. The bound holds at every point, by `lowerLocalDim_nonneg`. -/
 theorem ae_zero_le_lowerLocalDim [IsFiniteMeasure μ] : ∀ᵐ x ∂μ, 0 ≤ lowerLocalDim μ x :=
   Eventually.of_forall lowerLocalDim_nonneg
 
@@ -183,7 +183,7 @@ theorem ae_isBoundedUnder_le_log_div_log [IsFiniteMeasure μ] :
   exact isBoundedUnder_of_eventually_le (eventually_log_div_log_le hc h one_pos)
 
 /-- The upper pointwise dimension of a finite Borel measure on a finite-dimensional real normed
-space `E` is at most `dim E` almost everywhere; see lines 2744 to 2749 of the article. -/
+space `E` is at most `dim E` almost everywhere; see lines 2649 to 2655 of the article. -/
 theorem ae_upperLocalDim_le [IsFiniteMeasure μ] :
     ∀ᵐ x ∂μ, upperLocalDim μ x ≤ finrank ℝ E := by
   filter_upwards [ae_exists_mul_pow_le_measureReal_closedBall (μ := μ)] with x ⟨c, hc, h⟩
@@ -266,7 +266,7 @@ theorem IsDoubleDim.dim_mem_Icc [IsFiniteMeasure μ] (h : IsDoubleDim μ d₁ d�
 
 /-- A nonzero finite Borel measure `μ` on a finite-dimensional real normed space is
 exact-dimensional with `dim μ = d` if and only if
-`\overline{dim}_p(μ) = \underline{dim}_H(μ) = d`; see lines 2796 to 2797 of the article. -/
+`\overline{dim}_p(μ) = \underline{dim}_H(μ) = d`; see lines 2686 to 2687 of the article. -/
 theorem isExactDim_iff_upperPackingDim_eq_lowerHausdorffDim [IsFiniteMeasure μ] (hne : μ ≠ 0) :
     IsExactDim μ d ↔ upperPackingDim μ = d ∧ lowerHausdorffDim μ = d := by
   refine ⟨fun h => ⟨h.upperPackingDim_eq hne, h.lowerHausdorffDim_eq hne⟩, fun ⟨hp, hh⟩ => ?_⟩

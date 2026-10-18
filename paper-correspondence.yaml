@@ -2,8 +2,8 @@ version: 3
 scope: "All 41 numbered statements of the manuscript, and 45 prose spans with the unnumbered definitions and claims the library certifies or takes from the literature."
 source_version: "diagonal-antidiagonal.tex, working manuscript (no arXiv version yet)"
 manuscript_files: ["diagonal-antidiagonal.tex"]
-manuscript_revision: "1ae97d829bb7b9b0c2185cf538e6042733dbaf3d"
-manuscript_sha256: {"diagonal-antidiagonal.tex": "253f0575927bf3492a7253f04fa1637f87869366df77ad7e0adefaee1fd345d3"}
+manuscript_revision: "2e45bb0a3f01a2047809a0bf74cb76dcdc93ac3b"
+manuscript_sha256: {"diagonal-antidiagonal.tex": "7c929ff22ca0cc25bf5fb4f914e0633dc8a45f6f32d809d858771b1f06644ad5"}
 entries:
   - source: "Fraser's packing and Minkowski dimension formula"
     label: "thm:fraser"
@@ -24,7 +24,7 @@ entries:
     sha256: "2957d1ea944eb0c9f06578276d956ceb68b138e843ebd064e6a9f579a3cc43aa"
     status: "formalized"
     lean: ["Challenge.audit_main1"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension"]
     relation: "split"
     headline: true
     note: "Full statement proved for every value of dimaff and every equilibrium state; uniqueness and ergodicity are not needed as premises. For s >= 2 the exponents coincide, the threshold is one and both values are one (main1_of_two_le), through the Bernoulli orientation lift of Theorem 4.4. For s < 2 Lean calls Jordan-Rapaport directly, so Feng-Hu is a redundant citation."
@@ -37,7 +37,7 @@ entries:
     sha256: "2c069734098ee27ab75acd18b24c73db8f8e9829e8b526f4d1dc6a38bd525691"
     status: "formalized"
     lean: ["Challenge.audit_main2"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.FengLedrappierYoung", "BoxLike.KittleKoglerDimension"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FengLedrappierYoung", "BoxLike.KittleKoglerDimension"]
     relation: "split"
     headline: true
     note: "Full statement proved along the prose (main2_noExactOverlaps_prose, the type of main2_noExactOverlaps_all): typical words by Shannon-McMillan-Breiman (proved) with returns to horizontal orientation, the pigeonhole over count vectors, the genuinely diagonal subsystem, 0 <= q <= q_y = 0 by conditional-entropy monotonicity, strong separation of the selected subsystem in the open-set branch. Deviations: returns from ergodic Cesaro averages instead of mixing; the scalar Feng formula for the diagonal subsystem obtained from the authorised planar FengLedrappierYoung on an auxiliary box-like system. FengInfoSumBar and FengLedrappierYoungBar are carried by the headline type but unused (main2_prose). The Gibbs and Birkhoff counting proof main2_noExactOverlaps_all is an alternative."
@@ -252,13 +252,12 @@ entries:
     number: "3.10"
     kind: "proposition"
     sha256: "145ebb4cf4ae1e7b20a1cb6f21ed55ec89b78e3d182102fc7bfdde457f285d74"
-    status: "partially_formalized"
-    hypotheses: ["BoxLike.FengKaenmakiGibbs", "BoxLike.FengKaenmakiUnique"]
-    lean: ["BoxLike.System.irred_eq_state", "BoxLike.System.unique_of_irreducible", "BoxLike.System.IsEquilibriumState.ergodic_of_irreducible", "BoxLike.System.IsEquilibriumState.hasGibbsBounds_of_irreducible", "BoxLike.MatrixTuple.exists_isEquilibriumState", "BoxLike.MatrixTuple.irred_eq_state_of_two_le", "BoxLike.MatrixTuple.ergodic_of_unique", "BoxLike.MatrixTuple.isEquilibriumState_iff_rescale", "BoxLike.MatrixTuple.hasGibbsBounds_iff_rescale", "BoxLike.MatrixTuple.isNormEquilibriumPlus_map_eta_iff"]
-    relation: "partial"
+    status: "formalized"
+    hypotheses: ["BoxLike.FengKaenmakiNormEquilibrium", "BoxLike.FengKaenmakiGibbs", "BoxLike.FengKaenmakiUnique"]
+    lean: ["BoxLike.MatrixTuple.irred_eq_state_of_fengKaenmaki", "BoxLike.FengKaenmakiNormEquilibrium", "BoxLike.FengKaenmakiNormEquilibrium.svf", "BoxLike.FengKaenmakiNormEquilibrium.twoSided", "BoxLike.FengKaenmakiNormEquilibrium.degenerate_quarterTurn", "BoxLike.FengKaenmakiNormEquilibrium.fengKaenmakiGibbs", "BoxLike.FengKaenmakiNormEquilibrium.fengKaenmakiUnique", "BoxLike.System.irred_eq_state", "BoxLike.System.unique_of_irreducible", "BoxLike.System.IsEquilibriumState.ergodic_of_irreducible", "BoxLike.System.IsEquilibriumState.hasGibbsBounds_of_irreducible", "BoxLike.MatrixTuple.exists_isEquilibriumState", "BoxLike.MatrixTuple.irred_eq_state_of_two_le", "BoxLike.MatrixTuple.ergodic_of_unique", "BoxLike.MatrixTuple.isEquilibriumState_iff_rescale", "BoxLike.MatrixTuple.hasGibbsBounds_iff_rescale", "BoxLike.MatrixTuple.isNormEquilibriumPlus_map_eta_iff"]
+    relation: "split"
     headline: false
-    note: "The prose route is followed: the norm potential for s <= 1, the rescaled tuple with exponent 2-s for 1 < s < 2, and the determinant Bernoulli calculation for s >= 2. FraserJordanJurgaDecomposition is not used."
-    reason: "Complete for irreducible box-like systems (existence, uniqueness, ergodicity, Gibbs bounds, every s > 0) from FengKaenmakiGibbs and FengKaenmakiUnique. For arbitrary irreducible invertible tuples existence, s >= 2, ergodicity from uniqueness and the rescaling and one-sided reductions are proved; the remaining Gibbs and uniqueness input is the unauthorised proposal FengKaenmakiNormEquilibrium."
+    note: "The full statement at the article scope (every irreducible tuple of invertible planar matrices, every s > 0) from the authorised FengKaenmakiNormEquilibrium (Feng-Kaenmaki, Proposition 1.2, in the source form): the norm potential for s <= 1, the rescaled tuple with exponent 2-s for 1 < s < 2, the reduction to the one-sided shift, and the determinant Bernoulli calculation for s >= 2, which the source does not cover. Ergodicity follows from uniqueness. The box-like endpoint is the specialisation from FengKaenmakiGibbs and FengKaenmakiUnique, which the cited statement implies. FraserJordanJurgaDecomposition is not used."
     solution_entry: "paper_3_10"
   - source: "Two-block normalisation"
     label: "thm:two-block-normalisation"
@@ -301,12 +300,12 @@ entries:
     number: "3.14"
     kind: "proposition"
     sha256: "bc9d1da8d3977693ff5e553391a59e3894e2ec65111b904fcdb41ca5a2699c90"
-    status: "cited"
-    hypotheses: ["BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition"]
-    lean: ["BoxLike.FraserJordanJurgaDecomposition", "BoxLike.System.GibbsDecomposition", "BoxLike.System.pressure_eq_pressureZ₁", "BoxLike.System.pressure_eq_pressureZ₂", "BoxLike.System.GibbsDecomposition.lyapunov₁_eq_integral", "BoxLike.System.GibbsDecomposition.lyapunov₂_eq_integral", "BoxLike.System.GibbsDecomposition.lyapunov₁_eq_integral_potential₂", "BoxLike.System.GibbsDecomposition.lyapunov₂_eq_integral_potential₂", "BoxLike.System.GibbsDecomposition.map_flip", "BoxLike.System.decomposition₂_of_decompositions", "BoxLike.System.GibbsDecomposition.eq_mu₁", "BoxLike.System.GibbsDecomposition.eq_mu₂"]
+    status: "formalized"
+    hypotheses: ["BoxLike.FengKaenmakiGibbs"]
+    lean: ["BoxLike.fraserJordanJurgaDecomposition_holds", "BoxLike.System.eq_of_hasGibbsBounds", "BoxLike.System.hasGibbsBounds_map_unCode", "BoxLike.System.lyapunov_map_unCode_of_isGibbs", "BoxLike.System.exists_isGibbs_potential₁", "BoxLike.System.gibbsDecomposition_map_unCode", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.System.GibbsDecomposition", "BoxLike.System.pressure_eq_pressureZ₁", "BoxLike.System.pressure_eq_pressureZ₂", "BoxLike.System.GibbsDecomposition.lyapunov₁_eq_integral", "BoxLike.System.GibbsDecomposition.lyapunov₂_eq_integral", "BoxLike.System.GibbsDecomposition.lyapunov₁_eq_integral_potential₂", "BoxLike.System.GibbsDecomposition.lyapunov₂_eq_integral_potential₂", "BoxLike.System.GibbsDecomposition.map_flip", "BoxLike.System.decomposition₂_of_decompositions", "BoxLike.System.GibbsDecomposition.eq_mu₁", "BoxLike.System.GibbsDecomposition.eq_mu₂"]
     relation: "split"
     headline: false
-    note: "All displayed identities are encoded or derivable for the supplied Gibbs witnesses. FraserJordanJurgaDecomposition bundles the existence of ergodic Gibbs measures (the manuscript cites Sarig, Theorem 4.7 and Corollary 4.2) with the Fraser-Jordan-Jurga consequence; FengKaenmakiGibbs supplies the Gibbs bounds of the equilibrium state. The s-Gibbs measures of a decomposition are unique (GibbsDecomposition.eq_mu₁, GibbsDecomposition.eq_mu₂)."
+    note: "The article quotes the proposition from Fraser-Jordan-Jurga; the library proves it without literature input (fraserJordanJurgaDecomposition_holds): Bowen theorem gives the ergodic Gibbs measure mu_1 for f_{1,s}, mu_2 is its image under the exchange of the axes, the image of mu_1 under forgetting the axis has the Gibbs bounds of phi^s and every invariant measure with these bounds equals it, the four decompositions follow from Sigma_Z = tau(Sigma) and omega(Sigma), and the Lyapunov identities from Birkhoff and a relative-entropy comparison. FengKaenmakiGibbs passes from the equilibrium-state hypothesis of the manuscript to the Gibbs bounds. Proximality is not used."
     solution_entry: "paper_3_14"
   - source: "Mixtures of exact-dimensional measures"
     label: "thm:exact-dimensional-mixture"
@@ -325,13 +324,12 @@ entries:
     number: "4.2"
     kind: "theorem"
     sha256: "93cba8e1fa629363e3b0f0ad65b39c9c41a9fff41bfd9534905f5c0db3aac5ef"
-    status: "partially_formalized"
-    hypotheses: ["BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar"]
-    lean: ["BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar"]
+    status: "cited"
+    hypotheses: ["BoxLike.PlanarFengLedrappierYoung", "BoxLike.FengLedrappierYoungBar", "BoxLike.FengLedrappierYoung"]
+    lean: ["BoxLike.planar_feng1", "BoxLike.PlanarSystem.feng1", "BoxLike.PlanarFengLedrappierYoung", "BoxLike.PlanarFengLedrappierYoung.fengLedrappierYoung", "BoxLike.planarFengLedrappierYoung_of_fengXi", "BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar"]
     headline: false
-    note: "The scalar clause matches. The planar clause concerns every planar self-affine set; the authorised FengLedrappierYoung covers box-like systems, and its transcription at general scope is the proposal PlanarFengLedrappierYoung."
-    relation: "partial"
-    reason: "The scalar clause matches. The planar clause is stated for any planar self-affine set; the general planar objects exist (PlanarSystem), and the general transcription of Feng Theorems 1.2 and 1.3 is the unauthorised proposal PlanarFengLedrappierYoung, which implies the authorised box-like FengLedrappierYoung."
+    note: "Both clauses at the article scope as cited results: the planar clause for every planar self-affine set from the authorised PlanarFengLedrappierYoung (Feng, Theorems 1.2 (ii) and 1.3), whose box-like specialisation FengLedrappierYoung the headlines take; the scalar clause from FengLedrappierYoungBar. The source statement for Feng partitions implies the transcription (planarFengLedrappierYoung_of_fengXi)."
+    relation: "exact"
     solution_entry: "paper_4_2"
   - source: "Entropy of the equilibrium state and of the Gibbs measures"
     label: "thm:entropy_eq_gibbs"
@@ -342,7 +340,7 @@ entries:
     lean: ["BoxLike.System.GibbsDecomposition.dimEntropy_zero_eq_gibbs", "BoxLike.System.GibbsDecomposition.dimEntropy_zero_eq_gibbs", "BoxLike.System.GibbsDecomposition.zero_entropy_identities", "BoxLike.System.GibbsDecomposition.entropy_eq₁", "BoxLike.System.GibbsDecomposition.entropy_eq₂", "BoxLike.entropy_map_unCode", "BoxLike.System.dimEntropy_zero_eq_entropy'", "BoxLike.System.dimEntropyBar_zero_eq_entropy'"]
     relation: "split"
     headline: false
-    hypotheses: ["BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition"]
+    hypotheses: ["BoxLike.FengKaenmakiGibbs"]
     note: "The existing named helpers conclude equality of entropy rates, while the printed result uses conditional-past entropies. PastEntropy contains both bridges; the planar conull-set condition follows from ergodicity, which follows from hdec. No hms is necessary if the primed bridge is used. The review added a checked literal endpoint dimEntropy_zero_eq_gibbs, assembling both conditional-entropy identities."
     solution_entry: "paper_4_3"
   - source: "Dimensions of the projections of the equilibrium state"
@@ -352,7 +350,7 @@ entries:
     sha256: "9e1467da94da619202c799251f6542d4fcfe755541f3f3ea0acba46733eae2b9"
     status: "formalized"
     lean: ["BoxLike.System.eq_state_proj_dim_all", "BoxLike.System.eq_state_proj_dim_of_two_le", "BoxLike.System.isExactDim_marginal_of_two_le", "BoxLike.System.IsEquilibriumState.lyapunov_eq_of_two_le", "BoxLike.ergodic_orientationLift_bernoulli", "BoxLike.entropy_orientationLift", "BoxLike.System.map_projBar_orientationLift", "BoxLike.System.eq_state_proj_dim", "BoxLike.System.marginal_decomposition"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension"]
     relation: "split"
     headline: false
     note: "Proved for every s > 0 and every equilibrium state. For s >= 2 as in the prose: the Bernoulli equilibrium state, its orientation lift as a stationary mixing Markov measure, equal entropy, equal Lyapunov exponents, Jordan-Rapaport on the lift and the differentiation step; this branch uses only rotations, projective exponential separation and Jordan-Rapaport."
@@ -361,10 +359,10 @@ entries:
     label: "ex:projection_double_dimensional"
     number: "4.5"
     kind: "example"
-    sha256: "8176ff94b721dbfd606a0074c4e2aabc4c95f138bf1e1b74b5f3e0d4a8bf60e6"
+    sha256: "454870d696432826be0026319e64578fe72596c3996826868ad837cc8853a888"
     status: "formalized"
     lean: ["BoxLike.PrescribedExample.projection_double_dimensional", "BoxLike.PrescribedExample.exists_geometry", "BoxLike.PrescribedExample.existsUnique_p", "BoxLike.PrescribedExample.pressure_eq", "BoxLike.PrescribedExample.exists_translation", "BoxLike.PrescribedExample.volume_badSet_le", "BoxLike.PrescribedExample.Gibbs.isEquilibriumState_spec", "BoxLike.PrescribedExample.Gibbs.marginal_spec"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension"]
     headline: false
     note: "Full statement for every 0 < s2 < s1 <= 1 along the prose: parameters, pressure and dimaff, the translation cube and the volume argument for projective exponential separation, the Markov measure, entropy and exponents, and Theorem 4.4. The identification of the Gibbs measure with the Markov measure is proved by a Gibbs-uniqueness argument the prose leaves implicit."
     relation: "exact"
@@ -376,7 +374,7 @@ entries:
     sha256: "5801ff0d2fbc07d336ce45d64c9756585e510fd16b731b4c22b0a9b433c8c660"
     status: "formalized"
     lean: ["BoxLike.System.gibbs_tau_omega_positive"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs"]
     relation: "split"
     headline: false
     note: "Both sums equal one, the four zero terms and all four strict positivity assertions match. The implicit dependence of Σ^τ and Σ^ω on μ is explicit in Lean. hdec is an internal constructed object; its external source is hfjj after applying hfk."
@@ -388,7 +386,7 @@ entries:
     sha256: "71dc8dd973c8fda89bf599860a6b2c73dd5239dbab73af5506e0aa7484d9d332"
     status: "formalized"
     lean: ["BoxLike.System.conditional_two_ways_normalised", "BoxLike.System.conditional_two_ways", "BoxLike.condMeas_transport"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs"]
     relation: "split"
     headline: false
     note: "All four identities agree. The endpoint conditional_two_ways_normalised follows the prose: normalise on the positive pieces, transport the conditional measures, remove the restrictions by Lemma 3.2; it is the form used by Lemmas 4.8 to 4.14. The transport of the unnormalised restrictions, conditional_two_ways, is an alternative proof."
@@ -400,7 +398,7 @@ entries:
     sha256: "5ebb51dcedee8beaf90a30358dee623afd20b988df67e66249283c5857a721c6"
     status: "formalized"
     lean: ["BoxLike.System.overline_h1_zero"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoungBar"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoungBar"]
     relation: "split"
     headline: false
     note: "The almost-everywhere zero pointwise entropy of the average is exactly represented. The non-strict comparison of the prose is correct; no strict positivity assumption is needed."
@@ -412,7 +410,7 @@ entries:
     sha256: "9ec69db450c6888b756d59e48f4c94ae23723fdf27e2a91bd0f6c00e267634b2"
     status: "formalized"
     lean: ["BoxLike.System.overline_h1_zero_large"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoungBar"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoungBar"]
     relation: "split"
     headline: false
     note: "The Lean statement carries exactly the hypotheses of the manuscript; no bound -lambda_1 <= h(mu) is assumed. The scalar entropy-zero conclusion and the almost-everywhere Dirac conclusion on slowPart have the full scope of the statement; the latter is the measure-equality statement of the manuscript in equivalent almost-everywhere form."
@@ -424,7 +422,7 @@ entries:
     sha256: "96ab54e5281e9ad955bc66400e23b24ed6f8e1663a63b9f67c21cace7e343d60"
     status: "formalized"
     lean: ["BoxLike.System.overline_h1_large"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs"]
     relation: "split"
     headline: false
     note: "Lean states equality barh₁(μ₁)=h₁(μ) together with the ae equality for the average on fastPart. These two conclusions are equivalent to the displayed three-term equality."
@@ -436,7 +434,7 @@ entries:
     sha256: "29673d11eb9ab7531f29cfebda06f649f3f3f48f388d7bed937d419392d7123d"
     status: "formalized"
     lean: ["BoxLike.System.eq_state_h1_zero"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoungBar"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoungBar"]
     relation: "split"
     headline: false
     note: "Both h₁=0 and the ae Dirac conditional-measure assertion are proved. The manuscript restricts the full-measure set to Σ'; Lean's assertion is on all sequences but is equivalent because Σ' is conull."
@@ -448,7 +446,7 @@ entries:
     sha256: "2b0b1648227516f78a32866b80b5766fcd1d68bc5ad0ab926358df1edc4836ce"
     status: "formalized"
     lean: ["BoxLike.System.eq_state_h1_large"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoungBar"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoungBar"]
     relation: "split"
     headline: false
     note: "The formula h₁=entropy μ+λ₁ agrees with h₁=h₀+λ₁ after the conditional-past bridge. The lower boundary is included exactly as in the current statement."
@@ -460,10 +458,10 @@ entries:
     sha256: "6d692b2e41cc8cb436312b4b6d595610298e60aeb934f8cf2d5c098230158d19"
     status: "formalized"
     lean: ["BoxLike.System.eq_state_h2_zero"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoungBar"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoungBar"]
     relation: "split"
     headline: false
-    note: "The h₂=0 endpoint matches. It is now logically subsumed by the stronger 4.14, but it has its own proof and must retain its own numbered entry."
+    note: "The h₂=0 endpoint matches. It is logically subsumed by the stronger 4.14, but it has its own proof and must retain its own numbered entry."
     solution_entry: "paper_4_13"
   - source: "Dirac conditional measures on the orthogonal partition"
     label: "thm:orto_partition_dirac"
@@ -472,10 +470,10 @@ entries:
     sha256: "e15316289a6fa7233d392d01ec5507419bafd1e4eb24e514d37477964331645c"
     status: "formalized"
     lean: ["BoxLike.System.orto_partition_dirac"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoungBar"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoungBar"]
     relation: "split"
     headline: false
-    note: "The old signature still required −λ₁≤entropy μ, although only passed to 4.9. This review removed both obsolete binders and the obsolete caller argument. The current manuscript's full entropy range is now proved."
+    note: "The Lean statement carries exactly the hypotheses of the manuscript; no bound -lambda_1 <= h(mu) is assumed, and the full entropy range of the manuscript is proved."
     solution_entry: "paper_4_14"
   - source: "h_2(μ) = 0 under the strong open set condition"
     label: "thm:SOSC_h2_zero"
@@ -496,7 +494,7 @@ entries:
     sha256: "d9def48abd66aa1130db2026d227fe79e67f55ed9842b111335d43d966e98811"
     status: "formalized"
     lean: ["Challenge.audit_main_extended"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar"]
     relation: "split"
     headline: true
     note: "The full current all-s exact-dimensionality statement is represented. Positivity of s follows from rotations. For s≥2 the entropy alternative is impossible and the SOSC volume argument yields exact dimension 2. The ge-two helper needs no external literature hypotheses, rotations, proximality or projective separation."
@@ -510,7 +508,7 @@ entries:
     sha256: "a030675ea27a2247b37cceb9cc919d8ba11150a0372559bd3d462333373cb596"
     status: "formalized"
     lean: ["BoxLike.System.dim_chain", "BoxLike.System.dim_chain_noExactOverlaps", "BoxLike.System.dim_chain_main2", "BoxLike.System.dimmaff_le_dimaff", "BoxLike.System.dimmaff_eq_dimaff", "BoxLike.System.dimmaff_eq_dimaff_noExactOverlaps", "BoxLike.System.dimmaff_eq_dimaff_main2", "BoxLike.System.main2_noExactOverlaps_all"]
-    hypotheses: ["BoxLike.System.FraserBound", "BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar", "BoxLike.KittleKoglerDimension"]
+    hypotheses: ["BoxLike.System.FraserBound", "BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar", "BoxLike.KittleKoglerDimension"]
     relation: "split"
     headline: false
     note: "The introduction derives dim_H X = dim_P X = dim_M X = dimaff(X) from thm:main2, and squeezes dimmaff(X) = dimaff(X). The chain holds for every box-like set with dim_H X = dimaff(X), from Falconer bound alone (System.dim_chain). The squeeze takes System.FraserBound. The inequality dimmaff(X) <= dimaff(X) holds for every box-like set. The forms with suffix noExactOverlaps take the hypotheses of thm:main2 as the manuscript states it; the forms with suffix main2 are the special case under projective exponential separation; some noExactOverlaps wrappers are stated for s < 2, and the full parameter range follows by applying the generic chain and squeeze theorems to the full thm:main2 endpoint."
@@ -524,8 +522,8 @@ entries:
     lean: ["BoxLike.PlanarSystem.dimH_attractor_le", "BoxLike.PlanarSystem.upperBoxDim_attractor_le", "BoxLike.PlanarSystem.upperBoxDim_attractor_le_dimaff", "BoxLike.PlanarSystem.packingDim_attractor_le", "BoxLike.PlanarSystem.dimH_toPlane_attractor_le", "BoxLike.PlanarSystem.dimaff", "BoxLike.PlanarSystem.dimaff_congr", "BoxLike.PlanarSystem.eq_attractor", "BoxLike.MatrixTuple.image_closedBall_subset_closedBall", "BoxLike.MatrixTuple.exists_finset_image_closedBall_subset", "BoxLike.MatrixTuple.ContractionBound.upperBoxDim_le_of_pressure_neg", "BoxLike.System.toPlanar_dimaff", "BoxLike.System.dimH_attractor_le_planar", "BoxLike.System.dimH_attractor_le"]
     relation: "exact"
     headline: false
-    note: "Proved without literature input for every planar self-affine set (invertible linear parts of operator norm < 1): dim_H X <= dim_P X <= upper Minkowski <= min{2, dimaff(X)}, in the sup metric and in the Euclidean plane. The covers of tex 2197-2200 are proved as stated with Euclidean balls; the Hausdorff bound follows from the upper Minkowski bound by the stopping-time cover. The box-like bound is the specialisation System.dimH_attractor_le_planar."
-    reason: "The current prose states arbitrary planar self-affine systems; the covering theorem certifies contracting invertible box-like System only."
+    note: "Proved without literature input for every planar self-affine set (invertible linear parts of operator norm < 1): dim_H X <= dim_P X <= upper Minkowski <= min{2, dimaff(X)}, in the sup metric and in the Euclidean plane. The covers of tex 2162-2165 are proved as stated with Euclidean balls; the Hausdorff bound follows from the upper Minkowski bound by the stopping-time cover. The box-like bound is the specialisation System.dimH_attractor_le_planar."
+
   - source: "Rossi's bound eq:hausdorff_ergodic_lyapunov"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -546,7 +544,7 @@ entries:
     sha256: "e1264402918a5c8b92ba1e5cbbb68aea1d0f92e3d877225e9a661510e183d10b"
     status: "formalized"
     lean: ["Challenge.audit_dimH_eq_min", "Challenge.audit_dimH_of_two_le", "BoxLike.System.dimH_attractor_eq_min", "BoxLike.System.dimH_attractor_of_strongOpenSet", "BoxLike.System.dimH_attractor_of_two_le"]
-    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar"]
+    hypotheses: ["BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar"]
     relation: "split"
     headline: false
     note: "The paragraph after eq:hausdorff_ergodic_lyapunov sets out to prove dim_H X = min{2, dimaff(X)}, which follows from thm:main_extended, the mass distribution principle and Falconer's bound. Challenge.audit_dimH_eq_min holds under the hypotheses of thm:main_extended. Challenge.audit_dimH_of_two_le is the case dimaff(X) ≥ 2 under the strong open set condition; it assumes no measure and takes no literature hypothesis. The generic reduction itself needs no literature; the eight listed premises belong only to its application via main_extended."
@@ -558,7 +556,7 @@ entries:
     sha256: "a9b07918f7cbafb91a37b7609a231ea29bbaec0c53774ad0368843e4e08ac9f3"
     status: "formalized"
     lean: ["BoxLike.map_comp_coding", "BoxLike.System.exists_decomposition_of_coding", "BoxLike.System.marginal_decomposition_normalised", "BoxLike.System.marginal_decomposition", "BoxLike.System.marginal_eq_map", "BoxLike.IsGibbs.measure_range_tau_pos", "BoxLike.IsGibbs.measure_range_omega_pos"]
-    hypotheses: ["BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition"]
+    hypotheses: ["BoxLike.FengKaenmakiGibbs"]
     relation: "split"
     headline: false
     note: "Unconditional algebraic decomposition uses map_comp_coding, marginal_eq_map and GibbsDecomposition.eq_tau/eq_omega. Positivity uses IsGibbs.measure_range_tau_pos/omega_pos; domination uses restrict_le_self and map_mono. Dimension-computing marginal_decomposition helpers additionally assume hsep/hjr; they alone do not certify this unconditional algebra."
@@ -570,7 +568,7 @@ entries:
     sha256: "c0a21432a01972a1b7b9dd27049153a6a59a502c1ce1aa8d1fc6df7a119f9294"
     status: "formalized"
     lean: ["BoxLike.System.marginal_isDoubleDim_normalised", "BoxLike.System.marginal_isDoubleDim", "BoxLike.ae_hasLocalDim_iff_of_le", "BoxLike.IsExactDim.of_le"]
-    hypotheses: ["BoxLike.FengHuExactDim", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition"]
+    hypotheses: ["BoxLike.FengHuExactDim", "BoxLike.FengKaenmakiGibbs"]
     relation: "exact"
     headline: false
     note: "For 0 < s < 2 both coordinate marginals of the s-equilibrium state are double-dimensional without any separation condition. The exact-dimensionality of the projected Gibbs measures enters as FengHuExactDim, from Feng–Hu, Theorem 2.8 (Comm. Pure Appl. Math. 62 (2009)); eq:restricted-projection-dimensions is ae_hasLocalDim_iff_of_le and IsExactDim.of_le."
@@ -581,7 +579,7 @@ entries:
     end: "-\\frac{\\overline{h}_0(\\mu_2)}{\\overline{\\lambda}(\\A,\\mu_2)} \\biggr\\} = s_2."
     sha256: "2752868739824e597703c22acfdd140037aa713b7bea86002b97c65ecef14c53"
     status: "cited"
-    hypotheses: ["BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.JordanRapaportDimension"]
+    hypotheses: ["BoxLike.FengKaenmakiGibbs", "BoxLike.JordanRapaportDimension"]
     lean: ["BoxLike.System.marginal_decomposition"]
     relation: "exact"
     headline: false
@@ -598,7 +596,7 @@ entries:
     relation: "split"
     headline: false
     note: "Simple spectrum from MorrisShmerkinLyapunov in the normalised case and the non-Bernoulli conclusion from FengKaenmakiGibbs; grouping a Bernoulli measure into pairs gives a Bernoulli measure (IsBernoulli.map_group), which transfers the conclusion to the second iterate."
-    reason: "The simple-spectrum conclusion uses MorrisShmerkinLyapunov; the preceding non-Bernoulli conclusion uses FengKaenmakiGibbs. Grouping a Bernoulli measure into pairs is asserted in the span but not formalised."
+
   - source: "Bernoulli measures: definition, invariance and ergodicity"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -654,7 +652,6 @@ entries:
     lean: ["BoxLike.IsGibbsWith.measureReal_cylinder_le_succ", "BoxLike.IsGibbsWith.doubling", "BoxLike.IsGibbs.doubling", "BoxLike.IsGibbsWith.measureReal_preimage_shift_cylinder_le", "BoxLike.IsGibbsPotential.doubling", "BoxLike.IsGibbs.doubling_symBall", "BoxLike.isOpen_iff_forall_symBall"]
     relation: "split"
     headline: false
-    reason: "The inequality of cylinder measures, with the sharp constant C² exp(P - f(σ^n 𝐢)) and its extension to the left by invariance, is proved; the metric form for the balls of Σ_Z is not formalised, and the paper does not use it."
     note: "The cylinder comparison and, for the metric 2^(-min|n|) whose balls are the centred cylinders, the doubling of balls with the square of the displayed constant (IsGibbsPotential.doubling); the paper does not specify the metric."
 
   - source: "Existence and uniqueness of ergodic Gibbs measures on the mixing sub-shift"
@@ -663,13 +660,13 @@ entries:
     start: "Recall that, since the sub-shift $\\Sigma_Z$ is mixing, for each H\\\"older continuous potential $f$ there exists a unique ergodic Gibbs measure"
     end: "\\cite[Theorem 4.7 and Corollary 4.2]{SarigNotes}."
     sha256: "7b5f693a533412c82c81cb0199e525b105e70e118328a711e3155fd1c3978edf"
-    status: "partially_formalized"
-    hypotheses: ["BoxLike.FraserJordanJurgaDecomposition"]
-    lean: ["BoxLike.exists_trans_trans", "BoxLike.IsGibbsPotential.eq_of_ergodic_of_isHolder", "BoxLike.IsGibbsPotential.pressure_eq_of_isHolder", "BoxLike.IsGibbs.eq_of_ergodic"]
+    status: "formalized"
+    hypotheses: []
+    lean: ["BoxLike.bowenGibbsExistence", "BoxLike.existsUnique_ergodic_isGibbsPotential", "BoxLike.exists_gibbsUpTo_periodic", "BoxLike.exists_isGibbsPotential_of_forall_gibbsUpTo", "BoxLike.IsGibbsPotential.ergodic", "BoxLike.IsGibbsPotential.ergodic_of_isHolder", "BoxLike.IsGibbsPotential.quasiBernoulli_cylinder", "BoxLike.exists_trans_trans", "BoxLike.IsGibbsPotential.eq_of_ergodic_of_isHolder", "BoxLike.IsGibbsPotential.pressure_eq_of_isHolder", "BoxLike.IsGibbs.eq_of_ergodic"]
     headline: false
-    note: "FraserJordanJurgaDecomposition supplies existence for the two specific singular-value potentials. It does not assert general Holder-potential existence and uniqueness on a mixing subshift."
-    relation: "partial"
-    reason: "Uniqueness of the ergodic Gibbs measure for every Holder potential and the identification of its constant with P_Z(f) are proved. Existence for a general Holder potential is Bowen theorem, prepared as the unauthorised proposal BowenGibbsExistence (source not yet verified); FraserJordanJurgaDecomposition supplies existence for the two singular-value potentials the proofs use."
+    note: "Proved without literature input (Bowen theorem; the article cites Sarig): for every Holder potential on the mixing sub-shift there is an ergodic Gibbs probability measure carried by Sigma_Z, and it is unique with constant P_Z(f). The weighted periodic-orbit measures satisfy uniform Gibbs bounds up to every length (exists_gibbsUpTo_periodic), a limit by compactness is an invariant Gibbs measure (exists_isGibbsPotential_of_forall_gibbsUpTo), and an invariant Gibbs measure is ergodic by the quasi-Bernoulli lower bound (IsGibbsPotential.ergodic); every invariant Gibbs measure carried by Sigma_Z is that measure. Mixing of the measure, which the sentence does not assert, is not formalised."
+    relation: "split"
+
   - source: "Set dimensions used in the introduction"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -686,7 +683,7 @@ entries:
     file: "diagonal-antidiagonal.tex"
     start: "By an affine iterated function system on $\\R^2$ we mean a finite tuple"
     end: "box-like with rotations''."
-    sha256: "87c49ebb15c2ad3c7eec7b99ad4d55bbaf5ce6d569ad2fa8afa50ca95ff1a44e"
+    sha256: "e01c58d789b04c5345ef791cc2cadc620685ea8bfddce9b05d17d33181196e24"
     status: "formalized"
     lean: ["BoxLike.System", "BoxLike.boxMat", "BoxLike.System.mat", "BoxLike.System.phi", "BoxLike.System.WithRotations", "BoxLike.System.attractor", "BoxLike.System.attractor_eq_iUnion", "BoxLike.System.Bounds.attractor_eq_iUnion", "BoxLike.IsBoxLikeWithRotations", "BoxLike.PlanarSystem.isBoxLikeWithRotations_iff_exists_system"]
     relation: "representation"
@@ -736,7 +733,7 @@ entries:
     relation: "split"
     headline: false
     note: "The one-sided projection of every contracting affine system, the series, Hutchinson existence and uniqueness, and (pi^+)_* mu^+ = pi_* mu for the natural extension; invertibility is not used. Box-like and general planar systems specialise."
-    reason: "The two-sided box-like canonical projection is formalised. The one-sided projection π^+ and equality of its push-forward with the natural extension are not defined/proved. Arbitrary-affine scope is not certified."
+
   - source: "Sub-shift Σ_Z and the codings τ, ω"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -748,7 +745,7 @@ entries:
     relation: "split"
     headline: false
     note: "The codings and transition identities, and topological mixing of Sigma_Z, which holds exactly when both orientations occur (isTopologicallyMixing_subshiftShift_iff)."
-    reason: "The codings and transition identities are proved. Positivity of the two-step transition matrix is proved, but no topological-mixing predicate/theorem connects this to the prose mixing claim."
+
   - source: "The projective system Ψ"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -790,7 +787,7 @@ entries:
     sha256: "473235ad80cb6ef390eddb94280207fd04b69642ec4a931dcf22db724f241ad6"
     status: "formalized"
     lean: ["BoxLike.NoOverlap.Params.sum_abs_det_lt_one", "BoxLike.System.dimaff_lt_of_pressure_neg", "BoxLike.System.dimaff_lt_two_of_sum_abs_det_lt_one", "BoxLike.NoOverlap.dimH_eq_dimaff'"]
-    hypotheses: ["BoxLike.NoOverlap.BaranyKaenmakiTheorem", "BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FraserJordanJurgaDecomposition", "BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar", "BoxLike.KittleKoglerDimension"]
+    hypotheses: ["BoxLike.NoOverlap.BaranyKaenmakiTheorem", "BoxLike.MorrisShmerkinLyapunov", "BoxLike.FengKaenmakiGibbs", "BoxLike.FengLedrappierYoung", "BoxLike.FengLedrappierYoungBar", "BoxLike.KittleKoglerDimension"]
     relation: "exact"
     headline: false
     note: "The source-faithful prime endpoint proves the example has dim_H=dimaff from BaranyKaenmakiTheorem and the seven main2 literature inputs; no transcendence premise."
@@ -809,14 +806,14 @@ entries:
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
     start: "we define the $i^{\\textrm{th}}$ \\emph{Lyapunov exponent} of $\\mu$ by setting"
-    end: "Notice also that $-\\infty < \\lambda_2(\\A,\\mu) \\le \\lambda_1(\\A,\\mu) < 0$."
-    sha256: "dbe568dee88cb49309d2eff82fc2369e39d9b66b64f8c4779dface4da337c25b"
+    end: "$\\|A_i\\|<1$ for every $i$, then $\\lambda_1(\\A,\\mu)<0$."
+    sha256: "7179f14a8af645a8d5817e2843845e0b14a3ae0a4ff6eeec9234c6b072534b2a"
     status: "formalized"
-    lean: ["BoxLike.System.lyapunov₁", "BoxLike.System.lyapunov₂", "BoxLike.System.tendsto_lyapunov₁", "BoxLike.System.tendsto_lyapunov₂", "BoxLike.System.lyapunov₁_neg", "BoxLike.System.lyapunov₂_le_lyapunov₁", "BoxLike.MatrixTuple.tendsto_lyapunov₁_of_det_ne_zero", "BoxLike.MatrixTuple.tendsto_lyapunov₂_of_det_ne_zero", "BoxLike.MatrixTuple.tendsto_log_norm_pastProd", "BoxLike.MatrixTuple.tendsto_log_alpha₂_pastProd"]
+    lean: ["BoxLike.System.lyapunov₁", "BoxLike.System.lyapunov₂", "BoxLike.System.tendsto_lyapunov₁", "BoxLike.System.tendsto_lyapunov₂", "BoxLike.System.lyapunov₁_neg", "BoxLike.System.lyapunov₂_le_lyapunov₁", "BoxLike.MatrixTuple.tendsto_lyapunov₁_of_det_ne_zero", "BoxLike.MatrixTuple.tendsto_lyapunov₂_of_det_ne_zero", "BoxLike.MatrixTuple.tendsto_log_norm_pastProd", "BoxLike.MatrixTuple.tendsto_log_alpha₂_pastProd", "BoxLike.MatrixTuple.lyapunov₂_le_lyapunov₁_of_det_ne_zero", "BoxLike.PlanarSystem.lyapunov₁_neg"]
     relation: "split"
     headline: false
-    note: "The limits exist for every invertible tuple (Fekete), with the Furstenberg-Kesten almost-everywhere limits along the backward products. The bound lambda_1 < 0 needs the contraction hypothesis, which the paragraph does not state for arbitrary tuples."
-    reason: "The limits defining the exponents exist for every invertible tuple (Fekete) and the box-like Oseledets filtration is constructed with its all-vector property. Oseledets theorem for arbitrary invertible planar tuples is the unauthorised proposal PlanarOseledets. The bound lambda_1 < 0 needs contraction, which the paragraph does not assume."
+    note: "The limits exist and are finite and ordered for every invertible tuple (Fekete), with the Furstenberg-Kesten almost-everywhere limits along the backward products. The paragraph assumes contraction for lambda_1 < 0, matching PlanarSystem.lyapunov₁_neg."
+
   - source: "Oseledets' theorem and the filtration eq:V_lyapunov"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -844,9 +841,9 @@ entries:
   - source: "Linear changes of coordinates"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
-    start: "Similarly, invertible linear changes of coordinates $T$ preserves pressure, Lyapunov exponents and the"
+    start: "Similarly, invertible linear changes of coordinates $T$ preserve pressure, Lyapunov exponents and the"
     end: "dimensions of planar sets and measures."
-    sha256: "e00fc31a174aa74aafebfecce16644f7f2b77b3150aa1f3b4c6b66775966d22f"
+    sha256: "0bdee92040c5efba5566ac70a7215536b66d37077bde04938e17079574b1c0c2"
     status: "formalized"
     lean: ["BoxLike.MatrixTuple.comparable_conj", "BoxLike.MatrixTuple.Comparable.pressure_eq", "BoxLike.MatrixTuple.Comparable.lyapunov₁_eq", "BoxLike.MatrixTuple.Comparable.lyapunov₂_eq", "BoxLike.MatrixTuple.Comparable.isEquilibriumState_iff", "BoxLike.dimH_image_linMap", "BoxLike.packingDim_image_linMap", "BoxLike.upperBoxDim_image_linMap", "BoxLike.hasLocalDim_map_linMap_iff", "BoxLike.isExactDim_map_linMap_iff", "BoxLike.isDoubleDim_map_linMap_iff", "BoxLike.PlanarSystem.ConjBy.attractor_eq", "BoxLike.PlanarSystem.ConjBy.dimH_attractor", "BoxLike.PlanarSystem.ConjBy.pressure_eq", "BoxLike.PlanarSystem.ConjBy.isEquilibriumState_iff", "BoxLike.System.dimaff_eq_of_conjBy"]
     hypotheses: []
@@ -888,7 +885,7 @@ entries:
     relation: "split"
     headline: false
     note: "Information and entropy of countable partitions relative to arbitrary sub-sigma-algebras (values in [0, infinity]), with the library objects as specialisations; the conditional measure of a two-set partition."
-    reason: "Disintegration is general on standard Borel spaces. condInfo/condEntropy specialise the canonical finite partition and saturated atom maps, not all countable Q and arbitrary conditioning sigma-algebras of the prose."
+
   - source: "Measurable partitions ξ_i and the dimensional entropies h_i"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -900,7 +897,7 @@ entries:
     relation: "split"
     headline: false
     note: "The partitions and entropies are defined for every planar system, measurable when lambda_2 < lambda_1, with mu(Sigma prime)=1 from the proved planar Oseledets theorem; the box-like objects are specialisations and agree modulo null sets with those of every choice of Oseledets set."
-    reason: "The partitions and entropies are defined for every planar system, measurable when lambda_2 < lambda_1, equal to the box-like ones by specialisation, and agree modulo null sets with those of every choice of Oseledets set. Full measure of Sigma prime for arbitrary tuples is Oseledets theorem, the unauthorised proposal PlanarOseledets."
+
   - source: "Partitions ξ̄_i and entropies h̄_i of the projective system"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -922,7 +919,7 @@ entries:
     relation: "split"
     headline: false
     note: "ksEntropy is the supremum over finite Borel partitions; the generator theorem gives ksEntropy = entropy for the two-sided shift, with the supremum attained at the time-zero partition."
-    reason: "The library defines entropy through finite block rates and proves its conditional-past identity. No definition/theorem equating it with the supremum over all finite Borel partitions has been supplied."
+
   - source: "Shannon–McMillan–Breiman theorem"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -946,7 +943,7 @@ entries:
     relation: "split"
     headline: false
     note: "For every tuple of invertible matrices: the limit, convexity between consecutive integers (and on [2, infinity)), Lipschitz continuity, and under contraction strict decrease and a unique zero."
-    reason: "The limits, strict decrease and unique zero are proved for BoxLike.System. The general matrix-tuple scope and convexity assertion are not fully represented."
+
   - source: "Modified affinity dimension"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -970,7 +967,7 @@ entries:
     relation: "split"
     headline: false
     note: "Energy, the variational inequality and existence of an equilibrium state for every tuple of invertible matrices; the box-like versions specialise."
-    reason: "Energy and the variational inequality are proved for BoxLike.System, not arbitrary planar tuples."
+
   - source: "Lyapunov dimension"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -993,7 +990,7 @@ entries:
     relation: "split"
     headline: false
     note: "The pressure P_Z(f) over periodic points exists for every Holder potential, the constant of a Gibbs measure is P_Z(f), and the one-symbol potentials of the proofs are special cases."
-    reason: "The library treats one-symbol potentials phi(j0), while the prose states pressure and Gibbs facts for arbitrary Holder potentials."
+
   - source: "The potentials f_{1,s}, f_{2,s} and the s-Gibbs measures"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -1005,7 +1002,7 @@ entries:
     relation: "representation"
     headline: false
     note: "eq:lyapunov_exp_for_psi is abs_gDeriv_futureWord and the identity φ^s(A_{𝐢|_n}) = max{exp S_n f_{1,s}(τ𝐢), exp S_n f_{2,s}(τ𝐢)} is svf_matWord_futureWord. The existence of the s-Gibbs measures is part of FraserJordanJurgaDecomposition. Existence of the two named Gibbs measures is supplied by FraserJordanJurgaDecomposition; formulas alone do not construct them."
-    hypotheses: ["BoxLike.FraserJordanJurgaDecomposition"]
+    hypotheses: []
   - source: "Pointwise dimensions, exact- and double-dimensional measures, upper packing and lower Hausdorff dimension"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"

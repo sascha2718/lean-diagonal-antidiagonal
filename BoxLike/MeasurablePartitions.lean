@@ -1,8 +1,8 @@
 module
 
 /-
-The partitions of `sec:entropies` are measurable partitions (tex lines 1959 to 1960 and 2007 to
-2008; Feng, Lemma 4.2): each of `ξ_0, ξ_1, ξ_2`, `ξ_1^⊥`, `\overline{ξ}_0`, `\overline{ξ}_1` is
+The partitions of `sec:entropies` are measurable partitions (tex lines 1868 to 1869 and 1914 to
+1915; Feng, Lemma 4.2): each of `ξ_0, ξ_1, ξ_2`, `ξ_1^⊥`, `\overline{ξ}_0`, `\overline{ξ}_1` is
 the partition into the fibres of a Borel map into `ℝ`. The map records the past `𝐢^-` and the
 coordinates of `π(𝐢)` or `\overline{π}(𝐢)` that the atom fixes, and sends the complement of `Σ'`
 or of `Σ_Z` to one separate value. `docs/layer-e.md` records the choices made.
@@ -29,11 +29,11 @@ open MeasureTheory Set
 /-! ### The past as a Borel map -/
 
 /-- The past `𝐢^- = (i_{-1}, i_{-2}, …)` of a sequence (`sec:two_sided_shift_space`, tex line
-856), as a sequence indexed by `ℕ`. -/
+809), as a sequence indexed by `ℕ`. -/
 def past {α : Type*} (x : ℤ → α) : ℕ → α := fun n => x (Int.negSucc n)
 
 /-- Two sequences have the same past exactly when `𝐢^- = 𝐣^-` in the sense of `SamePast`
-(`sec:two_sided_shift_space`, tex line 856). -/
+(`sec:two_sided_shift_space`, tex line 809). -/
 theorem past_eq_iff {α : Type*} {x y : ℤ → α} : past y = past x ↔ SamePast y x := by
   constructor
   · intro h n hn
@@ -55,7 +55,7 @@ theorem measurable_past {α : Type*} [MeasurableSpace α] :
 
 /-- A partition of a Borel set `D` into the fibres of a Borel map `G` into a standard Borel
 space, extended to `Ω` by the atom `Ω ∖ D`, is a measurable partition in the sense of
-`sec:conditional` (tex lines 1817 to 1819). The inducing map into `ℝ` is the exponential of a
+`sec:conditional` (tex lines 1748 to 1750). The inducing map into `ℝ` is the exponential of a
 measurable embedding of the target of `G` on `D`, and `0` on `Ω ∖ D`. -/
 theorem isMeasurablePartition_atomsOn {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X]
     [StandardBorelSpace X] {D : Set Ω} (hD : MeasurableSet D) {G : Ω → X} (hG : Measurable G)
@@ -87,7 +87,7 @@ variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClas
   (S : System ι)
 
 /-- The coordinate of `π(𝐢)` along the axis `slowAxis + c` is a Borel function of `𝐢`, since
-`Σ^τ` is Borel (`sec:lyapunov_exponents`, tex line 1677) and `π` is Borel. -/
+`Σ^τ` is Borel (`sec:lyapunov_exponents`, tex line 1622) and `π` is Borel. -/
 theorem measurable_coord_slowAxis_proj (μ : Measure (ℤ → ι)) (c : ZMod 2) :
     Measurable fun x => coord (S.slowAxis μ x + c) (S.proj x) := by
   classical
@@ -105,8 +105,8 @@ theorem measurable_coord_slowAxis_proj (μ : Measure (ℤ → ι)) (c : ZMod 2) 
   exact Measurable.ite (S.measurableSet_SigmaTau μ) (hc _) (hc _)
 
 /-- Feng, *Dimension of invariant measures for affine iterated function systems*,
-Duke Math. J. 172 (2023), Lemma 4.2, for the planar partitions (`sec:entropies`, tex lines 1959
-to 1960): `ξ_0, ξ_1, ξ_2` are measurable partitions, being the fibres of
+Duke Math. J. 172 (2023), Lemma 4.2, for the planar partitions (`sec:entropies`, tex lines 1868
+to 1869): `ξ_0, ξ_1, ξ_2` are measurable partitions, being the fibres of
 `𝐢 ↦ (𝐢^-, V_𝐢^i + π(𝐢))`. In the box-like case the proof is elementary once `Σ^τ` and `Σ^ω`
 are Borel. -/
 theorem isMeasurablePartition_xi (μ : Measure (ℤ → ι)) (i : ℕ) :
@@ -135,7 +135,7 @@ theorem isMeasurablePartition_xi (μ : Measure (ℤ → ι)) (i : ℕ) :
     simp [mem_oseledets_iff, past_eq_iff]
 
 /-- `ξ_1^⊥` is a measurable partition: "the same argument" as Feng, Lemma 4.2
-(`sec:entropies`, tex line 1960). -/
+(`sec:entropies`, tex line 1869). -/
 theorem isMeasurablePartition_xiPerp (μ : Measure (ℤ → ι)) :
     IsMeasurablePartition (S.xiPerp μ) := by
   have h0 := S.measurable_coord_slowAxis_proj μ 0
@@ -160,8 +160,8 @@ section Projective
 variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   (S : System ι)
 
-/-- Feng, Lemma 4.2, for the projective system `Ψ` on `ℝ` (`sec:entropies`, tex lines 2007 to
-2013): `\overline{ξ}_0` and `\overline{ξ}_1` are measurable partitions. -/
+/-- Feng, Lemma 4.2, for the projective system `Ψ` on `ℝ` (`sec:entropies`, tex lines 1914 to
+1920): `\overline{ξ}_0` and `\overline{ξ}_1` are measurable partitions. -/
 theorem isMeasurablePartition_xiBar (i : ℕ) : IsMeasurablePartition (S.xiBar i) := by
   obtain ⟨r, M, hS⟩ := S.exists_bounds
   rcases i with _ | i

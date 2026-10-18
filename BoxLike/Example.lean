@@ -204,7 +204,7 @@ theorem iterate_transfer_of_eigenvector (hv : S.transfer s v = ρ • v) (n : �
   | succ n ih => rw [Function.iterate_succ_apply', ih, transfer_smul, hv, smul_smul, pow_succ]
 
 /-- "Multiplication of these matrices records the two possible coordinate contractions of each
-word", tex lines 3095 to 3096: `(M(s)^n v)(c) = ∑_{|𝐢| = n} |g'_𝐣|^s v(c + o(𝐢))`, where `𝐣` is
+word", tex lines 3014 to 3015: `(M(s)^n v)(c) = ∑_{|𝐢| = n} |g'_𝐣|^s v(c + o(𝐢))`, where `𝐣` is
 the path of `Σ_Z` over `𝐢` starting on the axis `c`. -/
 theorem sum_abs_gDeriv_rpow_mul (s : ℝ) (n : ℕ) (v : ZMod 2 → ℝ) (c : ZMod 2) :
     ∑ w : Fin n → ι, |S.gDeriv (S.codeWord c (List.ofFn w))| ^ s *
@@ -220,7 +220,7 @@ theorem sum_abs_gDeriv_rpow_mul (s : ℝ) (n : ℕ) (v : ZMod 2 → ℝ) (c : ZM
     simp [codeWord_append, gDeriv_append, oWord_append, abs_mul,
       Real.mul_rpow (abs_nonneg _) (abs_nonneg _), add_assoc, mul_assoc]
 
-/-- The two-sided comparison of `Example.sys`, tex lines 3097 to 3101, for
+/-- The two-sided comparison of `Example.sys`, tex lines 3019 to 3025, for
 a positive vector `v` in place of `(1, 1)`: for `0 ≤ s ≤ 1`,
 `min(v) ∑_{|𝐢| = n} φ^s(A_𝐢) ≤ (1, 1) M(s)^n v ≤ 2 max(v) ∑_{|𝐢| = n} φ^s(A_𝐢)`. The factor two
 compares the maximum of two terms with their sum. -/

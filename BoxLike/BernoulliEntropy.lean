@@ -2,7 +2,7 @@ module
 
 /-
 The entropy argument for the case `s ≥ 2` of `thm:main_extended` in `sec:normalisation`, tex
-lines 2471 to 2480: the entropy of an invariant measure `μ` on the full shift `ℤ → α` is at most
+lines 2385 to 2394: the entropy of an invariant measure `μ` on the full shift `ℤ → α` is at most
 the entropy `H_μ(𝒫)` of the one-symbol partition, with equality only for a Bernoulli measure, and
 the variational expression `H(p) + ∑_i p_i log q_i` of a probability vector `p` is maximised
 uniquely by `p_i = q_i / ∑_j q_j`.
@@ -346,7 +346,7 @@ theorem measureReal_cylinder_eq_prod_of_entropy_eq {μ : Measure (ℤ → α)} [
     rw [ha, Fin.prod_univ_castSucc]
     rfl
 
-/-- If `h(μ) = H_μ(𝒫)`, then `μ` is a Bernoulli measure in the sense of tex lines 2451 to 2455,
+/-- If `h(μ) = H_μ(𝒫)`, then `μ` is a Bernoulli measure in the sense of tex lines 2355 to 2360,
 with the probability vector `p_i = μ[i]`: the cylinder `σ^{-k}[w] = {x : x_k ⋯ x_{k+n-1} = w}`
 at an arbitrary position `k ∈ ℤ` has measure `∏_j p_{w_j}`. -/
 theorem measureReal_preimage_shift_cylinder_eq_prod_of_entropy_eq {μ : Measure (ℤ → α)}

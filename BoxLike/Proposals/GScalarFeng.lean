@@ -8,7 +8,7 @@ boundary, nothing outside `BoxLike/Proposals/` imports it, and every result in i
 Ledrappier–Young formula for the diagonal subsystems is derived there from the authorised planar
 statement `FengLedrappierYoung` (`BoxLike/MainTwoProse/ScalarFeng.lean`).
 
-The proof of `thm:main2` (tex lines 3765 to 3770) cites Feng, Theorems 1.2 and 1.3, for the
+The proof of `thm:main2` (tex lines 3716 to 3721) cites Feng, Theorems 1.2 and 1.3, for the
 coordinate projections of the finite diagonal subsystems `Φ_n`. The authorised scalar statement
 `FengLedrappierYoungBar` transcribes the second part of `thm:feng1`, which the article states for
 proximal box-like systems with rotations; a diagonal subsystem has no rotation, so the authorised
@@ -46,7 +46,7 @@ exact-dimensional with
 Source. D.-J. Feng, *Dimension of invariant measures for affine iterated function systems*,
 Duke Math. J. 172 (2023), arXiv:1901.01691v2, Theorems 1.2 and 1.3; the authorised transcription
 `FengLedrappierYoungBar` records the comparison with arXiv v2 (2026-09-20). The manuscript cites
-the theorems for the diagonal subsystems at tex lines 3765 to 3770.
+the theorems for the diagonal subsystems at tex lines 3716 to 3721.
 
 Source hypotheses. An affine iterated function system `S_j(x) = M_j x + a_j` on `ℝ^d` with
 invertible contracting `M_j`, and an ergodic shift-invariant probability measure `m` on the

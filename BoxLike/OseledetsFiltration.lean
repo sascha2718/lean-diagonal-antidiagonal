@@ -1,7 +1,7 @@
 module
 
 /-
-The Oseledets filtration of `sec:lyapunov_exponents` (tex lines 1620 to 1665) and
+The Oseledets filtration of `sec:lyapunov_exponents` (tex lines 1585 to 1630) and
 `thm:lyapunov_exponents_via_g_system` in the form of the article. The article takes from
 Oseledets' theorem a Borel set `Σ'` with `σ(Σ') = Σ'` and `μ(Σ') = 1`, saturated with respect
 to the past, and measurable subspaces `{0} = V_𝐢^2 ⊊ V_𝐢^1 ⊊ V_𝐢^0 = ℝ²` with the properties
@@ -40,7 +40,7 @@ sets `Σ^τ`, `Σ^ω` for this choice, and agree with them modulo `μ`-null sets
 * `System.oseledetsSet`: a choice of `Σ'` for a box-like tuple, with `Σ' = S.SigmaPrime μ`.
 * `System.V_one_eq_axis`, `System.carrier_subset_SigmaPrime`, `System.V_eq_oseledetsSub`,
   `System.mem_V_iff_mem_oseledets`: for every choice `V_𝐢^1` is a coordinate axis (tex lines
-  1649 to 1651) and the filtration is the coordinate filtration.
+  1614 to 1616) and the filtration is the coordinate filtration.
 * `System.sigmaTau_eq_inter`, `System.sigmaOmega_eq_inter`, `System.sigmaTau_ae_eq`,
   `System.sigmaOmega_ae_eq`, `System.sigmaTau_union_sigmaOmega`, `System.carrier_ae_eq`: the
   article's `Σ'`, `Σ^τ`, `Σ^ω` agree with the box-like sets on `Σ'`, hence modulo `μ`-null sets,
@@ -240,7 +240,7 @@ theorem HasEucPastRate.unique {x : ℤ → ι} {v : Fin 2 → ℝ} {l l' : ℝ} 
     (h' : HasEucPastRate A x v l') : l = l' :=
   tendsto_nhds_unique h h'
 
-/-- The backward growth rate depends only on the past `𝐢^-` (tex lines 1636 to 1641). -/
+/-- The backward growth rate depends only on the past `𝐢^-` (tex lines 1600 to 1606). -/
 theorem hasEucPastRate_congr {x y : ℤ → ι} (h : SamePast x y) (v : Fin 2 → ℝ) (l : ℝ) :
     HasEucPastRate A x v l ↔ HasEucPastRate A y v l := by
   simp only [HasEucPastRate, pastWord_congr h]
@@ -261,7 +261,7 @@ theorem hasEucPastRate_shift_neg_one_iff (x : ℤ → ι) (v : Fin 2 → ℝ) (l
 variable (A) [MeasurableSpace ι]
 
 /-- A choice of the set `Σ'` and of the Oseledets filtration of `sec:lyapunov_exponents` (tex
-lines 1620 to 1641 and 1652 to 1653) for the tuple `𝖠` and the measure `μ`: a Borel set `Σ'`
+lines 1585 to 1606 and 1617 to 1618) for the tuple `𝖠` and the measure `μ`: a Borel set `Σ'`
 with `σ(Σ') = Σ'` and `μ(Σ') = 1`, containing every sequence sharing the past of one of its
 elements, and subspaces `V_𝐢^0, V_𝐢^1, V_𝐢^2` of `ℝ²` with, at every `𝐢 ∈ Σ'`,
 (V1) `A_{i_{-1}} V_𝐢^i = V_{σ^{-1}(𝐢)}^i`, (V2) `dim V_𝐢^i = 2 - i`, and (V3)
@@ -280,8 +280,8 @@ structure OseledetsSet (μ : Measure (ℤ → ι)) where
   image_shift : shift 1 '' carrier = carrier
   /-- `μ(Σ') = 1`, for the probability measure `μ`. -/
   measure_compl : μ carrierᶜ = 0
-  /-- `Σ'` contains every sequence sharing the past of one of its elements (tex lines 1652
-  to 1653). -/
+  /-- `Σ'` contains every sequence sharing the past of one of its elements (tex lines 1617
+  to 1618). -/
   mem_of_samePast : ∀ x ∈ carrier, ∀ y, SamePast y x → y ∈ carrier
   /-- The subspaces are measurable: their graphs are Borel. -/
   measurableSet_V : ∀ i ≤ 2, MeasurableSet {p : (ℤ → ι) × (Fin 2 → ℝ) | p.2 ∈ V p.1 i}
@@ -375,7 +375,7 @@ theorem mem_V_one_iff (hlt : lyapunov₂ A μ < lyapunov₁ A μ) {x : ℤ → �
       have := hl.unique (O.hasEucPastRate_of_notMem hx hv)
       linarith
 
-/-- `V_𝐢^1` depends only on the past `𝐢^-` (tex lines 1636 to 1641), by `eq:V_lyapunov`. -/
+/-- `V_𝐢^1` depends only on the past `𝐢^-` (tex lines 1600 to 1606), by `eq:V_lyapunov`. -/
 theorem V_one_eq_of_samePast (hlt : lyapunov₂ A μ < lyapunov₁ A μ) {x y : ℤ → ι}
     (hx : x ∈ O.carrier) (hy : y ∈ O.carrier) (h : SamePast x y) : O.V x 1 = O.V y 1 := by
   ext v
@@ -635,7 +635,7 @@ theorem finrank_oseledetsSub (μ : Measure (ℤ → ι)) (x : ℤ → ι) {i : �
   | 2, _ => show finrank ℝ (⊥ : Submodule ℝ (Fin 2 → ℝ)) = 2 - 2 by simp
   | _ + 3, h => by omega
 
-/-- `σ(Σ') = Σ'` for the box-like `Σ'` (tex line 1633). -/
+/-- `σ(Σ') = Σ'` for the box-like `Σ'` (tex line 1598). -/
 theorem image_shift_SigmaPrime (μ : Measure (ℤ → ι)) :
     shift 1 '' S.SigmaPrime μ = S.SigmaPrime μ := by
   ext y
@@ -733,7 +733,7 @@ section Identification
 
 variable {ι : Type*} [MeasurableSpace ι] {S : System ι} {μ : Measure (ℤ → ι)}
 
-/-- Tex lines 1649 to 1651, proved: for a box-like tuple and every choice of `Σ'` and of the
+/-- Tex lines 1614 to 1616, proved: for a box-like tuple and every choice of `Σ'` and of the
 filtration, `V_𝐢^1` is one of the coordinate axes at every `𝐢 ∈ Σ'`, "by (V3)". If neither
 `(1, 0)` nor `(0, 1)` lay on the line `V_𝐢^1`, both would grow at the rate `λ_1(𝖠, μ)`, and so
 would every vector, including the non-zero vectors of `V_𝐢^1`. -/

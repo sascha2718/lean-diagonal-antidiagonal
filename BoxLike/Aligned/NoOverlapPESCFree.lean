@@ -439,7 +439,7 @@ namespace Params
 
 variable (P : Params)
 
-/-- The maps of the projective system `Ψ` generate a free semigroup (tex lines 1518 to 1547), by
+/-- The maps of the projective system `Ψ` generate a free semigroup (tex lines 1482 to 1511), by
 the argument of the proof of `prop:ssc_no_overlap_not_pesc`. Let the homogeneous system
 `(λx, λx + t, λx + 1)` generate a free semigroup and let the parameters be algebraically
 independent over a subfield `K ∋ λ, t` of `ℝ`. Let `g_𝐢 = g_𝐣`.

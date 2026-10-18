@@ -42,7 +42,7 @@ open scoped Matrix.Norms.L2Operator
 
 variable {ι : Type*}
 
-/-- The tuple `𝖠` is box-like with rotations (`sec:box_like_self_affine`, tex lines 680 to 686):
+/-- The tuple `𝖠` is box-like with rotations (`sec:box_like_self_affine`, tex lines 641 to 650):
 every `A_i` is `D_i R_i` with `D_i = diag(d_1(i), d_2(i))` invertible, `‖D_i‖ < 1`, and `R_i` a
 linear isometry with `R_i([-1,1]²) = [-1,1]²`, and both rotating and non-rotating isometries
 occur. The isometry `R_i` is rotating when it moves the coordinate axes, `R_i e_1 ∉ ℝ e_1`, that

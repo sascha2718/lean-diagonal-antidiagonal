@@ -1,27 +1,23 @@
 module
 
 /-
-PROPOSAL FOR REVIEW. NOT AN AUTHORISED LITERATURE PREMISE.
+The result of Feng and Käenmäki that the article cites in `thm:irred_eq_state` (tex lines 2222
+to 2239) for every irreducible tuple of invertible planar matrices, as a `Prop`-valued definition
+in the form of the source: the potential `‖·‖^q` on the one-sided shift. A result that uses it
+takes it as a hypothesis. `docs/correspondence.md`, "Fidelity boundary", states the rules; the
+project owner authorised this statement. The predicates `FengKaenmakiGibbs` and
+`FengKaenmakiUnique` of `BoxLike/Literature.lean` and `BoxLike/LiteratureRemarks.lean` are its
+box-like specialisations.
 
-`thm:irred_eq_state` at the scope of the article, every irreducible tuple of invertible planar
-matrices and every `s > 0`, conditional on a broadened transcription of Feng–Käenmäki,
-Proposition 1.2. The library's predicates `FengKaenmakiGibbs` (`BoxLike/Literature.lean`) and
-`FengKaenmakiUnique` (`BoxLike/LiteratureRemarks.lean`) quantify over box-like systems only, so
-they do not cover the general tuple of `thm:irred_eq_state`. This file states the source
-theorem in its own form, the potential `‖·‖^q` on the one-sided shift, for real planar
-invertible tuples, proves that it implies both existing predicates, and assembles the general
-endpoint. Nothing outside `BoxLike/Proposals/` imports this file.
-
-* `FengKaenmakiNormEquilibrium`: the proposed premise, with its source boundary record.
-* `FengKaenmakiNormEquilibrium.degenerate_quarterTurn`: the conclusion of the premise holds at
-  the degenerate instance of one letter, the quarter turn.
-* `FengKaenmakiNormEquilibrium.twoSided`: the two-sided-shift reduction.
-* `FengKaenmakiNormEquilibrium.svf`: the singular value potential for `0 < s < 2`, by `q = s`
-  for `s ≤ 1` and the rescaled tuple with `q = 2 - s` for `1 < s < 2`.
+* `FengKaenmakiNormEquilibrium`: Feng–Käenmäki, Proposition 1.2, for real planar invertible
+  tuples, with its source boundary record.
+* `FengKaenmakiNormEquilibrium.degenerate_quarterTurn`: the conclusion holds at the degenerate
+  instance of one letter, the quarter turn.
+* `FengKaenmakiNormEquilibrium.twoSided`: the reduction to the two-sided shift.
+* `FengKaenmakiNormEquilibrium.svf`: the singular value potential for `0 < s < 2`, by `q = s` for
+  `s ≤ 1` and the rescaled tuple with `q = 2 - s` for `1 < s < 2`.
 * `FengKaenmakiNormEquilibrium.fengKaenmakiGibbs`, `FengKaenmakiNormEquilibrium.fengKaenmakiUnique`:
-  the premise implies the two existing predicates.
-* `MatrixTuple.irred_eq_state_of_fengKaenmaki`: `thm:irred_eq_state` for every irreducible
-  tuple of invertible planar matrices, conditional on the premise.
+  the statement implies the two box-like predicates.
 -/
 public import BoxLike.Literature
 public import BoxLike.LiteratureRemarks
@@ -38,12 +34,12 @@ open scoped Matrix Matrix.Norms.L2Operator
 
 universe u
 
-/-- **Proposed premise, not authorised.** Feng–Käenmäki, Proposition 1.2, for real planar
+/-- Feng–Käenmäki, Proposition 1.2, for real planar
 invertible tuples, in the form of the source.
 
 Source. De-Jun Feng and Antti Käenmäki, *Equilibrium states of the pressure function for
-products of matrices*, Discrete Contin. Dyn. Syst. 30 (2011), Proposition 1.2. For this
-proposal the statement was read in arXiv:1009.3129v1 (16 September 2010), p. 3, with its setting
+products of matrices*, Discrete Contin. Dyn. Syst. 30 (2011), Proposition 1.2. The statement was
+read in arXiv:1009.3129v1 (16 September 2010), p. 3, with its setting
 on pp. 1–2; the journal version was not consulted.
 
 Source hypotheses and conclusions. `F` is `ℝ` or `ℂ`; `{M_i}_{i=1}^ℓ` is a family of `d × d`
@@ -85,10 +81,9 @@ Relation to the library. The existing predicates `FengKaenmakiGibbs` and `FengKa
 are the box-like specialisations of the singular value form for `0 < s < 2`; they follow from
 this statement (`FengKaenmakiNormEquilibrium.fengKaenmakiGibbs`,
 `FengKaenmakiNormEquilibrium.fengKaenmakiUnique`) through the two-sided-shift reduction and the
-rescaling `A'_i = |det A_i|^{(s-1)/(2-s)} A_i` of tex lines 2270 to 2274, both proved in
-`BoxLike/TupleEquilibriumNorm.lean`. The broadening is from box-like contracting tuples to all
-irreducible invertible planar tuples, which is the scope at which the article states
-`thm:irred_eq_state`; the source covers it. Downstream use:
+rescaling `A'_i = |det A_i|^{(s-1)/(2-s)} A_i` of tex lines 2235 to 2239, both proved in
+`BoxLike/TupleEquilibriumNorm.lean`. The statement covers all irreducible invertible planar
+tuples, the scope at which the article states `thm:irred_eq_state`. Downstream use:
 `MatrixTuple.irred_eq_state_of_fengKaenmaki`. -/
 def FengKaenmakiNormEquilibrium : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
@@ -183,7 +178,7 @@ theorem twoSided (h : FengKaenmakiNormEquilibrium.{u}) (hA : ∀ i, (A i).det �
   exact map_eta_injective hinv' hμ (hU (μ'.map eta) (measurePreserving_shiftPlus_map_eta hinv')
     ((MatrixTuple.isNormEquilibriumPlus_map_eta_iff μ').2 heq'))
 
-/-- The singular value potential for `0 < s < 2`, tex lines 2270 to 2274: an invariant
+/-- The singular value potential for `0 < s < 2`, tex lines 2235 to 2239: an invariant
 `s`-equilibrium state of an irreducible tuple of invertible planar matrices has the Gibbs bounds
 of `thm:irred_eq_state` and is the only invariant `s`-equilibrium state. For `0 < s ≤ 1` the
 premise applies with `q = s`, since `φ^s = ‖·‖^s`; for `1 < s < 2` it applies to the rescaled
@@ -215,47 +210,18 @@ end FengKaenmakiNormEquilibrium
 
 /-! ### The existing predicates -/
 
-/-- The proposed premise implies the library's `FengKaenmakiGibbs`, its specialisation to
+/-- `FengKaenmakiNormEquilibrium` implies the library's `FengKaenmakiGibbs`, its specialisation to
 box-like systems and `0 < s < 2`. -/
 theorem FengKaenmakiNormEquilibrium.fengKaenmakiGibbs (h : FengKaenmakiNormEquilibrium.{u}) :
     FengKaenmakiGibbs.{u} := by
   intro ι _ _ _ S hirr s hs0 hs2 μ _ hμ heq
   exact (h.svf S.det_mat_ne_zero hirr hs0 hs2 hμ heq).1
 
-/-- The proposed premise implies the library's `FengKaenmakiUnique`, its specialisation to
+/-- `FengKaenmakiNormEquilibrium` implies the library's `FengKaenmakiUnique`, its specialisation to
 box-like systems and `0 < s < 2`. -/
 theorem FengKaenmakiNormEquilibrium.fengKaenmakiUnique (h : FengKaenmakiNormEquilibrium.{u}) :
     FengKaenmakiUnique.{u} := by
   intro ι _ _ _ S hirr s hs0 hs2 μ μ' _ _ hμ hμ' heq heq'
   exact ((h.svf S.det_mat_ne_zero hirr hs0 hs2 hμ' heq').2 μ inferInstance hμ heq)
-
-/-! ### `thm:irred_eq_state` for every irreducible tuple -/
-
-/-- `thm:irred_eq_state`, **conditional on the proposed premise
-`FengKaenmakiNormEquilibrium`**. If `𝖠 = (A_1, …, A_N)` is an irreducible tuple of invertible
-planar matrices, then for each `s > 0` there is an invariant `s`-equilibrium state `μ`, every
-invariant `s`-equilibrium state equals `μ`, `μ` is ergodic, and there is `C ≥ 1` with
-`C⁻¹ exp(-|𝐢| P(𝖠, s)) φ^s(A_𝐢) ≤ μ([𝐢]) ≤ C exp(-|𝐢| P(𝖠, s)) φ^s(A_𝐢)` for all finite words.
-Existence is the variational construction (`MatrixTuple.exists_isEquilibriumState`); for
-`0 < s < 2` uniqueness and the Gibbs bounds come from the premise through the reductions of
-tex lines 2270 to 2274 (`FengKaenmakiNormEquilibrium.svf`); for `s ≥ 2` they are the determinant
-calculation (`MatrixTuple.irred_eq_state_of_two_le`); ergodicity follows from uniqueness
-(`MatrixTuple.ergodic_of_unique`). -/
-theorem MatrixTuple.irred_eq_state_of_fengKaenmaki (h : FengKaenmakiNormEquilibrium.{u})
-    {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-    (A : ι → Matrix (Fin 2) (Fin 2) ℝ) (hA : ∀ i, (A i).det ≠ 0) (hirr : TupleIrreducible A)
-    {s : ℝ} (hs0 : 0 < s) :
-    ∃ μ : Measure (ℤ → ι), IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ ∧
-      MatrixTuple.IsEquilibriumState A s μ ∧
-      (∀ ν : Measure (ℤ → ι), IsProbabilityMeasure ν → MeasurePreserving (shift 1) ν ν →
-        MatrixTuple.IsEquilibriumState A s ν → ν = μ) ∧
-      Ergodic (shift 1) μ ∧ MatrixTuple.HasGibbsBounds A s μ := by
-  have := hirr.nonempty
-  rcases lt_or_ge s 2 with hs2 | hs2
-  · obtain ⟨μ, hprob, hinv, heq⟩ := MatrixTuple.exists_isEquilibriumState hA hs0.le
-    obtain ⟨hG, hU⟩ := h.svf hA hirr hs0 hs2 hinv heq
-    exact ⟨μ, hprob, hinv, heq, hU,
-      MatrixTuple.ergodic_of_unique hA hs0.le hinv heq hU, hG⟩
-  · exact MatrixTuple.irred_eq_state_of_two_le hA hs2
 
 end BoxLike

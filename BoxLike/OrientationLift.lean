@@ -2,7 +2,7 @@ module
 
 /-
 The orientation lift in the proof of `thm:eq_state_proj_dim` for `s ≥ 2`, in
-`sec:dimension_of_projections` (tex lines 2908 to 2926): for a Bernoulli measure `μ` on `Σ` the
+`sec:dimension_of_projections` (tex lines 2855 to 2872): for a Bernoulli measure `μ` on `Σ` the
 measure `\widetilde μ = (τ_*μ + ω_*μ) / 2` on `Σ_Z` chooses the initial axis uniformly and then
 each planar symbol independently. It is a stationary Markov measure, mixing when both matrix
 types have positive probability, hence ergodic. Its entropy is `h_0(μ)`, and Birkhoff's theorem
@@ -633,7 +633,7 @@ theorem eq_liftBlock_iff {n : ℕ} (v : Fin (n + 1) → ι × ZMod 2) :
 
 omit [MeasurableSpace ι] [Fintype ι] [MeasurableSingletonClass ι] in
 /-- Each planar word `w` of positive length has exactly two orientation lifts, as in the proof of
-`thm:eq_state_proj_dim` (tex line 2913): an admissible word `v` of `Σ_Z` over `w` is
+`thm:eq_state_proj_dim` (tex line 2860): an admissible word `v` of `Σ_Z` over `w` is
 `liftBlock o 0 w` or `liftBlock o 1 w`, and these two lifts differ. -/
 theorem admissible_iff_eq_liftBlock {n : ℕ} (v : Fin (n + 1) → ι × ZMod 2)
     (w : Fin (n + 1) → ι) :
@@ -661,7 +661,7 @@ theorem admissible_iff_eq_liftBlock {n : ℕ} (v : Fin (n + 1) → ι × ZMod 2)
 
 omit [MeasurableSpace ι] [Fintype ι] [MeasurableSingletonClass ι] in
 /-- The two orientation lifts of a planar word of positive length differ in their initial axis,
-as in the proof of `thm:eq_state_proj_dim` (tex line 2913). -/
+as in the proof of `thm:eq_state_proj_dim` (tex line 2860). -/
 theorem liftBlock_zero_ne_one {n : ℕ} (w : Fin (n + 1) → ι) :
     liftBlock o 0 w ≠ liftBlock o 1 w := fun h => by
   have h0 := congrArg (fun v => (v 0).2) h

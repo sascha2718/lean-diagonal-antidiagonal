@@ -2,7 +2,7 @@ module
 
 /-
 The Gibbs measures and the equilibrium state of `ex:projection_double_dimensional` (tex lines
-3076 to 3096): the matrix `M(u)`, the vector `v = (p, 1 - p)`, the transition matrix
+3028 to 3048): the matrix `M(u)`, the vector `v = (p, 1 - p)`, the transition matrix
 `Q_{ij} = M(s)_{ij} v_j / v_i` on the two orientation states, the Markov measure on the
 projective shift `Σ_Z` that it defines, the identification of the `s`-Gibbs measures `μ_1`, `μ_2`
 of `thm:eq_state_is_sum` with this measure and its mirror image, and the entropy and the two
@@ -250,7 +250,7 @@ theorem stateRatio_pos (P : Params) (c : ZMod 2) : 0 < stateRatio P c := by
   · exact P.a_pos
   · exact P.b_pos
 
-/-- The matrix `M(u)` of `ex:projection_double_dimensional` (tex lines 3062 to 3066): its
+/-- The matrix `M(u)` of `ex:projection_double_dimensional` (tex lines 3014 to 3018): its
 `(i, j)` entry sums the `u`th powers of the contractions from the coordinate `j` to the
 coordinate `i`. By `System.coord_phi`, the map `k` sends the coordinate `i + o(k)` to the
 coordinate `i` with the contraction of the axis `i`. -/
@@ -265,7 +265,7 @@ theorem card_labels (i j : ZMod 2) :
   revert i j
   decide
 
-/-- `M(u) = 2 (a^u, a^u; b^u, b^u)`, the display of tex lines 3064 to 3066. -/
+/-- `M(u) = 2 (a^u, a^u; b^u, b^u)`, the display of tex lines 3016 to 3018. -/
 theorem M_apply (P : Params) (u : ℝ) (i j : ZMod 2) : M P u i j = 2 * stateRatio P i ^ u := by
   rw [M, Matrix.of_apply, ← Finset.sum_filter, Finset.sum_const, card_labels, nsmul_eq_mul]
   norm_num
@@ -332,7 +332,7 @@ theorem prob_pos_lt_one (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) : 0 < prob P s ∧ 
   unfold prob
   constructor <;> linarith
 
-/-- `M(s) v = v`, tex line 3079: `v = (p, 1 - p)` is an eigenvector of `M(s)` with eigenvalue
+/-- `M(s) v = v`, tex line 3031: `v = (p, 1 - p)` is an eigenvector of `M(s)` with eigenvalue
 `2 a^s + 2 b^s = 1`. -/
 theorem mulVec_M_v (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
     (M P s).mulVec (v (prob P s)) = v (prob P s) := by
@@ -342,18 +342,18 @@ theorem mulVec_M_v (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
     v_prob P hP]
 
 /-- The transition probabilities `Q_{ij} = M(s)_{ij} v_j / v_i` on the two orientation states of
-the `s`-Gibbs measure `μ_1`, tex lines 3079 to 3084. -/
+the `s`-Gibbs measure `μ_1`, tex lines 3031 to 3036. -/
 noncomputable def Q (s : ℝ) : Matrix (ZMod 2) (ZMod 2) ℝ :=
   Matrix.of fun i j => M P s i j * v (prob P s) j / v (prob P s) i
 
-/-- `Q_{ij} = v_j`: both rows of `Q` are `(p, 1 - p)`, tex lines 3081 to 3083. -/
+/-- `Q_{ij} = v_j`: both rows of `Q` are `(p, 1 - p)`, tex lines 3033 to 3035. -/
 theorem Q_apply (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) (i j : ZMod 2) :
     Q P s i j = v (prob P s) j := by
   obtain ⟨h0, h1⟩ := prob_pos_lt_one P hP
   rw [Q, Matrix.of_apply, M_apply, ← v_prob P hP, mul_div_right_comm,
     div_self (v_pos h0 h1 i).ne', one_mul]
 
-/-- The stationary distribution of `Q` is `(p, 1 - p)`, tex line 3084: `v Q = v`. -/
+/-- The stationary distribution of `Q` is `(p, 1 - p)`, tex line 3036: `v Q = v`. -/
 theorem vecMul_v_Q (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
     Matrix.vecMul (v (prob P s)) (Q P s) = v (prob P s) := by
   funext j
@@ -362,7 +362,7 @@ theorem vecMul_v_Q (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
 
 /-- The probability `Q_{i, i + o(k)} / 2` of the labelled transition by the map `k` from the
 state `i`: the transition `i → i + o(k)` followed by one of its two equiprobable map choices,
-tex lines 3084 to 3086. -/
+tex lines 3036 to 3038. -/
 noncomputable def labelledProb (s : ℝ) (i : ZMod 2) (k : Fin 4) : ℝ :=
   Q P s i (i + orient k) / 2
 
@@ -375,7 +375,7 @@ theorem sum_labelledProb (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) (i : ZMod 2) :
 
 /-- From either state the four labelled transitions have the probabilities
 `p/2, p/2, (1-p)/2, (1-p)/2`, so their entropy is `-p log(p/2) - (1-p) log((1-p)/2)`,
-tex lines 3084 to 3089. -/
+tex lines 3036 to 3041. -/
 theorem sum_negMulLog_labelledProb (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) (i : ZMod 2) :
     ∑ k, Real.negMulLog (labelledProb P s i k) =
       -(prob P s * Real.log (prob P s / 2)) -
@@ -586,7 +586,7 @@ theorem markov_cylinder (hp0 : 0 ≤ p) (hp1 : p ≤ 1) {y : ℤ → Fin 4 × ZM
     · exact measurableSet_singleton _
     · exact (Set.toFinite _).measurableSet
 
-/-- The entropy of the Markov measure, tex lines 3086 to 3089:
+/-- The entropy of the Markov measure, tex lines 3038 to 3041:
 `h(markov p) = -p log(p/2) - (1-p) log((1-p)/2) = log 2 + H(p)`. The `n`-cylinders of the
 Markov measure are unions of `(n+1)`-cylinders of the Bernoulli measure and the reverse holds
 with `n` in place of `n + 1`, so the block entropies differ by a bounded amount from those of
@@ -692,7 +692,7 @@ theorem measureReal_cylinder_le_of_isGibbsWith (hp0 : 0 < p) (hp1 : p < 1)
     rw [h1, h2]
     simp
 
-/-- Identification of the Gibbs measure, tex lines 3079 to 3084: an ergodic probability measure
+/-- Identification of the Gibbs measure, tex lines 3031 to 3036: an ergodic probability measure
 carried by `Σ_Z` with the Gibbs property of `sec:gibbs_measures` for the potential
 `φ(j_0) = log(v_{c_0} / 2)` is the Markov measure `markov p`. Summing the comparison of
 `measureReal_cylinder_le_of_isGibbsWith` over the `n`-cylinders forces `P ≤ 0`, so
@@ -742,7 +742,7 @@ theorem eq_markov_of_isGibbs (hp0 : 0 < p) (hp1 : p < 1) {φ : Fin 4 × ZMod 2 �
 
 end Markov
 
-/-- The Markov form of the cylinder masses, tex lines 3079 to 3086: for `y ∈ Σ_Z` with axes
+/-- The Markov form of the cylinder masses, tex lines 3031 to 3038: for `y ∈ Σ_Z` with axes
 `c_k`, `markov p [y|_n] = v_{c_0} ∏_{k < n} Q_{c_k c_{k+1}} / 2`. The Markov measure starts in the
 stationary distribution `v = (p, 1 - p)`, moves between the orientation states with the
 transition matrix `Q` and chooses one of the two maps of each transition with probability
@@ -789,7 +789,7 @@ theorem hasProximalDiagonal : (sys P t).HasProximalDiagonal := by
 /-- The system of `ex:projection_double_dimensional` is proximal. -/
 theorem proximal : (sys P t).Proximal := (hasProximalDiagonal P t).proximal
 
-/-- The tuple of `ex:projection_double_dimensional` is irreducible, tex lines 3006 to 3007. -/
+/-- The tuple of `ex:projection_double_dimensional` is irreducible, tex lines 2953 to 2954. -/
 theorem irreducible : (sys P t).Irreducible :=
   System.irreducible_of_hasProximalDiagonal (withRotations P t) (hasProximalDiagonal P t)
 
@@ -814,7 +814,7 @@ theorem potential₂_sys (hs1 : s ≤ 1) (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1)
     (sys P t).potential₂ s q = Real.log (v (1 - prob P s) q.2 / 2) := by
   rw [System.potential₂, potential₁_sys P t hs1 hP, v_add_one]
 
-/-- The `s`-Gibbs measures of `ex:projection_double_dimensional`, tex lines 3079 to 3084: in
+/-- The `s`-Gibbs measures of `ex:projection_double_dimensional`, tex lines 3031 to 3036: in
 every decomposition of `thm:eq_state_is_sum`, `μ_1` is the Markov measure with the vector
 `v = (p, 1 - p)` and `μ_2` the one with `(1 - p, p)`. -/
 theorem GibbsDecomposition.eq_markov (hs1 : s ≤ 1) (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1)
@@ -830,7 +830,7 @@ theorem GibbsDecomposition.eq_markov (hs1 : s ≤ 1) (hP : 2 * P.a ^ s + 2 * P.b
       hdec.supp₂ hdec.gibbs₂⟩
 
 /-- Averaging a function of the axis at time `0` with respect to the Markov measure with the
-vector `(q, 1 - q)`: the axis has the distribution `(q, 1 - q)`, tex lines 3090 to 3092. -/
+vector `(q, 1 - q)`: the axis has the distribution `(q, 1 - q)`, tex lines 3042 to 3044. -/
 theorem integral_markov_state {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1) (g : ZMod 2 → ℝ) :
     ∫ y, g (y 0).2 ∂(markov q) = q * g 0 + (1 - q) * g 1 := by
   have := isProbabilityMeasure_rho hq0 hq1
@@ -847,7 +847,7 @@ theorem integral_markov_state {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1) (g : ZMo
     smul_eq_mul]
   ring
 
-/-- `λ_1` through `μ_1`, tex lines 3090 to 3094: the selected coordinate contracts by `a` in the
+/-- `λ_1` through `μ_1`, tex lines 3042 to 3046: the selected coordinate contracts by `a` in the
 first state and by `b` in the second, so `∫ f_{1,1} d(markov q) = q log a + (1 - q) log b`. -/
 theorem integral_potential₁_markov {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1) :
     ∫ y, (sys P t).potential₁ 1 (y 0) ∂(markov q) =
@@ -860,7 +860,7 @@ theorem integral_potential₁_markov {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1) :
   exact (integral_markov_state hq0 hq1 fun c => Real.log (stateRatio P c)).trans
     (by simp [stateRatio])
 
-/-- `λ_2` through `μ_1`, tex lines 3090 to 3095: the other coordinate has the complementary
+/-- `λ_2` through `μ_1`, tex lines 3042 to 3047: the other coordinate has the complementary
 contraction, so `∫ f_{2,1} d(markov q) = q log b + (1 - q) log a`. -/
 theorem integral_potential₂_markov {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1) :
     ∫ y, (sys P t).potential₂ 1 (y 0) ∂(markov q) =
@@ -886,7 +886,7 @@ theorem lyapBar_markov {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1) :
     (by simp [stateRatio])
 
 /-- `h_0`, `λ_1` and `λ_2` of the `s`-equilibrium state of `ex:projection_double_dimensional`,
-tex lines 3076 to 3096, for `0 < s ≤ 1` with `2 a^s + 2 b^s = 1` and `p = 2 a^s`. By
+tex lines 3028 to 3048, for `0 < s ≤ 1` with `2 a^s + 2 b^s = 1` and `p = 2 a^s`. By
 `FengKaenmakiGibbs` and `FraserJordanJurgaDecomposition`, every invariant `s`-equilibrium
 state `μ` has a decomposition of `thm:eq_state_is_sum`, whose Gibbs measures are
 `μ_1 = markov p` and `μ_2 = markov (1 - p)` (`GibbsDecomposition.eq_markov`). Hence

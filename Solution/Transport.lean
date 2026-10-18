@@ -193,14 +193,6 @@ end Partitions
 
 section Literature
 
-/-- The Gibbs decomposition of `thm:eq_state_is_sum` in the challenge vocabulary gives the
-library's. -/
-theorem gibbsDecomposition {ι : Type*} [MeasurableSpace ι] {S : BoxLike.System ι} {s : ℝ}
-    {μ : Measure (ℤ → ι)} {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)}
-    (h : (ofLib S).GibbsDecomposition s μ μ₁ μ₂) : S.GibbsDecomposition s μ μ₁ μ₂ :=
-  ⟨h.prob₁, h.prob₂, h.ergodic₁, h.ergodic₂, h.supp₁, h.supp₂, h.gibbs₁, h.gibbs₂, h.eq_tau,
-    h.eq_omega, h.eq₁, h.eq₂, h.lyapunov₁_eq, h.lyapunov₂_eq⟩
-
 /-- Morris–Shmerkin, `eq:simple_lyapunov`. -/
 theorem morrisShmerkinLyapunov (h : Challenge.MorrisShmerkinLyapunov.{u}) :
     BoxLike.MorrisShmerkinLyapunov.{u} := by
@@ -212,13 +204,6 @@ theorem fengKaenmakiGibbs (h : Challenge.FengKaenmakiGibbs.{u}) :
     BoxLike.FengKaenmakiGibbs.{u} := by
   intro ι _ _ _ S hirr s hs0 hs2 μ _ hinv heq
   exact h (ofLib S) hirr hs0 hs2 μ hinv heq
-
-/-- Fraser–Jordan–Jurga, `thm:eq_state_is_sum`. -/
-theorem fraserJordanJurgaDecomposition (h : Challenge.FraserJordanJurgaDecomposition.{u}) :
-    BoxLike.FraserJordanJurgaDecomposition.{u} := by
-  intro ι _ _ _ S hrot hdiag s hs0 hs2 μ _ hinv hgibbs
-  obtain ⟨μ₁, μ₂, hd⟩ := h (ofLib S) hrot hdiag hs0 hs2 μ hinv hgibbs
-  exact ⟨μ₁, μ₂, gibbsDecomposition hd⟩
 
 /-- Jordan–Rapaport, the dimension of `\overline{π}_*ν`. -/
 theorem jordanRapaportDimension (h : Challenge.JordanRapaportDimension.{u}) :

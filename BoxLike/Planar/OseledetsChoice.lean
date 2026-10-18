@@ -3,8 +3,8 @@ module
 /-
 The set `Σ'` of regular points of `BoxLike/Planar/Oseledets.lean` and the choices of `Σ'` and of
 the Oseledets filtration of `BoxLike/OseledetsFiltration.lean` (`MatrixTuple.OseledetsSet`), for
-an arbitrary tuple of invertible planar matrices (`sec:lyapunov_exponents`, tex lines 1620 to
-1664). Every choice is contained in the set of regular points and has the same slow line there;
+an arbitrary tuple of invertible planar matrices (`sec:lyapunov_exponents`, tex lines 1585 to
+1618). Every choice is contained in the set of regular points and has the same slow line there;
 conversely, the set of regular points with its filtration is a choice as soon as it has full
 measure. The existence of a choice is therefore the statement `μ(Σ') = 1` for the set of regular
 points, which is Oseledets' theorem. The two growth rates, with the supremum norm and with the

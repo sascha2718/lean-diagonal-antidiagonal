@@ -2,8 +2,8 @@ module
 
 /-
 The Shannon–McMillan–Breiman theorem for the two-sided shift over a finite alphabet, which
-`sec:entropies` cites from Petersen before `thm:feng_entropy_kolmogorov_sinai` (tex lines 2008
-to 2013) and the proof of `thm:main2` uses for its typical words (tex lines 3706 to 3712). The
+`sec:entropies` cites from Petersen before `thm:feng_entropy_kolmogorov_sinai` (tex lines 1973
+to 1977) and the proof of `thm:main2` uses for its typical words (tex lines 3658 to 3666). The
 proof is Breiman's (L. Breiman, Ann. Math. Statist. 28 (1957)) and uses no literature input.
 
 For an invariant probability measure `μ` on `ℤ → α`, invariance and the multiplication rule give
@@ -47,8 +47,8 @@ section Info
 
 variable {α : Type*} [Fintype α] [MeasurableSpace α] [MeasurableSingletonClass α]
 
-/-- The conditional information `I_μ(𝒫 | \widehat{ξ})` of `sec:conditional` (tex lines 1798 to
-1803) is Borel, for every partition `ξ`. -/
+/-- The conditional information `I_μ(𝒫 | \widehat{ξ})` of `sec:conditional` (tex lines 1729 to
+1734) is Borel, for every partition `ξ`. -/
 theorem measurable_condInfo (μ : Measure (ℤ → α)) [IsFiniteMeasure μ]
     (ξ : (ℤ → α) → Set (ℤ → α)) : Measurable (condInfo μ ξ) := by
   have h : Measurable fun p : α × (ℤ → α) => (condMeas μ ξ p.2).real {y | y 0 = p.1} :=
@@ -134,8 +134,8 @@ variable {α : Type*} [Fintype α] [MeasurableSpace α] [MeasurableSingletonClas
   {μ : Measure (ℤ → α)} [IsProbabilityMeasure μ]
 
 /-- The Shannon–McMillan–Breiman theorem for an invariant, not necessarily ergodic, probability
-measure on the two-sided shift over a finite alphabet (Breiman; `sec:entropies`, tex lines 2008
-to 2013): for every Borel set `D` of full measure and the partition `ξ` of `D` by the past `𝐢^-`,
+measure on the two-sided shift over a finite alphabet (Breiman; `sec:entropies`, tex lines 1973
+to 1977): for every Borel set `D` of full measure and the partition `ξ` of `D` by the past `𝐢^-`,
 extended by the atom `Ω ∖ D`,
 `-n⁻¹ log μ([x_0 ⋯ x_{n-1}]) → E_μ(I_μ(𝒫 | \widehat{ξ}) | ℐ)(x)` for `μ`-almost every `x`.
 It is the form of Feng's (4.17) (Feng, Duke Math. J. 172 (2023), Lemma 4.6) for the partition by
@@ -151,7 +151,7 @@ theorem tendsto_neg_log_cylinder_localEntropy (hinv : MeasurePreserving (shift 1
   simp only [iterate_shift_one, hsum n, div_eq_inv_mul]
 
 /-- The Shannon–McMillan–Breiman theorem for an ergodic measure on the two-sided shift over a
-finite alphabet, which `sec:entropies` cites from Petersen (tex lines 2008 to 2013):
+finite alphabet, which `sec:entropies` cites from Petersen (tex lines 1973 to 1977):
 `-n⁻¹ log μ([x_0 ⋯ x_{n-1}]) → h(μ)` for `μ`-almost every `x`, where `h(μ)` is the entropy rate
 `entropy μ`. -/
 theorem tendsto_neg_log_cylinder_entropy (herg : Ergodic (shift 1) μ) :
@@ -165,7 +165,7 @@ theorem tendsto_neg_log_cylinder_entropy (herg : Ergodic (shift 1) μ) :
   rwa [hxe, hc] at hx
 
 /-- The Shannon–McMillan–Breiman theorem in the form fixed by `BoxLike/SMBStatement.lean`
-(`sec:entropies`, tex lines 2008 to 2013), proved for every finite alphabet in the universe
+(`sec:entropies`, tex lines 1973 to 1977), proved for every finite alphabet in the universe
 `u`. -/
 theorem shannonMcMillanBreiman : ShannonMcMillanBreimanStatement.{u} := by
   intro α _ _ _ μ _ herg
@@ -182,8 +182,8 @@ variable {α : Type*} [Fintype α] [MeasurableSpace α] [MeasurableSingletonClas
 
 open Classical in
 /-- The typical words of length `n` for the entropy `h` and the tolerance `ε`: the words `w`
-with `e^{-n(h+ε)} ≤ μ([w]) ≤ e^{-n(h-ε)}` (`sec:dimension_result_proof`, tex lines 3706 to
-3712). -/
+with `e^{-n(h+ε)} ≤ μ([w]) ≤ e^{-n(h-ε)}` (`sec:dimension_result_proof`, tex lines 3658 to
+3666). -/
 noncomputable def typicalWords (μ : Measure (ℤ → α)) (h ε : ℝ) (n : ℕ) : Finset (Fin n → α) :=
   Finset.univ.filter fun w => Real.exp (-(n * (h + ε))) ≤ μ.real (cylinder w) ∧
     μ.real (cylinder w) ≤ Real.exp (-(n * (h - ε)))
@@ -272,7 +272,7 @@ theorem measurableSet_block_mem_typicalWords (h ε : ℝ) (n : ℕ) :
   measurable_block n (Set.toFinite _).measurableSet
 
 /-- The interface of the Shannon–McMillan–Breiman theorem for the typical words of the proof of
-`thm:main2` (tex lines 3706 to 3712): for an ergodic measure and all `ε, δ > 0`, the cylinders
+`thm:main2` (tex lines 3658 to 3666): for an ergodic measure and all `ε, δ > 0`, the cylinders
 of length `n` with measure between `e^{-n(h+ε)}` and `e^{-n(h-ε)}` eventually carry measure at
 least `1 - δ`. -/
 theorem eventually_sum_typicalWords (herg : Ergodic (shift 1) μ) {ε δ : ℝ} (hε : 0 < ε)
@@ -289,7 +289,7 @@ theorem eventually_sum_typicalWords (herg : Ergodic (shift 1) μ) {ε δ : ℝ} 
 /-- The form of the interface for a family of sets: for an ergodic measure and all `ε, δ > 0`,
 eventually every Borel set `B` keeps all but `δ` of its measure on the points with a typical
 block of length `n`. This is the form in which the typical words are combined with the Birkhoff
-and mixing conditions in the proof of `thm:main2` (tex lines 3700 to 3712). -/
+and mixing conditions in the proof of `thm:main2` (tex lines 3654 to 3666). -/
 theorem eventually_measureReal_inter_typical (herg : Ergodic (shift 1) μ) {ε δ : ℝ}
     (hε : 0 < ε) (hδ : 0 < δ) :
     ∀ᶠ n : ℕ in atTop, ∀ B : Set (ℤ → α), MeasurableSet B →
@@ -316,7 +316,7 @@ theorem measureReal_inter_typical_le_sum (B : Set (ℤ → α)) (h ε : ℝ) (n 
   exact fun _ => rfl
 
 /-- A family `W` of typical words of length `n` has at most `e^{n(h+ε)}` members
-(`sec:dimension_result_proof`, tex lines 3714 to 3715). -/
+(`sec:dimension_result_proof`, tex lines 3668 to 3669). -/
 theorem card_le_of_subset_typicalWords {h ε : ℝ} {n : ℕ} {W : Finset (Fin n → α)}
     (hW : W ⊆ typicalWords μ h ε n) : (W.card : ℝ) ≤ Real.exp (n * (h + ε)) := by
   have hsum : W.card * Real.exp (-(n * (h + ε))) ≤ 1 := by
@@ -338,7 +338,7 @@ theorem card_typicalWords_le (h ε : ℝ) (n : ℕ) :
 
 omit [MeasurableSingletonClass α] [IsProbabilityMeasure μ] in
 /-- A family `W` of typical words of length `n` has at least `e^{n(h-ε)}` times its total mass
-members (`sec:dimension_result_proof`, tex lines 3714 to 3715). -/
+members (`sec:dimension_result_proof`, tex lines 3668 to 3669). -/
 theorem le_card_of_subset_typicalWords {h ε : ℝ} {n : ℕ} {W : Finset (Fin n → α)}
     (hW : W ⊆ typicalWords μ h ε n) :
     (∑ w ∈ W, μ.real (cylinder w)) * Real.exp (n * (h - ε)) ≤ W.card := by

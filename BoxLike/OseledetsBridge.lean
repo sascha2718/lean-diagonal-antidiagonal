@@ -1,7 +1,7 @@
 module
 
 /-
-The partitions `ξ_0, ξ_1, ξ_2`, `ξ_1^⊥` of `sec:entropies` (tex lines 1889 to 1906) for the
+The partitions `ξ_0, ξ_1, ξ_2`, `ξ_1^⊥` of `sec:entropies` (tex lines 1854 to 1871) for the
 article's choice of `Σ'` and of the Oseledets filtration, and for Feng's choice, compared with
 the partitions `System.xi`, `System.xiPerp` of `BoxLike/DimPartitions.lean`, which use the
 box-like `Σ'` of `BoxLike/SlowAxis.lean`.
@@ -43,8 +43,8 @@ inside which the filtration is given by Feng's (4.6).
   choice.
 * `System.isMeasurablePartition_oseledetsXi`, `System.isMeasurablePartition_oseledetsXiPerp`,
   `System.oseledetsXi_succ_subset`, `System.oseledetsXi_two_subset_perp`,
-  `System.oseledetsXiPerp_subset_zero`: measurability and the inclusions of tex lines 1908 to
-  1910.
+  `System.oseledetsXiPerp_subset_zero`: measurability and the inclusions of tex lines 1873 to
+  1875.
 * `System.condMeas_oseledetsXi_ae_eq`, `System.condInfo_oseledetsXi_ae_eq`,
   `System.condEntropy_oseledetsXi_eq`, `System.localEntropy_oseledetsXi_ae_eq`,
   `System.condMeas_oseledetsXiPerp_ae_eq`, `System.condEntropy_oseledetsXiPerp_eq`: the
@@ -128,7 +128,7 @@ theorem exists_measurableSet_saturated_ae_eq_of_cut (μ : Measure Ω) [IsFiniteM
     rw [hc] at hB1
     exact zero_ne_one hB1
 
-/-- Comparison of partitions modulo null sets (`sec:entropies`, tex lines 1903 to 1906, and the
+/-- Comparison of partitions modulo null sets (`sec:entropies`, tex lines 1868 to 1871, and the
 header of `BoxLike/LiteratureFeng.lean`): if `ξ` is a measurable partition, `D` is a Borel set
 of full measure, the atom `ξ'(x)` is `ξ(x) ∩ D` for `x ∈ D` and avoids `D` for `x ∉ D`, then
 `ξ` and `ξ'` have the same conditional measures `μ_x^ξ = μ_x^{ξ'}` for `μ`-almost every `x`.
@@ -256,7 +256,7 @@ variable {ι : Type*} [MeasurableSpace ι] (S : System ι)
 
 /-- The partition of a set `D ⊆ Σ` into the sets `{𝐣 ∈ D : 𝐣^- = 𝐢^-, π(𝐣) - π(𝐢) ∈ W(𝐢)}`,
 extended to `Σ` by the atom `Σ ∖ D`, as the partitions `ξ_i`, `ξ_1^⊥` of `sec:entropies` (tex
-lines 1893 to 1902) and Feng's partitions (Section 4, before Lemma 4.2). -/
+lines 1858 to 1867) and Feng's partitions (Section 4, before Lemma 4.2). -/
 noncomputable def xiOn (D : Set (ℤ → ι)) (W : (ℤ → ι) → Set (ℝ × ℝ)) :
     (ℤ → ι) → Set (ℤ → ι) :=
   atomsOn D fun x => {y | SamePast y x ∧ S.proj y - S.proj x ∈ W x}
@@ -465,14 +465,14 @@ section Article
 variable {ι : Type*} [MeasurableSpace ι] (S : System ι) {μ : Measure (ℤ → ι)}
 
 /-- The partitions `ξ_i(𝐢) = {𝐣 ∈ Σ' : 𝐣^- = 𝐢^-, π(𝐣) - π(𝐢) ∈ V_𝐢^i}` of `sec:entropies` (tex
-lines 1893 to 1898) for a choice `O` of `Σ'` and of the Oseledets filtration, extended to `Σ` by
+lines 1858 to 1863) for a choice `O` of `Σ'` and of the Oseledets filtration, extended to `Σ` by
 the atom `Σ ∖ Σ'`; the indices of the article are `i ∈ {0, 1, 2}`. -/
 noncomputable def oseledetsXi (O : MatrixTuple.OseledetsSet S.mat μ) (i : ℕ) :
     (ℤ → ι) → Set (ℤ → ι) :=
   S.xiOn O.carrier fun x => {z | ![z.1, z.2] ∈ O.V x i}
 
 /-- The partition `ξ_1^⊥(𝐢) = {𝐣 ∈ Σ' : 𝐣^- = 𝐢^-, π(𝐣) - π(𝐢) ⊥ V_𝐢^1}` of `sec:entropies` (tex
-lines 1899 to 1902) for a choice `O` of `Σ'`, with the Euclidean inner product, extended to `Σ`
+lines 1864 to 1867) for a choice `O` of `Σ'`, with the Euclidean inner product, extended to `Σ`
 by the atom `Σ ∖ Σ'`. -/
 noncomputable def oseledetsXiPerp (O : MatrixTuple.OseledetsSet S.mat μ) :
     (ℤ → ι) → Set (ℤ → ι) :=
@@ -556,7 +556,7 @@ theorem oseledetsXiPerp_eq_inter (O : MatrixTuple.OseledetsSet S.mat μ)
   rw [oseledetsXiPerp, xiOn, atomsOn_of_mem hx]
   exact inter_subset_right
 
-/-- `ξ_2(𝐢) ⊆ ξ_1(𝐢) ⊆ ξ_0(𝐢)` for the article's partitions (tex line 1908). -/
+/-- `ξ_2(𝐢) ⊆ ξ_1(𝐢) ⊆ ξ_0(𝐢)` for the article's partitions (tex line 1873). -/
 theorem oseledetsXi_succ_subset (O : MatrixTuple.OseledetsSet S.mat μ)
     (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) {i : ℕ} (hi : i ≤ 1) (x : ℤ → ι) :
     S.oseledetsXi O (i + 1) x ⊆ S.oseledetsXi O i x := by
@@ -565,7 +565,7 @@ theorem oseledetsXi_succ_subset (O : MatrixTuple.OseledetsSet S.mat μ)
     exact S.xi_succ_subset μ i x
   · rw [S.oseledetsXi_of_notMem O hx, S.oseledetsXi_of_notMem O hx]
 
-/-- `ξ_2(𝐢) ⊆ ξ_1^⊥(𝐢)` for the article's partitions (tex line 1909). -/
+/-- `ξ_2(𝐢) ⊆ ξ_1^⊥(𝐢)` for the article's partitions (tex line 1874). -/
 theorem oseledetsXi_two_subset_perp (O : MatrixTuple.OseledetsSet S.mat μ)
     (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) (x : ℤ → ι) :
     S.oseledetsXi O 2 x ⊆ S.oseledetsXiPerp O x := by
@@ -574,7 +574,7 @@ theorem oseledetsXi_two_subset_perp (O : MatrixTuple.OseledetsSet S.mat μ)
     exact S.xi_two_subset_xiPerp μ x
   · rw [S.oseledetsXi_of_notMem O hx, S.oseledetsXiPerp_of_notMem O hx]
 
-/-- `ξ_1^⊥(𝐢) ⊆ ξ_0(𝐢)` for the article's partitions (tex line 1909). -/
+/-- `ξ_1^⊥(𝐢) ⊆ ξ_0(𝐢)` for the article's partitions (tex line 1874). -/
 theorem oseledetsXiPerp_subset_zero (O : MatrixTuple.OseledetsSet S.mat μ)
     (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) (x : ℤ → ι) :
     S.oseledetsXiPerp O x ⊆ S.oseledetsXi O 0 x := by
@@ -649,7 +649,7 @@ theorem oseledetsXi_oseledetsSet [IsProbabilityMeasure μ] (hinv : MeasurePreser
       S.oseledetsXiPerp (S.oseledetsSet μ hinv herg hlt) = S.xiPerp μ :=
   S.oseledetsXi_eq_xi _ hlt rfl hi
 
-/-- The article's partitions `ξ_i` are measurable partitions (tex lines 1903 to 1904; Feng,
+/-- The article's partitions `ξ_i` are measurable partitions (tex lines 1868 to 1869; Feng,
 Lemma 4.2). -/
 theorem isMeasurablePartition_oseledetsXi (O : MatrixTuple.OseledetsSet S.mat μ)
     (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) {i : ℕ} (hi : i ≤ 2) :
@@ -657,7 +657,7 @@ theorem isMeasurablePartition_oseledetsXi (O : MatrixTuple.OseledetsSet S.mat μ
   (S.isMeasurablePartition_xi μ i).cut O.measurableSet_carrier
     (fun _ hx => S.oseledetsXi_eq_inter O hlt hx hi) fun _ hx => S.oseledetsXi_of_notMem O hx i
 
-/-- The article's partition `ξ_1^⊥` is a measurable partition (tex lines 1904 to 1905). -/
+/-- The article's partition `ξ_1^⊥` is a measurable partition (tex lines 1868 to 1869). -/
 theorem isMeasurablePartition_oseledetsXiPerp (O : MatrixTuple.OseledetsSet S.mat μ)
     (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) : IsMeasurablePartition (S.oseledetsXiPerp O) :=
   (S.isMeasurablePartition_xiPerp μ).cut O.measurableSet_carrier
@@ -684,14 +684,14 @@ theorem condMeas_oseledetsXiPerp_ae_eq [IsFiniteMeasure μ]
       simp only [mem_ofPred_eq, V_one_eq_axis_slowAxis O hlt hx,
         forall_dotProduct_axis_eq_zero_iff]
 
-/-- The article's `i`-dimensional entropy `h_i(μ) = H_μ(𝒫 | \widehat{ξ}_i)` (tex lines 1926 to
-1932) for every choice of `Σ'` is `System.dimEntropy μ i`. -/
+/-- The article's `i`-dimensional entropy `h_i(μ) = H_μ(𝒫 | \widehat{ξ}_i)` (tex lines 1891 to
+1897) for every choice of `Σ'` is `System.dimEntropy μ i`. -/
 theorem condEntropy_oseledetsXi_eq [IsFiniteMeasure μ] (O : MatrixTuple.OseledetsSet S.mat μ)
     (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) {i : ℕ} (hi : i ≤ 2) :
     condEntropy μ (S.oseledetsXi O i) = S.dimEntropy μ i :=
   condEntropy_eq_of_condMeas (S.condMeas_oseledetsXi_ae_eq O hlt hi)
 
-/-- The article's pointwise entropy `h_i(μ, 𝐢)` (tex lines 1919 to 1925) for every choice of
+/-- The article's pointwise entropy `h_i(μ, 𝐢)` (tex lines 1884 to 1890) for every choice of
 `Σ'` is almost everywhere `System.dimEntropyAt μ i`. -/
 theorem localEntropy_oseledetsXi_ae_eq [IsFiniteMeasure μ]
     (O : MatrixTuple.OseledetsSet S.mat μ) (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) {i : ℕ}

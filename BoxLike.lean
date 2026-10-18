@@ -7,10 +7,11 @@ box-like self-affine sets with rotations" (Allen, Käenmäki, Prokaj, Simon, Tro
 The library is built on Mathlib alone, contains no `sorry` and declares no axiom: every
 constant depends on `propext`, `Classical.choice` and `Quot.sound` only. Literature theorems
 cited by the article without proof are `Prop`-valued definitions of the modules
-`BoxLike/Literature.lean`, `BoxLike/LiteratureFeng.lean` and `BoxLike/LiteratureRemarks.lean`,
-and every result that uses one takes it as a hypothesis; the last module holds the ones that no
-main result depends on. Proposed premises that await the owner's authorisation are in
-`BoxLike/Proposals/`, which this module does not import. `docs/correspondence.md` records the
+`BoxLike/Literature.lean`, `BoxLike/LiteratureFeng.lean`, `BoxLike/LiteraturePlanarFeng.lean`,
+`BoxLike/LiteratureFengKaenmaki.lean` and `BoxLike/LiteratureRemarks.lean`, and every result that
+uses one takes it as a hypothesis; the last module holds the ones that no main result depends
+on. Premises that are not authorised are in `BoxLike/Proposals/`, which this module does not
+import. `docs/correspondence.md` records the
 state of every numbered result, the remaining work and the fidelity boundary, and
 `docs/mathlib-gaps.md` the representation.
 
@@ -111,6 +112,21 @@ state of every numbered result, the remaining work and the fidelity boundary, an
 * `DimensionFormula`: `\dim_H(X) = min{2, dimaff}` under the hypotheses of `thm:main_extended`,
   the statement of Rossi's bound `eq:hausdorff_ergodic_lyapunov`, and equality in it for the
   equilibrium state.
+* `LiteraturePlanarFeng`, `Planar.FengOne`: Feng's Ledrappier–Young formula for planar
+  self-affine systems as a `Prop`, its box-like specialisation, and `thm:feng1` at the article's
+  scope.
+* `LiteratureFengKaenmaki`, `IrreducibleEquilibriumTuple`: Feng–Käenmäki, Proposition 1.2, for
+  irreducible invertible planar tuples as a `Prop`, its reductions and box-like specialisations,
+  and `thm:irred_eq_state` at the article's scope.
+* `Bowen`: Bowen's theorem, the existence of an ergodic Gibbs measure for every Hölder potential
+  on the mixing sub-shift `Σ_Z` (`bowenGibbsExistence`): the weighted periodic-orbit measures
+  satisfy uniform Gibbs bounds up to every length, a limit by compactness is an invariant Gibbs
+  measure, and a Gibbs measure is ergodic by a quasi-Bernoulli lower bound; with uniqueness,
+  `existsUnique_ergodic_isGibbsPotential`.
+* `FraserJordanJurga`: `thm:eq_state_is_sum`, the decomposition of the equilibrium state into the
+  two `s`-Gibbs measures and its Lyapunov exponents (`fraserJordanJurgaDecomposition_holds`), from
+  Bowen's theorem, the Gibbs bounds of the image of `μ_1` under forgetting the orientation, and a
+  relative-entropy comparison of the two projective exponents.
 * `LiteratureRemarks`: the literature theorems that no main result depends on, as `Prop`s:
   Feng–Hu, Theorem 2.8, and the uniqueness part of `thm:irred_eq_state`.
 * `NoSeparation`: the remark before `thm:eq_state_proj_dim` that the coordinate marginals are
@@ -128,10 +144,10 @@ state of every numbered result, the remaining work and the fidelity boundary, an
   `eq:haus_dim_sum` for all finite Borel measures, the second line of
   `eq:dimension_measure_def`.
 * `EquilibriumExistence`: an `s`-equilibrium state exists for every `s ≥ 0`, by the construction
-  of Misiurewicz (tex lines 2322 to 2323, Käenmäki); irreducibility is not needed.
+  of Misiurewicz (tex lines 2217 to 2218, Käenmäki); irreducibility is not needed.
 * `InvariantMeasures`: the invariant measures form a compact set in the weak-star topology and
-  `h_0 + Λ(𝖠, ·, s)` is upper semicontinuous on it, so it attains its maximum (tex lines 2322
-  to 2323, Käenmäki).
+  `h_0 + Λ(𝖠, ·, s)` is upper semicontinuous on it, so it attains its maximum (tex lines 2217
+  to 2218, Käenmäki).
 * `Example`: a separate rational two-map system accompanying `sec:dimension_of_projections`,
   whose coordinate marginals have two distinct pointwise dimensions, with `thm:main1` and
   `thm:main2` for `0 < s ≤ 1`; `ex:projection_double_dimensional` is `PrescribedExample`.
@@ -370,6 +386,20 @@ public import BoxLike.Aligned.BoxLikeSA
 public import BoxLike.Planar.ChangeOfBasis
 public import BoxLike.Support.PotentialsAtTwo
 public import BoxLike.Support.IntroductionClaims
+public import BoxLike.LiteraturePlanarFeng
+public import BoxLike.Planar.FengOne
+public import BoxLike.LiteratureFengKaenmaki
+public import BoxLike.IrreducibleEquilibriumTuple
+public import BoxLike.Bowen.Defs
+public import BoxLike.Bowen.PartitionBounds
+public import BoxLike.Bowen.PeriodicMeasures
+public import BoxLike.Bowen.Limit
+public import BoxLike.Bowen.Ergodic
+public import BoxLike.Bowen.Main
+public import BoxLike.FraserJordanJurga.Gibbs
+public import BoxLike.FraserJordanJurga.Decomposition
+public import BoxLike.FraserJordanJurga.Lyapunov
+public import BoxLike.FraserJordanJurga.Main
 public import BoxLike.IrreducibleEquilibrium
 public import BoxLike.BernoulliGrouping
 public import BoxLike.TwoBlockNormalisation

@@ -2,8 +2,8 @@ module
 
 /-
 The set-based argument of `sec:ledrappier_young_formula` for the dimensions of a sum of measures
-(tex lines 2709 to 2721), and the characterisation of double-dimensional measures by
-`\overline{dim}_p` and `\underline{dim}_H` (tex lines 2737 to 2739).
+(tex lines 2674 to 2685), and the characterisation of double-dimensional measures by
+`\overline{dim}_p` and `\underline{dim}_H` (tex lines 2686 to 2688).
 
 The article derives `eq:haus_dim_sum` from `eq:dimension_measure_def`. Since `μ ≪ μ + ν`, every
 Borel set of full `(μ + ν)`-measure has full `μ`-measure and every Borel set of positive
@@ -22,7 +22,7 @@ Both lines of `eq:dimension_measure_def` are theorems of `PackingDimMeasure` and
   `eq:dimension_measure_def`.
 * `le_upperPackingDim_add_left`, `le_upperPackingDim_add_right`,
   `lowerHausdorffDim_add_le_left`, `lowerHausdorffDim_add_le_right`: the four monotonicity
-  inequalities of tex lines 2709 to 2712.
+  inequalities of tex lines 2674 to 2677.
 * `upperPackingDim_add_eq_max`, `lowerHausdorffDim_add_eq_min`: `eq:haus_dim_sum` by the
   set-based argument.
 * `isDoubleDim_iff_upperPackingDim_lowerHausdorffDim`: a nonzero measure is double-dimensional
@@ -45,7 +45,7 @@ section Packing
 variable {X : Type*} [PseudoMetricSpace X]
 
 /-- `dim_P(E ∪ F) ≤ max {dim_P E, dim_P F}`: interleaving two countable bounded covers of `E`
-and `F` gives one of `E ∪ F` (tex lines 2712 to 2714, the countable stability of the packing
+and `F` gives one of `E ∪ F` (tex lines 2677 to 2679, the countable stability of the packing
 dimension). -/
 theorem packingDim_union_le (E F : Set X) :
     packingDim (E ∪ F) ≤ max (packingDim E) (packingDim F) := by
@@ -91,7 +91,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimension
 /-- If `μ ≪ ν` for finite Borel measures on a finite-dimensional real normed space and `μ ≠ 0`,
 then `\underline{dim}_H(ν) ≤ \underline{dim}_H(μ)`: every Borel set of positive `μ`-measure has
 positive `ν`-measure, so the infimum in the second line of `eq:dimension_measure_def` for `ν` is
-taken over more sets. This is the argument of tex lines 2709 to 2712 for
+taken over more sets. This is the argument of tex lines 2674 to 2677 for
 `\underline{dim}_H(μ + ν) ≤ \underline{dim}_H(μ)`.
 Depends on: `ofReal_lowerHausdorffDim_eq_iInf_dimH_of_finiteDimensional`. -/
 theorem lowerHausdorffDim_le_of_absolutelyContinuous [IsFiniteMeasure μ] [IsFiniteMeasure ν]
@@ -105,7 +105,7 @@ theorem lowerHausdorffDim_le_of_absolutelyContinuous [IsFiniteMeasure μ] [IsFin
         hpos.ne' (h h0))))
   exact (ENNReal.ofReal_le_ofReal_iff lowerHausdorffDim_nonneg).1 hle
 
-/-- Tex lines 2709 to 2712: `\overline{dim}_p(μ + ν) ≥ \overline{dim}_p(μ)`, since
+/-- Tex lines 2674 to 2677: `\overline{dim}_p(μ + ν) ≥ \overline{dim}_p(μ)`, since
 `μ ≪ μ + ν`. -/
 theorem le_upperPackingDim_add_left [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     upperPackingDim μ ≤ upperPackingDim (μ + ν) :=
@@ -117,7 +117,7 @@ theorem le_upperPackingDim_add_right [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
   rw [add_comm]
   exact le_upperPackingDim_add_left
 
-/-- Tex lines 2709 to 2712: `\underline{dim}_H(μ + ν) ≤ \underline{dim}_H(μ)` for `μ ≠ 0`,
+/-- Tex lines 2674 to 2677: `\underline{dim}_H(μ + ν) ≤ \underline{dim}_H(μ)` for `μ ≠ 0`,
 since `μ ≪ μ + ν`. -/
 theorem lowerHausdorffDim_add_le_left [IsFiniteMeasure μ] [IsFiniteMeasure ν] (hne : μ ≠ 0) :
     lowerHausdorffDim (μ + ν) ≤ lowerHausdorffDim μ :=
@@ -200,7 +200,7 @@ section DoubleDim
 
 variable {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X] {μ : Measure X}
 
-/-- Tex lines 2737 to 2739: a nonzero measure is double-dimensional if and only if the pointwise
+/-- Tex lines 2686 to 2688: a nonzero measure is double-dimensional if and only if the pointwise
 dimension exists almost everywhere and `\overline{dim}_p(μ)` and `\underline{dim}_H(μ)` are its
 only possible values. If both values `d₂ ≤ d₁` occur on sets of positive measure, they are
 `\underline{dim}_H(μ)` and `\overline{dim}_p(μ)`; if one of them occurs only on a null set, the

@@ -2,8 +2,8 @@ module
 
 /-
 Falconer's upper bound for every planar self-affine set, `sec:affinity_dim`:
-`eq:hausdorff_affinity_upper_bound` (tex lines 2194 to 2207) and the bound
-`\overline{\dim}_M X ≤ dimaff(X)` of tex lines 581 to 583, after Falconer, Math. Proc. Cambridge
+`eq:hausdorff_affinity_upper_bound` (tex lines 2159 to 2172) and the bound
+`\overline{\dim}_M X ≤ dimaff(X)` of tex lines 542 to 543, after Falconer, Math. Proc. Cambridge
 Philos. Soc. 103 (1988), Theorem 5.4, which the article cites. The systems are the planar
 systems of `BoxLike/Planar/System.lean`: maps `φ_i(x) = A_i x + v_i` with `A_i ∈ GL_2(ℝ)` and
 `‖A_i‖ < 1`, without any separation condition.
@@ -17,7 +17,7 @@ most `α_2(A) |y|` with `α_2(A) = |det A| / ‖A‖`, and its component along `
 `α_1(A) |y|`: the ellipse `A(B(0, R))` lies in a rectangle with sides `2 α_1(A) R` and
 `2 α_2(A) R`. Dividing the long side into `⌈α_1/α_2⌉` pieces covers it by `⌈α_1/α_2⌉` balls of
 radius `α_2(A) diam(B)`, and it lies in one ball of radius `α_1(A) diam(B)`; these are the two
-covers of tex lines 2197 to 2200. Fix `0 ≤ t ≤ 2` with `P(𝖠, t) < 0`, so that
+covers of tex lines 2162 to 2165. Fix `0 ≤ t ≤ 2` with `P(𝖠, t) < 0`, so that
 `∑_n ∑_{|𝐢| = n} φ^t(A_𝐢) ≤ K`. At the scale `ρ diam(B)` every point of `X` lies in a copy
 `φ_𝐢(X) ⊆ φ_𝐢(B)` whose singular value `α_k(A_𝐢)` lies between `δ₀ρ` and `ρ`, with `k = 1` for
 `t ≤ 1` and `k = 2` for `1 < t ≤ 2`, and `δ₀ = min_i α_2(A_i)`. The cover of `φ_𝐢(B)` of the
@@ -40,7 +40,7 @@ metrics.
 * `Ellipse.exists_finset_cover`, `Ellipse.dist_le_norm_mul`: `c + A(B(0, R))` is covered by
   `⌈α_1/α_2⌉` balls of radius `2 α_2(A) R` and by one ball of radius `α_1(A) R`.
 * `MatrixTuple.image_closedBall_subset_closedBall`,
-  `MatrixTuple.exists_finset_image_closedBall_subset`: tex lines 2197 to 2200 for the ellipses
+  `MatrixTuple.exists_finset_image_closedBall_subset`: tex lines 2162 to 2165 for the ellipses
   `φ_𝐢(B)`.
 * `MatrixTuple.ContractionBound.exists_canonicalProjPlus_eq_affineWord`:
   `π^+(𝐢) ∈ φ_{𝐢|_n}(X)`.
@@ -225,7 +225,7 @@ theorem exists_centre {n : ℕ} (hn : 0 < n) {L u : ℝ} (hL : 0 ≤ L) (hu : |u
     have : u = 0 := abs_nonpos_iff.1 hu
     simp [this]
 
-/-- Tex lines 2197 to 2200: the ellipse `c + A(B(0, R))` of an invertible matrix is covered by
+/-- Tex lines 2162 to 2165: the ellipse `c + A(B(0, R))` of an invertible matrix is covered by
 `⌈α_1(A)/α_2(A)⌉` balls of radius `α_2(A) · 2R`, where `α_1(A) = ‖A‖` and
 `α_2(A) = |det A| / ‖A‖`. The rectangle of `exists_strip` with sides `2 α_1(A) R` and
 `2 α_2(A) R` is cut into `n = ⌈α_1/α_2⌉` pieces with sides at most `2 α_2(A) R`, whose half
@@ -273,7 +273,7 @@ theorem exists_finset_cover {A : Matrix (Fin 2) (Fin 2) ℝ} (hA : A.det ≠ 0)
     exact pow_le_pow_left₀ (abs_nonneg _) hv 2
   nlinarith [sq_nonneg (a₂ * R)]
 
-/-- Tex lines 2197 and 2198: the ellipse `c + A(B(0, R))` lies in one ball of radius
+/-- Tex lines 2162 and 2163: the ellipse `c + A(B(0, R))` lies in one ball of radius
 `α_1(A) R`. -/
 theorem dist_le_norm_mul (A : Matrix (Fin 2) (Fin 2) ℝ) (c y : EuclideanSpace ℝ (Fin 2))
     {R : ℝ} (hy : ‖y‖ ≤ R) : dist (c + planeLin A y) c ≤ ‖A‖ * R := by
@@ -288,7 +288,7 @@ namespace MatrixTuple
 
 variable {ι : Type*} {A : ι → Matrix (Fin 2) (Fin 2) ℝ} (v : ι → EuclideanSpace ℝ (Fin 2))
 
-/-- Tex lines 2197 and 2198: for a closed ball `B`, the ellipse `φ_𝐢(B)` is covered by one ball
+/-- Tex lines 2162 and 2163: for a closed ball `B`, the ellipse `φ_𝐢(B)` is covered by one ball
 of radius `α_1(A_𝐢) diam(B)`. -/
 theorem image_closedBall_subset_closedBall (w : List ι) (b : EuclideanSpace ℝ (Fin 2)) {R : ℝ}
     (hR : 0 ≤ R) :
@@ -300,7 +300,7 @@ theorem image_closedBall_subset_closedBall (w : List ι) (b : EuclideanSpace ℝ
     (show ‖x - b‖ ≤ 2 * R by rw [← dist_eq_norm]; linarith [mem_closedBall.1 hx])
   rwa [← affineWord_sub, add_sub_cancel] at h
 
-/-- Tex lines 2197 to 2200: for a closed ball `B` and an invertible tuple, the ellipse `φ_𝐢(B)`
+/-- Tex lines 2162 to 2165: for a closed ball `B` and an invertible tuple, the ellipse `φ_𝐢(B)`
 is covered by `⌈α_1(A_𝐢)/α_2(A_𝐢)⌉` balls of radius `α_2(A_𝐢) diam(B)`, with
 `α_1(A_𝐢) = ‖A_𝐢‖` and `α_2(A_𝐢) = |det A_𝐢| / ‖A_𝐢‖`. -/
 theorem exists_finset_image_closedBall_subset (hA : ∀ i, (A i).det ≠ 0) (w : List ι)
@@ -321,7 +321,7 @@ theorem exists_finset_image_closedBall_subset (hA : ∀ i, (A i).det ≠ 0) (w :
 variable {v} {r : ℝ}
 
 /-- `π^+(𝐢) = φ_{𝐢|_n}(π^+(𝐣))` for some `𝐣`: the point `π^+(𝐢)` lies in the copy
-`φ_{𝐢|_n}(X)` of the self-affine set (tex lines 2194 and 2195). -/
+`φ_{𝐢|_n}(X)` of the self-affine set (tex lines 2160 and 2161). -/
 theorem ContractionBound.exists_canonicalProjPlus_eq_affineWord [Finite ι]
     (hA : ContractionBound A r)
     (n : ℕ) (y : ℕ → ι) :
@@ -690,7 +690,7 @@ theorem isCompact_attractor [Finite ι] : IsCompact P.attractor := by
 /-- The self-affine set of a planar system with at least one map is non-empty. -/
 theorem attractor_nonempty [Nonempty ι] : P.attractor.Nonempty := range_nonempty _
 
-/-- Hutchinson's theorem (`eq:self_affine_set_def`, tex lines 671 to 676): the attractor
+/-- Hutchinson's theorem (`eq:self_affine_set_def`, tex lines 633 to 638): the attractor
 `X = π(Σ)` of a planar system is the unique non-empty compact set `K ⊆ ℝ²` with
 `K = ⋃_i φ_i(K)`, so it is the self-affine set of the article. -/
 theorem eq_attractor [Finite ι] {K : Set (ℝ × ℝ)} (hK : IsCompact K) (hne : K.Nonempty)
@@ -738,7 +738,7 @@ theorem upperBoxDim_attractor_le_of_pressure_neg [Fintype ι] [Nonempty ι] {t :
       _ ≤ ENNReal.ofReal t := ENNReal.ofReal_le_ofReal ht2.le
 
 /-- `\overline{\dim}_M X ≤ dimaff(X)` for every planar self-affine set, the bound of tex lines
-581 to 583: the pressure is negative at every `t > dimaff(X)`. -/
+542 to 543: the pressure is negative at every `t > dimaff(X)`. -/
 theorem upperBoxDim_attractor_le_dimaff [Fintype ι] [Nonempty ι] :
     upperBoxDim P.attractor ≤ ENNReal.ofReal P.dimaff := by
   refine ENNReal.le_of_forall_pos_le_add fun ε hε _ => ?_
@@ -750,7 +750,7 @@ theorem upperBoxDim_attractor_le_dimaff [Fintype ι] [Nonempty ι] :
 
 /-- Falconer's bound, Theorem 5.4 of his 1988 article, for the upper Minkowski dimension:
 `\overline{\dim}_M X ≤ min{2, dimaff(X)}` for every planar self-affine set, without a separation
-condition (tex lines 581 to 583 and 2194 to 2207). -/
+condition (tex lines 542 to 543 and 2159 to 2172). -/
 theorem upperBoxDim_attractor_le [Fintype ι] [Nonempty ι] :
     upperBoxDim P.attractor ≤ ENNReal.ofReal (min 2 P.dimaff) := by
   rcases le_total 2 P.dimaff with hd | hd

@@ -2,8 +2,8 @@ module
 
 /-
 The existence part of `thm:irred_eq_state` for an arbitrary tuple `𝖠 = (A_1, …, A_N)` of
-invertible planar matrices and every `s ≥ 0`, with no irreducibility hypothesis (tex lines 2252
-to 2253; Käenmäki, Ann. Acad. Sci. Fenn. Math. 29 (2004), Theorem 2.6, and, for sub-additive
+invertible planar matrices and every `s ≥ 0`, with no irreducibility hypothesis (tex lines 2217
+to 2218; Käenmäki, Ann. Acad. Sci. Fenn. Math. 29 (2004), Theorem 2.6, and, for sub-additive
 potentials, Cao–Feng–Huang, Discrete Contin. Dyn. Syst. 20 (2008), Theorem 1.1). The proof is
 Misiurewicz's construction of `BoxLike/EquilibriumExistence.lean` for the tuple: the weights
 `φ^s(A_𝐢) / ∑_{|𝐣| = n} φ^s(A_𝐣)` on the words of length `n` give a Bernoulli measure on the

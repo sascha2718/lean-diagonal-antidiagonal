@@ -2,7 +2,7 @@ module
 
 /-
 Fraser's modified singular value function and the modified affinity dimension `dimmaff(X)` of
-`sec:affinity_dim` (tex lines 2267 to 2282), after Fraser, "On the packing dimension of box-like
+`sec:affinity_dim` (tex lines 2175 to 2189), after Fraser, "On the packing dimension of box-like
 self-affine sets in the plane", §2.1 (numbering of arXiv:1108.2639v1).
 
 For a word `𝐢` the rectangle `A_𝐢([0,1]²)` has base `b(𝐢) = |a_𝐢|` and height `h(𝐢) = |b_𝐢|`,
@@ -28,7 +28,7 @@ The modified pressure is defined as the `lim sup` of `n⁻¹ log ∑_{|𝐢| = n
 * `System.wordBase`, `System.wordHeight`, `System.alpha₁`, `System.alpha₂`, `System.wordDim`,
   `System.modSvf`: the sides of `A_𝐢([0,1]²)`, the singular values, `s(𝐢)` and `ψ^s(𝐢)`.
 * `System.wordDim_eq_axis`: `s(𝐢)` is also the dimension of the projection of `X` onto the axis
-  parallel to the longer side, the description of tex lines 2273 to 2275.
+  parallel to the longer side, the description of tex lines 2180 to 2182.
 * `System.modSvf_add`, `System.modSvf_of_wordBase_eq`: `ψ^{s+δ}(𝐢) = α_2(𝐢)^δ ψ^s(𝐢)`, and
   `ψ^s(𝐢) = α_1(𝐢)^s` for a square.
 * `System.modSvf_le_svf`, `System.svf_le_modSvf`: `ψ^s(𝐢) ≤ φ^s(A_𝐢)` when `s(𝐢) ≤ p(s)` and
@@ -679,7 +679,7 @@ theorem projDim_add_projDim (c : ZMod 2) :
   · rw [zero_add]
   · rw [show (1 : ZMod 2) + 1 = 0 from by decide, add_comm]
 
-/-- The description of tex lines 2273 to 2275: `s(𝐢)` is the Minkowski dimension of the
+/-- The description of tex lines 2180 to 2182: `s(𝐢)` is the Minkowski dimension of the
 projection of `X` onto the coordinate axis parallel to the longer side of `A_𝐢([0,1]²)`. It
 agrees with Fraser's definition `wordDim`, which uses the other axis when `A_𝐢` is
 anti-diagonal, because `s_1 = s_2` as soon as an anti-diagonal generator exists. -/
@@ -992,7 +992,7 @@ theorem existsUnique_modPressure_eq_zero [Nonempty ι] :
 
 /-! ### The modified affinity dimension -/
 
-/-- Fraser's modified affinity dimension `dimmaff(X)` of tex lines 2267 to 2282: the unique
+/-- Fraser's modified affinity dimension `dimmaff(X)` of tex lines 2175 to 2189: the unique
 `s ≥ 0` at which the modified pressure vanishes, that is, the unique solution of `P(s) = 1` in
 Fraser's Theorem 2.3. It depends on the set `X` through `s_1` and `s_2`, not on the matrices
 alone. -/
@@ -1260,7 +1260,7 @@ theorem dimmaff_le_dimaff_of_projDim_le [Nonempty ι] (h : ∀ c, S.projDim c �
 theorem dimmaff_le_dimaff_of_one_le [Nonempty ι] (h : 1 ≤ S.dimaff) : S.dimmaff ≤ S.dimaff :=
   S.dimmaff_le_dimaff_of_projDim_le fun c => (S.projDim_le_one c).trans h
 
-/-- `dimmaff(X) ≤ dimaff(X)`, tex lines 578 to 579 and 2277, where the article attributes it to
+/-- `dimmaff(X) ≤ dimaff(X)`, tex lines 548 to 549 and 2184, where the article attributes it to
 Fraser. It follows from `s_1, s_2 ≤ dimaff(X)` (`projDim_le_dimaff`), Falconer's covering
 argument for the coordinate projections. -/
 theorem dimmaff_le_dimaff [Nonempty ι] : S.dimmaff ≤ S.dimaff :=

@@ -2,7 +2,7 @@ module
 
 /-
 The norm potential of Feng–Käenmäki and the reductions of `thm:irred_eq_state` to it (tex
-lines 2270 to 2274). Feng–Käenmäki, *Equilibrium states of the pressure function for products
+lines 2235 to 2239). Feng–Käenmäki, *Equilibrium states of the pressure function for products
 of matrices*, Discrete Contin. Dyn. Syst. 30 (2011), work on the one-sided full shift
 `Σ^+ = ℕ → ι` with the potential `𝐢 ↦ ‖A_𝐢‖^q`, `q > 0`: the pressure is
 `P(q) = lim_n n⁻¹ log ∑_{|𝐢| = n} ‖A_𝐢‖^q` (their (1.1)), the Lyapunov exponent of an
@@ -327,7 +327,7 @@ end SmallExponent
 /-! ### The rescaled tuple for `1 < s < 2` -/
 
 variable (A) in
-/-- The rescaled tuple `A'_i = |det A_i|^{(s-1)/(2-s)} A_i` of tex lines 2271 to 2274. -/
+/-- The rescaled tuple `A'_i = |det A_i|^{(s-1)/(2-s)} A_i` of tex lines 2236 to 2239. -/
 noncomputable def rescale (s : ℝ) (i : ι) : Matrix (Fin 2) (Fin 2) ℝ :=
   |(A i).det| ^ ((s - 1) / (2 - s)) • A i
 
@@ -357,7 +357,7 @@ theorem tupleIrreducible_rescale (hA : ∀ i, (A i).det ≠ 0) (s : ℝ) (h : Tu
   rw [rescale, Matrix.smul_mulVec] at hc
   rw [div_eq_inv_mul, mul_smul, ← hc, smul_smul, inv_mul_cancel₀ hpos.ne', one_smul]
 
-/-- `‖A'_𝐢‖^{2-s} = φ^s(A_𝐢)` for `1 < s < 2`, tex lines 2272 to 2273: the norm of the rescaled
+/-- `‖A'_𝐢‖^{2-s} = φ^s(A_𝐢)` for `1 < s < 2`, tex lines 2237 to 2238: the norm of the rescaled
 product is `|det A_𝐢|^{(s-1)/(2-s)} ‖A_𝐢‖`, and `φ^s(A) = ‖A‖^{2-s} |det A|^{s-1}`. -/
 theorem norm_word_rescale_rpow {s : ℝ} (hs1 : 1 < s) (hs2 : s < 2) (w : List ι) :
     ‖word (rescale A s) w‖ ^ (2 - s) = svf s (word A w) := by

@@ -2,7 +2,7 @@ module
 
 /-
 Planar self-affine sets in general: the affine iterated function systems of
-`sec:box_like_self_affine` (tex lines 664 to 676) with arbitrary invertible contracting linear
+`sec:box_like_self_affine` (tex lines 625 to 638) with arbitrary invertible contracting linear
 parts, and their canonical projection of `sec:two_sided_shift_space`
 (`eq:canonical_projection`). These are the systems of "If `X` is a planar self-affine set" in
 `thm:feng_entropy_as_limit`, `thm:feng_entropy_kolmogorov_sinai`, `thm:feng_entropy_zero` and
@@ -140,8 +140,8 @@ theorem norm_mulVec_le (M : Matrix (Fin 2) (Fin 2) ℝ) (u : Fin 2 → ℝ) :
 
 /-! ### Planar systems -/
 
-/-- An affine iterated function system on the plane (`sec:box_like_self_affine`, tex lines 664
-to 676): the maps `φ_i(x) = A_i x + v_i` with `A_i ∈ GL_2(ℝ)`, that is `det A_i ≠ 0`, of
+/-- An affine iterated function system on the plane (`sec:box_like_self_affine`, tex lines 625
+to 638): the maps `φ_i(x) = A_i x + v_i` with `A_i ∈ GL_2(ℝ)`, that is `det A_i ≠ 0`, of
 operator norm `‖A_i‖ < 1`. The norm is the `ℓ²` operator norm, `‖A‖ = α_1(A)`. These are the
 systems of "If `X` is a planar self-affine set" in `thm:feng_entropy_as_limit`,
 `thm:feng_entropy_zero` and `thm:feng1`. -/

@@ -3,10 +3,10 @@ module
 /-
 The theorem of Furstenberg and Kesten for the backward products of an invertible planar tuple,
 the first half of Oseledets' multiplicative ergodic theorem cited in `sec:lyapunov_exponents`
-(Oseledec 1968, tex line 1620). For an ergodic `μ ∈ M_σ(Σ)` and `M_n(𝐢) = A_{i_{-n}} ⋯ A_{i_{-1}}`,
+(Oseledec 1968, tex line 1585). For an ergodic `μ ∈ M_σ(Σ)` and `M_n(𝐢) = A_{i_{-n}} ⋯ A_{i_{-1}}`,
 `n⁻¹ log α_1(M_n(𝐢)) → λ_1(𝖠, μ)` and `n⁻¹ log α_2(M_n(𝐢)) → λ_2(𝖠, μ)` for `μ`-almost every
 `𝐢`, where the exponents are the limits of `n⁻¹ ∫ log α_i(A_{i_0} ⋯ A_{i_{n-1}}) dμ` of tex lines
-1608 to 1617. Both follow from Kingman's theorem (`BoxLike/Kingman.lean`) over the inverse shift
+1572 to 1581. Both follow from Kingman's theorem (`BoxLike/Kingman.lean`) over the inverse shift
 `σ⁻¹`, which is ergodic: `log α_1` is sub-additive and `-log α_2` is sub-additive on words, and
 the integrals of a function of `M_n(𝐢)` and of `A_{i_0} ⋯ A_{i_{n-1}}` agree by invariance.
 
@@ -101,7 +101,7 @@ variable [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ]
 
 /-- The theorem of Furstenberg and Kesten for `α_1`, the first half of Oseledets' theorem in
-`sec:lyapunov_exponents` (tex line 1620): for an invertible tuple and an ergodic `μ`,
+`sec:lyapunov_exponents` (tex line 1585): for an invertible tuple and an ergodic `μ`,
 `n⁻¹ log ‖A_{i_{-n}} ⋯ A_{i_{-1}}‖ → λ_1(𝖠, μ)` for `μ`-almost every `𝐢`. -/
 theorem tendsto_log_norm_pastProd (hA : ∀ i, (A i).det ≠ 0) (herg : Ergodic (shift 1) μ) :
     ∀ᵐ x ∂μ, Tendsto (fun n : ℕ => Real.log ‖pastProd A x n‖ / n) atTop
@@ -110,7 +110,7 @@ theorem tendsto_log_norm_pastProd (hA : ∀ i, (A i).det ≠ 0) (herg : Ergodic 
     (log_norm_word_append_le hA) (tendsto_lyapunov₁_of_det_ne_zero hA herg.toMeasurePreserving)
 
 /-- The theorem of Furstenberg and Kesten for `α_2 = |det| / α_1`, the first half of Oseledets'
-theorem in `sec:lyapunov_exponents` (tex line 1620): for an invertible tuple and an ergodic `μ`,
+theorem in `sec:lyapunov_exponents` (tex line 1585): for an invertible tuple and an ergodic `μ`,
 `n⁻¹ log α_2(A_{i_{-n}} ⋯ A_{i_{-1}}) → λ_2(𝖠, μ)` for `μ`-almost every `𝐢`. The function
 `-log α_2` is sub-additive on words. -/
 theorem tendsto_log_alpha₂_pastProd (hA : ∀ i, (A i).det ≠ 0) (herg : Ergodic (shift 1) μ) :

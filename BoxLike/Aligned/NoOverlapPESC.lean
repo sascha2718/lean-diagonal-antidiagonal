@@ -95,7 +95,7 @@ theorem prop_ssc_no_overlap_not_pesc (h : BaranyKaenmakiTheorem) :
   exact exists_system_of_homFree_of_exceptionalSet hlam0 hlam1 ht0 ht1 hfree fun c hc =>
     homGap_lt_of_le_mul_exp one_pos (fun n hn => by rw [one_mul]; exact (hgap n hn).le) hc
 
-/-- The paragraph after `prop:ssc_no_overlap_not_pesc` (tex lines 1563 to 1573), from Theorem 2.1
+/-- The paragraph after `prop:ssc_no_overlap_not_pesc` (tex lines 1527 to 1537), from Theorem 2.1
 of Bárány and Käenmäki as the source states it: exponential separation of the planar affine maps
 does not imply projective exponential separation. The system of the proposition satisfies the
 strong separation condition, hence `dist(φ_𝐢(X), φ_𝐣(X)) ≥ δ r^{n-1}` for distinct words of

@@ -673,7 +673,7 @@ theorem admissibleSum_comp_flipSymbol (n : ℕ) :
   simp only [Function.Involutive.toPerm, Equiv.coe_fn_mk, isAdmissible_flipSymbol_iff]
 
 /-- `P_Z(f ∘ flip) = P_Z(f)`: the symmetry behind `P_Z(f_{1,s}) = P_Z(f_{2,s})` in
-`sec:gibbs_measures` (tex lines 2671 to 2672). -/
+`sec:gibbs_measures` (tex lines 2581 to 2582). -/
 theorem pressureZ_comp_flipSymbol :
     pressureZ o (fun p => φ (flipSymbol p)) = pressureZ o φ := by
   simp only [pressureZ, periodicSum_comp_flipSymbol]
@@ -871,7 +871,7 @@ variable {ι : Type*} (S : System ι) {n : ℕ}
 /-- `φ^s(A_w) = max{exp S_n f_{1,s}(w, 0), exp S_n f_{1,s}(w, 1)}` for a word `w` of length
 `n ≥ 1` and `0 < s < 2`, where `(w, c)` is the admissible word over `w` that starts on the axis
 `c`: by `thm:matrix_products_g_derivatives` the entries of `A_w` have the moduli `|g'|` of the
-two lifts of `w`. This is the identity of `sec:gibbs_measures` (tex lines 2656 to 2660) for
+two lifts of `w`. This is the identity of `sec:gibbs_measures` (tex lines 2563 to 2569) for
 finite words. -/
 theorem svf_matWord_ofFn (w : Fin (n + 1) → ι) {s : ℝ} (hs0 : 0 < s) (hs2 : s < 2) :
     svf s (S.matWord (List.ofFn w)) =
@@ -987,8 +987,8 @@ theorem decomposition₂_of_decompositions {o : ι → ZMod 2} [IsFiniteMeasure 
   rw [e1, e2, add_comm]
   exact h₁
 
-/-- `\overline{τ}_*μ_2 = \overline{ω}_*μ_1`, as noted in `sec:gibbs_measures` (tex lines 2695 to
-2696): the first and the third decomposition of `thm:eq_state_is_sum` share the finite summand
+/-- `\overline{τ}_*μ_2 = \overline{ω}_*μ_1`, as noted in `sec:gibbs_measures` (tex lines 2606 to
+2607): the first and the third decomposition of `thm:eq_state_is_sum` share the finite summand
 `\overline{τ}_*μ_1`. -/
 theorem GibbsDecomposition.map_unCode_tau₂ (h : S.GibbsDecomposition s μ μ₁ μ₂) :
     (μ₂.restrict (Set.range (tau S.o))).map unCode =
@@ -996,8 +996,8 @@ theorem GibbsDecomposition.map_unCode_tau₂ (h : S.GibbsDecomposition s μ μ�
   have := h.prob₁
   exact (Measure.add_right_inj _ _ _).1 (h.eq_tau.symm.trans h.eq₁)
 
-/-- `\overline{ω}_*μ_2 = \overline{τ}_*μ_1`, as noted in `sec:gibbs_measures` (tex lines 2695 to
-2696): the second and the third decomposition of `thm:eq_state_is_sum` share the finite summand
+/-- `\overline{ω}_*μ_2 = \overline{τ}_*μ_1`, as noted in `sec:gibbs_measures` (tex lines 2606 to
+2607): the second and the third decomposition of `thm:eq_state_is_sum` share the finite summand
 `\overline{ω}_*μ_1`. -/
 theorem GibbsDecomposition.map_unCode_omega₂ (h : S.GibbsDecomposition s μ μ₁ μ₂) :
     (μ₂.restrict (Set.range (omega S.o))).map unCode =

@@ -2,10 +2,10 @@ module
 
 /-
 Invariant measures of the iterated function system `Φ`, for the case `s ≥ 2` of
-`thm:main_extended` in `sec:dimension_result_proof` (tex lines 3718 to 3721): Hutchinson's
+`thm:main_extended` in `sec:dimension_result_proof` (tex lines 3576 to 3579): Hutchinson's
 uniqueness of the invariant probability measure, and the invariance of the projection `π_*μ` of
-a Bernoulli measure `μ` in the sense of `sec:normalisation` (tex lines 2451 to 2455 and 2471 to
-2480).
+a Bernoulli measure `μ` in the sense of `sec:normalisation` (tex lines 2355 to 2360 and 2376 to
+2382).
 
 The plane `ℝ × ℝ` carries the sup metric and the Borel `σ`-algebra, the alphabet `ι` carries a
 measurable structure with measurable singletons, and the sequence spaces `ℤ → ι` and `ℕ → ι`
@@ -87,7 +87,7 @@ variable {ι : Type*} [Fintype ι] (S : System ι)
 
 /-- The operator `T f = ∑_i p_i f ∘ φ_i` on bounded continuous test functions. It is the adjoint
 of `ν ↦ ∑_i p_i (φ_i)_*ν`, the operator of the invariance equation in the proof of
-`thm:main_extended` (tex lines 3713 to 3717). -/
+`thm:main_extended` (tex lines 3571 to 3575). -/
 noncomputable def testOp (p : ι → ℝ≥0∞) (f : (ℝ × ℝ) →ᵇ ℝ) : (ℝ × ℝ) →ᵇ ℝ :=
   ∑ i, (p i).toReal • f.compContinuous ⟨S.phi i, S.continuous_phi i⟩
 
@@ -120,7 +120,7 @@ theorem norm_iterate_testOp_le {p : ι → ℝ≥0∞} (hp : ∑ i, p i = 1) (f 
 variable {S}
 
 /-- The weights of an invariant probability measure sum to one: evaluate the invariance equation
-of the proof of `thm:main_extended` (tex lines 3713 to 3717) on the whole plane. -/
+of the proof of `thm:main_extended` (tex lines 3571 to 3575) on the whole plane. -/
 theorem IsInvariantMeasure.sum_eq_one {p : ι → ℝ≥0∞} {ν : Measure (ℝ × ℝ)}
     [IsProbabilityMeasure ν] (h : S.IsInvariantMeasure p ν) : ∑ i, p i = 1 := by
   have hmi : ∀ i, Measurable (S.phi i) := fun i => (S.continuous_phi i).measurable
@@ -195,8 +195,8 @@ theorem Bounds.abs_sub_iterate_testOp_le {r M : ℝ} (hS : S.Bounds r M) {p : ι
 
 omit [Fintype ι] in
 /-- Every `φ_i` maps the closed ball of radius `R` about the origin into itself as soon as
-`r R + M ≤ R`; this is the large ball of the proof of `thm:main_extended` (tex lines 3699 to
-3700). -/
+`r R + M ≤ R`; this is the large ball of the proof of `thm:main_extended` (tex lines 3557 to
+3558). -/
 theorem Bounds.mapsTo_closedBall {r M : ℝ} (hS : S.Bounds r M) {R : ℝ} (hR : r * R + M ≤ R)
     (i : ι) : Set.MapsTo (S.phi i) (closedBall 0 R) (closedBall 0 R) := by
   intro z hz
@@ -216,7 +216,7 @@ theorem Bounds.mapsTo_closedBall {r M : ℝ} (hS : S.Bounds r M) {R : ℝ} (hR :
 
 /-- Hutchinson's theorem, uniqueness part: two invariant probability measures with the same
 probability weights coincide. This is the uniqueness cited in the proof of `thm:main_extended`
-(tex lines 3720 to 3721). No assumption on the supports is made: for a bounded continuous `f`
+(tex lines 3578 to 3579). No assumption on the supports is made: for a bounded continuous `f`
 the function `T^n f` is within `ε` of a constant on a large closed ball `K` with `φ_i(K) ⊆ K`,
 and the complement of `K` carries little mass. -/
 theorem IsInvariantMeasure.unique {p : ι → ℝ≥0∞} (hp : ∑ i, p i = 1) {ν ν' : Measure (ℝ × ℝ)}
@@ -405,7 +405,7 @@ section Bernoulli
 
 variable {ι : Type*} [MeasurableSpace ι]
 
-/-- For a Bernoulli measure in the sense of `sec:normalisation` (tex lines 2451 to 2455),
+/-- For a Bernoulli measure in the sense of `sec:normalisation` (tex lines 2355 to 2360),
 `μ[i w] = μ[i] μ[w]`. -/
 theorem measureReal_cylinder_cons {μ : Measure (ℤ → ι)}
     (hprod : ∀ (n : ℕ) (w : Fin n → ι), μ.real (cylinder w) = ∏ k, μ.real (cylinder ![w k]))
@@ -416,7 +416,7 @@ theorem measureReal_cylinder_cons {μ : Measure (ℤ → ι)}
 
 variable [Fintype ι] [MeasurableSingletonClass ι]
 
-/-- Under a Bernoulli measure in the sense of `sec:normalisation` (tex lines 2451 to 2455) the
+/-- Under a Bernoulli measure in the sense of `sec:normalisation` (tex lines 2355 to 2360) the
 symbol `i_0` is independent of the future of `σ 𝐢`: `μ([i] ∩ σ^{-1} E) = μ[i] μ(E)` for every
 set `E` determined by the future `𝐢^+`. Both sides are finite measures of `E` that agree on the
 one-sided cylinders. -/
@@ -461,8 +461,8 @@ variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClas
 
 set_option linter.unusedVariables false in
 /-- The projection of a Bernoulli measure is invariant with the weights of its symbols, as in
-the proof of `thm:main_extended` (tex lines 3718 to 3719). The measure is Bernoulli in the sense
-of `sec:normalisation` (tex lines 2451 to 2455), with `p_i = μ[i]`. The proof splits `Σ` into
+the proof of `thm:main_extended` (tex lines 3576 to 3577). The measure is Bernoulli in the sense
+of `sec:normalisation` (tex lines 2355 to 2360), with `p_i = μ[i]`. The proof splits `Σ` into
 the cylinders `[i]`, on which `π = φ_i ∘ π ∘ σ`, and uses that `π ∘ σ` is a function of the
 future of `σ 𝐢`, which is independent of `i_0`. The hypothesis `hinv` is not used: the product
 formula for the cylinders at time `0` determines the law of the future `𝐢^+`. -/
@@ -512,7 +512,7 @@ theorem isInvariantMeasure_map_proj {μ : Measure (ℤ → ι)} [IsProbabilityMe
   exact measure_cylinder_inter_shift_preimage hprod i
     ((hproj.comp measurable_extendFuture) (hphi i hB))
 
-/-- The step `π_*μ = ν` of the proof of `thm:main_extended` (tex lines 3718 to 3721): the
+/-- The step `π_*μ = ν` of the proof of `thm:main_extended` (tex lines 3576 to 3579): the
 projection of a Bernoulli measure `μ` is the only invariant probability measure with the weights
 `p_i = μ[i]`. -/
 theorem map_proj_eq_of_isInvariantMeasure {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ]

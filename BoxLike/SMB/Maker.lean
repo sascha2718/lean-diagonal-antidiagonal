@@ -2,8 +2,8 @@ module
 
 /-
 Maker's generalised ergodic theorem, the step of Breiman's proof of the Shannon–McMillan–Breiman
-theorem that `sec:entropies` cites before `thm:feng_entropy_kolmogorov_sinai` (tex lines 2008 to
-2013). For a measure-preserving map `T` of a probability space and measurable functions
+theorem that `sec:entropies` cites before `thm:feng_entropy_kolmogorov_sinai` (tex lines 1973 to
+1977). For a measure-preserving map `T` of a probability space and measurable functions
 `f_k → g` almost everywhere with `sup_k |f_k|` integrable, the averages
 `n⁻¹ ∑_{k<n} f_k(T^k x)` converge almost everywhere to `E(g | ℐ)(x)`, where `ℐ` is the
 `σ`-algebra of `T`-invariant sets. It is derived from Birkhoff's theorem `birkhoff_ae`.
@@ -35,7 +35,7 @@ section TailSup
 variable {X : Type*}
 
 /-- The tail supremum `H_N(x) = sup_{k ≥ N} |f_k(x) - g(x)|` of the proof of Maker's theorem
-(`sec:entropies`, tex lines 2008 to 2013), computed in `[0, ∞]` and read as a real number. -/
+(`sec:entropies`, tex lines 1973 to 1977), computed in `[0, ∞]` and read as a real number. -/
 noncomputable def tailSup (f : ℕ → X → ℝ) (g : X → ℝ) (N : ℕ) (x : X) : ℝ :=
   (⨆ k, ENNReal.ofReal |f (N + k) x - g x|).toReal
 
@@ -99,7 +99,7 @@ variable {X : Type*} [MeasurableSpace X] {μ : Measure X} [IsProbabilityMeasure 
   {T : X → X}
 
 /-- Maker's generalised ergodic theorem (P. T. Maker, Duke Math. J. 6 (1940)), as used in the
-proof of the Shannon–McMillan–Breiman theorem cited in `sec:entropies`, tex lines 2008 to 2013:
+proof of the Shannon–McMillan–Breiman theorem cited in `sec:entropies`, tex lines 1973 to 1977:
 for a measure-preserving map `T` of a probability space and measurable functions `f_k`
 converging almost everywhere to a measurable `g`, with `|f_k| ≤ F` for an integrable `F`, the
 averages `n⁻¹ ∑_{k<n} f_k(T^k x)` converge for almost every `x` to `E(g | ℐ)(x)`. -/
@@ -220,7 +220,7 @@ theorem maker_ae (hT : MeasurePreserving T μ μ) {f : ℕ → X → ℝ} {g F :
   simp only [sub_add_cancel, zero_add] at h
   exact h
 
-/-- Maker's theorem for an ergodic map (`sec:entropies`, tex lines 2008 to 2013): the averages
+/-- Maker's theorem for an ergodic map (`sec:entropies`, tex lines 1973 to 1977): the averages
 `n⁻¹ ∑_{k<n} f_k(T^k x)` converge almost everywhere to `∫ g dμ`. -/
 theorem maker_ergodic (hT : Ergodic T μ) {f : ℕ → X → ℝ} {g F : X → ℝ}
     (hf : ∀ k, Measurable (f k)) (hg : Measurable g) (hF : Integrable F μ)

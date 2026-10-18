@@ -1,9 +1,9 @@
 module
 
 /-
-The pressure `P_Z(f)` of `sec:gibbs_measures` (tex lines 2515 to 2522) for an arbitrary Hölder
+The pressure `P_Z(f)` of `sec:gibbs_measures` (tex lines 2480 to 2487) for an arbitrary Hölder
 continuous potential `f : Σ_Z → ℝ`, the existence of the limit that defines it, and the
-identification of the constant of a Gibbs measure with `P_Z(f)` (tex lines 2524 to 2529). The
+identification of the constant of a Gibbs measure with `P_Z(f)` (tex lines 2489 to 2493). The
 library's `pressureZ` of `BoxLike/PressureZ.lean` treats the potentials that depend on the
 symbol `j_0` only; it is the specialisation `pressureZPot_apply_zero`.
 
@@ -46,7 +46,7 @@ section Holder
 
 variable {ι : Type*} {o : ι → ZMod 2} {f : (ℤ → ι × ZMod 2) → ℝ}
 
-/-- A Hölder continuous potential on `Σ_Z` (tex line 2515), for the standard metric `symDist`:
+/-- A Hölder continuous potential on `Σ_Z` (tex line 2481), for the standard metric `symDist`:
 `|f(𝐢) - f(𝐣)| ≤ K d(𝐢, 𝐣)^α` for `𝐢, 𝐣 ∈ Σ_Z`, with `K ≥ 0` and `α > 0`. -/
 def IsHolderPotential (o : ι → ZMod 2) (f : (ℤ → ι × ZMod 2) → ℝ) : Prop :=
   ∃ K α : ℝ, 0 ≤ K ∧ 0 < α ∧ ∀ y ∈ subshift o, ∀ z ∈ subshift o,
@@ -149,7 +149,7 @@ section Sums
 variable {ι : Type*} [Fintype ι] {o : ι → ZMod 2} {f : (ℤ → ι × ZMod 2) → ℝ} {B D : ℝ}
 
 variable (o f) in
-/-- `sup_{𝐣 ∈ [w]} S_n f(𝐣)` over the points `𝐣 ∈ Σ_Z` of the cylinder `[w]` (tex line 2520). -/
+/-- `sup_{𝐣 ∈ [w]} S_n f(𝐣)` over the points `𝐣 ∈ Σ_Z` of the cylinder `[w]` (tex line 2485). -/
 noncomputable def cylSup (n : ℕ) (w : Fin n → ι × ZMod 2) : ℝ :=
   sSup ((birkhoffSum (shift 1) f n) '' (cylinder w ∩ subshift o))
 
@@ -203,7 +203,7 @@ noncomputable def admissibleSumPot (n : ℕ) : ℝ :=
 
 variable (o f) in
 open Classical in
-/-- The sum `∑_{𝐢 ∈ Σ_Z : σ^n(𝐢) = 𝐢} exp(sup_{𝐣 ∈ [𝐢|_n]} S_n f(𝐣))` of tex line 2520, as a sum
+/-- The sum `∑_{𝐢 ∈ Σ_Z : σ^n(𝐢) = 𝐢} exp(sup_{𝐣 ∈ [𝐢|_n]} S_n f(𝐣))` of tex line 2485, as a sum
 over the cyclically admissible words of length `n`; `periodicSumPot_eq_finsum` is the article's
 form. -/
 noncomputable def periodicSumPot (n : ℕ) : ℝ :=
@@ -211,7 +211,7 @@ noncomputable def periodicSumPot (n : ℕ) : ℝ :=
 
 variable (o f) in
 /-- The pressure `P_Z(f) = lim_n n⁻¹ log ∑_{𝐢 ∈ Σ_Z : σ^n(𝐢) = 𝐢} exp(sup_{𝐣 ∈ [𝐢|_n]} S_n f(𝐣))` of
-`sec:gibbs_measures`, tex lines 2519 to 2522. -/
+`sec:gibbs_measures`, tex lines 2484 to 2487. -/
 noncomputable def pressureZPot : ℝ :=
   limUnder atTop fun n : ℕ => Real.log (periodicSumPot o f n) / n
 
@@ -428,7 +428,7 @@ theorem HasBoundedDistortion.tendsto_log_periodicSumPot_div (h : HasBoundedDisto
     exact div_le_div_of_nonneg_right
       (Real.log_le_log hP (periodicSumPot_le_admissibleSumPot o f n)) (Nat.cast_nonneg n)
 
-/-- Tex lines 2519 to 2522: the limit defining `P_Z(f)` exists for a potential of bounded
+/-- Tex lines 2484 to 2487: the limit defining `P_Z(f)` exists for a potential of bounded
 distortion, in particular for a Hölder potential, when some generator is diagonal; this holds
 for a box-like tuple with rotations, for which `Σ_Z` is mixing. -/
 theorem HasBoundedDistortion.tendsto_pressureZPot (h : HasBoundedDistortion o f B D)
@@ -449,7 +449,7 @@ theorem HasBoundedDistortion.tendsto_pressureZPot_admissibleSumPot
   obtain ⟨L, hL⟩ := h.tendsto_log_admissibleSumPot_div
   rwa [tendsto_nhds_unique (h.tendsto_pressureZPot h0) (h.tendsto_log_periodicSumPot_div h0 hL)]
 
-/-- Tex lines 2519 to 2522 for Hölder potentials: the limit defining `P_Z(f)` exists for every
+/-- Tex lines 2484 to 2487 for Hölder potentials: the limit defining `P_Z(f)` exists for every
 Hölder potential `f : Σ_Z → ℝ` when some generator is diagonal. -/
 theorem IsHolderPotential.tendsto_pressureZPot (hf : IsHolderPotential o f) (h0 : ∃ i, o i = 0) :
     Tendsto (fun n : ℕ => Real.log (periodicSumPot o f n) / n) atTop (𝓝 (pressureZPot o f)) := by
@@ -539,7 +539,7 @@ theorem IsGibbsPotential.tendsto_log_admissibleSumPot [IsProbabilityMeasure ν]
     rw [div_le_iff₀ hn', add_mul, div_mul_cancel₀ _ hn'.ne']
     linarith [(hlog n hn).2, mul_comm P (n : ℝ)]
 
-/-- Tex lines 2524 to 2529: the constant `P` in the Gibbs bounds of a probability measure carried
+/-- Tex lines 2489 to 2493: the constant `P` in the Gibbs bounds of a probability measure carried
 by `Σ_Z` is the pressure `P_Z(f)`, for a potential of bounded distortion and when some generator
 is diagonal. -/
 theorem IsGibbsPotential.pressure_eq (h0 : ∃ i, o i = 0) [IsProbabilityMeasure ν]
@@ -558,7 +558,7 @@ theorem IsGibbsPotential.pressure_eq_of_isHolder (h0 : ∃ i, o i = 0) [IsProbab
   exact hg.pressure_eq h0 hν h
 
 omit [Fintype ι] in
-/-- Tex lines 2531 to 2539 for Hölder potentials: an invariant Gibbs probability measure for a
+/-- Tex lines 2497 to 2501 for Hölder potentials: an invariant Gibbs probability measure for a
 Hölder potential `f : Σ_Z → ℝ` is doubling, `ν(B(𝐢, r)) ≤ D ν(B(𝐢, r/2))` for every `𝐢 ∈ Σ_Z` and
 every `r > 0`. -/
 theorem IsGibbsPotential.doubling_of_isHolder [IsProbabilityMeasure ν]

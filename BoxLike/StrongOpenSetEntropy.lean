@@ -238,7 +238,7 @@ end System
 from almost every point. By Poincaré recurrence almost every point of `s` returns to `s`
 infinitely often, and the set of points that visit `s` infinitely often is invariant, so it has
 full measure. The proof of `thm:SOSC_h2_zero` uses this recurrence for a word of positive
-measure (tex lines 3554 to 3555), which it attributes to ergodicity. -/
+measure (tex lines 3506 to 3507), which it attributes to ergodicity. -/
 theorem ae_frequently_iterate_mem {X : Type*} [MeasurableSpace X] {μ : Measure X}
     [IsProbabilityMeasure μ] {T : X → X} (hT : Ergodic T μ) {s : Set X} (hs : MeasurableSet s)
     (hpos : μ s ≠ 0) : ∀ᵐ x ∂μ, ∃ᶠ n in atTop, T^[n] x ∈ s := by

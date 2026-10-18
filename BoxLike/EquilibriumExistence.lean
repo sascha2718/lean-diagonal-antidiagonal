@@ -2,7 +2,7 @@ module
 
 /-
 The existence of an `s`-equilibrium state, the half of the sub-additive variational principle
-that `thm:irred_eq_state` needs (tex lines 2318 to 2326; Käenmäki, Ann. Acad. Sci. Fenn. Math.
+that `thm:irred_eq_state` needs (tex lines 2209 to 2218; Käenmäki, Ann. Acad. Sci. Fenn. Math.
 29 (2004), Theorem 2.6, and, for sub-additive potentials, Cao–Feng–Huang, Discrete Contin. Dyn.
 Syst. 20 (2008), Theorem 1.1). The construction is the one of Misiurewicz: the weights
 `φ^s(A_𝐢)/∑_{|𝐣| = n} φ^s(A_𝐣)` on the words of length `n` give a Bernoulli measure on the
@@ -840,7 +840,7 @@ theorem exists_invariant_le_entropy_add_energy (hs : 0 ≤ s) {ε : ℝ} (hε : 
   exact ⟨μ, hprob, hinv, by linarith⟩
 
 /-- **Existence of an `s`-equilibrium state**, the existence part of `thm:irred_eq_state` (tex
-lines 2318 to 2326), for every `s ≥ 0` and with no irreducibility hypothesis: the measure of
+lines 2209 to 2218), for every `s ≥ 0` and with no irreducibility hypothesis: the measure of
 `exists_invariant_pressure_le` satisfies `eq:eq_state_def`, since the variational inequality
 `eq:variational` gives the reverse inequality. -/
 theorem exists_isEquilibriumState (hs : 0 ≤ s) :

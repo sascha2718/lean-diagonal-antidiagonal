@@ -1,7 +1,7 @@
 module
 
 /-
-The all-anti-diagonal case of `sec:irreducibility` (tex lines 780 to 782 and 813 to 815). The
+The all-anti-diagonal case of `sec:irreducibility` (tex lines 744 to 746 and 777 to 779). The
 argument of the proof of `thm:box_like_proximal` is in `BoxLike/Proximal.lean`
 (`System.Proximal.box_like_proximal`).
 
@@ -28,7 +28,7 @@ namespace System
 variable {ι : Type*}
 
 /-- If every generator is anti-diagonal, every matrix `A_i A_j` of the second iterate is diagonal
-(tex line 782); `Φ^(2)` has the attractor `X` (`System.attractor_sq`). -/
+(tex line 746); `Φ^(2)` has the attractor `X` (`System.attractor_sq`). -/
 theorem sq_o_of_forall_anti {S : System ι} (h : ∀ i, S.o i = 1) (p : ι × ι) : S.sq.o p = 0 := by
   change S.o p.1 + S.o p.2 = 0
   rw [h, h]
@@ -40,7 +40,7 @@ end System
 
 /-- A tuple of two anti-diagonal matrices, `A_1` with entries `1/2`, `1/3` and `A_2` with entries
 `1/3`, `1/2` in the first and second rows, and zero translations: the all-anti-diagonal case of
-`sec:irreducibility` (tex lines 780 to 782). -/
+`sec:irreducibility` (tex lines 744 to 746). -/
 noncomputable def antiDiagonalExample : System (Fin 2) where
   o _ := 1
   a := ![1 / 2, 1 / 3]
@@ -83,7 +83,7 @@ theorem antiDiagonalExample_not_withRotations : ¬ antiDiagonalExample.WithRotat
   exact (show (1 : ZMod 2) ≠ 0 by decide) hi
 
 /-- All matrices of the second iterate of the all-anti-diagonal tuple are diagonal (tex line
-782). -/
+746). -/
 theorem antiDiagonalExample_sq_o (p : Fin 2 × Fin 2) : antiDiagonalExample.sq.o p = 0 :=
   System.sq_o_of_forall_anti (fun _ => rfl) p
 
@@ -137,7 +137,7 @@ strongly irreducible, but it is not box-like with rotations in any basis: no cha
 makes its matrices simultaneously diagonal or anti-diagonal with both types present. The
 identification of the intermediate class with box-like tuples with rotations therefore needs the
 exception of the all-anti-diagonal tuples, which the paragraph after `thm:box_like_proximal`
-makes (tex lines 813 to 815). -/
+makes (tex lines 777 to 779). -/
 theorem antiDiagonalExample_not_withRotations_conj :
     TupleIrreducible antiDiagonalExample.mat ∧
       ¬ TupleStronglyIrreducible antiDiagonalExample.mat ∧

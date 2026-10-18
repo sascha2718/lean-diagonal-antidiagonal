@@ -39,8 +39,8 @@ the fidelity boundary.
 | B | `sec:exponential_separation`, `sec:Singular_value_function`, `sec:affinity_dim`, `sec:normalisation` (algebraic part): `Δ_n^Ψ`, the projective exponential separation condition, `φ^s`, pressure by Fekete for box-like systems and for general tuples, affinity dimension, Falconer's bound for every planar self-affine set, second iterates | elementary to moderate, proved in full |
 | C | `sec:ledrappier_young_formula`: pointwise dimension, exact- and double-dimensional measures, `thm:exact-dimensional-mixture`, `eq:dimension_measure_def`, `eq:haus_dim_sum` | measure theory on Mathlib's differentiation theorem, proved in full |
 | D | `sec:dimension_of_projections`, `sec:dimension_result_proof`: `thm:eq_state_proj_dim` and `thm:main1` for every `s > 0` (with the orientation lift for `s ≥ 2`), `ex:projection_double_dimensional`, `thm:main_extended`, `thm:main2` along the prose, `\dim_H X = min{2, dimaff(X)}` | proved from the literature hypotheses and layer E; the case `s ≥ 2` of `thm:main_extended` with no literature hypothesis |
-| E | `sec:lyapunov_exponents`, `sec:conditional`, `sec:entropies`, `sec:gibbs_measures`, `sec:average_gibbs` to `sec:higher_dimensional_entropies`: `Σ'` and the Oseledets filtration, measurable partitions, conditional measures, the entropies `h_i`, Gibbs measures, `P_Z(f)` | Birkhoff, Maker, Shannon–McMillan–Breiman, Kolmogorov–Sinai, Kingman, Furstenberg–Kesten, Oseledets, Rokhlin's disintegration and Feng's identity are built here; Feng's Ledrappier–Young formulas are hypotheses; design in [`layer-e.md`](layer-e.md) |
-| F | off the main line: `thm:fraser` and the dimension chain, `thm:A_classification`, `prop:ssc_no_overlap_not_pesc`, the rational example `Example.sys`, the natural extension, `thm:irred_eq_state` for box-like systems and for general tuples, the claims of the prose (`Support`) | proved; cited theorems enter as `Prop` hypotheses, and three proposed premises await authorisation in `BoxLike/Proposals/` |
+| E | `sec:lyapunov_exponents`, `sec:conditional`, `sec:entropies`, `sec:gibbs_measures`, `sec:average_gibbs` to `sec:higher_dimensional_entropies`: `Σ'` and the Oseledets filtration, measurable partitions, conditional measures, the entropies `h_i`, Gibbs measures, `P_Z(f)` | Birkhoff, Maker, Shannon–McMillan–Breiman, Kolmogorov–Sinai, Kingman, Furstenberg–Kesten, Oseledets, Rokhlin's disintegration, Feng's identity, Bowen's existence of Gibbs measures and the Fraser–Jordan–Jurga decomposition `thm:eq_state_is_sum` are built here; Feng's Ledrappier–Young formulas are hypotheses; design in [`layer-e.md`](layer-e.md) |
+| F | off the main line: `thm:fraser` and the dimension chain, `thm:A_classification`, `prop:ssc_no_overlap_not_pesc`, the rational example `Example.sys`, the natural extension, `thm:irred_eq_state` for box-like systems and for general tuples, the claims of the prose (`Support`) | proved; cited theorems enter as `Prop` hypotheses, among them the general forms `FengKaenmakiNormEquilibrium` and `PlanarFengLedrappierYoung`; the one proposal in `BoxLike/Proposals/` is used by no result |
 
 ## 3. What Mathlib does not have
 
@@ -80,10 +80,26 @@ Each item is a piece of the paper that the library builds itself. Labels such as
   `Q(μ) = ∑_𝐢 2^{-e(𝐢)} μ([𝐢])²` of the cylinder masses, and an extreme point is ergodic. On `Σ_Z`,
   the pressure `P_Z(f)`, Gibbs measures, their doubling, the uniqueness of the ergodic Gibbs
   measure of a Hölder potential and `P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s})` are in `PressureZ`,
-  `GibbsProperties`, `Support/HolderPressure`, `Support/GibbsUniqueness` and `Thermodynamic`. The
-  Bernoulli equilibrium state for `s ≥ 2` is in `BernoulliEquilibrium`, `BernoulliEntropy` and
-  `PressureLarge`, and the orientation lift of a Bernoulli measure as a mixing stationary Markov
-  measure in `OrientationLift`.
+  `GibbsProperties`, `Support/HolderPressure`, `Support/GibbsUniqueness` and `Thermodynamic`.
+  Bowen's theorem, the existence of an ergodic Gibbs measure for every Hölder potential on the
+  mixing `Σ_Z`, is built in `Bowen/`: the bounds `e^{nP} ≤ A_n ≤ K e^{nP}` on the partition sums,
+  from Fekete's lemma and a super-additive form of it for sums glued through periodic points
+  (`Bowen/PartitionBounds`); the weighted periodic-orbit measures, which satisfy the Gibbs bounds
+  up to every length with one constant (`Bowen/PeriodicMeasures`); a weak-star limit point in the
+  compact space of probability measures, where the Gibbs bounds up to a length are a closed
+  condition since cylinders are clopen (`Bowen/Limit`); and the ergodicity of every invariant
+  Gibbs measure from a quasi-Bernoulli lower bound (`Bowen/Ergodic`, `Bowen/Main`). The
+  decomposition of `thm:eq_state_is_sum` (Fraser–Jordan–Jurga) is built on Bowen's theorem in
+  `FraserJordanJurga/`: the ergodic Gibbs measure `μ_1` of `f_{1,s}`, its image `μ_2` under the
+  exchange of the axes, and the Gibbs bounds of `φ^s` for the image of `μ_1` under forgetting the
+  axis (`FraserJordanJurga/Gibbs`); the equality of every invariant measure with these bounds and
+  this image, and the four decompositions from `Σ_Z = τ(Σ) ⊔ ω(Σ)`
+  (`FraserJordanJurga/Decomposition`); the Lyapunov identities from Birkhoff's theorem along the
+  two lifts and a relative-entropy comparison (`FraserJordanJurga/Lyapunov`); and the assembly
+  `fraserJordanJurgaDecomposition_holds` (`FraserJordanJurga/Main`). The Bernoulli equilibrium
+  state for `s ≥ 2` is in `BernoulliEquilibrium`, `BernoulliEntropy` and `PressureLarge`, and the
+  orientation lift of a Bernoulli measure as a mixing stationary Markov measure in
+  `OrientationLift`.
 - **Entropy.** Mathlib has no Kolmogorov–Sinai entropy and no conditional entropy. Block
   entropies and the entropy rate (`Entropy`), the entropy of finite partitions, the conditional
   entropy calculus, the Kolmogorov–Sinai entropy as a supremum over finite Borel partitions and

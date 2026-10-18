@@ -49,14 +49,14 @@ section Saturated
 variable {Ω : Type*} [MeasurableSpace Ω]
 
 /-- A Borel map that is constant on the atoms of `ξ` is measurable with respect to the
-`σ`-algebra `\widehat{ξ}` of `sec:conditional` (tex line 1817). -/
+`σ`-algebra `\widehat{ξ}` of `sec:conditional` (tex line 1757). -/
 theorem measurable_saturated_of_forall_eq {Z : Type*} [MeasurableSpace Z] {ξ : Ω → Set Ω}
     {f : Ω → Z} (hf : Measurable f) (hconst : ∀ x y, y ∈ ξ x → f x = f y) :
     Measurable[saturated ξ] f :=
   fun U hU => ⟨hf hU, fun x y hxy => by simp only [mem_preimage, hconst x y hxy]⟩
 
 /-- A `\widehat{ξ}`-measurable map into a space with measurable singletons is constant on the
-atoms of `ξ` (`sec:conditional`, tex line 1817). -/
+atoms of `ξ` (`sec:conditional`, tex line 1757). -/
 theorem eq_of_measurable_saturated {Z : Type*} [MeasurableSpace Z] [MeasurableSingletonClass Z]
     {ξ : Ω → Set Ω} {f : Ω → Z} (hf : Measurable[saturated ξ] f) {x y : Ω} (hxy : y ∈ ξ x) :
     f x = f y := by
@@ -74,14 +74,14 @@ variable {X Y : Type*} [MeasurableSpace X] [StandardBorelSpace X] [MeasurableSpa
   [StandardBorelSpace Y]
 
 /-- The conditional measures `μ_x^ξ` of `sec:conditional` are constant on the atoms of `ξ`,
-because `x ↦ μ_x^ξ(A)` is `\widehat{ξ}`-measurable for every Borel set `A` (tex lines 1821 to
-1822). -/
+because `x ↦ μ_x^ξ(A)` is `\widehat{ξ}`-measurable for every Borel set `A` (tex lines 1752 to
+1753). -/
 theorem condMeas_eq_of_mem (μ : Measure X) [IsFiniteMeasure μ] {ξ : X → Set X} {x y : X}
     (hxy : y ∈ ξ x) : condMeas μ ξ x = condMeas μ ξ y :=
   Measure.ext fun _ hA => eq_of_measurable_saturated (measurable_condMeas μ ξ hA) hxy
 
 /-- Conditional measures do not change when the measure is multiplied by a constant: the kernel
-`μ_x^ξ` satisfies the defining identity of `sec:conditional` (tex lines 1824 to 1827) for `c μ`.
+`μ_x^ξ` satisfies the defining identity of `sec:conditional` (tex lines 1752 to 1756) for `c μ`.
 This is the passage between the restrictions of `eq:orientation-restrictions` and the normalised
 restrictions of `eq:normalised-orientation-restrictions`. It holds for every map `ξ`. -/
 theorem condMeas_smul (μ : Measure X) [IsFiniteMeasure μ] (ξ : X → Set X) (c : ℝ≥0) :

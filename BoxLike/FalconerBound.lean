@@ -2,8 +2,8 @@ module
 
 /-
 Falconer's upper bound for the upper Minkowski dimension of a box-like self-affine set, in
-`sec:affinity_dim`: `eq:hausdorff_affinity_upper_bound` (tex lines 2255 to 2265) and the bound
-of tex lines 573 to 574, after Falconer, Math. Proc. Cambridge Philos. Soc. 103 (1988),
+`sec:affinity_dim`: `eq:hausdorff_affinity_upper_bound` (tex lines 2160 to 2171) and the bound
+of tex lines 542 to 543, after Falconer, Math. Proc. Cambridge Philos. Soc. 103 (1988),
 Theorem 5.4, which the article cites.
 
 The plane `ℝ × ℝ` carries the sup metric, so closed balls are squares. For a word `𝐢` the copy
@@ -404,7 +404,7 @@ theorem upperBoxDim_attractor_le_dimaff [Nonempty ι] :
   rwa [S.pressure_dimaff] at h'
 
 /-- Falconer's bound, Theorem 5.4 of his 1988 article, for the upper Minkowski dimension:
-`\overline{\dim}_M X ≤ min{2, dimaff(X)}`, the bound of tex lines 573 to 574. It holds for every
+`\overline{\dim}_M X ≤ min{2, dimaff(X)}`, the bound of tex lines 542 to 543. It holds for every
 box-like self-affine set, without a separation condition. -/
 theorem upperBoxDim_attractor_le [Nonempty ι] :
     upperBoxDim S.attractor ≤ ENNReal.ofReal (min 2 S.dimaff) := by

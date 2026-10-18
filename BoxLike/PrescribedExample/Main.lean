@@ -1,7 +1,7 @@
 module
 
 /-
-`ex:projection_double_dimensional`, tex lines 2986 to 3112: for every `0 < s_2 < s_1 ≤ 1` there
+`ex:projection_double_dimensional`, tex lines 2933 to 3064: for every `0 < s_2 < s_1 ≤ 1` there
 is a proximal box-like self-affine set with rotations, defined by four maps and satisfying strong
 separation and projective exponential separation, with `dimaff(X) = s_1`, whose
 `s_1`-equilibrium state has double-dimensional coordinate projections with the pointwise
@@ -50,7 +50,7 @@ theorem two_mul_rpow_add_paramsOf {s₁ p : ℝ} (hs₀ : 0 < s₁) (hs₁ : s�
     ← Real.rpow_mul (by linarith), one_div_mul_cancel hs₀.ne', Real.rpow_one, Real.rpow_one]
   ring
 
-/-- The measure-theoretic part of `ex:projection_double_dimensional`, tex lines 3076 to 3111,
+/-- The measure-theoretic part of `ex:projection_double_dimensional`, tex lines 3028 to 3063,
 for `0 < s_2 < s_1 ≤ 1`, a parameter `1/2 < p < 1` with `(log 2 + H(p))/(log 2 + J(p)) = s_2/s_1`
 and a translation vector `t` with the projective exponential separation condition. The
 `s_1`-equilibrium state exists and is unique; for every invariant `s_1`-equilibrium state `μ`,
@@ -146,7 +146,7 @@ theorem projection_double_dimensional_of_geometry (hms : MorrisShmerkinLyapunov.
   exact ⟨p, hp, hratio, hpuniq, t, Gibbs.withRotations _ t, Gibbs.proximal _ t, hssc, hsep, hdim,
     huniq, hspec⟩
 
-/-- `ex:projection_double_dimensional`, tex lines 2986 to 3112. For every `0 < s_2 < s_1 ≤ 1`
+/-- `ex:projection_double_dimensional`, tex lines 2933 to 3064. For every `0 < s_2 < s_1 ≤ 1`
 the equation `(log 2 + H(p))/(log 2 + J(p)) = s_2/s_1` has exactly one solution `1/2 < p < 1`,
 and for some translation vector `t ∈ ℝ^8` the system `Φ` of the four maps
 `φ_i(x, y) = (a x + t_i, b y + t_{i+4})`, `i ∈ {1, 2}`, and

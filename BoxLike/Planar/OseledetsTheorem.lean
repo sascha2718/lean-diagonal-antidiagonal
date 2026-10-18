@@ -3,7 +3,7 @@ module
 /-
 Oseledets' multiplicative ergodic theorem for invertible planar matrix cocycles, in the form that
 `sec:lyapunov_exponents` cites (Oseledec 1968 and Froyland–Lloyd–Quas, Theorem 4.1, tex lines
-1620 to 1642): for an invertible tuple `𝖠` and an ergodic `μ ∈ M_σ(Σ)` with
+1585 to 1607): for an invertible tuple `𝖠` and an ergodic `μ ∈ M_σ(Σ)` with
 `λ_2(𝖠, μ) < λ_1(𝖠, μ)`, `μ`-almost every `𝐢` carries a line `V_𝐢^1` such that every non-zero
 `v ∈ V_𝐢^1` has `n⁻¹ log |A_{i_{-n}} ⋯ A_{i_{-1}} v| → λ_2(𝖠, μ)` and every `v ∉ V_𝐢^1` has the
 rate `λ_1(𝖠, μ)`. In the terms of `BoxLike/Planar/Oseledets.lean`, the set of regular points has
@@ -15,7 +15,7 @@ argument of `BoxLike/Planar/OseledetsTheoremDirection.lean`. No literature premi
 The consequences at the general planar scope: a choice of `Σ'` and of the Oseledets filtration
 (`MatrixTuple.OseledetsSet`) exists for every invertible planar tuple; for a planar self-affine
 system `μ(Σ') = 1`, `thm:feng_entropy_kolmogorov_sinai` holds in the form of the article, and
-`h_0(μ) = h(μ)` (tex lines 2024 to 2026).
+`h_0(μ) = h(μ)` (tex lines 1989 to 1991).
 
 * `MatrixTuple.ae_mem_regularSet`, `MatrixTuple.measure_regularSet_compl_of_ergodic`: Oseledets'
   theorem in the plane.
@@ -48,8 +48,8 @@ variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonCla
   {A : ι → Matrix (Fin 2) (Fin 2) ℝ} {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ]
 
 /-- **Oseledets' theorem for invertible planar cocycles**, in the form of
-`sec:lyapunov_exponents` (Oseledec 1968, Froyland–Lloyd–Quas, Theorem 4.1, tex lines 1620 to
-1642): for an invertible tuple and an ergodic `μ` with `λ_2(𝖠, μ) < λ_1(𝖠, μ)`, `μ`-almost every
+`sec:lyapunov_exponents` (Oseledec 1968, Froyland–Lloyd–Quas, Theorem 4.1, tex lines 1585 to
+1607): for an invertible tuple and an ergodic `μ` with `λ_2(𝖠, μ) < λ_1(𝖠, μ)`, `μ`-almost every
 `𝐢` is regular, that is, has a line `V_𝐢^1` with the properties (V2) and (V3). At such a point
 the theorem of Furstenberg and Kesten gives the rates of `α_1` and `α_2` of
 `A_{i_{-n}} ⋯ A_{i_{-1}}`, and the deterministic theorem `exists_slow_fast_of_tendsto` gives a
@@ -72,14 +72,14 @@ theorem ae_mem_regularSet (hA : ∀ i, (A i).det ≠ 0) (herg : Ergodic (shift 1
 
 /-- Oseledets' theorem for invertible planar cocycles in the form `μ(Σ') = 1`: the set of
 regular points has full measure for an ergodic `μ` with `λ_2(𝖠, μ) < λ_1(𝖠, μ)`
-(`sec:lyapunov_exponents`, tex lines 1620 to 1642). -/
+(`sec:lyapunov_exponents`, tex lines 1585 to 1607). -/
 theorem measure_regularSet_compl_of_ergodic (hA : ∀ i, (A i).det ≠ 0)
     (herg : Ergodic (shift 1) μ) (hlt : lyapunov₂ A μ < lyapunov₁ A μ) :
     μ (regularSet A (lyapunov₁ A μ) (lyapunov₂ A μ))ᶜ = 0 :=
   ae_iff.1 (ae_mem_regularSet hA herg hlt)
 
 /-- A choice of `Σ'` and of the Oseledets filtration in the sense of `OseledetsSet`, the form in
-which `sec:lyapunov_exponents` (tex lines 1620 to 1642) takes Oseledets' theorem, exists for every
+which `sec:lyapunov_exponents` (tex lines 1585 to 1607) takes Oseledets' theorem, exists for every
 invertible planar tuple and every ergodic `μ` with `λ_2(𝖠, μ) < λ_1(𝖠, μ)`. -/
 theorem nonempty_oseledetsSet_of_ergodic (hA : ∀ i, (A i).det ≠ 0)
     (herg : Ergodic (shift 1) μ) (hlt : lyapunov₂ A μ < lyapunov₁ A μ) :
@@ -89,7 +89,7 @@ theorem nonempty_oseledetsSet_of_ergodic (hA : ∀ i, (A i).det ≠ 0)
 variable (A μ) in
 /-- The choice of `Σ'` and of the Oseledets filtration given by the regular points and the
 filtration `regularV`, for an invertible planar tuple and an ergodic `μ` with
-`λ_2(𝖠, μ) < λ_1(𝖠, μ)` (`sec:lyapunov_exponents`, tex lines 1620 to 1642). -/
+`λ_2(𝖠, μ) < λ_1(𝖠, μ)` (`sec:lyapunov_exponents`, tex lines 1585 to 1607). -/
 noncomputable def oseledetsSetOfErgodic (hA : ∀ i, (A i).det ≠ 0)
     (herg : Ergodic (shift 1) μ) (hlt : lyapunov₂ A μ < lyapunov₁ A μ) : OseledetsSet A μ :=
   regularOseledetsSet A μ hA hlt (measure_regularSet_compl_of_ergodic hA herg hlt)
@@ -102,7 +102,7 @@ variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonCla
   (P : PlanarSystem ι)
 
 /-- `μ(Σ') = 1` for a planar self-affine system and an ergodic `μ` with
-`λ_2(𝖠, μ) < λ_1(𝖠, μ)` (`sec:lyapunov_exponents`, tex lines 1620 to 1642), by Oseledets'
+`λ_2(𝖠, μ) < λ_1(𝖠, μ)` (`sec:lyapunov_exponents`, tex lines 1585 to 1607), by Oseledets'
 theorem `MatrixTuple.measure_regularSet_compl_of_ergodic`. -/
 theorem measure_SigmaPrime_compl_of_ergodic (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (herg : Ergodic (shift 1) μ) (hlt : P.lyapunov₂ μ < P.lyapunov₁ μ) :
@@ -111,7 +111,7 @@ theorem measure_SigmaPrime_compl_of_ergodic (μ : Measure (ℤ → ι)) [IsProba
 
 /-- The choice of `Σ'` and of the Oseledets filtration in the sense of
 `MatrixTuple.OseledetsSet` for a planar self-affine system and an ergodic `μ` with
-`λ_2(𝖠, μ) < λ_1(𝖠, μ)` (`sec:lyapunov_exponents`, tex lines 1620 to 1642). -/
+`λ_2(𝖠, μ) < λ_1(𝖠, μ)` (`sec:lyapunov_exponents`, tex lines 1585 to 1607). -/
 noncomputable def oseledetsSetOfErgodic (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (herg : Ergodic (shift 1) μ) (hlt : P.lyapunov₂ μ < P.lyapunov₁ μ) :
     MatrixTuple.OseledetsSet P.mat μ :=
@@ -140,9 +140,9 @@ theorem tendsto_neg_log_cylinder_dimEntropyAt_of_ergodic (μ : Measure (ℤ → 
   P.tendsto_neg_log_cylinder_dimEntropyAt μ herg.toMeasurePreserving hlt
     (P.measure_SigmaPrime_compl_of_ergodic μ herg hlt)
 
-/-- `h_0(μ) = h(μ)` with the Kolmogorov–Sinai entropy of tex lines 2000 to 2007, for a planar
+/-- `h_0(μ) = h(μ)` with the Kolmogorov–Sinai entropy of tex lines 1965 to 1972, for a planar
 self-affine system and an ergodic `μ` with `λ_2(𝖠, μ) < λ_1(𝖠, μ)` (`sec:entropies`, tex lines
-2024 to 2026). -/
+1989 to 1991). -/
 theorem dimEntropy_zero_eq_ksEntropy_of_ergodic (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (herg : Ergodic (shift 1) μ) (hlt : P.lyapunov₂ μ < P.lyapunov₁ μ) :
     P.dimEntropy μ 0 = ksEntropy μ (shift 1) :=
@@ -150,8 +150,8 @@ theorem dimEntropy_zero_eq_ksEntropy_of_ergodic (μ : Measure (ℤ → ι)) [IsP
     (P.measure_SigmaPrime_compl_of_ergodic μ herg hlt)
 
 /-- `h_0(μ) = h(μ)` with the entropy rate of the time-zero partition, for a planar self-affine
-system and an ergodic `μ` with `λ_2(𝖠, μ) < λ_1(𝖠, μ)` (`sec:entropies`, tex lines 2024 to
-2026). -/
+system and an ergodic `μ` with `λ_2(𝖠, μ) < λ_1(𝖠, μ)` (`sec:entropies`, tex lines 1989 to
+1991). -/
 theorem dimEntropy_zero_eq_entropy_of_ergodic (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (herg : Ergodic (shift 1) μ) (hlt : P.lyapunov₂ μ < P.lyapunov₁ μ) :
     P.dimEntropy μ 0 = entropy μ :=

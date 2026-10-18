@@ -51,7 +51,7 @@ def FengInfoSum : Prop :=
 
 /-- Feng, Lemma 4.6, first identity of (4.16), for the projective system and an
 invariant measure `ν` on `Σ_Z`, ergodic or not; the article checks Feng's constant-multiplicity
-hypothesis (4.7) in `sec:entropies`, tex lines 1956 to 1959. The library proves it, with neither
+hypothesis (4.7) in `sec:entropies`, tex lines 1921 to 1924. The library proves it, with neither
 that hypothesis nor rotations nor proximality (`fengInfoSumBar_holds`,
 `BoxLike/FengIdentityBar.lean`). -/
 def FengInfoSumBar : Prop :=

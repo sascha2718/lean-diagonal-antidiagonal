@@ -2,7 +2,7 @@ module
 
 /-
 The measure of `Σ'`, `Σ^τ` and `Σ^ω`: the assertion `μ(Σ') = 1` of `sec:lyapunov_exponents` (tex
-lines 1675 to 1679), the almost sure limit `eq:lyapunov_exponent_gsystem`, and
+lines 1598 to 1600), the almost sure limit `eq:lyapunov_exponent_gsystem`, and
 `thm:sigma_tau_omega_positive_eq_measure` of `sec:normalisation`.
 
 The backward growth rate of `eq:lyapunov_exponent_gsystem` along `𝐣 ∈ Σ_Z` is a Birkhoff average
@@ -364,7 +364,7 @@ theorem tendsto_log_abs_det_div_norm_matWord_pastWord {x : ℤ → ι} {a b : �
     (abs_pos.2 (S.gDeriv_ne_zero _)), min_div_div_right (Nat.cast_nonneg n)]
 
 /-- The shift keeps the two backward rates along `τ(𝐢)` and `ω(𝐢)` or exchanges them
-(`sec:lyapunov_exponents`, tex lines 1678 to 1679), so their maximum and their minimum are
+(`sec:lyapunov_exponents`, tex lines 1598 to 1599), so their maximum and their minimum are
 invariant. -/
 theorem max_min_backRate_shift {x : ℤ → ι} {a b a' b' : ℝ}
     (ha : S.HasBackRate (tau S.o x) a) (hb : S.HasBackRate (omega S.o x) b)
@@ -444,7 +444,7 @@ theorem exists_backRate (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     ae_of_ae_map (measurable_tau S.o).aemeasurable h1,
     ae_of_ae_map (measurable_omega S.o).aemeasurable h2⟩
 
-/-- `sec:lyapunov_exponents`, tex line 1677: `μ(Σ') = 1` for an ergodic `μ`. The article
+/-- `sec:lyapunov_exponents`, tex line 1599: `μ(Σ') = 1` for an ergodic `μ`. The article
 obtains it from Oseledets' theorem. In the box-like case `birkhoff_ae` suffices: the two backward
 rates are Birkhoff averages of `log |g'_{j_{-1}}|` under `σ⁻¹` along `τ(𝐢)` and `ω(𝐢)`, for the
 invariant lift `(τ_*μ + ω_*μ) / 2`; their maximum and their minimum are `σ`-invariant, hence

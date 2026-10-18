@@ -1,7 +1,7 @@
 module
 
 /-
-The geometric part of `ex:projection_double_dimensional`, tex lines 2986 to 3077, in one
+The geometric part of `ex:projection_double_dimensional`, tex lines 2933 to 3029, in one
 statement: for every `0 < s_2 < s_1 ≤ 1` the unique `p ∈ (1/2, 1)` with
 `(log 2 + H(p)) / (log 2 + J(p)) = s_2/s_1`, and a translation `t` in the cube `B` for which the
 system of four maps with `a = (p/2)^{1/s_1}`, `b = ((1-p)/2)^{1/s_1}` is a proximal irreducible

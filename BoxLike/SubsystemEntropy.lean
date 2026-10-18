@@ -3,7 +3,7 @@ module
 /-
 The dimension of the Bernoulli measure of a finite homogeneous diagonal subsystem: the second
 part of the measure-theoretic argument in the proof of `thm:main2` in
-`sec:dimension_result_proof` (tex lines 3870 to 3918). For the subsystem `T` of
+`sec:dimension_result_proof` (tex lines 3702 to 3737). For the subsystem `T` of
 `BoxLike/HomogeneousSubsystem.lean`, with the alphabet `Option κ`, the common diagonal linear
 part `diag(a, b)`, `|b| < |a|`, and the Bernoulli measure `ν_n` with equal weights on the
 symbols `some k`, write `H = log #κ`, `χ_1 = -log |a|` and `χ_2 = -log |b|`.
@@ -19,7 +19,7 @@ Ledrappier–Young formula then gives the dimension `subsystemDim H χ_1 χ_2` o
 
 * `subsystemDim`, `subsystemDim_eq_lyapDim`, `subsystemDim_div`, `tendsto_subsystemDim`,
   `subsystemDim_eq_ledrappierYoung`: the dimension formula `d + (H - χ_1 d) / χ_2` with
-  `d = min{1, H / χ_1}` of tex lines 3913 to 3915, its agreement with `eq:diml_min2`, its
+  `d = min{1, H / χ_1}` of tex lines 3730 to 3732, its agreement with `eq:diml_min2`, its
   homogeneity, its continuity and its evaluation through `eq:feng1_1`.
 * `measurableEmbedding_tau`, `measurableEmbedding_omega`, `restrict_map_image_eq`,
   `tau_preimage_cylinder_zero`: the codings are measurable embeddings, and the restriction
@@ -33,7 +33,7 @@ Ledrappier–Young formula then gives the dimension `subsystemDim H χ_1 χ_2` o
   the dimension of a coordinate marginal, from `KittleKoglerDimension`.
 * `System.IsHomogeneousOption.dimEntropyBar_map_tau`,
   `System.IsHomogeneousOption.dimEntropyBar_map_omega_eq_zero`: the conditional entropies
-  `q_{x,n}` and `q_{y,n}` of tex lines 3896 to 3906.
+  `q_{x,n}` and `q_{y,n}` of tex lines 3714 to 3724.
 * `System.IsHomogeneousOption.dimEntropy_one_eq`,
   `System.IsHomogeneousOption.condMeas_xiPerp_eq_dirac`: the transport of the conditional
   entropy and of the Dirac conditional measures along the codings.
@@ -64,13 +64,13 @@ universe u
 
 /-! ### The dimension formula of the subsystem -/
 
-/-- The dimension of the subsystem measure `ν_n` of tex lines 3913 to 3915:
+/-- The dimension of the subsystem measure `ν_n` of tex lines 3730 to 3732:
 `d + (H - χ_1 d) / χ_2` with `d = min{1, H / χ_1}`, for `H = H_n`, `χ_1 = χ_{1,n}` and
 `χ_2 = χ_{2,n}`. -/
 noncomputable def subsystemDim (H χ₁ χ₂ : ℝ) : ℝ :=
   min 1 (H / χ₁) + (H - χ₁ * min 1 (H / χ₁)) / χ₂
 
-/-- Tex lines 3932 to 3933: the dimension formula of the subsystem agrees with `eq:diml_min2`
+/-- Tex lines 3734 to 3735: the dimension formula of the subsystem agrees with `eq:diml_min2`
 for `l₂ < l₁ < 0` and `h ≤ -l₁ - l₂`, that is, in the range `dim_L ≤ 2`. -/
 theorem subsystemDim_eq_lyapDim {h l₁ l₂ : ℝ} (hl : l₂ < l₁) (hl₁ : l₁ < 0)
     (hh₂ : h ≤ -l₁ - l₂) : subsystemDim h (-l₁) (-l₂) = lyapDim h l₁ l₂ := by
@@ -88,7 +88,7 @@ theorem subsystemDim_eq_lyapDim {h l₁ l₂ : ℝ} (hl : l₂ < l₁) (hl₁ : 
     ring
 
 /-- The dimension formula is invariant under dividing all three parameters by the same nonzero
-number, as happens with `H_n / n`, `χ_{1,n} / n` and `χ_{2,n} / n` (tex line 3916). -/
+number, as happens with `H_n / n`, `χ_{1,n} / n` and `χ_{2,n} / n` (tex line 3734). -/
 theorem subsystemDim_div (H χ₁ χ₂ : ℝ) {n : ℝ} (hn : n ≠ 0) :
     subsystemDim (H / n) (χ₁ / n) (χ₂ / n) = subsystemDim H χ₁ χ₂ := by
   unfold subsystemDim
@@ -97,7 +97,7 @@ theorem subsystemDim_div (H χ₁ χ₂ : ℝ) {n : ℝ} (hn : n ≠ 0) :
   rw [show H / n - χ₁ / n * min 1 (H / χ₁) = (H - χ₁ * min 1 (H / χ₁)) / n by ring,
     div_div_div_cancel_right₀ hn]
 
-/-- Tex lines 3932 to 3933: the dimension formula is continuous where both exponents are
+/-- Tex lines 3734 to 3735: the dimension formula is continuous where both exponents are
 positive. -/
 theorem tendsto_subsystemDim {H χ₁ χ₂ : ℕ → ℝ} {h c₁ c₂ : ℝ} (hc₁ : 0 < c₁) (hc₂ : 0 < c₂)
     (hH : Tendsto H atTop (𝓝 h)) (h₁ : Tendsto χ₁ atTop (𝓝 c₁))
@@ -110,7 +110,7 @@ theorem tendsto_subsystemDim {H χ₁ χ₂ : ℕ → ℝ} {h c₁ c₂ : ℝ} (
 
 /-- The planar Ledrappier–Young formula `eq:feng1_1` with `h_0 = H`, `h_1 = H - χ_1 d`,
 `h_2 = 0`, `λ_1 = -χ_1` and `λ_2 = -χ_2`, where `d = min{1, H / χ_1}`, evaluates to
-`subsystemDim H χ_1 χ_2` (tex lines 3913 to 3915). -/
+`subsystemDim H χ_1 χ_2` (tex lines 3728 to 3733). -/
 theorem subsystemDim_eq_ledrappierYoung {H l₁ l₂ : ℝ} (h₁ : l₁ ≠ 0) (h₂ : l₂ ≠ 0) :
     subsystemDim H (-l₁) (-l₂) =
       (H - -l₁ * min 1 (H / -l₁) - H) / l₁ + (0 - (H - -l₁ * min 1 (H / -l₁))) / l₂ := by
@@ -176,7 +176,7 @@ namespace System
 
 variable {ι : Type u} [MeasurableSpace ι] (S : System ι)
 
-/-- The atom of `ξ_2` on `Σ'` (`sec:entropies`, tex lines 1938 to 1943): `𝐣 ∈ ξ_2(𝐢)` fixes
+/-- The atom of `ξ_2` on `Σ'` (`sec:entropies`, tex lines 1858 to 1862): `𝐣 ∈ ξ_2(𝐢)` fixes
 the past and the planar point, since `V_𝐢^2 = {0}`. -/
 theorem samePast_and_proj_eq_of_mem_xi_two (μ : Measure (ℤ → ι)) {x y : ℤ → ι}
     (hx : x ∈ S.SigmaPrime μ) (hy : y ∈ S.xi μ 2 x) : SamePast y x ∧ S.proj y = S.proj x := by
@@ -238,12 +238,12 @@ include hT
 /-! ### The exponents -/
 
 omit [Fintype κ] in
-/-- `log |a| < 0`, so that `χ_{1,n} = -log |a_n| > 0` (tex line 3871). -/
+/-- `log |a| < 0`, so that `χ_{1,n} = -log |a_n| > 0` (tex line 3698). -/
 theorem log_abs_a_neg : Real.log |a| < 0 :=
   Real.log_neg (abs_pos.2 hT.a_ne_zero) hT.abs_a_lt_one
 
 omit [Fintype κ] in
-/-- `log |b| < 0`, so that `χ_{2,n} = -log |b_n| > 0` (tex line 3871). -/
+/-- `log |b| < 0`, so that `χ_{2,n} = -log |b_n| > 0` (tex line 3698). -/
 theorem log_abs_b_neg : Real.log |b| < 0 :=
   Real.log_neg (abs_pos.2 hT.b_ne_zero) hT.abs_b_lt_one
 
@@ -255,7 +255,7 @@ theorem lyapunov₂_lt_lyapunov₁ (hab : |b| < |a|) :
 
 /-! ### The dimensions of the coordinate marginals -/
 
-/-- Tex lines 3891 to 3910: each coordinate marginal of `ν_n` is a self-similar measure with
+/-- Tex lines 3703 to 3712: each coordinate marginal of `ν_n` is a self-similar measure with
 equal weights on the `#κ` coordinate maps `g_{(some k, c)}` of the subsystem, with the common
 ratio `a` for `c = 0` and `b` for `c = 1`; without exact overlaps, that is, when the words in
 these maps compose injectively, Kittle–Kogler gives `dim = min{1, H_n / χ_{c,n}}`. -/
@@ -292,14 +292,14 @@ theorem marginal_isExactDim (hkk : KittleKoglerDimension.{u}) (c : ZMod 2)
     field_simp
   simpa only [h1, h2] using key
 
-/-- Tex lines 3904 to 3910 for the horizontal marginal: `d_{x,n} = min{1, H_n / χ_{1,n}}`. -/
+/-- Tex lines 3707 to 3712 for the horizontal marginal: `d_{x,n} = min{1, H_n / χ_{1,n}}`. -/
 theorem marginal_zero_isExactDim (hkk : KittleKoglerDimension.{u})
     (hfreex : Function.Injective (simWord (fun _ : κ => a) (fun k => T.trans (some k, 0)))) :
     IsExactDim (T.marginal 0 (optionBernoulli κ))
       (min 1 (Real.log (Fintype.card κ) / -Real.log |a|)) := by
   simpa using hT.marginal_isExactDim hkk 0 (by simpa using hfreex)
 
-/-- Tex lines 3904 to 3910 for the vertical marginal: `d_{y,n} = min{1, H_n / χ_{2,n}}`. -/
+/-- Tex lines 3707 to 3712 for the vertical marginal: `d_{y,n} = min{1, H_n / χ_{2,n}}`. -/
 theorem marginal_one_isExactDim (hkk : KittleKoglerDimension.{u})
     (hfreey : Function.Injective (simWord (fun _ : κ => b) (fun k => T.trans (some k, 1)))) :
     IsExactDim (T.marginal 1 (optionBernoulli κ))
@@ -308,7 +308,7 @@ theorem marginal_one_isExactDim (hkk : KittleKoglerDimension.{u})
 
 /-! ### The scalar Ledrappier–Young formula for the coded measures -/
 
-/-- Tex lines 3912 to 3918: `q_{x,n} = \overline{h}_1(τ_*ν_n) = H_n - χ_{1,n} d_{x,n}` with
+/-- Tex lines 3714 to 3721: `q_{x,n} = \overline{h}_1(τ_*ν_n) = H_n - χ_{1,n} d_{x,n}` with
 `d_{x,n} = min{1, H_n / χ_{1,n}}`, by comparing the scalar Ledrappier–Young formula
 `thm:feng1` for `τ_*ν_n`, whose projection is the horizontal marginal
 (`eq:commutative_diagram`), with the dimension of Kittle–Kogler, through the uniqueness of the
@@ -332,7 +332,7 @@ theorem dimEntropyBar_map_tau (hlyb : FengLedrappierYoungBar.{u}) (hkk : KittleK
   rw [div_eq_iff hT.log_abs_a_neg.ne] at heq
   linarith
 
-/-- Tex lines 3912 to 3922: `q_{y,n} = \overline{h}_1(ω_*ν_n) = H_n - χ_{2,n} d_{y,n}` with
+/-- Tex lines 3714 to 3724: `q_{y,n} = \overline{h}_1(ω_*ν_n) = H_n - χ_{2,n} d_{y,n}` with
 `d_{y,n} = min{1, H_n / χ_{2,n}}`, which vanishes when `H_n ≤ χ_{2,n}`. -/
 theorem dimEntropyBar_map_omega_eq_zero (hlyb : FengLedrappierYoungBar.{u})
     (hkk : KittleKoglerDimension.{u}) (hab : |b| < |a|)
@@ -356,7 +356,7 @@ theorem dimEntropyBar_map_omega_eq_zero (hlyb : FengLedrappierYoungBar.{u})
 
 /-! ### The transport along the codings -/
 
-/-- Tex lines 3923 to 3927: `h_1(ν_n) = \overline{h}_1(τ_*ν_n)`. On `Σ^τ`, which carries
+/-- Tex lines 3726 to 3728: `h_1(ν_n) = \overline{h}_1(τ_*ν_n)`. On `Σ^τ`, which carries
 `ν_n`, the atom `ξ_1(𝐢)` is `\overline{τ}(\overline{ξ}_1(τ(𝐢)))` (`thm:partitions_xi1`), so the
 conditional measures transport along `τ` (`thm:conditional_two_ways`) and the conditional
 information agrees pointwise. -/
@@ -383,7 +383,7 @@ theorem dimEntropy_one_eq (hab : |b| < |a|) :
   rw [h, measureReal_def, measureReal_def, Measure.map_apply (measurable_tau T.o) hmeas,
     tau_preimage_cylinder_zero]
 
-/-- Tex lines 3919 to 3922, the transport step: if the conditional measures of `\overline{ξ}_1`
+/-- Tex lines 3722 to 3724, the transport step: if the conditional measures of `\overline{ξ}_1`
 under `ω_*ν_n` are Dirac, then so are those of `ξ_1^⊥` under `ν_n`, because on `Σ^τ` the atom
 `ξ_1^⊥(𝐢)` is `\overline{ω}(\overline{ξ}_1(ω(𝐢)))` (`thm:partitions_xi1`) and `ω` is
 injective. -/
@@ -422,7 +422,7 @@ theorem dimEntropy_eq_zero_of_condMeas_xi_eq_dirac (i : ℕ)
   rw [hx, measureReal_def, Measure.dirac_apply_of_mem (show x ∈ {y | y 0 = x 0} from rfl),
     ENNReal.toReal_one, Real.log_one, neg_zero]
 
-/-- Tex lines 3919 to 3922, the case `H_n ≤ χ_{2,n}`: then `q_{y,n} = 0`, the conditional
+/-- Tex lines 3722 to 3724, the case `H_n ≤ χ_{2,n}`: then `q_{y,n} = 0`, the conditional
 measures of `\overline{ξ}_1` under `ω_*ν_n` are Dirac (`thm:feng_entropy_zero`), hence those
 of `ξ_1^⊥` under `ν_n`, hence those of the finer partition `ξ_2`
 (`thm:finer_partition_dirac_mass`), and `h_2(ν_n) = 0`. -/
@@ -439,7 +439,7 @@ theorem dimEntropy_two_eq_zero_of_le (hfib : FengInfoSumBar.{u})
       (T.isMeasurablePartition_xi _ 2) (T.xi_two_subset_xiPerp _)
       (hT.condMeas_xiPerp_eq_dirac hab hd))
 
-/-- Tex lines 3922 to 3923, the case of unique coding: if every `𝐣` over `some κ` with
+/-- Tex lines 3724 to 3725, the case of unique coding: if every `𝐣` over `some κ` with
 `π(𝐣) = π(𝐢)` agrees with `𝐢` in forward time, for every `𝐢` over `some κ`, then the
 conditional measure of `ξ_2` at almost every `𝐢` is carried by `ξ_2(𝐢) ∩ (some κ)^ℤ = {𝐢}`
 (`thm:SOSC_h2_zero`), so it is Dirac, and `h_2(ν_n) = 0`. The sequences using the auxiliary
@@ -469,7 +469,7 @@ theorem dimEntropy_two_eq_zero_of_unique_coding (hab : |b| < |a|)
 
 /-! ### The dimension of `ν_n` -/
 
-/-- Tex lines 3927 to 3931: `dim(ν_n) = d_{x,n} + (H_n - χ_{1,n} d_{x,n}) / χ_{2,n}`, by the
+/-- Tex lines 3728 to 3733: `dim(ν_n) = d_{x,n} + (H_n - χ_{1,n} d_{x,n}) / χ_{2,n}`, by the
 planar Ledrappier–Young formula `thm:feng1` with the entropies `h_0 = H_n`, `h_1 = q_{x,n}`
 and `h_2 = 0`, and the exponents `λ_1 = -χ_{1,n}`, `λ_2 = -χ_{2,n}`. The hypothesis `hzero`
 is the case distinction of the article: `H_n ≤ χ_{2,n}`, or unique coding of the subsystem

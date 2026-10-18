@@ -3,7 +3,7 @@ module
 /-
 The canonical projection of a general planar system of `BoxLike/Planar/System.lean` as the
 canonical projection `π = π^+ ∘ η` of its affine system in the Euclidean plane, as
-`sec:box_like_self_affine` defines it for every planar self-affine set (tex lines 850 to 858).
+`sec:box_like_self_affine` defines it for every planar self-affine set (tex lines 814 to 822).
 
 * `PlanarSystem.planeTrans`: the translations in `EuclideanSpace ℝ (Fin 2)`.
 * `PlanarSystem.toPlane_phi`, `PlanarSystem.toPlane_phiWord`: the maps and their compositions.

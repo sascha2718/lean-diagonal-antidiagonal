@@ -98,7 +98,7 @@ theorem indicator_antiDiagSet_le (μ : Measure (ℤ → ι)) {x : ℤ → ι}
   · rw [indicator_of_notMem hU]
     exact ⟨add_nonneg (h0 _ _) (h0 _ _), add_nonneg (h0 _ _) (h0 _ _)⟩
 
-/-- `σ^k(Σ') ⊆ Σ'` for every `k ∈ ℕ` (`sec:lyapunov_exponents`, tex line 1633), so the
+/-- `σ^k(Σ') ⊆ Σ'` for every `k ∈ ℕ` (`sec:lyapunov_exponents`, tex line 1598), so the
 counting inequality holds at every time along a point of `Σ'`. -/
 theorem iterate_mem_SigmaPrime (μ : Measure (ℤ → ι)) {x : ℤ → ι} (hx : x ∈ S.SigmaPrime μ)
     (k : ℕ) : (shift 1)^[k] x ∈ S.SigmaPrime μ := by

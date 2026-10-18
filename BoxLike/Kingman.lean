@@ -5,7 +5,7 @@ Kingman's subadditive ergodic theorem, proved from Birkhoff's theorem (`birkhoff
 `birkhoff_ergodic` of `BoxLike/Birkhoff.lean`). The article does not state it; it is the basis
 of the theorem of Furstenberg and Kesten (`BoxLike/FurstenbergKesten.lean`) and of Oseledets'
 multiplicative ergodic theorem, which `sec:lyapunov_exponents` cites (Oseledec 1968, tex
-line 1620). Mathlib does not contain it.
+line 1585). Mathlib does not contain it.
 
 Statement. Let `T` be a measure-preserving map of a probability space and `f_n` measurable
 integrable functions with `f_{m+n}(x) ≤ f_m(x) + f_n(T^m x)` for all `m, n, x`. Then for almost
@@ -650,7 +650,7 @@ B. Weiss, Israel J. Math. 42 (1982), and J. M. Steele, Ann. Inst. H. Poincaré P
 25 (1989)). For an ergodic map `T` of a probability space and measurable integrable functions
 `f_n` forming a subadditive cocycle with `inf_{n ≥ 1} n⁻¹ ∫ f_n > -∞`,
 `n⁻¹ f_n(x) → inf_{n ≥ 1} n⁻¹ ∫ f_n` for almost every `x`. It is the basis of Oseledets'
-theorem cited in `sec:lyapunov_exponents` (tex line 1620). -/
+theorem cited in `sec:lyapunov_exponents` (tex line 1585). -/
 theorem kingman_ergodic [IsProbabilityMeasure μ]
     (hT : Ergodic T μ) {f : ℕ → X → ℝ} (hf : IsSubadditiveCocycle T f)
     (hmeas : ∀ n, Measurable (f n)) (hint : ∀ n, Integrable (f n) μ)

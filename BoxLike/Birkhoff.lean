@@ -8,14 +8,14 @@ every `x` to the conditional expectation `E(f | ℐ)(x)` with respect to the `σ
 
 The article `diagonal-antidiagonal.tex` uses the ergodic form for the almost sure limit
 `eq:lyapunov_exponent_gsystem` defining the Lyapunov exponent of the projective system (tex lines
-1676 to 1682), for the frequency of visits to `Σ^τ` in the proof of
-`thm:sigma_tau_omega_positive_eq_measure` (tex lines 2490 to 2497), along both orientation lifts
-in the proof of `thm:eq_state_proj_dim` for `s ≥ 2` (tex lines 2914 to 2915), and for the typical
-words in the proof of `thm:main2` (tex lines 3706 to 3712). The library also derives from it
+1641 to 1647), for the frequency of visits to `Σ^τ` in the proof of
+`thm:sigma_tau_omega_positive_eq_measure` (tex lines 2455 to 2462), along both orientation lifts
+in the proof of `thm:eq_state_proj_dim` for `s ≥ 2` (tex lines 2861 to 2862), and for the typical
+words in the proof of `thm:main2` (tex lines 3658 to 3666). The library also derives from it
 Maker's theorem (`BoxLike/SMB/Maker.lean`), Kingman's subadditive ergodic theorem
 (`BoxLike/Kingman.lean`) and the box-like case of `μ(Σ') = 1` (`BoxLike/SigmaMeasure.lean`). The
-recurrence of a word of positive measure in the proof of `thm:SOSC_h2_zero` (tex lines 3554 to
-3555) comes from Poincaré recurrence and ergodicity instead.
+recurrence of a word of positive measure in the proof of `thm:SOSC_h2_zero` (tex lines 3506 to
+3507) comes from Poincaré recurrence and ergodicity instead.
 
 The proof goes through the maximal ergodic theorem, in Garsia's form. Write `S_n h` for the
 Birkhoff sums of `h`, with `S_0 h = 0`, and `M_N h = max_{0 ≤ k ≤ N} S_k h`. Then

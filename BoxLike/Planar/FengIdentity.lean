@@ -4,7 +4,7 @@ module
 Feng's information-sum identity, D.-J. Feng, *Dimension of invariant measures for affine iterated
 function systems*, Duke Math. J. 172 (2023), arXiv:1901.01691v2, Lemma 4.6, first identity of
 (4.16), proved for the partitions `ξ_i` of a planar self-affine system (`sec:entropies`, tex
-lines 1889 to 1906), and with it the planar parts of `thm:feng_entropy_as_limit` and
+lines 1854 to 1871), and with it the planar parts of `thm:feng_entropy_as_limit` and
 `thm:feng_entropy_zero` at the article's scope, for every measure giving full mass to `Σ'`.
 
 The identity is the general `infoSum_of_pullShift` of `BoxLike/FengIdentity.lean`, applied with
@@ -111,7 +111,7 @@ system, proved: for every invariant probability measure `μ` with `λ_2(𝖠, μ
 `μ(Σ') = 1`, and every `i`, `-log μ_𝐢^{ξ_i}(𝒫_0^{n-1}(𝐢)) = ∑_{k<n} I_μ(𝒫 | \widehat{ξ}_i)(σ^k 𝐢)`
 for all `n`, for `μ`-almost every `𝐢`. Ergodicity is not needed. This is the identity behind
 `thm:feng_entropy_as_limit` and the one cited in the proof of `thm:feng_entropy_zero` (tex lines
-2049 to 2054), at the article's planar scope. -/
+2014 to 2019), at the article's planar scope. -/
 theorem infoSum_xi (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (hlt : P.lyapunov₂ μ < P.lyapunov₁ μ)
     (hfull : μ (P.SigmaPrime μ)ᶜ = 0) (i : ℕ) : P.InfoSum μ i :=

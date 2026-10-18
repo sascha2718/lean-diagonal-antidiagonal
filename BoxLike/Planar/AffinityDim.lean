@@ -1,16 +1,16 @@
 module
 
 /-
-The affinity dimension of a planar self-affine set, `sec:affinity_dim` (tex lines 2174 to 2192
-and 2206 to 2207). For a planar system `φ_i(x) = A_i x + v_i` of `BoxLike/Planar/System.lean`,
+The affinity dimension of a planar self-affine set, `sec:affinity_dim` (tex lines 2139 to 2157
+and 2171 to 2172). For a planar system `φ_i(x) = A_i x + v_i` of `BoxLike/Planar/System.lean`,
 with `A_i ∈ GL_2(ℝ)` and `‖A_i‖ < 1`, the singular value pressure `P(𝖠, s)` is the pressure
 `MatrixTuple.pressure` of the tuple `𝖠 = P.mat`. Under `max_i ‖A_i‖ < 1` it is continuous and
 strictly decreasing on `[0, ∞)`, with `P(𝖠, 0) = log N ≥ 0` and `P(𝖠, s) → -∞`
 (`BoxLike/Support/PressureConvexity.lean`), and `dimaff(𝖠)` is its unique zero on `[0, ∞)`. The
-convention `dimaff(X) = dimaff(𝖠)` of tex lines 2206 to 2207 is built into the definition: the
+convention `dimaff(X) = dimaff(𝖠)` of tex lines 2171 to 2172 is built into the definition: the
 affinity dimension of a planar system depends on its linear parts alone.
 
-* `PlanarSystem.tendsto_pressure`: the pressure is the limit of tex lines 2182 to 2184.
+* `PlanarSystem.tendsto_pressure`: the pressure is the limit of tex lines 2147 to 2149.
 * `PlanarSystem.existsUnique_pressure_eq_zero`: the pressure of `P.mat` has a unique zero on
   `[0, ∞)`.
 * `PlanarSystem.dimaff`, `PlanarSystem.dimaff_nonneg`, `PlanarSystem.pressure_dimaff`,
@@ -36,7 +36,7 @@ namespace PlanarSystem
 
 variable {ι : Type*} [Fintype ι] [Nonempty ι] (P : PlanarSystem ι)
 
-/-- Tex lines 2180 to 2187: the singular value pressure of the linear parts of a planar system is
+/-- Tex lines 2145 to 2152: the singular value pressure of the linear parts of a planar system is
 the limit `P(𝖠, s) = lim_n n⁻¹ log ∑_{|𝐢| = n} φ^s(A_𝐢)` for `s ≥ 0`, which exists by Fekete's
 lemma. -/
 theorem tendsto_pressure {s : ℝ} (hs : 0 ≤ s) :
@@ -44,7 +44,7 @@ theorem tendsto_pressure {s : ℝ} (hs : 0 ≤ s) :
       (𝓝 (MatrixTuple.pressure P.mat s)) :=
   MatrixTuple.Convexity.tendsto_pressure P.det_ne_zero hs
 
-/-- Tex lines 2189 to 2192: the singular value pressure `s ↦ P(𝖠, s)` of the linear parts of a
+/-- Tex lines 2154 to 2157: the singular value pressure `s ↦ P(𝖠, s)` of the linear parts of a
 planar system has a unique zero on `[0, ∞)`, since the matrices are invertible and
 `max_i ‖A_i‖ < 1`. -/
 theorem existsUnique_pressure_eq_zero :
@@ -52,7 +52,7 @@ theorem existsUnique_pressure_eq_zero :
   MatrixTuple.pressure_existsUnique_eq_zero P.det_ne_zero P.norm_lt_one
 
 /-- The affinity dimension `dimaff(X) = dimaff(𝖠)` of a planar self-affine set
-(`sec:affinity_dim`, tex lines 2189 to 2192 and 2206 to 2207): the unique `s ≥ 0` with
+(`sec:affinity_dim`, tex lines 2154 to 2157 and 2171 to 2172): the unique `s ≥ 0` with
 `P(𝖠, s) = 0`, for the tuple `𝖠 = P.mat` of linear parts. -/
 noncomputable def dimaff : ℝ := P.existsUnique_pressure_eq_zero.exists.choose
 
@@ -70,14 +70,14 @@ theorem dimaff_eq {s : ℝ} (hs : 0 ≤ s) (h : MatrixTuple.pressure P.mat s = 0
   P.existsUnique_pressure_eq_zero.unique ⟨P.dimaff_nonneg, P.pressure_dimaff⟩ ⟨hs, h⟩
 
 /-- The pressure is negative above the affinity dimension, since it is strictly decreasing on
-`[0, ∞)` (tex lines 2189 and 2190). -/
+`[0, ∞)` (tex lines 2154 and 2155). -/
 theorem pressure_neg_of_dimaff_lt {t : ℝ} (ht : P.dimaff < t) :
     MatrixTuple.pressure P.mat t < 0 := by
   have h := MatrixTuple.pressure_strictAntiOn_Ici P.det_ne_zero P.norm_lt_one
     (Set.mem_Ici.2 P.dimaff_nonneg) (Set.mem_Ici.2 (P.dimaff_nonneg.trans ht.le)) ht
   rwa [P.pressure_dimaff] at h
 
-/-- The pressure is positive on `[0, dimaff(𝖠))` (tex lines 2189 and 2190). -/
+/-- The pressure is positive on `[0, dimaff(𝖠))` (tex lines 2154 and 2155). -/
 theorem pressure_pos_of_lt_dimaff {t : ℝ} (ht0 : 0 ≤ t) (ht : t < P.dimaff) :
     0 < MatrixTuple.pressure P.mat t := by
   have h := MatrixTuple.pressure_strictAntiOn_Ici P.det_ne_zero P.norm_lt_one
@@ -97,7 +97,7 @@ theorem dimaff_le_of_pressure_nonpos {s : ℝ} (hs : 0 ≤ s)
   exact (not_le.2 (P.pressure_pos_of_lt_dimaff hs (not_le.1 hlt))) h
 
 /-- A planar system of at least two maps has positive affinity dimension, since
-`P(𝖠, 0) = log N > 0` (tex line 2190). -/
+`P(𝖠, 0) = log N > 0` (tex line 2155). -/
 theorem dimaff_pos [Nontrivial ι] : 0 < P.dimaff := by
   refine lt_of_le_of_ne P.dimaff_nonneg fun h0 => ?_
   have h := P.pressure_dimaff
@@ -105,7 +105,7 @@ theorem dimaff_pos [Nontrivial ι] : 0 < P.dimaff := by
   have hcard : (1 : ℝ) < Fintype.card ι := by exact_mod_cast Fintype.one_lt_card
   exact (Real.log_pos hcard).ne' h
 
-/-- The convention `dimaff(X) = dimaff(𝖠)` of tex lines 2206 to 2207: two planar systems with
+/-- The convention `dimaff(X) = dimaff(𝖠)` of tex lines 2171 to 2172: two planar systems with
 the same linear parts have the same affinity dimension. -/
 theorem dimaff_congr {Q : PlanarSystem ι} (h : P.mat = Q.mat) : P.dimaff = Q.dimaff := by
   refine P.dimaff_eq Q.dimaff_nonneg ?_

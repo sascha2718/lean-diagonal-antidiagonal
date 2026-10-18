@@ -60,7 +60,7 @@ namespace BoxLike
 open MeasureTheory
 
 /-- The example of `prop:ssc_no_overlap_not_pesc` satisfies the hypotheses of `thm:main2` and
-`\dim_H X = dimaff(X)` (tex lines 1597 to 1605): it satisfies the strong separation condition,
+`\dim_H X = dimaff(X)` (tex lines 1522 to 1525): it satisfies the strong separation condition,
 hence the strong open set condition, its projective system has no exact overlaps, it fails the
 projective exponential separation condition, and `dimaff(X) < 2` since `∑_i |det A_i| < 1`.
 The theorem of Bárány and Käenmäki enters as the hypothesis `NoOverlap.BaranyKaenmakiTheorem`. -/

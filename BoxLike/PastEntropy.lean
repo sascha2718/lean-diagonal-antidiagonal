@@ -1,8 +1,8 @@
 module
 
 /-
-The identities `h_0(μ) = h(μ)` and `\overline{h}_0(ν) = h(ν)` of `sec:entropies` (tex lines 2087
-to 2091): the conditional entropy of the coordinate-zero partition `𝒫` given the past is the
+The identities `h_0(μ) = h(μ)` and `\overline{h}_0(ν) = h(ν)` of `sec:entropies` (tex lines 1989
+to 1991): the conditional entropy of the coordinate-zero partition `𝒫` given the past is the
 Kolmogorov–Sinai entropy. The proof is the classical one and uses no literature input. For an
 invariant probability measure on `ℤ → α` with `α` finite, the chain rule and invariance give
 `H_μ(𝒫_0^k) - H_μ(𝒫_0^{k-1}) = H_μ(𝒫 | σ(x_{-k}, …, x_{-1}))`. By Lévy's upward theorem and
@@ -364,7 +364,7 @@ variable {α : Type*} [Fintype α] [MeasurableSpace α] [MeasurableSingletonClas
 
 /-- The Kolmogorov–Sinai entropy of an invariant measure on the two-sided full shift over a
 finite alphabet is the conditional entropy `H_μ(𝒫 | 𝒫^-)` of the partition `𝒫` by the coordinate
-`x_0` given the `σ`-algebra of the past `𝐢^-` (`sec:entropies`, tex lines 2087 to 2091), written
+`x_0` given the `σ`-algebra of the past `𝐢^-` (`sec:entropies`, tex lines 1989 to 1991), written
 with conditional expectations. -/
 theorem integral_sum_negMulLog_condExp_past (hinv : MeasurePreserving (shift 1) μ μ) :
     ∫ x, ∑ a, Real.negMulLog
@@ -419,7 +419,7 @@ open scoped ENNReal
 variable {α : Type*} [Fintype α] [MeasurableSpace α] [MeasurableSingletonClass α]
 
 /-- The conditional entropy `H_μ(𝒫 | \widehat{ξ}) = ∫ I_μ(𝒫 | \widehat{ξ}) dμ` of
-`sec:conditional` (tex lines 1798 to 1808) is `∫ ∑_a η(E_μ(1_{[a]} | \widehat{ξ})) dμ` with
+`sec:conditional` (tex lines 1729 to 1739) is `∫ ∑_a η(E_μ(1_{[a]} | \widehat{ξ})) dμ` with
 `η(t) = -t log t`. No integrability of the conditional information is assumed: both sides are
 computed as integrals of non-negative functions. -/
 theorem condEntropy_eq_integral_sum_negMulLog (μ : Measure (ℤ → α)) [IsFiniteMeasure μ]
@@ -595,7 +595,7 @@ theorem exists_measurableSet_past_inter_eq {D : Set (ℤ → α)} (hD : Measurab
 /-- For an invariant probability measure giving full mass to a Borel set `D`, the conditional
 entropy of `𝒫` given the partition of `D` by the past `𝐢^-`, extended by the atom `Ω ∖ D`, is
 the Kolmogorov–Sinai entropy. This is the common form of `h_0(μ) = h(μ)` and
-`\overline{h}_0(ν) = h(ν)` (`sec:entropies`, tex lines 2087 to 2091). -/
+`\overline{h}_0(ν) = h(ν)` (`sec:entropies`, tex lines 1989 to 1991). -/
 theorem condEntropy_atomsOn_samePast {μ : Measure (ℤ → α)} [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) {D : Set (ℤ → α)} (hD : MeasurableSet D)
     (hfull : μ Dᶜ = 0) :
@@ -622,7 +622,7 @@ namespace System
 variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   (S : System ι)
 
-/-- `sec:entropies`, tex lines 2087 to 2090: `h_0(μ) = h(μ)`, the Kolmogorov–Sinai entropy, for
+/-- `sec:entropies`, tex lines 1989 to 1990: `h_0(μ) = h(μ)`, the Kolmogorov–Sinai entropy, for
 every invariant measure `μ` with `μ(Σ') = 1`. Neither ergodicity nor `λ_2 < λ_1` is assumed; the
 atoms of `ξ_0` in `Σ'` are the classes of the relation `𝐢^- = 𝐣^-`. -/
 theorem dimEntropy_zero_eq_entropy' (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
@@ -637,7 +637,7 @@ theorem dimEntropy_zero_eq_entropy' (μ : Measure (ℤ → ι)) [IsProbabilityMe
   rw [dimEntropy, e]
   exact condEntropy_atomsOn_samePast hinv (S.measurableSet_SigmaPrime μ) hfull
 
-/-- `sec:entropies`, tex lines 2087 to 2090: `h_0(μ) = h(μ)`, the Kolmogorov–Sinai
+/-- `sec:entropies`, tex lines 1989 to 1990: `h_0(μ) = h(μ)`, the Kolmogorov–Sinai
 entropy, stated here for ergodic `μ` with `λ_2 < λ_1`, where `Σ'` has full measure. This is the
 bridge between `thm:feng1`, which carries `h_0(μ) = H_μ(𝒫 | \widehat{ξ}_0)`, and the rest of the
 library, which carries `entropy μ`.
@@ -647,14 +647,14 @@ theorem dimEntropy_zero_eq_entropy (μ : Measure (ℤ → ι)) [IsProbabilityMea
     (_hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) : S.dimEntropy μ 0 = entropy μ :=
   S.dimEntropy_zero_eq_entropy' μ hinv (S.measure_SigmaPrime_compl μ hinv herg)
 
-/-- `sec:entropies`, tex line 2091: `\overline{h}_0(ν) = h(ν)` for every invariant measure `ν` on
+/-- `sec:entropies`, tex line 1990: `\overline{h}_0(ν) = h(ν)` for every invariant measure `ν` on
 `Σ_Z`. -/
 theorem dimEntropyBar_zero_eq_entropy' (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν]
     (hinv : MeasurePreserving (shift 1) ν ν) (hsupp : ν (subshift S.o)ᶜ = 0) :
     S.dimEntropyBar ν 0 = entropy ν :=
   condEntropy_atomsOn_samePast hinv (measurableSet_subshift S.o) hsupp
 
-/-- `sec:entropies`, tex line 2091: `\overline{h}_0(ν) = h(ν)`, stated here for ergodic
+/-- `sec:entropies`, tex line 1990: `\overline{h}_0(ν) = h(ν)`, stated here for ergodic
 `ν` on `Σ_Z`, which is the case the proofs use (`ν = μ_1, μ_2`). -/
 theorem dimEntropyBar_zero_eq_entropy (_hrot : S.WithRotations) (_hprox : S.Proximal)
     (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν]

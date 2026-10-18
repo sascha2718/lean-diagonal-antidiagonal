@@ -4,12 +4,12 @@ module
 Feng's information-sum identity, D.-J. Feng, *Dimension of invariant measures for affine iterated
 function systems*, Duke Math. J. 172 (2023), arXiv:1901.01691v2, Lemma 4.6, first identity of
 (4.16), proved for the partitions `\overline{ξ}_0`, `\overline{ξ}_1` of `Σ_Z` of `sec:entropies`
-(tex lines 1944 to 1960) and every invariant measure carried by `Σ_Z`, ergodic or not. It is the
+(tex lines 1909 to 1925) and every invariant measure carried by `Σ_Z`, ergodic or not. It is the
 general identity `infoSum_of_pullShift` of `BoxLike/FengIdentity.lean`, applied with `D = Σ_Z`:
 the shift maps the atoms of `\overline{ξ}_i` refined by the time-zero symbol onto atoms of
 `\overline{ξ}_i`, since the past of `σ 𝐢` is the past of `𝐢` followed by `i_0`, and
 `\overline{π}(𝐢) = g_{i_0}(\overline{π}(σ 𝐢))` with `g_{i_0}` injective. The article checks Feng's
-constant-multiplicity hypothesis (4.7) at tex lines 1956 to 1959; the proof here needs no
+constant-multiplicity hypothesis (4.7) at tex lines 1921 to 1924; the proof here needs no
 hypothesis of this kind, and neither rotations nor proximality.
 
 * `shift_one_mem_subshift_iff`: `σ^{-1}(Σ_Z) = Σ_Z`.
@@ -94,8 +94,8 @@ theorem pullShift_xiBar_subset_of_notMem (i : ℕ) {y : ℤ → ι × ZMod 2}
 proved: for every invariant probability measure `ν` on `{1, …, 2N}^ℤ` carried by `Σ_Z`, ergodic
 or not, and every `i`, `-log ν_𝐢^{\overline{ξ}_i}(\overline{𝒫}_0^{n-1}(𝐢))` equals
 `∑_{k<n} I_ν(\overline{𝒫} | \widehat{\overline{ξ}}_i)(σ^k 𝐢)` for all `n`, for `ν`-almost every
-`𝐢`. This is the identity cited in the proof of `thm:feng_entropy_zero` (tex lines 2049 to
-2054) and behind `thm:feng_entropy_as_limit`, scalar part. -/
+`𝐢`. This is the identity cited in the proof of `thm:feng_entropy_zero` (tex lines 2014 to
+2019) and behind `thm:feng_entropy_as_limit`, scalar part. -/
 theorem infoSum_xiBar [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
     (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν]
     (hinv : MeasurePreserving (shift 1) ν ν) (hsupp : ν (subshift S.o)ᶜ = 0) (i : ℕ) :

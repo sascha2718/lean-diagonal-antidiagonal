@@ -11,8 +11,8 @@ measure. For box-like systems it follows from `FengInfoSum` through the speciali
 proved in `BoxLike/Planar/FengIdentity.lean` (`PlanarSystem.infoSum_xi`), and `FengInfoSum`
 itself is the theorem `fengInfoSum_holds`.
 
-The proof of the planar part of `thm:feng_entropy_zero` follows the article (tex lines 2046 to
-2068): with `f = I_μ(𝒫 | \widehat{ξ}_i)` and `H = E_μ(f | ℐ) = h_i(μ, ·)`, the set `E = {H = 0}`
+The proof of the planar part of `thm:feng_entropy_zero` follows the article (tex lines 2010 to
+2028): with `f = I_μ(𝒫 | \widehat{ξ}_i)` and `H = E_μ(f | ℐ) = h_i(μ, ·)`, the set `E = {H = 0}`
 is invariant and `∫_E f dμ = ∫_E H dμ = 0`, so `f(σ^k 𝐢) = 0` for every `k ≥ 0` and almost every
 `𝐢 ∈ E`; the identity gives `μ_𝐢^{ξ_i}(𝒫_0^{n-1}(𝐢)) = 1` for every `n`; the conditional measure
 is carried by an atom with fixed past, and intersecting the cylinders gives
@@ -54,14 +54,14 @@ variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonCla
 
 /-- The first identity of Feng, Lemma 4.6, (4.16), for the partition `ξ_i` of the planar system
 `P` and the measure `μ`: `-log μ_𝐢^{ξ_i}(𝒫_0^{n-1}(𝐢)) = ∑_{k<n} I_μ(𝒫 | \widehat{ξ}_i)(σ^k 𝐢)`
-for all `n`, on one set of full measure. The proof of `thm:feng_entropy_zero` (tex lines 2050 to
-2054) uses it. -/
+for all `n`, on one set of full measure. The proof of `thm:feng_entropy_zero` (tex lines 2015 to
+2019) uses it. -/
 def InfoSum (μ : Measure (ℤ → ι)) [IsFiniteMeasure μ] (i : ℕ) : Prop :=
   ∀ᵐ x ∂μ, ∀ n : ℕ, -Real.log ((condMeas μ (P.xi μ i) x).real (cylinder (block n x))) =
     ∑ k ∈ Finset.range n, condInfo μ (P.xi μ i) (shift k x)
 
 /-- "The conditional measure is supported on an atom with fixed past" (proof of
-`thm:feng_entropy_zero`, tex lines 2058 to 2060) for a planar system: if `μ_𝐢^{ξ_i}` gives mass
+`thm:feng_entropy_zero`, tex lines 2023 to 2025) for a planar system: if `μ_𝐢^{ξ_i}` gives mass
 one to every cylinder `[𝐢|_n]`, then it gives mass one to `{𝐣 : 𝐣^- = 𝐢^-}`, for `μ`-almost
 every `𝐢`. The set `Σ'` is invariant and Borel, so `μ(Σ') ∈ {0, 1}` for ergodic `μ`. If
 `μ(Σ') = 1`, the atoms `ξ_i(𝐢)` have fixed past and `condMeas_atom` applies. If `μ(Σ') = 0`,
@@ -111,7 +111,7 @@ theorem feng_entropy_as_limit_of_infoSum (μ : Measure (ℤ → ι)) [IsProbabil
 /-- `thm:feng_entropy_zero`, planar part, for a planar self-affine system: for ergodic `μ` with
 `λ_2(𝖠, μ) < λ_1(𝖠, μ)`, given the first identity of Feng, Lemma 4.6, (4.16), for `ξ_i`,
 `h_i(μ, 𝐢) = 0 ↔ μ_𝐢^{ξ_i} = δ_𝐢` for `μ`-almost every `𝐢`. The proof is the article's
-(tex lines 2046 to 2068): `condInfo_shift_eq_zero_of_localEntropy_eq_zero` (the invariant zero
+(tex lines 2010 to 2028): `condInfo_shift_eq_zero_of_localEntropy_eq_zero` (the invariant zero
 set of `H`, on which `f` vanishes along every forward iterate),
 `condMeas_cylinder_eq_one_of_localEntropy_eq_zero` (the finite information-sum identity gives
 mass one on all future cylinders), `condMeas_xi_samePast` (fixed past) and
@@ -185,7 +185,7 @@ each `i ∈ {0, 1, 2}`, `h_i(μ, 𝐢) = -lim_n n⁻¹ log μ_𝐢^{ξ_i}(𝒫_0
 ergodic or not, and each `i ∈ {0, 1}`,
 `\overline{h}_i(ν, 𝐢) = -lim_n n⁻¹ log ν_𝐢^{\overline{ξ}_i}(\overline{𝒫}_0^{n-1}(𝐢))` for
 `ν`-almost every `𝐢`. Hypotheses: `FengInfoSum`, `FengInfoSumBar`. The general planar scope is
-`PlanarSystem.feng_entropy_as_limit` of `BoxLike/Proposals/CPlanarFeng.lean`. -/
+`feng_entropy_as_limit_general` of `BoxLike/Planar/FengGeneral.lean`. -/
 theorem feng_entropy_as_limit_boxLike (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) :
     (∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
       (S : System ι) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ],
@@ -210,8 +210,8 @@ through the planar objects of `S.toPlanar` along the article's proof. Planar par
 every `𝐢`. Scalar part: for a proximal box-like system with rotations, every invariant `ν` on
 `Σ_Z`, ergodic or not, and each `i ∈ {0, 1}`,
 `\overline{h}_i(ν, 𝐢) = 0 ↔ ν_𝐢^{\overline{ξ}_i} = δ_𝐢` for `ν`-almost every `𝐢`. Hypotheses:
-`FengInfoSum`, `FengInfoSumBar`. The general planar scope is `PlanarSystem.feng_entropy_zero` of
-`BoxLike/Proposals/CPlanarFeng.lean`. -/
+`FengInfoSum`, `FengInfoSumBar`. The general planar scope is `feng_entropy_zero_general` of
+`BoxLike/Planar/FengGeneral.lean`. -/
 theorem feng_entropy_zero_boxLike (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u}) :
     (∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
       (S : System ι) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ],
