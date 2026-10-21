@@ -25,9 +25,11 @@ statements were compared with the arXiv version (v2) of the source on 2026-09-20
   `BoxLike/FengIdentityBar.lean`); the results that state them as hypotheses receive these
   proofs, and no headline statement takes them.
 * `FengLedrappierYoung`, `FengLedrappierYoungBar`: `thm:feng1`, from Feng, Theorems 1.2
-  and 1.3. The second follows from the first (`fengLedrappierYoungBar_of_fengLedrappierYoung`
-  in `BoxLike/ProjectiveLineSystem.lean`); the results that state it as a hypothesis receive
-  this proof, and no headline statement takes it.
+  and 1.3. Both are theorems of the library: the first from the planar statement
+  `PlanarFengLedrappierYoung` (`fengLedrappierYoung_holds` in `BoxLike/FengLedrappierYoung.lean`),
+  the second from the first (`fengLedrappierYoungBar_of_fengLedrappierYoung` in
+  `BoxLike/ProjectiveLineSystem.lean`, `fengLedrappierYoungBar_holds`); the results that state
+  them as hypotheses receive these proofs, and no headline statement takes them.
 -/
 public import BoxLike.DimPartitions
 
@@ -68,7 +70,8 @@ and simple Lyapunov spectrum: if `μ` is ergodic with `λ_2(𝖠, μ) < λ_1(�
 exact-dimensional with
 `dim π_*μ = (h_1(μ) - h_0(μ)) / λ_1(𝖠, μ) + (h_2(μ) - h_1(μ)) / λ_2(𝖠, μ)`.
 Feng works with closed Euclidean balls; `IsExactDim` on `ℝ × ℝ` uses closed balls of the
-supremum norm, which gives the same pointwise dimension. -/
+supremum norm, which gives the same pointwise dimension. The library proves the statement from
+`PlanarFengLedrappierYoung` (`fengLedrappierYoung_holds` in `BoxLike/FengLedrappierYoung.lean`). -/
 def FengLedrappierYoung : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ], MeasurePreserving (shift 1) μ μ →
@@ -83,8 +86,9 @@ exact-dimensional with
 `dim \overline{π}_*ν = (\overline{h}_1(ν) - \overline{h}_0(ν)) / \overline{λ}(𝖠, ν)`.
 It follows from `FengLedrappierYoung` applied to the planar system
 `z ↦ diag(g'_j, g'_j / 2) z + (g_j(0), 0)` of `Ψ`, whose attractor lies on the horizontal axis
-(`fengLedrappierYoungBar_of_fengLedrappierYoung`, `BoxLike/ProjectiveLineSystem.lean`); the
-hypotheses `S.WithRotations` and `S.Proximal` are not needed. -/
+(`fengLedrappierYoungBar_of_fengLedrappierYoung`, `BoxLike/ProjectiveLineSystem.lean`), so the
+library proves it (`fengLedrappierYoungBar_holds`); the hypotheses `S.WithRotations` and
+`S.Proximal` are not needed. -/
 def FengLedrappierYoungBar : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.WithRotations → S.Proximal → ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],

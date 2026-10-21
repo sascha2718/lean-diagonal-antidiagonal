@@ -75,8 +75,9 @@ ALLOWED_RELATIONS = {
     "partial",
 }
 STANDARD_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
-# Directories under the Lean root that hold no library source.
-EXCLUDED_DIRECTORIES = {".lake", "Archive", "tools"}
+# Directories under the Lean root that hold no source of this library; `vendor` holds the
+# verbatim copy of the library `ExactOverlaps` (see vendor/README.md).
+EXCLUDED_DIRECTORIES = {".lake", "Archive", "tools", "vendor"}
 DECL_RE = re.compile(
     r"^\s*"
     r"(?:@\[[^\]]*\]\s+)*"

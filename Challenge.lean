@@ -110,11 +110,6 @@ def gDeriv (u : List (ι × ZMod 2)) : ℝ := (u.map S.ratio).prod
 
 end System
 
-/-- The word `i_{-n} ⋯ i_{-1}` of the past of `𝐢`. -/
-def pastWord {α : Type*} (x : ℤ → α) : ℕ → List α
-  | 0 => []
-  | n + 1 => x (-((n : ℤ) + 1)) :: pastWord x n
-
 end Systems
 
 /-! ## The singular value pressure and the affinity dimension -/
@@ -177,11 +172,6 @@ def ProjExpSeparation : Prop :=
 def NoExactOverlaps : Prop := ∀ u u' : List (ι × ZMod 2), u ≠ u' → S.gWord u ≠ S.gWord u'
 
 end System
-
-/-- Composition of the line similarities `x ↦ r_j x + t_j` (`thm:main2`). -/
-def simWord {κ : Type*} (r t : κ → ℝ) : List κ → ℝ → ℝ
-  | [] => id
-  | j :: u => (fun x => r j * x + t j) ∘ simWord r t u
 
 end Separation
 
@@ -295,56 +285,6 @@ noncomputable def entropy (μ : Measure (ℤ → α)) : ℝ :=
 
 end Entropy
 
-/-! ## Measurable partitions, conditional measures and conditional entropy -/
-
-section Partition
-
-open MeasureTheory ProbabilityTheory Set
-
-variable {Ω : Type*}
-
-open Classical in
-/-- Extend a partition of `D` by the complementary atom `Dᶜ` (`sec:entropies`). -/
-def atomsOn (D : Set Ω) (ξ : Ω → Set Ω) (x : Ω) : Set Ω :=
-  if x ∈ D then ξ x ∩ D else Dᶜ
-
-/-- The σ-algebra of Borel unions of atoms, `\widehat{ξ}` (`sec:conditional`). -/
-@[implicit_reducible]
-def saturated [m : MeasurableSpace Ω] (ξ : Ω → Set Ω) : MeasurableSpace Ω where
-  MeasurableSet' A := MeasurableSet[m] A ∧ ∀ x y, y ∈ ξ x → (x ∈ A ↔ y ∈ A)
-  measurableSet_empty := ⟨MeasurableSet.empty, fun _ _ _ => Iff.rfl⟩
-  measurableSet_compl A hA := ⟨hA.1.compl, fun x y h => not_congr (hA.2 x y h)⟩
-  measurableSet_iUnion f hf := ⟨MeasurableSet.iUnion fun n => (hf n).1, fun x y h => by
-    rw [mem_iUnion, mem_iUnion]
-    exact exists_congr fun n => (hf n).2 x y h⟩
-
-variable [MeasurableSpace Ω] [StandardBorelSpace Ω]
-
-/-- The conditional measure `μ_x^ξ` given the partition `ξ` (`sec:conditional`). -/
-noncomputable def condMeas (μ : Measure Ω) [IsFiniteMeasure μ] (ξ : Ω → Set Ω) (x : Ω) :
-    Measure Ω :=
-  condExpKernel μ (saturated ξ) x
-
-end Partition
-
-section ShiftEntropy
-
-open MeasureTheory
-
-variable {α : Type*} [Fintype α] [MeasurableSpace α] [MeasurableSingletonClass α]
-
-/-- Conditional information `-log μ_x^ξ([x_0])`, using `Real.log 0 = 0` (`sec:conditional`). -/
-noncomputable def condInfo (μ : Measure (ℤ → α)) [IsFiniteMeasure μ]
-    (ξ : (ℤ → α) → Set (ℤ → α)) (x : ℤ → α) : ℝ :=
-  -Real.log ((condMeas μ ξ x).real {y | y 0 = x 0})
-
-/-- The conditional entropy `H_μ(𝒫 ∣ \widehat{ξ})` (`sec:conditional`). -/
-noncomputable def condEntropy (μ : Measure (ℤ → α)) [IsFiniteMeasure μ]
-    (ξ : (ℤ → α) → Set (ℤ → α)) : ℝ :=
-  ∫ x, condInfo μ ξ x ∂μ
-
-end ShiftEntropy
-
 /-! ## Pointwise dimensions of measures -/
 
 section MeasureDim
@@ -388,10 +328,6 @@ noncomputable def lyapunov₂ (μ : Measure (ℤ → ι)) : ℝ :=
   limUnder atTop fun n : ℕ =>
     (∫ x, Real.log (|(S.matWord (futureWord x n)).det| / ‖S.matWord (futureWord x n)‖) ∂μ) / n
 
-/-- The projective Lyapunov exponent `\overline{λ}(𝖠, ν)` (`eq:lyapunov_exponent_gsystem`). -/
-noncomputable def lyapBar (ν : Measure (ℤ → ι × ZMod 2)) : ℝ :=
-  ∫ y, Real.log |S.ratio (y 0)| ∂ν
-
 /-- The `s`-energy `Λ(𝖠, μ, s)` (`eq:energy_def`). -/
 noncomputable def energyLim (s : ℝ) (μ : Measure (ℤ → ι)) : ℝ :=
   limUnder atTop fun n : ℕ => (∫ x, Real.log (svf s (S.matWord (futureWord x n))) ∂μ) / n
@@ -408,138 +344,13 @@ end System
 
 end Thermodynamic
 
-/-! ## The Oseledets filtration -/
-
-section SlowAxis
-
-open MeasureTheory Filter Topology Set
-
-/-- Agreement on all negative coordinates (`sec:two_sided_shift_space`). -/
-def SamePast {α : Type*} (x y : ℤ → α) : Prop := ∀ n : ℤ, n < 0 → x n = y n
-
-namespace System
-
-section BackRate
-
-variable {ι : Type*} (S : System ι)
-
-/-- Backward projective growth rate `l` (`eq:lyapunov_exponent_gsystem`). -/
-def HasBackRate (y : ℤ → ι × ZMod 2) (l : ℝ) : Prop :=
-  Tendsto (fun n : ℕ => Real.log |S.gDeriv (pastWord y n)| / n) atTop (𝓝 l)
-
-end BackRate
-
-section Sigma
-
-variable {ι : Type*} [MeasurableSpace ι] (S : System ι)
-
-/-- `Σ^τ`: backward coordinate rates `(λ_1, λ_2)` (`eq:sigma_tau_omega`). -/
-noncomputable def SigmaTau (μ : Measure (ℤ → ι)) : Set (ℤ → ι) :=
-  {x | S.HasBackRate (tau S.o x) (S.lyapunov₁ μ) ∧ S.HasBackRate (omega S.o x) (S.lyapunov₂ μ)}
-
-/-- `Σ^ω`: backward coordinate rates `(λ_2, λ_1)` (`eq:sigma_tau_omega`). -/
-noncomputable def SigmaOmega (μ : Measure (ℤ → ι)) : Set (ℤ → ι) :=
-  {x | S.HasBackRate (tau S.o x) (S.lyapunov₂ μ) ∧ S.HasBackRate (omega S.o x) (S.lyapunov₁ μ)}
-
-/-- The set `Σ′` of the prescribed backward coordinate rates (`sec:lyapunov_exponents`). -/
-noncomputable def SigmaPrime (μ : Measure (ℤ → ι)) : Set (ℤ → ι) :=
-  S.SigmaTau μ ∪ S.SigmaOmega μ
-
-open Classical in
-/-- The slow axis: `1` on `Σ^τ`, `0` otherwise (`sec:lyapunov_exponents`). -/
-noncomputable def slowAxis (μ : Measure (ℤ → ι)) (x : ℤ → ι) : ZMod 2 :=
-  if x ∈ S.SigmaTau μ then 1 else 0
-
-/-- The box-like Oseledets filtration `V^0`, `V^1`, `V^2` (`sec:lyapunov_exponents`). -/
-noncomputable def oseledets (μ : Measure (ℤ → ι)) (x : ℤ → ι) : ℕ → Set (ℝ × ℝ)
-  | 0 => univ
-  | 1 => {v | coord (S.slowAxis μ x + 1) v = 0}
-  | _ => {0}
-
-end Sigma
-
-end System
-
-end SlowAxis
-
-/-! ## The partitions `ξ_i` and the entropies `h_i` -/
-
-section DimPartitions
-
-open MeasureTheory Set
-
-namespace System
-
-section Planar
-
-variable {ι : Type u} [MeasurableSpace ι] (S : System ι)
-
-/-- The planar partitions `ξ_i`, extended by the atom `Σ ∖ Σ′` (`sec:entropies`). -/
-noncomputable def xi (μ : Measure (ℤ → ι)) (i : ℕ) : (ℤ → ι) → Set (ℤ → ι) :=
-  atomsOn (S.SigmaPrime μ) fun x =>
-    {y | SamePast y x ∧ S.proj y - S.proj x ∈ S.oseledets μ x i}
-
-end Planar
-
-section Entropies
-
-variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-  (S : System ι)
-
-/-- The `i`-dimensional entropy `h_i(μ) = H_μ(𝒫 | \widehat{ξ}_i)` (`sec:entropies`). -/
-noncomputable def dimEntropy (μ : Measure (ℤ → ι)) [IsFiniteMeasure μ] (i : ℕ) : ℝ :=
-  condEntropy μ (S.xi μ i)
-
-end Entropies
-
-end System
-
-end DimPartitions
-
-/-! ## Cited theorems
-
-Each `Prop` below is an explicit literature hypothesis of the headline statements.
--/
-
-section Literature
-
-open MeasureTheory
-
-/-- Jordan–Rapaport, Theorem 1.1 (arXiv:1908.00271): projection dimension under exponential
-separation (`eq:gibbs_proj_dim`). -/
-def JordanRapaportDimension : Prop :=
-  ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
-    S.ProjExpSeparation → ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],
-    Ergodic (shift 1) ν → IsExactDim (ν.map S.projBar) (min 1 (-entropy ν / S.lyapBar ν))
-
-/-- Kittle–Kogler, Theorem 1.1 (arXiv:2610.10511): self-similar dimension without exact overlaps
-(`thm:main2`). -/
-def KittleKoglerDimension : Prop :=
-  ∀ {κ : Type u} [Fintype κ] (r t p : κ → ℝ), (∀ j, r j ≠ 0) → (∀ j, |r j| < 1) →
-    (∀ j, 0 < p j) → ∑ j, p j = 1 → Function.Injective (simWord r t) →
-    ∀ (ν : Measure ℝ) [IsProbabilityMeasure ν],
-    ν = ∑ j, ENNReal.ofReal (p j) • ν.map (fun x => r j * x + t j) →
-    IsExactDim ν (min 1 ((∑ j, Real.negMulLog (p j)) / -(∑ j, p j * Real.log |r j|)))
-
-/-- Feng, Theorems 1.2 and 1.3 (arXiv:1901.01691v2): the planar Ledrappier–Young formula
-(`eq:feng1_1`). -/
-def FengLedrappierYoung : Prop :=
-  ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
-    (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ], MeasurePreserving (shift 1) μ μ →
-    Ergodic (shift 1) μ → S.lyapunov₂ μ < S.lyapunov₁ μ →
-    IsExactDim (μ.map S.proj)
-      ((S.dimEntropy μ 1 - S.dimEntropy μ 0) / S.lyapunov₁ μ +
-        (S.dimEntropy μ 2 - S.dimEntropy μ 1) / S.lyapunov₂ μ)
-
-end Literature
-
 /-! ## Dimension of the projections of the equilibrium state -/
 
 open MeasureTheory
 
 /-- Theorem 1.2 (`thm:main1`): coordinate dimensions and the exact-dimensionality threshold. -/
 theorem audit_main1 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-    (S : System ι) (hjr : JordanRapaportDimension.{u})
+    (S : System ι)
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ) (c : ZMod 2) :
@@ -553,7 +364,7 @@ theorem audit_main1 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableS
 
 /-- Theorem 1.3 (`thm:main2`): Hausdorff dimension equals affinity dimension. -/
 theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-    (S : System ι) (hly : FengLedrappierYoung.{u}) (hkk : KittleKoglerDimension.{u})
+    (S : System ι)
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hfree : S.NoExactOverlaps) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
@@ -561,11 +372,9 @@ theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableS
     (hor : S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∨ S.StrongOpenSet) :
     dimH S.attractor = ENNReal.ofReal S.dimaff := sorry
 
-/-- Theorem 4.16 (`thm:main_extended`): dimension of the projected equilibrium state, from
-`JordanRapaportDimension` and `FengLedrappierYoung`. -/
+/-- Theorem 4.16 (`thm:main_extended`): dimension of the projected equilibrium state. -/
 theorem audit_main_extended {ι : Type u} [Fintype ι] [MeasurableSpace ι]
-    [MeasurableSingletonClass ι] (S : System ι) (hjr : JordanRapaportDimension.{u})
-    (hly : FengLedrappierYoung.{u})
+    [MeasurableSingletonClass ι] (S : System ι)
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsep : S.ProjExpSeparation) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)

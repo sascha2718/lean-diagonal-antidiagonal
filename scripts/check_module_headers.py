@@ -2,12 +2,18 @@
 """Check module headers, source sizes and symlinks before a Palomar upload.
 
 The sources are the tracked files together with untracked files that git does not ignore, so
-the check also covers new modules before they are committed.
+the check also covers new modules before they are committed. The files under ``vendor/`` are the
+verbatim copy of the library ``ExactOverlaps`` (see vendor/README.md); they begin with the
+copyright notice of their source before ``module``, which the check accepts for them alone.
 """
 
 from pathlib import Path
+import re
 import subprocess
 import sys
+
+VENDORED_PREFIX = "vendor/"
+LEADING_BLOCK_COMMENT_RE = re.compile(r"\A\s*/-.*?-/", re.DOTALL)
 
 
 def main() -> int:
@@ -21,6 +27,8 @@ def main() -> int:
     ).decode("utf-8").split("\0"))
     sources = sorted({path for path in paths if path and path not in deleted})
     failures = []
+    authored = 0
+    vendored = 0
     for source in sources:
         try:
             path = root / source
@@ -29,6 +37,11 @@ def main() -> int:
                 continue
             content = path.read_bytes()
             text = content.decode("utf-8")
+            if source.startswith(VENDORED_PREFIX):
+                vendored += 1
+                text = LEADING_BLOCK_COMMENT_RE.sub("", text, count=1)
+            else:
+                authored += 1
             line_count = content.count(b"\n") + int(bool(content) and not content.endswith(b"\n"))
             limit = 1000 if source == "Challenge.lean" else 10000
             if line_count > limit:
@@ -46,7 +59,10 @@ def main() -> int:
     if not sources:
         print("No Lean sources found", file=sys.stderr)
         return 1
-    print(f"Module headers, sizes and symlinks checked: {len(sources)} Lean sources")
+    print(
+        f"Module headers, sizes and symlinks checked: {authored} Lean sources"
+        f" and {vendored} vendored Lean sources"
+    )
     return 0
 
 

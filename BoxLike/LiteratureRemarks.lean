@@ -12,7 +12,9 @@ the discrete `σ`-algebra.
 
 * `FengHuExactDim`: exact-dimensionality of the projections of ergodic measures under the
   self-similar system `Ψ`, without separation, from Feng–Hu, Comm. Pure Appl. Math. 62 (2009),
-  Theorem 2.8. The article uses it in `sec:dimension_of_projections`.
+  Theorem 2.8. The article uses it in `sec:dimension_of_projections`. The library proves it
+  (`fengHuExactDim_holds` in `BoxLike/FengHu.lean`), along Feng–Hu's density argument; the
+  results of `BoxLike/NoSeparation.lean` take it as a hypothesis.
 * `FengKaenmakiUnique`: the uniqueness part of `thm:irred_eq_state`, from Feng–Käenmäki,
   Discrete Contin. Dyn. Syst. 30 (2011), Proposition 1.2, applied with `q = s` for
   `0 < s ≤ 1` and to a rescaled tuple with `q = 2 - s` for `1 < s < 2`. The library proves it
@@ -46,7 +48,9 @@ are similarities of the line, so `Ψ` is weakly conformal and hence `m`-conforma
 No separation condition is assumed, the maps need not be distinct, and the measure need not be
 carried by `Σ_Z`. The source works on the one-sided shift with closed balls; `\overline{π}`
 depends on the non-negative coordinates only, and the measure obtained by forgetting the
-negative coordinates is invariant and ergodic. -/
+negative coordinates is invariant and ergodic. The library proves the statement
+(`fengHuExactDim_holds` in `BoxLike/FengHu.lean`), directly on the two-sided shift, along
+Feng–Hu's density argument. -/
 def FengHuExactDim : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
     (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν], Ergodic (shift 1) ν →

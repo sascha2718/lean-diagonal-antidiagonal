@@ -22,10 +22,10 @@ The example, in the namespace `BoxLike.NoOverlap`:
 
 * `homGap`, `homGap_zero`: the minimal gap `Δ_n^{λ,t}` of the homogeneous system.
 * `BaranyKaenmakiPair`, `BaranyKaenmakiTheorem`: the theorem of Bárány and Käenmäki, in the
-  form the article uses and in the form of the source. Both are hypotheses, not axioms.
-* `exists_pair_of_baranyKaenmakiTheorem`: the source's Theorem 2.1 applied to
-  `η_n = exp(-n²)` gives a pair with every property of `BaranyKaenmakiPair` except the
-  transcendence of `λ`, with `C_0 = 1`.
+  form the article uses and in the form of the source. The library proves the first
+  (`baranyKaenmakiPair_holds` in `BoxLike/BaranyKaenmaki.lean`); the second is false
+  (`not_baranyKaenmakiTheorem` in `BoxLike/BaranyKaenmakiCounterexample.lean`), and no result
+  takes it.
 * `paramLo`, `paramHi`, `Params`, `Params.sys`, `Params.sys_phi_zero` to
   `Params.sys_phi_three`: the intervals of the parameters, the parameters and the system.
 * `Params.withRotations`, `Params.hasProximalDiagonal`, `Params.proximal`,
@@ -37,9 +37,8 @@ The example, in the namespace `BoxLike.NoOverlap`:
 * `Params.sys_gDeriv`, `Params.sys_gWord_zero`, `Params.freeProjective`: freeness.
 * `exists_params`: parameters in the box of tex lines 1430 to 1438, algebraically independent
   over `ℚ(λ, t)`.
-* `exists_system_of_homFree`, `ssc_no_overlap_not_pesc`, `ssc_no_overlap_not_pesc'`: the
-  proposition, from the properties of `(λ, t)` that the proof uses, from `BaranyKaenmakiPair`
-  and from `BaranyKaenmakiTheorem`.
+* `exists_system_of_homFree`, `ssc_no_overlap_not_pesc`: the proposition, from the properties
+  of `(λ, t)` that the proof uses and from `BaranyKaenmakiPair`.
 * `planar_separation_not_pesc`: the paragraph after the proof.
 -/
 public import BoxLike.Classification
@@ -252,9 +251,10 @@ overlapping set with `Δ_n^{λ,t} < (3/2) δ⁻¹ C η_n` for all `n ≥ 1`, whe
 of Lemma 3.6 and `C` that of (3.12); `λ^*` maps `{0,1}^ℕ` onto the uncountable Cantor set
 `F ⊆ (1/4, 1/3)` built from the intervals of Lemma 3.8, and `F` contains transcendental
 numbers. The statement of Theorem 2.1 alone gives uncountably many pairs, not uncountably many
-`λ`, see `exists_pair_of_baranyKaenmakiTheorem`. The transcendence of `λ` is not used in the
-proof of the proposition, see `exists_system_of_homFree`. This is a hypothesis of
-`ssc_no_overlap_not_pesc`, not an axiom. -/
+`λ`. The transcendence of `λ` is not used in the proof of the proposition, see
+`exists_system_of_homFree`. The library proves this statement (`baranyKaenmakiPair_holds` in
+`BoxLike/BaranyKaenmaki.lean`), by a Baire category argument at the base crossing of Lemma 3.8
+of the source; `ssc_no_overlap_not_pesc` takes it as a hypothesis. -/
 def BaranyKaenmakiPair : Prop :=
   ∃ lam t C₀ : ℝ, 0 < lam ∧ lam < 1 / 3 ∧ 0 < t ∧ t < lam / (1 - lam) ∧ Transcendental ℚ lam ∧
     0 < C₀ ∧ HomFree lam t ∧
@@ -265,8 +265,14 @@ def BaranyKaenmakiPair : Prop :=
 set `𝒞_η ∖ ℰ` is uncountable. Here `𝒞_η` is the set of pairs `(λ, t)` with `0 < λ < 1/3`,
 `0 < t < λ/(1-λ)` and `Δ_n^{λ,t} < η_n` for all `n ≥ 1`, and `ℰ` is the set of pairs for which
 `h_𝐢 = h_𝐣` for some finite words `𝐢 ≠ 𝐣`. The source indexes `η` by `n ≥ 1`; a sequence
-indexed by `ℕ` restricts to such a sequence, so this statement follows from the source. This is
-a hypothesis of `ssc_no_overlap_not_pesc'`, not an axiom. -/
+indexed by `ℕ` restricts to such a sequence, so this statement follows from the source. The
+statement is false: `not_baranyKaenmakiTheorem` in `BoxLike/BaranyKaenmakiCounterexample.lean`
+exhibits an admissible `η` for which `𝒞_η ∖ ℰ` is empty, since `Δ_1 = t` forces `t < η_1`, and a
+pair with such a small `t` has a length `M` with `Δ_M ≥ λ^{3M}/15 ≥ η_M`. The proof of Theorem 2.1
+in the source constructs pairs with `Δ_n < C η_n` for all `n ≥ 1` with a constant `C`, which is
+the form `BaranyKaenmakiPair` that the article uses; the corrected statement, for the lengths
+`n ≥ 5`, is `not_countable_condensation` in `BoxLike/BaranyKaenmaki.lean`. No result takes this
+statement. -/
 def BaranyKaenmakiTheorem : Prop :=
   ∀ η : ℕ → ℝ, Antitone η → (∀ n, 0 < η n) →
     Tendsto (fun n : ℕ => Real.log (η n) / n) atTop atBot →
@@ -322,22 +328,6 @@ theorem tendsto_log_exp_neg_sq :
   have hn0 : (n : ℝ) ≠ 0 := by positivity
   rw [Real.log_exp]
   field_simp
-
-/-- The relation between the two forms of the theorem of Bárány and Käenmäki. Theorem 2.1 of
-the source, applied to `η_n = exp(-n²)` itself, gives a pair `(λ, t)` with `0 < λ < 1/3`,
-`0 < t < λ/(1-λ)`, a free homogeneous system and `Δ_n^{λ,t} < exp(-n²)` for all `n ≥ 1`: every
-property of `BaranyKaenmakiPair` except the transcendence of `λ`, with `C_0 = 1` and without a
-constant multiple of `η_n` (tex lines 1424 to 1429). An uncountable set of pairs need not have
-an uncountable projection to the first coordinate, so the transcendence of `λ` does not follow
-from the statement of Theorem 2.1. -/
-theorem exists_pair_of_baranyKaenmakiTheorem (h : BaranyKaenmakiTheorem) :
-    ∃ lam t : ℝ, 0 < lam ∧ lam < 1 / 3 ∧ 0 < t ∧ t < lam / (1 - lam) ∧ HomFree lam t ∧
-      ∀ n : ℕ, 1 ≤ n → homGap lam t n < ENNReal.ofReal (Real.exp (-(n : ℝ) ^ 2)) := by
-  have hne := h (fun n => Real.exp (-(n : ℝ) ^ 2)) antitone_exp_neg_sq
-    (fun n => Real.exp_pos _) tendsto_log_exp_neg_sq
-  by_contra hcon
-  refine hne (Set.Countable.mono (fun p hp => ?_) Set.countable_empty)
-  exact hcon ⟨p.1, p.2, hp⟩
 
 /-! ### The system -/
 
@@ -894,21 +884,6 @@ theorem ssc_no_overlap_not_pesc (h : BaranyKaenmakiPair) :
   obtain ⟨lam, t, C₀, hlam0, hlam1, ht0, ht1, -, hC, hfree, hgap⟩ := h
   exact exists_system_of_homFree hlam0 hlam1 ht0 ht1 hfree fun c hc =>
     homGap_lt_of_le_mul_exp hC hgap hc
-
-/-- `prop:ssc_no_overlap_not_pesc`, from Theorem 2.1 of Bárány and Käenmäki as the source
-states it, applied to `η_n = exp(-n²)` through `exists_pair_of_baranyKaenmakiTheorem`. Neither
-the transcendence of `λ` nor the uncountability of the first-coordinate projection is needed
-(tex lines 1424 to 1429). -/
-theorem ssc_no_overlap_not_pesc' (h : BaranyKaenmakiTheorem) :
-    ∃ S : System (Fin 4), S.o = ![0, 0, 0, 1] ∧ S.Proximal ∧ S.Irreducible ∧
-      ¬ TupleStronglyIrreducible S.mat ∧
-      (∀ i (v : Fin 2 → ℝ), v 0 = 0 ∨ v 1 = 0 → (S.mat i *ᵥ v) 0 = 0 ∨ (S.mat i *ᵥ v) 1 = 0) ∧
-      (∃ i₀, S.o i₀ = 0 ∧ |S.a i₀| ≠ |S.b i₀|) ∧
-      S.StrongSeparation ∧ S.FreeProjective ∧ ¬ S.ProjExpSeparation ∧
-      ∑ i, |(S.mat i).det| < 1 := by
-  obtain ⟨lam, t, hlam0, hlam1, ht0, ht1, hfree, hgap⟩ := exists_pair_of_baranyKaenmakiTheorem h
-  exact exists_system_of_homFree hlam0 hlam1 ht0 ht1 hfree fun c hc =>
-    homGap_lt_of_le_mul_exp one_pos (fun n hn => by rw [one_mul]; exact (hgap n hn).le) hc
 
 /-- The paragraph after `prop:ssc_no_overlap_not_pesc` (tex lines 1527 to 1537): exponential
 separation of the planar affine maps does not imply projective exponential separation. The

@@ -27,9 +27,9 @@ The assembled proof of `thm:main2` in `sec:dimension_result_proof` along the pro
 * `System.main2_prose_normalised`, `System.main2_prose_of_pressure`, `System.main2_prose_lt_two`:
   the case `0 < s < 2`.
 * `System.main2_prose`: `thm:main2` with the hypotheses the proof uses: the statements
-  `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement` and
-  `FraserJordanJurgaDecomposition`, which the library proves, and the literature hypotheses
-  `FengLedrappierYoung` and `KittleKoglerDimension`.
+  `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`,
+  `FraserJordanJurgaDecomposition` and `KittleKoglerDimension`, which the library proves, and the
+  literature hypothesis `FengLedrappierYoung`.
 * `System.main2_prose_all`: `thm:main2` with the type of `System.main2_noExactOverlaps_all` and
   the hypothesis `hsmb`.
 * `System.main2_noExactOverlaps_prose`: `thm:main2` with exactly the type of

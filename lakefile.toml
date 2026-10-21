@@ -19,3 +19,14 @@ name = "Challenge"
 
 [[lean_lib]]
 name = "Solution"
+
+# Kittle–Kogler, *The exact overlaps conjecture for self-similar measures on the real line*
+# (arXiv:2610.10511), formalised in Lean by its authors: a verbatim copy of the library
+# `ExactOverlaps` of github.com/ckkogler/exact-overlaps-one-dim-lean, under its own licence, with
+# the Lean options of its own lakefile; see vendor/README.md. It supplies the dimension formula
+# that proves `BoxLike.KittleKoglerDimension`. `lake build BoxLike` builds the modules the library
+# imports; `lake build ExactOverlaps` builds all of them.
+[[lean_lib]]
+name = "ExactOverlaps"
+srcDir = "vendor"
+leanOptions = { relaxedAutoImplicit = false, maxSynthPendingDepth = 3 }

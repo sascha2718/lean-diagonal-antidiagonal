@@ -1,13 +1,14 @@
 module
 
 /-
-`prop:ssc_no_overlap_not_pesc` of `sec:exponential_separation`, assembled along its proof, and
-the paragraph after the proof from the theorem of Bárány and Käenmäki as the source states it.
+`prop:ssc_no_overlap_not_pesc` of `sec:exponential_separation`, assembled along its proof from the
+theorem of Bárány and Käenmäki in the form the article uses, `BaranyKaenmakiPair`.
 
 The steps of the proof and the declarations that carry them:
 
-* the pair `(λ, t)` from Bárány–Käenmäki, Theorem 2.1, with `η_n = exp(-n²)`:
-  `exists_pair_of_baranyKaenmakiTheorem` (`BoxLike.NoOverlapExample`);
+* the pair `(λ, t)` of Bárány–Käenmäki with `Δ_n ≤ C_0 exp(-n²)` for all `n ≥ 1`:
+  `BaranyKaenmakiPair` (`BoxLike.NoOverlapExample`), proved in `BoxLike.BaranyKaenmaki`
+  (`baranyKaenmakiPair_holds`);
 * the parameters, outside the countable union of proper algebraic hypersurfaces over
   `ℚ(λ, t)`: `exists_params_not_mem_exceptionalSet`,
   `algebraicIndependent_iff_not_mem_exceptionalSet` (`BoxLike.Aligned.NoOverlapPESCParams`);
@@ -26,10 +27,9 @@ Declarations:
 
 * `exists_system_of_homFree_of_exceptionalSet`: the proposition from the properties of the
   pair `(λ, t)` that the proof uses.
-* `prop_ssc_no_overlap_not_pesc`: `prop:ssc_no_overlap_not_pesc` from
-  `BaranyKaenmakiTheorem`.
-* `planar_separation_not_pesc_of_baranyKaenmakiTheorem`: the paragraph after the proof, from
-  `BaranyKaenmakiTheorem`.
+* `prop_ssc_no_overlap_not_pesc`: `prop:ssc_no_overlap_not_pesc` from `BaranyKaenmakiPair`,
+  along the proof of the article; `BoxLike.BaranyKaenmaki` discharges the hypothesis
+  (`prop_ssc_no_overlap_not_pesc_holds`).
 -/
 public import BoxLike.Aligned.NoOverlapPESCFree
 public import BoxLike.Aligned.NoOverlapPESCParams
@@ -78,38 +78,23 @@ condition and the maps of `Ψ` generate a free semigroup, yet `X` does not satis
 exponential separation condition. The union of the coordinate axes is invariant under every
 `A_i`, and `∑_i |det A_i| < 1`.
 
-The only hypothesis is Theorem 2.1 of Bárány and Käenmäki as the source states it,
-`BaranyKaenmakiTheorem`, applied to `η_n = exp(-n²)`; it gives the gap bound with `C_0 = 1`.
-The proof follows the article: the parameters avoid the countable union of proper algebraic
-hypersurfaces over `ℚ(λ, t)`, and the freeness of `Ψ` goes through multiplicative independence,
-symbol counts and coefficient comparison (`exists_system_of_homFree_of_exceptionalSet`). The
-statement is that of `ssc_no_overlap_not_pesc'`. -/
-theorem prop_ssc_no_overlap_not_pesc (h : BaranyKaenmakiTheorem) :
+The only hypothesis is the theorem of Bárány and Käenmäki in the form the article uses,
+`BaranyKaenmakiPair`: a free pair with `Δ_n ≤ C_0 exp(-n²)` for all `n ≥ 1`, which the library
+proves (`baranyKaenmakiPair_holds`). The proof follows the article: the parameters avoid the
+countable union of proper algebraic hypersurfaces over `ℚ(λ, t)`, and the freeness of `Ψ` goes
+through multiplicative independence, symbol counts and coefficient comparison
+(`exists_system_of_homFree_of_exceptionalSet`). The statement is that of
+`ssc_no_overlap_not_pesc`. -/
+theorem prop_ssc_no_overlap_not_pesc (h : BaranyKaenmakiPair) :
     ∃ S : System (Fin 4), S.o = ![0, 0, 0, 1] ∧ S.Proximal ∧ S.Irreducible ∧
       ¬ TupleStronglyIrreducible S.mat ∧
       (∀ i (v : Fin 2 → ℝ), v 0 = 0 ∨ v 1 = 0 → (S.mat i *ᵥ v) 0 = 0 ∨ (S.mat i *ᵥ v) 1 = 0) ∧
       (∃ i₀, S.o i₀ = 0 ∧ |S.a i₀| ≠ |S.b i₀|) ∧
       S.StrongSeparation ∧ S.FreeProjective ∧ ¬ S.ProjExpSeparation ∧
       ∑ i, |(S.mat i).det| < 1 := by
-  obtain ⟨lam, t, hlam0, hlam1, ht0, ht1, hfree, hgap⟩ := exists_pair_of_baranyKaenmakiTheorem h
+  obtain ⟨lam, t, C₀, hlam0, hlam1, ht0, ht1, -, hC, hfree, hgap⟩ := h
   exact exists_system_of_homFree_of_exceptionalSet hlam0 hlam1 ht0 ht1 hfree fun c hc =>
-    homGap_lt_of_le_mul_exp one_pos (fun n hn => by rw [one_mul]; exact (hgap n hn).le) hc
-
-/-- The paragraph after `prop:ssc_no_overlap_not_pesc` (tex lines 1527 to 1537), from Theorem 2.1
-of Bárány and Käenmäki as the source states it: exponential separation of the planar affine maps
-does not imply projective exponential separation. The system of the proposition satisfies the
-strong separation condition, hence `dist(φ_𝐢(X), φ_𝐣(X)) ≥ δ r^{n-1}` for distinct words of
-length `n`, with `δ > 0` and `r = min_i α_2(A_i)`; it fails the projective exponential separation
-condition, and it is not strongly irreducible. The statement is that of
-`planar_separation_not_pesc`, with the hypothesis `BaranyKaenmakiTheorem`. -/
-theorem planar_separation_not_pesc_of_baranyKaenmakiTheorem (h : BaranyKaenmakiTheorem) :
-    ∃ S : System (Fin 4), S.StrongSeparation ∧
-      (∃ δ : ℝ, 0 < δ ∧ ∀ w w' : List (Fin 4), w.length = w'.length →
-        w ≠ w' → ∀ x ∈ S.attractor, ∀ y ∈ S.attractor,
-          δ * S.minSingular ^ (w.length - 1) ≤ dist (S.phiWord w x) (S.phiWord w' y)) ∧
-      ¬ S.ProjExpSeparation ∧ ¬ TupleStronglyIrreducible S.mat := by
-  obtain ⟨S, -, -, -, hsi, -, -, hsep, -, hpesc, -⟩ := prop_ssc_no_overlap_not_pesc h
-  exact ⟨S, hsep, hsep.exists_le_dist_phiWord, hpesc, hsi⟩
+    homGap_lt_of_le_mul_exp hC hgap hc
 
 end NoOverlap
 

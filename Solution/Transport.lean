@@ -9,13 +9,14 @@ public import BoxLike
 # Transport between the challenge vocabulary and the library
 
 `toLib` and `ofLib` identify a `Challenge.System` with the `BoxLike.System` carrying the same
-data. Every challenge notion that the three headline statements and the internal supporting statements use agrees with its library
-namesake on the identified system. Most agreements hold by `rfl`. The structurally recursive
-`pastWord` and `gWord` agree by induction, since the elaborator does not unfold their recursors
-at a variable, and the notions built on them (`HasBackRate`, `Σ'`, `ξ_i`, `h_i`, the projective
-gap) follow by rewriting. The challenge `dimaff` takes no `[Nonempty ι]` and chooses a zero of
-the pressure when a unique one exists; `dimaff_eq` identifies it with the library's under
-`[Nonempty ι]`. Each cited theorem in the challenge vocabulary implies its library statement.
+data. Every challenge notion that the three headline statements and the internal supporting
+statements use agrees with its library namesake on the identified system. Most agreements hold
+by `rfl`. The structurally recursive `gWord` agrees by induction, since the elaborator does not
+unfold its recursor at a variable, and the projective gap built on it follows by rewriting. The
+challenge `dimaff` takes no `[Nonempty ι]` and chooses a zero of the pressure when a unique one
+exists; `dimaff_eq` identifies it with the library's under `[Nonempty ι]`. The challenge
+vocabulary states no cited theorem: every literature input of the headline results is a theorem
+of the library.
 -/
 
 open MeasureTheory
@@ -66,20 +67,6 @@ theorem upperPackingDim_eq {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
 
 theorem lowerHausdorffDim_eq {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
     (μ : Measure X) : Challenge.lowerHausdorffDim μ = BoxLike.lowerHausdorffDim μ := rfl
-
-/-- The composition of similarities, by induction on the word. -/
-theorem simWord_eq {κ : Type*} (r t : κ → ℝ) : Challenge.simWord r t = BoxLike.simWord r t := by
-  funext u
-  induction u with
-  | nil => rfl
-  | cons j u ih => exact congrArg ((fun x => r j * x + t j) ∘ ·) ih
-
-/-- `pastWord`, by induction on the length. -/
-theorem pastWord_eq {α : Type*} (x : ℤ → α) : Challenge.pastWord x = BoxLike.pastWord x := by
-  funext n
-  induction n with
-  | zero => rfl
-  | succ n ih => exact congrArg (x (-((n : ℤ) + 1)) :: ·) ih
 
 variable (S : Challenge.System ι)
 
@@ -140,79 +127,5 @@ theorem dimaff_eq [Fintype ι] [Nonempty ι] : S.dimaff = (toLib S).dimaff := by
   rfl
 
 end Notions
-
-/-! ## The partitions `ξ_i` and the entropies `h_i` -/
-
-section Partitions
-
-variable {ι : Type*} (S : Challenge.System ι)
-
-theorem hasBackRate_iff (y : ℤ → ι × ZMod 2) (l : ℝ) :
-    S.HasBackRate y l ↔ (toLib S).HasBackRate y l := by
-  rw [Challenge.System.HasBackRate, pastWord_eq]
-  rfl
-
-variable [MeasurableSpace ι] (μ : Measure (ℤ → ι))
-
-theorem sigmaTau_eq : S.SigmaTau μ = (toLib S).SigmaTau μ := by
-  simp only [Challenge.System.SigmaTau, hasBackRate_iff]
-  rfl
-
-theorem sigmaOmega_eq : S.SigmaOmega μ = (toLib S).SigmaOmega μ := by
-  simp only [Challenge.System.SigmaOmega, hasBackRate_iff]
-  rfl
-
-theorem sigmaPrime_eq : S.SigmaPrime μ = (toLib S).SigmaPrime μ := by
-  rw [Challenge.System.SigmaPrime, sigmaTau_eq, sigmaOmega_eq]
-  rfl
-
-theorem slowAxis_eq (x : ℤ → ι) : S.slowAxis μ x = (toLib S).slowAxis μ x := by
-  rw [Challenge.System.slowAxis, sigmaTau_eq]
-  rfl
-
-theorem oseledets_eq (x : ℤ → ι) (i : ℕ) : S.oseledets μ x i = (toLib S).oseledets μ x i := by
-  rcases i with _ | _ | i
-  · rfl
-  · change {v | Challenge.System.coord (S.slowAxis μ x + 1) v = 0} = _
-    rw [slowAxis_eq]
-    rfl
-  · rfl
-
-theorem xi_eq (i : ℕ) : S.xi μ i = (toLib S).xi μ i := by
-  simp only [Challenge.System.xi, sigmaPrime_eq, oseledets_eq]
-  rfl
-
-theorem dimEntropy_eq [Fintype ι] [MeasurableSingletonClass ι] [IsFiniteMeasure μ] (i : ℕ) :
-    S.dimEntropy μ i = (toLib S).dimEntropy μ i := by
-  rw [Challenge.System.dimEntropy, xi_eq]
-  rfl
-
-end Partitions
-
-/-! ## The cited theorems -/
-
-section Literature
-
-/-- Jordan–Rapaport, the dimension of `\overline{π}_*ν`. -/
-theorem jordanRapaportDimension (h : Challenge.JordanRapaportDimension.{u}) :
-    BoxLike.JordanRapaportDimension.{u} := by
-  intro ι _ _ _ S hsep ν _ herg
-  exact h (ofLib S) ((projExpSeparation_iff _).2 hsep) ν herg
-
-/-- Kittle–Kogler, the dimension of self-similar measures without exact overlaps. -/
-theorem kittleKoglerDimension (h : Challenge.KittleKoglerDimension.{u}) :
-    BoxLike.KittleKoglerDimension.{u} := by
-  intro κ _ r t p hr hr1 hp hsum hfree ν _ hν
-  exact h r t p hr hr1 hp hsum (by rwa [simWord_eq]) ν hν
-
-/-- Feng, the Ledrappier–Young formula `eq:feng1_1` for `π_*μ`. -/
-theorem fengLedrappierYoung (h : Challenge.FengLedrappierYoung.{u}) :
-    BoxLike.FengLedrappierYoung.{u} := by
-  intro ι _ _ _ S μ _ hinv herg hl
-  have key := h (ofLib S) μ hinv herg hl
-  simp only [dimEntropy_eq] at key
-  exact key
-
-end Literature
 
 end Solution.Transport

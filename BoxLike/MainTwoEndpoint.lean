@@ -32,8 +32,9 @@ theorem StrongOpenSet.dimaff_eq_two (h : S.StrongOpenSet) (h2 : 2 ≤ S.dimaff) 
   simpa using congrArg Real.log hsum
 
 /-- `thm:main2` without an extra `dimaff < 2` assumption. The seven hypotheses on statements
-are used only in the finite-subsystem branch below two; `FengLedrappierYoung` and
-`KittleKoglerDimension` are cited theorems, and the library proves the other five,
+are used only in the finite-subsystem branch below two; `FengLedrappierYoung` is a cited
+theorem, and the library proves the other six, `KittleKoglerDimension` from the Lean
+formalisation of Kittle–Kogler by its authors (`kittleKoglerDimension_holds`) and
 `FengLedrappierYoungBar` from `FengLedrappierYoung`
 (`fengLedrappierYoungBar_of_fengLedrappierYoung`). -/
 theorem main2_noExactOverlaps_all (hms : BoxLike.MorrisShmerkinLyapunov.{u})
@@ -58,31 +59,3 @@ theorem main2_noExactOverlaps_all (hms : BoxLike.MorrisShmerkinLyapunov.{u})
     norm_num
 
 end BoxLike.System
-
-namespace BoxLike
-
-open MeasureTheory
-
-/-- The example of `prop:ssc_no_overlap_not_pesc` satisfies the hypotheses of `thm:main2` and
-`\dim_H X = dimaff(X)` (tex lines 1522 to 1525): it satisfies the strong separation condition,
-hence the strong open set condition, its projective system has no exact overlaps, it fails the
-projective exponential separation condition, and `dimaff(X) < 2` since `∑_i |det A_i| < 1`.
-The theorem of Bárány and Käenmäki enters as the hypothesis `NoOverlap.BaranyKaenmakiTheorem`. -/
-theorem NoOverlap.dimH_eq_dimaff' (h : NoOverlap.BaranyKaenmakiTheorem)
-    (hms : MorrisShmerkinLyapunov.{0}) (hfk : EquilibriumGibbsStatement.{0})
-    (hfjj : FraserJordanJurgaDecomposition.{0}) (hfib : FengInfoSumBar.{0})
-    (hly : FengLedrappierYoung.{0}) (hlyb : FengLedrappierYoungBar.{0})
-    (hkk : KittleKoglerDimension.{0}) :
-    ∃ S : System (Fin 4), S.StrongSeparation ∧ S.NoExactOverlaps ∧ ¬ S.ProjExpSeparation ∧
-      S.dimaff < 2 ∧ dimH S.attractor = ENNReal.ofReal S.dimaff := by
-  obtain ⟨S, ho, hprox, -, -, -, -, hsep, hfree, hpesc, hdet⟩ :=
-    NoOverlap.ssc_no_overlap_not_pesc' h
-  have hrot : S.WithRotations := ⟨⟨0, by rw [ho]; rfl⟩, ⟨3, by rw [ho]; rfl⟩⟩
-  have hfree' : S.NoExactOverlaps := S.noExactOverlaps_iff.2 hfree
-  have h2 := S.dimaff_lt_two_of_sum_abs_det_lt_one hdet
-  obtain ⟨μ, hprob, hinv, heq⟩ := S.exists_isEquilibriumState S.dimaff_nonneg
-  exact ⟨S, hsep, hfree', hpesc, h2, S.main2_noExactOverlaps hms hfk hfjj hfib hly hlyb hkk hrot
-    hprox hfree' h2 μ hinv heq (Or.inr hsep.strongOpenSet)⟩
-
-
-end BoxLike

@@ -4,9 +4,10 @@ module
 The result of D.-J. Feng, *Dimension of invariant measures for affine iterated function systems*,
 Duke Math. J. 172 (2023), arXiv:1901.01691, that the article cites in `thm:feng1` for every
 planar self-affine set, as a `Prop`-valued definition about the planar systems, partitions and
-entropies of `BoxLike/Planar/`. A result that uses it takes it as a hypothesis.
-`docs/correspondence.md`, "Fidelity boundary", states the rules; the project owner authorised
-this statement. The box-like predicate `FengLedrappierYoung` of `BoxLike/LiteratureFeng.lean`
+entropies of `BoxLike/Planar/`. A result that uses it takes it as a hypothesis. The library
+proves it (`planarFengLedrappierYoung_holds` in `BoxLike/FengLedrappierYoung.lean`), along Feng's
+Sections 4 to 6 for `d = 2`. `docs/correspondence.md`, "Fidelity boundary", states the rules; the
+project owner authorised this statement. The box-like predicate `FengLedrappierYoung` of `BoxLike/LiteratureFeng.lean`
 is its specialisation.
 
 * `PlanarFengLedrappierYoung`: Feng, Theorems 1.2 and 1.3, for planar systems.
@@ -57,7 +58,8 @@ pointwise dimension `0`, and all `h_i` vanish since `𝒫` has one atom. Two let
 translations zero, Bernoulli `μ`: `π_*μ = δ_0` and `h_0 = h_1 = h_2`, so both sides vanish.
 Scaled rotations: `λ_1 = λ_2`, the statement is silent.
 
-Used by: `PlanarFengLedrappierYoung.fengLedrappierYoung`, `PlanarSystem.feng1`, `planar_feng1`. -/
+Used by: `PlanarFengLedrappierYoung.fengLedrappierYoung`, `PlanarSystem.feng1`, `planar_feng1`.
+Proved: `planarFengLedrappierYoung_holds` (`BoxLike/FengLedrappierYoung.lean`). -/
 def PlanarFengLedrappierYoung : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
     (P : PlanarSystem ι) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ],

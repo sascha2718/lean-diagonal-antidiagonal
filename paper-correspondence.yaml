@@ -24,7 +24,7 @@ entries:
     sha256: "2957d1ea944eb0c9f06578276d956ceb68b138e843ebd064e6a9f579a3cc43aa"
     status: "formalized"
     lean: ["Challenge.audit_main1"]
-    hypotheses: ["BoxLike.JordanRapaportDimension"]
+    hypotheses: []
     relation: "split"
     headline: true
     note: "Full statement proved for every value of dimaff and every equilibrium state; uniqueness and ergodicity are not needed as premises. For s >= 2 the exponents coincide, the threshold is one and both values are one (main1_of_two_le), through the Bernoulli orientation lift of Theorem 4.4. For s < 2 Lean calls Jordan-Rapaport directly, so Feng-Hu is a redundant citation. The inputs the manuscript takes from Morris-Shmerkin (eq:simple_lyapunov) and Feng-Kaenmaki (the Gibbs bounds of the equilibrium state) are theorems of the library (morrisShmerkinLyapunov_holds, equilibriumGibbs)."
@@ -37,12 +37,12 @@ entries:
     sha256: "2c069734098ee27ab75acd18b24c73db8f8e9829e8b526f4d1dc6a38bd525691"
     status: "formalized"
     lean: ["Challenge.audit_main2"]
-    hypotheses: ["BoxLike.FengLedrappierYoung", "BoxLike.KittleKoglerDimension"]
+    hypotheses: []
     relation: "split"
     headline: true
-    note: "Full statement proved along the prose (main2_noExactOverlaps_prose, the type of main2_noExactOverlaps_all): typical words by Shannon-McMillan-Breiman (proved) with returns to horizontal orientation, the pigeonhole over count vectors, the genuinely diagonal subsystem, 0 <= q <= q_y = 0 by conditional-entropy monotonicity, strong separation of the selected subsystem in the open-set branch. Deviations: returns from ergodic Cesaro averages instead of mixing; the scalar Feng formula for the diagonal subsystem obtained from the authorised planar FengLedrappierYoung on an auxiliary box-like system. The headline is proved by main2_prose, which needs neither FengInfoSumBar nor FengLedrappierYoungBar; the inputs the manuscript takes from Morris-Shmerkin and Feng-Kaenmaki are theorems of the library (morrisShmerkinLyapunov_holds, equilibriumGibbs). The Gibbs and Birkhoff counting proof main2_noExactOverlaps_all is an alternative."
+    note: "Full statement proved along the prose (main2_noExactOverlaps_prose, the type of main2_noExactOverlaps_all): typical words by Shannon-McMillan-Breiman (proved) with returns to horizontal orientation, the pigeonhole over count vectors, the genuinely diagonal subsystem, 0 <= q <= q_y = 0 by conditional-entropy monotonicity, strong separation of the selected subsystem in the open-set branch. Deviations: returns from ergodic Cesaro averages instead of mixing; the scalar Feng formula for the diagonal subsystem obtained from the planar FengLedrappierYoung, a theorem of the library (fengLedrappierYoung_holds, BoxLike/FengLedrappierYoung.lean), on an auxiliary box-like system. The headline is proved by main2_prose, which needs neither FengInfoSumBar nor FengLedrappierYoungBar; the inputs the manuscript takes from Morris-Shmerkin and Feng-Kaenmaki are theorems of the library (morrisShmerkinLyapunov_holds, equilibriumGibbs), and so is Kittle-Kogler's dimension formula KittleKoglerDimension (kittleKoglerDimension_holds, BoxLike/KittleKogler.lean), derived from the authors' Lean formalisation of arXiv:2610.10511, the library ExactOverlaps in vendor/; the library statements take it as a hypothesis and Solution discharges it. The Gibbs and Birkhoff counting proof main2_noExactOverlaps_all is an alternative."
     solution_entry: "paper_1_3"
-    library: ["BoxLike.System.main2_noExactOverlaps_prose", "BoxLike.System.main2_prose", "BoxLike.System.main2_prose_all", "BoxLike.System.exists_typical_words_prose", "BoxLike.System.IsHomDiag.isExactDim_map_proj", "BoxLike.System.le_dimH_attractor_of_family", "BoxLike.System.subsystem_strongSeparation", "BoxLike.System.StrongOpenSet.dimaff_eq_two", "BoxLike.System.dimH_attractor_of_two_le", "BoxLike.System.main2_noExactOverlaps_all"]
+    library: ["BoxLike.kittleKoglerDimension_holds", "BoxLike.System.main2_noExactOverlaps_prose", "BoxLike.System.main2_prose", "BoxLike.System.main2_prose_all", "BoxLike.System.exists_typical_words_prose", "BoxLike.System.IsHomDiag.isExactDim_map_proj", "BoxLike.System.le_dimH_attractor_of_family", "BoxLike.System.subsystem_strongSeparation", "BoxLike.System.StrongOpenSet.dimaff_eq_two", "BoxLike.System.dimH_attractor_of_two_le", "BoxLike.System.main2_noExactOverlaps_all"]
   - source: "Question on coincident projection dimensions without exact overlaps"
     label: "q:coincident-projection-dimensions"
     number: "1.4"
@@ -133,11 +133,11 @@ entries:
     kind: "proposition"
     sha256: "0b08020e8d52e6c501d11c5f378a195809e4f68e754096ad9276426e6394edec"
     status: "formalized"
-    lean: ["BoxLike.NoOverlap.prop_ssc_no_overlap_not_pesc", "BoxLike.NoOverlap.exists_pair_of_baranyKaenmakiTheorem", "BoxLike.NoOverlap.exists_params_not_mem_exceptionalSet", "BoxLike.NoOverlap.Params.mulIndependent", "BoxLike.NoOverlap.Params.count_eq_of_gDeriv_eq", "BoxLike.NoOverlap.eq_of_valPoly_eq", "BoxLike.NoOverlap.Params.freeProjective_of_mulIndependent", "BoxLike.NoOverlap.Params.strongSeparation", "BoxLike.NoOverlap.Params.not_projExpSeparation", "BoxLike.NoOverlap.ssc_no_overlap_not_pesc'"]
-    hypotheses: ["BoxLike.NoOverlap.BaranyKaenmakiTheorem"]
+    lean: ["BoxLike.NoOverlap.prop_ssc_no_overlap_not_pesc", "BoxLike.NoOverlap.baranyKaenmakiPair_holds", "BoxLike.NoOverlap.exists_params_not_mem_exceptionalSet", "BoxLike.NoOverlap.Params.mulIndependent", "BoxLike.NoOverlap.Params.count_eq_of_gDeriv_eq", "BoxLike.NoOverlap.eq_of_valPoly_eq", "BoxLike.NoOverlap.Params.freeProjective_of_mulIndependent", "BoxLike.NoOverlap.Params.strongSeparation", "BoxLike.NoOverlap.Params.not_projExpSeparation", "BoxLike.NoOverlap.prop_ssc_no_overlap_not_pesc_holds"]
+    hypotheses: []
     relation: "split"
     headline: false
-    note: "Exact statement with the source-faithful premise BaranyKaenmakiTheorem. The endpoint prop_ssc_no_overlap_not_pesc follows the prose: parameters outside a countable union of proper algebraic hypersurfaces (Baire), multiplicative independence, symbol counts and lengths, the no-r coefficient of the first non-lambda symbol, cancellation and induction. The logarithmic limits appear as eventual bounds Delta_n < c^n for every c > 0. The sequential transcendental route remains as an alternative."
+    note: "Exact statement. The premise is BaranyKaenmakiPair, the form of the theorem of Barany-Kaenmaki that the article uses, which the library proves (baranyKaenmakiPair_holds); Theorem 2.1 of the source as stated (BaranyKaenmakiTheorem) is false (not_baranyKaenmakiTheorem), and the article's citation should refer to its proof. The endpoint prop_ssc_no_overlap_not_pesc follows the prose: parameters outside a countable union of proper algebraic hypersurfaces (Baire), multiplicative independence, symbol counts and lengths, the no-r coefficient of the first non-lambda symbol, cancellation and induction. The logarithmic limits appear as eventual bounds Delta_n < c^n for every c > 0. The sequential transcendental route remains as an alternative."
     solution_entry: "paper_2_7"
   - source: "Lyapunov exponents through the projective system"
     label: "thm:lyapunov_exponents_via_g_system"
@@ -324,11 +324,11 @@ entries:
     number: "4.2"
     kind: "theorem"
     sha256: "93cba8e1fa629363e3b0f0ad65b39c9c41a9fff41bfd9534905f5c0db3aac5ef"
-    status: "cited"
-    hypotheses: ["BoxLike.PlanarFengLedrappierYoung", "BoxLike.FengLedrappierYoung"]
-    lean: ["BoxLike.planar_feng1", "BoxLike.PlanarSystem.feng1", "BoxLike.PlanarFengLedrappierYoung", "BoxLike.PlanarFengLedrappierYoung.fengLedrappierYoung", "BoxLike.planarFengLedrappierYoung_of_fengXi", "BoxLike.FengLedrappierYoung", "BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung", "BoxLike.System.isExactDim_map_projBar_of_fengLedrappierYoung"]
+    status: "formalized"
+    hypotheses: []
+    lean: ["BoxLike.planarFengLedrappierYoung_holds", "BoxLike.fengLedrappierYoung_holds", "BoxLike.fengLedrappierYoungBar_holds", "BoxLike.planar_feng1", "BoxLike.PlanarSystem.feng1", "BoxLike.PlanarFengLedrappierYoung", "BoxLike.PlanarFengLedrappierYoung.fengLedrappierYoung", "BoxLike.planarFengLedrappierYoung_of_fengXi", "BoxLike.FengLedrappierYoung", "BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung", "BoxLike.System.isExactDim_map_projBar_of_fengLedrappierYoung"]
     headline: false
-    note: "Both clauses at the article scope as cited results: the planar clause for every planar self-affine set from the authorised PlanarFengLedrappierYoung (Feng, Theorems 1.2 (ii) and 1.3), whose box-like specialisation FengLedrappierYoung the headlines take. The scalar clause, FengLedrappierYoungBar, follows from FengLedrappierYoung (fengLedrappierYoungBar_of_fengLedrappierYoung) through the planar system z -> diag(g'_j, g'_j/2) z + (g_j(0), 0) of the projective system, whose attractor lies on the horizontal axis, for every box-like system with neither rotations nor proximality (System.isExactDim_map_projBar_of_fengLedrappierYoung); both clauses therefore follow from PlanarFengLedrappierYoung alone (Solution, paper_4_2_11). The source statement for Feng partitions implies the transcription (planarFengLedrappierYoung_of_fengXi)."
+    note: "Both clauses at the article scope, proved: the planar clause for every planar self-affine set is PlanarFengLedrappierYoung (Feng, Theorems 1.2 (ii) and 1.3), which the library proves along Feng's Sections 4 to 6 in the plane (planarFengLedrappierYoung_holds, BoxLike/FengLedrappierYoung.lean): the claims (C1) to (C3) by general theorems about nested measurable partitions, Proposition 5.1 from the planar form of Lemma 5.4 with l = 1, Proposition 5.5 by Besicovitch differentiation and the weak maximal inequality on the atoms; its box-like specialisation FengLedrappierYoung is fengLedrappierYoung_holds. The scalar clause, FengLedrappierYoungBar, follows from FengLedrappierYoung (fengLedrappierYoungBar_holds, through fengLedrappierYoungBar_of_fengLedrappierYoung) through the planar system z -> diag(g'_j, g'_j/2) z + (g_j(0), 0) of the projective system, whose attractor lies on the horizontal axis, for every box-like system with neither rotations nor proximality (System.isExactDim_map_projBar_of_fengLedrappierYoung); both clauses therefore follow from PlanarFengLedrappierYoung alone (Solution, paper_4_2_11). The source statement for Feng partitions implies the transcription (planarFengLedrappierYoung_of_fengXi)."
     relation: "exact"
     solution_entry: "paper_4_2"
   - source: "Entropy of the equilibrium state and of the Gibbs measures"
@@ -350,7 +350,7 @@ entries:
     sha256: "9e1467da94da619202c799251f6542d4fcfe755541f3f3ea0acba46733eae2b9"
     status: "formalized"
     lean: ["BoxLike.System.eq_state_proj_dim_all", "BoxLike.System.eq_state_proj_dim_of_two_le", "BoxLike.System.isExactDim_marginal_of_two_le", "BoxLike.System.IsEquilibriumState.lyapunov_eq_of_two_le", "BoxLike.ergodic_orientationLift_bernoulli", "BoxLike.entropy_orientationLift", "BoxLike.System.map_projBar_orientationLift", "BoxLike.System.eq_state_proj_dim", "BoxLike.System.marginal_decomposition"]
-    hypotheses: ["BoxLike.JordanRapaportDimension"]
+    hypotheses: []
     relation: "split"
     headline: false
     note: "Proved for every s > 0 and every equilibrium state. For s >= 2 as in the prose: the Bernoulli equilibrium state, its orientation lift as a stationary mixing Markov measure, equal entropy, equal Lyapunov exponents, Jordan-Rapaport on the lift and the differentiation step; this branch uses only rotations, projective exponential separation and Jordan-Rapaport."
@@ -362,7 +362,7 @@ entries:
     sha256: "454870d696432826be0026319e64578fe72596c3996826868ad837cc8853a888"
     status: "formalized"
     lean: ["BoxLike.PrescribedExample.projection_double_dimensional", "BoxLike.PrescribedExample.exists_geometry", "BoxLike.PrescribedExample.existsUnique_p", "BoxLike.PrescribedExample.pressure_eq", "BoxLike.PrescribedExample.exists_translation", "BoxLike.PrescribedExample.volume_badSet_le", "BoxLike.PrescribedExample.Gibbs.isEquilibriumState_spec", "BoxLike.PrescribedExample.Gibbs.marginal_spec"]
-    hypotheses: ["BoxLike.JordanRapaportDimension"]
+    hypotheses: []
     headline: false
     note: "Full statement for every 0 < s2 < s1 <= 1 along the prose: parameters, pressure and dimaff, the translation cube and the volume argument for projective exponential separation, the Markov measure, entropy and exponents, and Theorem 4.4. The identification of the Gibbs measure with the Markov measure is proved by a Gibbs-uniqueness argument the prose leaves implicit."
     relation: "exact"
@@ -398,7 +398,7 @@ entries:
     sha256: "5ebb51dcedee8beaf90a30358dee623afd20b988df67e66249283c5857a721c6"
     status: "formalized"
     lean: ["BoxLike.System.overline_h1_zero"]
-    hypotheses: ["BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung"]
+    hypotheses: []
     relation: "split"
     headline: false
     note: "The almost-everywhere zero pointwise entropy of the average is exactly represented. The non-strict comparison of the prose is correct; no strict positivity assumption is needed. FengLedrappierYoungBar, which the library statement takes, follows from FengLedrappierYoung (fengLedrappierYoungBar_of_fengLedrappierYoung)."
@@ -410,7 +410,7 @@ entries:
     sha256: "9ec69db450c6888b756d59e48f4c94ae23723fdf27e2a91bd0f6c00e267634b2"
     status: "formalized"
     lean: ["BoxLike.System.overline_h1_zero_large"]
-    hypotheses: ["BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung"]
+    hypotheses: []
     relation: "split"
     headline: false
     note: "The Lean statement carries exactly the hypotheses of the manuscript; no bound -lambda_1 <= h(mu) is assumed. The scalar entropy-zero conclusion and the almost-everywhere Dirac conclusion on slowPart have the full scope of the statement; the latter is the measure-equality statement of the manuscript in equivalent almost-everywhere form. FengLedrappierYoungBar, which the library statement takes, follows from FengLedrappierYoung (fengLedrappierYoungBar_of_fengLedrappierYoung)."
@@ -434,7 +434,7 @@ entries:
     sha256: "29673d11eb9ab7531f29cfebda06f649f3f3f48f388d7bed937d419392d7123d"
     status: "formalized"
     lean: ["BoxLike.System.eq_state_h1_zero"]
-    hypotheses: ["BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung"]
+    hypotheses: []
     relation: "split"
     headline: false
     note: "Both h₁=0 and the ae Dirac conditional-measure assertion are proved. The manuscript restricts the full-measure set to Σ'; Lean's assertion is on all sequences but is equivalent because Σ' is conull. FengLedrappierYoungBar, which the library statement takes, follows from FengLedrappierYoung (fengLedrappierYoungBar_of_fengLedrappierYoung)."
@@ -446,7 +446,7 @@ entries:
     sha256: "2b0b1648227516f78a32866b80b5766fcd1d68bc5ad0ab926358df1edc4836ce"
     status: "formalized"
     lean: ["BoxLike.System.eq_state_h1_large"]
-    hypotheses: ["BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung"]
+    hypotheses: []
     relation: "split"
     headline: false
     note: "The formula h₁=entropy μ+λ₁ agrees with h₁=h₀+λ₁ after the conditional-past bridge. The lower boundary is included exactly as in the statement of the manuscript. FengLedrappierYoungBar, which the library statement takes, follows from FengLedrappierYoung (fengLedrappierYoungBar_of_fengLedrappierYoung)."
@@ -458,7 +458,7 @@ entries:
     sha256: "6d692b2e41cc8cb436312b4b6d595610298e60aeb934f8cf2d5c098230158d19"
     status: "formalized"
     lean: ["BoxLike.System.eq_state_h2_zero"]
-    hypotheses: ["BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung"]
+    hypotheses: []
     relation: "split"
     headline: false
     note: "The h₂=0 endpoint matches. It is logically subsumed by the stronger 4.14, but it has its own proof and must retain its own numbered entry. FengLedrappierYoungBar, which the library statement takes, follows from FengLedrappierYoung (fengLedrappierYoungBar_of_fengLedrappierYoung)."
@@ -470,7 +470,7 @@ entries:
     sha256: "e15316289a6fa7233d392d01ec5507419bafd1e4eb24e514d37477964331645c"
     status: "formalized"
     lean: ["BoxLike.System.orto_partition_dirac"]
-    hypotheses: ["BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung"]
+    hypotheses: []
     relation: "split"
     headline: false
     note: "The Lean statement carries exactly the hypotheses of the manuscript; no bound -lambda_1 <= h(mu) is assumed, and the full entropy range of the manuscript is proved. FengLedrappierYoungBar, which the library statement takes, follows from FengLedrappierYoung (fengLedrappierYoungBar_of_fengLedrappierYoung)."
@@ -494,7 +494,7 @@ entries:
     sha256: "d9def48abd66aa1130db2026d227fe79e67f55ed9842b111335d43d966e98811"
     status: "formalized"
     lean: ["Challenge.audit_main_extended"]
-    hypotheses: ["BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung"]
+    hypotheses: []
     relation: "split"
     headline: true
     note: "The full all-s exact-dimensionality statement is represented. Positivity of s follows from rotations. For s≥2 the entropy alternative is impossible and the SOSC volume argument yields exact dimension 2. The ge-two helper needs no external literature hypotheses, rotations, proximality or projective separation. FengLedrappierYoungBar, which the library statements take, follows from FengLedrappierYoung (fengLedrappierYoungBar_of_fengLedrappierYoung), and Solution passes the proof."
@@ -508,10 +508,10 @@ entries:
     sha256: "a030675ea27a2247b37cceb9cc919d8ba11150a0372559bd3d462333373cb596"
     status: "formalized"
     lean: ["BoxLike.System.dim_chain", "BoxLike.System.dim_chain_noExactOverlaps", "BoxLike.System.dim_chain_main2", "BoxLike.System.dimmaff_le_dimaff", "BoxLike.System.dimmaff_eq_dimaff", "BoxLike.System.fraserBound_holds", "BoxLike.System.dimmaff_eq_dimaff_noExactOverlaps", "BoxLike.System.dimmaff_eq_dimaff_main2", "BoxLike.System.main2_noExactOverlaps_all"]
-    hypotheses: ["BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung", "BoxLike.KittleKoglerDimension"]
+    hypotheses: []
     relation: "split"
     headline: false
-    note: "The introduction derives dim_H X = dim_P X = dim_M X = dimaff(X) from thm:main2, and squeezes dimmaff(X) = dimaff(X). The chain holds for every box-like set with dim_H X = dimaff(X), from Falconer bound alone (System.dim_chain). The squeeze holds for every box-like set with dim_H X = dimaff(X), with no literature premise: System.dimmaff_eq_dimaff takes System.FraserBound, the first part of thm:fraser, which the library proves (System.fraserBound_holds), and Solution passes the proof (prose_squeeze_0). The inequality dimmaff(X) <= dimaff(X) holds for every box-like set. The three listed literature premises enter only through thm:main2, in the forms with suffix noExactOverlaps or main2; FengLedrappierYoungBar, which these forms take, follows from FengLedrappierYoung (fengLedrappierYoungBar_of_fengLedrappierYoung). The forms with suffix noExactOverlaps take the hypotheses of thm:main2 as the manuscript states it; the forms with suffix main2 are the special case under projective exponential separation; some noExactOverlaps wrappers are stated for s < 2, and the full parameter range follows by applying the generic chain and squeeze theorems to the full thm:main2 endpoint."
+    note: "The introduction derives dim_H X = dim_P X = dim_M X = dimaff(X) from thm:main2, and squeezes dimmaff(X) = dimaff(X). The chain holds for every box-like set with dim_H X = dimaff(X), from Falconer bound alone (System.dim_chain). The squeeze holds for every box-like set with dim_H X = dimaff(X), with no literature premise: System.dimmaff_eq_dimaff takes System.FraserBound, the first part of thm:fraser, which the library proves (System.fraserBound_holds), and Solution passes the proof (prose_squeeze_0). The inequality dimmaff(X) <= dimaff(X) holds for every box-like set. The two listed literature premises enter only through thm:main2, in the forms with suffix noExactOverlaps or main2; FengLedrappierYoungBar, which these forms take, follows from FengLedrappierYoung (fengLedrappierYoungBar_of_fengLedrappierYoung), and KittleKoglerDimension, which they also take, is the library theorem kittleKoglerDimension_holds. The forms with suffix noExactOverlaps take the hypotheses of thm:main2 as the manuscript states it; the forms with suffix main2 are the special case under projective exponential separation; some noExactOverlaps wrappers are stated for s < 2, and the full parameter range follows by applying the generic chain and squeeze theorems to the full thm:main2 endpoint."
   - source: "Falconer's upper bound eq:hausdorff_affinity_upper_bound"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -544,7 +544,7 @@ entries:
     sha256: "e1264402918a5c8b92ba1e5cbbb68aea1d0f92e3d877225e9a661510e183d10b"
     status: "formalized"
     lean: ["Challenge.audit_dimH_eq_min", "Challenge.audit_dimH_of_two_le", "BoxLike.System.dimH_attractor_eq_min", "BoxLike.System.dimH_attractor_of_strongOpenSet", "BoxLike.System.dimH_attractor_of_two_le"]
-    hypotheses: ["BoxLike.JordanRapaportDimension", "BoxLike.FengLedrappierYoung"]
+    hypotheses: []
     relation: "split"
     headline: false
     note: "The paragraph after eq:hausdorff_ergodic_lyapunov sets out to prove dim_H X = min{2, dimaff(X)}, which follows from thm:main_extended, the mass distribution principle and Falconer's bound. Challenge.audit_dimH_eq_min holds under the hypotheses of thm:main_extended. Challenge.audit_dimH_of_two_le is the case dimaff(X) ≥ 2 under the strong open set condition; it assumes no measure and takes no literature hypothesis. The generic reduction itself needs no literature; the two listed premises belong only to its application via main_extended. FengLedrappierYoungBar, which System.dimH_attractor_eq_min takes, follows from FengLedrappierYoung (fengLedrappierYoungBar_of_fengLedrappierYoung), and Challenge.audit_dimH_eq_min passes the proof."
@@ -567,23 +567,23 @@ entries:
     end: "double-dimensional without any separation assumption."
     sha256: "5e351ac02864c67ee6559d879edd9d90b1dadef007e778467f950d94c92f5a35"
     status: "formalized"
-    lean: ["BoxLike.System.marginal_isDoubleDim_normalised", "BoxLike.System.marginal_isDoubleDim", "BoxLike.ae_hasLocalDim_iff_of_le", "BoxLike.IsExactDim.of_le"]
-    hypotheses: ["BoxLike.FengHuExactDim"]
+    lean: ["BoxLike.System.marginal_isDoubleDim_normalised", "BoxLike.System.marginal_isDoubleDim", "BoxLike.ae_hasLocalDim_iff_of_le", "BoxLike.IsExactDim.of_le", "BoxLike.fengHuExactDim_holds"]
+    hypotheses: []
     relation: "exact"
     headline: false
-    note: "For 0 < s < 2 both coordinate marginals of the s-equilibrium state are double-dimensional without any separation condition. The exact-dimensionality of the projected Gibbs measures enters as FengHuExactDim, from Feng–Hu, Theorem 2.8 (Comm. Pure Appl. Math. 62 (2009)); eq:restricted-projection-dimensions is ae_hasLocalDim_iff_of_le and IsExactDim.of_le."
+    note: "For 0 < s < 2 both coordinate marginals of the s-equilibrium state are double-dimensional without any separation condition. The exact-dimensionality of the projected Gibbs measures is FengHuExactDim, from Feng–Hu, Theorem 2.8 (Comm. Pure Appl. Math. 62 (2009)), which the library proves (fengHuExactDim_holds, BoxLike/FengHu.lean); eq:restricted-projection-dimensions is ae_hasLocalDim_iff_of_le and IsExactDim.of_le."
   - source: "Dimensions of the projected Gibbs measures eq:gibbs_proj_dim"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
     start: "Jordan--Rapaport \\cite[Theorem~1.1]{JordanRapaport2021} together with"
     end: "-\\frac{\\overline{h}_0(\\mu_2)}{\\overline{\\lambda}(\\A,\\mu_2)} \\biggr\\} = s_2."
     sha256: "2752868739824e597703c22acfdd140037aa713b7bea86002b97c65ecef14c53"
-    status: "cited"
-    hypotheses: ["BoxLike.JordanRapaportDimension"]
-    lean: ["BoxLike.System.marginal_decomposition"]
+    status: "formalized"
+    hypotheses: []
+    lean: ["BoxLike.System.marginal_decomposition", "BoxLike.JordanRapaportDimension", "BoxLike.jordanRapaportDimension_of_shmerkin", "BoxLike.ShmerkinLqDimension", "BoxLike.shmerkinLqDimension_holds"]
     relation: "exact"
     headline: false
-    note: "Jordan–Rapaport, Theorem 1.1 (Proc. Lond. Math. Soc. 122 (2021), arXiv:1908.00271), enters as JordanRapaportDimension: under the projective exponential separation condition the projection of an ergodic measure on Σ_Z is exact-dimensional with dimension min{1, -h̄_0/λ̄}. Compared with the source: faithful; System.ProjExpSeparation is their Definition 1 verbatim, and the reduction is from the two-sided to the one-sided shift. eq:gibbs_proj_dim is the conclusion of System.marginal_decomposition. The full Gibbs dimension formulas use JordanRapaportDimension plus the GibbsDecomposition entropy and Lyapunov identities; the theorems equilibriumGibbs and fraserJordanJurgaDecomposition_holds supply the decomposition from the equilibrium hypotheses."
+    note: "Jordan–Rapaport, Theorem 1.1 (Proc. Lond. Math. Soc. 122 (2021), arXiv:1908.00271), is JordanRapaportDimension: under the projective exponential separation condition the projection of an ergodic measure on Σ_Z is exact-dimensional with dimension min{1, -h̄_0/λ̄}. The library proves it (jordanRapaportDimension_of_shmerkin, BoxLike/JordanRapaport.lean) along Section 2 of the source from ShmerkinLqDimension, the lower bound of Shmerkin's Theorem 6.6 (Ann. of Math. (2) 189 (2019), arXiv:1609.07802v3) on the L^q dimension of self-similar measures with exponential separation, authorised on 2026-10-21 and proved in the library along the source (shmerkinLqDimension_holds, BoxLike/Shmerkin.lean, with Bourgain's structure theorem in a weak form that suffices). Compared with the sources: faithful; System.ProjExpSeparation is Jordan–Rapaport's Definition 1 verbatim and implies Shmerkin's Definition 6.5 for every block system, and the reduction is from the two-sided to the one-sided shift. eq:gibbs_proj_dim is the conclusion of System.marginal_decomposition. The full Gibbs dimension formulas use JordanRapaportDimension plus the GibbsDecomposition entropy and Lyapunov identities; the theorems equilibriumGibbs and fraserJordanJurgaDecomposition_holds supply the decomposition from the equilibrium hypotheses."
   - source: "Distinct Lyapunov exponents eq:simple_lyapunov"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -786,11 +786,11 @@ entries:
     end: "$\\dimh(X)=\\dimaff(X)$ despite the failure of projective exponential separation."
     sha256: "473235ad80cb6ef390eddb94280207fd04b69642ec4a931dcf22db724f241ad6"
     status: "formalized"
-    lean: ["BoxLike.NoOverlap.Params.sum_abs_det_lt_one", "BoxLike.System.dimaff_lt_of_pressure_neg", "BoxLike.System.dimaff_lt_two_of_sum_abs_det_lt_one", "BoxLike.NoOverlap.dimH_eq_dimaff'"]
-    hypotheses: ["BoxLike.NoOverlap.BaranyKaenmakiTheorem", "BoxLike.FengLedrappierYoung", "BoxLike.KittleKoglerDimension"]
+    lean: ["BoxLike.NoOverlap.Params.sum_abs_det_lt_one", "BoxLike.System.dimaff_lt_of_pressure_neg", "BoxLike.System.dimaff_lt_two_of_sum_abs_det_lt_one", "BoxLike.NoOverlap.dimH_eq_dimaff", "BoxLike.NoOverlap.dimH_eq_dimaff_aligned"]
+    hypotheses: []
     relation: "exact"
     headline: false
-    note: "The source-faithful prime endpoint proves the example has dim_H=dimaff from BaranyKaenmakiTheorem and the literature inputs FengLedrappierYoung and KittleKoglerDimension of the main2 endpoint it applies; no transcendence premise. The endpoint also takes FengLedrappierYoungBar, which follows from FengLedrappierYoung (fengLedrappierYoungBar_of_fengLedrappierYoung)."
+    note: "The endpoints prove the example has dim_H=dimaff from BaranyKaenmakiPair, which the library proves (baranyKaenmakiPair_holds), and FengLedrappierYoung for the main2 endpoint they apply, which the library proves (fengLedrappierYoung_holds); dimH_eq_dimaff_aligned takes no Barany-Kaenmaki hypothesis. The endpoint also takes FengLedrappierYoungBar, which the library proves (fengLedrappierYoungBar_holds), and KittleKoglerDimension, which is the library theorem kittleKoglerDimension_holds."
   - source: "Singular value function"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"

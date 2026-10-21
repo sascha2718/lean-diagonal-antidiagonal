@@ -4,16 +4,18 @@ module
 `BoxLike`: a formalisation of `diagonal-antidiagonal.tex`, "Hausdorff dimension of planar
 box-like self-affine sets with rotations" (Allen, Käenmäki, Prokaj, Simon, Troscheit).
 
-The library is built on Mathlib alone, contains no `sorry` and declares no axiom: every
-constant depends on `propext`, `Classical.choice` and `Quot.sound` only. Literature theorems
+The library is built on Mathlib and on the Lean formalisation of Kittle–Kogler's exact
+overlaps theorem by its authors, the library `ExactOverlaps` carried verbatim in `vendor/`
+(`BoxLike/KittleKogler.lean`); it contains no `sorry` and declares no axiom: every constant
+depends on `propext`, `Classical.choice` and `Quot.sound` only. Literature theorems
 cited by the article without proof are `Prop`-valued definitions of the modules
 `BoxLike/Literature.lean`, `BoxLike/LiteratureFeng.lean`, `BoxLike/LiteraturePlanarFeng.lean`,
 `BoxLike/LiteratureFengKaenmaki.lean` and `BoxLike/LiteratureRemarks.lean`, and every result that
 uses one takes it as a hypothesis; the last module holds the ones that no main result depends
-on. The library proves several of these statements, and `Solution.lean` passes the proofs to
-the results that take them. A premise that is not authorised goes in `BoxLike/Proposals/`,
-which this module does not import; none is pending. `docs/correspondence.md` records the state
-of every numbered result, the remaining work and the fidelity boundary.
+on. The library proves every statement the headline results take, and `Solution.lean` passes
+the proofs to the results that take them. A premise that is not authorised goes in `BoxLike/Proposals/`,
+which this module does not import; none is pending. `docs/correspondence.md` records the state of every numbered result, the remaining work
+and the fidelity boundary.
 
 * `Orientation`: the two-sided shift `σ^n` and the orientation cocycle `ε_n` of
   `eq:def_of_eps_mod2`, with the cocycle identity `eq:tau_omega_sigma_commutative1`.
@@ -44,8 +46,8 @@ of every numbered result, the remaining work and the fidelity boundary.
 * `Thermodynamic`: Lyapunov exponents, `eq:eq_state_def`, the potentials `f_{1,s}`, `f_{2,s}`,
   Gibbs measures on `Σ_Z`, the conclusion of `thm:eq_state_is_sum`, the coordinate marginals.
 * `Literature`: the literature theorems of the main line as `Prop`s: Morris–Shmerkin,
-  Feng–Käenmäki (the Gibbs bounds), Fraser–Jordan–Jurga, Jordan–Rapaport, Kittle–Kogler. The
-  library proves the statements of Morris–Shmerkin, Feng–Käenmäki and Fraser–Jordan–Jurga.
+  Feng–Käenmäki (the Gibbs bounds), Fraser–Jordan–Jurga, Jordan–Rapaport, Kittle–Kogler and
+  Shmerkin's `L^q` dimension theorem. The library proves every one of them.
 * `Main`: `thm:entropy_eq_gibbs` and the decomposition `eq:proj_eq_is_sum`, `eq:gibbs_proj_dim`
   of the coordinate marginals, for a tuple containing a proximal diagonal generator.
 * `Proximal`: proximal matrices and tuples, `thm:box_like_proximal`.
@@ -134,6 +136,24 @@ of every numbered result, the remaining work and the fidelity boundary.
   entropy over the cylinders (`equilibriumGibbs`, `System.irred_eq_state_of_withRotations`).
 * `MorrisShmerkin`: `eq:simple_lyapunov` from Morris–Shmerkin's Lemmas 3.4 and 3.5, proved, and
   the statement `MorrisShmerkinLyapunov` (`morrisShmerkinLyapunov_holds`).
+* `KittleKogler`: the statement `KittleKoglerDimension` (`kittleKoglerDimension_holds`), from the
+  Lean formalisation of Kittle–Kogler's Theorem 1.1 by its authors, the library `ExactOverlaps`
+  in `vendor/`.
+* `FengHu`: the statement `FengHuExactDim` (`fengHuExactDim_holds`), Feng–Hu's Theorem 2.8 for
+  the projective system `Ψ`, along Feng–Hu's density argument with no literature premise.
+* `JordanRapaport`: the statement `JordanRapaportDimension` from `ShmerkinLqDimension`
+  (`jordanRapaportDimension_of_shmerkin`), along Section 2 of
+  Jordan–Rapaport: block Bernoulli measures, Shmerkin's Lemma 1.7 and the counting of the typical
+  cylinders.
+* `FengLedrappierYoung`: the statements `PlanarFengLedrappierYoung`
+  (`planarFengLedrappierYoung_holds`), `FengLedrappierYoung` (`fengLedrappierYoung_holds`) and
+  `FengLedrappierYoungBar` (`fengLedrappierYoungBar_holds`), Feng's Theorems 1.2 (ii) and 1.3 in
+  the plane, along Feng's Sections 4 to 6 with no literature premise.
+* `Shmerkin`: the statement `ShmerkinLqDimension` (`shmerkinLqDimension_holds`), the lower bound
+  of Shmerkin's Theorem 6.6 on the `L^q` dimension of self-similar measures, along the source
+  (`BoxLike/Shmerkin/`): the inverse theorem for `L^q` norms of convolutions from the asymmetric
+  Balog–Szemerédi–Gowers theorem and a weak form of Bourgain's structure theorem, proved from
+  Hochman's saturation theorem of the vendored library `ExactOverlaps`.
 * `Fraser`: `thm:fraser` for every box-like self-affine set, with no literature premise: the
   upper bound `\overline{\dim}_M X ≤ dimmaff(X)` after Fraser's §5 (`Upper`) and the statement
   `System.FraserBound` (`UpperBound`, `System.fraserBound_holds`); the `δ`-stoppings and Fraser's
@@ -150,8 +170,8 @@ of every numbered result, the remaining work and the fidelity boundary.
   the statements `FengKaenmakiNormEquilibrium`, `FengKaenmakiGibbs` and `FengKaenmakiUnique` hold
   (`fengKaenmakiNormEquilibrium_holds`, `fengKaenmakiGibbs_holds`, `fengKaenmakiUnique_holds`).
 * `LiteratureRemarks`: the literature theorems that no main result depends on, as `Prop`s:
-  Feng–Hu, Theorem 2.8, and the uniqueness part of `thm:irred_eq_state`, which
-  `QuasiMultiplicative` proves.
+  Feng–Hu, Theorem 2.8, which `FengHu` proves, and the uniqueness part of `thm:irred_eq_state`,
+  which `QuasiMultiplicative` proves.
 * `NoSeparation`: the remark before `thm:eq_state_proj_dim` that the coordinate marginals are
   double-dimensional without separation, and the uniqueness of `μ^(2)` in
   `thm:two-block-normalisation`.
@@ -200,7 +220,13 @@ of every numbered result, the remaining work and the fidelity boundary.
 * `NoOverlapExampleFree`: the algebraic part of `prop:ssc_no_overlap_not_pesc`: algebraically
   independent parameters and the freeness of the semigroup generated by the projective system.
 * `NoOverlapExample`: `prop:ssc_no_overlap_not_pesc` and the paragraph after its proof, with the
-  theorem of Bárány and Käenmäki as a hypothesis.
+  theorem of Bárány and Käenmäki as a hypothesis, in the form the article uses and in the form
+  of the source.
+* `BaranyKaenmaki`: the form the article uses, `NoOverlap.BaranyKaenmakiPair`, proved by a Baire
+  category argument (`NoOverlap.baranyKaenmakiPair_holds`), a corrected form of Theorem 2.1 of
+  the source, and `prop:ssc_no_overlap_not_pesc` with no literature hypothesis.
+* `BaranyKaenmakiCounterexample`: Theorem 2.1 of the source as stated,
+  `NoOverlap.BaranyKaenmakiTheorem`, is false (`NoOverlap.not_baranyKaenmakiTheorem`).
 * `Subsystem`: finite subsystems `(φ_{w_k})_k` of a box-like system, the absence of exact
   overlaps of their coordinate maps, and their unique coding inside a feasible open set.
 * `TypicalWords`: the families `W_n` of diagonal words of the proof of `thm:main2`, with
@@ -388,6 +414,8 @@ public import BoxLike.Aligned.BoxLikeProximal
 public import BoxLike.Aligned.NoOverlapPESCParams
 public import BoxLike.Aligned.NoOverlapPESCFree
 public import BoxLike.Aligned.NoOverlapPESC
+public import BoxLike.BaranyKaenmaki
+public import BoxLike.BaranyKaenmakiCounterexample
 public import BoxLike.Aligned.NoOverlapPESCDim
 public import BoxLike.SMB.Maker
 public import BoxLike.SMB.PastInformation
@@ -431,6 +459,11 @@ public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.Support.RelativeEntropy
 public import BoxLike.EquilibriumGibbs
 public import BoxLike.MorrisShmerkin
+public import BoxLike.KittleKogler
+public import BoxLike.FengHu
+public import BoxLike.JordanRapaport
+public import BoxLike.FengLedrappierYoung
+public import BoxLike.Shmerkin
 public import BoxLike.Fraser.Upper
 public import BoxLike.Fraser.UpperBound
 public import BoxLike.Fraser.LowerStop

@@ -11,9 +11,9 @@ Completed headline proofs and supporting results for the three theorems in `Chal
 R. D. Prokaj, K. Simon and S. Troscheit, *Hausdorff dimension of planar box-like self-affine
 sets with rotations*. Theorem and equation numbers refer to the manuscript. Each proof applies
 the corresponding theorem of the library `BoxLike` to the system `toLib S`, through the
-identifications of `Solution.Transport`; each cited theorem passes from its challenge statement
-to its library statement. `Solution.Definitions` repeats the challenge vocabulary without
-importing `Challenge.lean`.
+identifications of `Solution.Transport`; each cited theorem passes from its challenge
+statement to its library statement. `Solution.Definitions` repeats the challenge vocabulary
+without importing `Challenge.lean`.
 -/
 
 namespace Challenge
@@ -32,10 +32,12 @@ double-dimensional with the values `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and `min{1,
 It fails to be exact-dimensional, with any dimension, precisely when
 `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`; at equality and above it is exact-dimensional of dimension one.
 The conclusion holds for every `s`-equilibrium state, so the uniqueness of the equilibrium state
-in the paper is not needed. The proof uses the cited theorem of Jordan–Rapaport; the inputs
-the paper takes from Morris–Shmerkin and Feng–Käenmäki are theorems of the library. -/
+in the paper is not needed. The proof uses Shmerkin's theorem
+(`BoxLike.shmerkinLqDimension_holds`) through Jordan–Rapaport's argument
+(`BoxLike.jordanRapaportDimension_of_shmerkin`); the inputs the paper takes from Morris–Shmerkin
+and Feng–Käenmäki are theorems of the library. -/
 theorem audit_main1 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-    (S : System ι) (hjr : JordanRapaportDimension.{u})
+    (S : System ι)
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ) (c : ZMod 2) :
@@ -44,12 +46,14 @@ theorem audit_main1 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableS
       ((¬ ∃ d, IsExactDim (S.marginal c μ) d) ↔
         S.dimaff < 2 - S.lyapunov₁ μ / S.lyapunov₂ μ) ∧
       (2 - S.lyapunov₁ μ / S.lyapunov₂ μ ≤ S.dimaff → IsExactDim (S.marginal c μ) 1) := by
+  have hjr : BoxLike.JordanRapaportDimension.{u} :=
+    BoxLike.jordanRapaportDimension_of_shmerkin BoxLike.shmerkinLqDimension_holds
   simp only [withRotations_iff, proximal_iff, projExpSeparation_iff, dimaff_eq, shift_eq,
     isEquilibriumState_iff] at hrot hprox hsep hinv heq
   simp only [isDoubleDim_iff, isExactDim_iff, marginal_eq, entropy_eq, lyapunov₁_eq,
     lyapunov₂_eq, dimaff_eq]
   exact (toLib S).main1_dimaff_all BoxLike.morrisShmerkinLyapunov_holds BoxLike.equilibriumGibbs
-    BoxLike.fraserJordanJurgaDecomposition_holds (jordanRapaportDimension hjr) hrot hprox hsep μ
+    BoxLike.fraserJordanJurgaDecomposition_holds hjr hrot hprox hsep μ
     hinv heq c
 
 /-- Theorem 4.4 (`thm:eq_state_proj_dim`). Let `X` be a proximal box-like self-affine set with
@@ -59,11 +63,12 @@ rotations satisfying the projective exponential separation condition, and let `�
 `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and `min{1, -h_0(μ)/λ_2(𝖠, μ)}`, their upper packing dimension is
 `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and their lower Hausdorff dimension is `min{1, -h_0(μ)/λ_2(𝖠, μ)}`.
 The conclusion holds for every `s`-equilibrium state, so its uniqueness and ergodicity in the
-paper are not needed. The proof uses the cited theorem of Jordan–Rapaport; the inputs the
-paper takes from Morris–Shmerkin and Feng–Käenmäki are theorems of the library. -/
+paper are not needed. The proof uses Shmerkin's theorem (`BoxLike.shmerkinLqDimension_holds`)
+through Jordan–Rapaport's argument (`BoxLike.jordanRapaportDimension_of_shmerkin`); the inputs
+the paper takes from Morris–Shmerkin and Feng–Käenmäki are theorems of the library. -/
 theorem audit_eq_state_proj_dim {ι : Type u} [Fintype ι] [MeasurableSpace ι]
     [MeasurableSingletonClass ι] (S : System ι) {s : ℝ}
-    (hjr : JordanRapaportDimension.{u}) (hrot : S.WithRotations) (hprox : S.Proximal)
+    (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) (c : ZMod 2) :
@@ -71,13 +76,15 @@ theorem audit_eq_state_proj_dim {ι : Type u} [Fintype ι] [MeasurableSpace ι]
         (min 1 (-entropy μ / S.lyapunov₂ μ)) ∧
       upperPackingDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₁ μ) ∧
       lowerHausdorffDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₂ μ) := by
+  have hjr : BoxLike.JordanRapaportDimension.{u} :=
+    BoxLike.jordanRapaportDimension_of_shmerkin BoxLike.shmerkinLqDimension_holds
   simp only [withRotations_iff, proximal_iff, projExpSeparation_iff, shift_eq,
     isEquilibriumState_iff] at hrot hprox hsep hinv heq
   simp only [isDoubleDim_iff, upperPackingDim_eq, lowerHausdorffDim_eq, marginal_eq, entropy_eq,
     lyapunov₁_eq, lyapunov₂_eq]
   exact (toLib S).eq_state_proj_dim_all BoxLike.morrisShmerkinLyapunov_holds
     BoxLike.equilibriumGibbs BoxLike.fraserJordanJurgaDecomposition_holds
-    (jordanRapaportDimension hjr) hrot hprox hsep hs0 μ hinv heq c
+    hjr hrot hprox hsep hs0 μ hinv heq c
 
 /-! ## Dimension of the equilibrium state and of the self-affine set -/
 
@@ -85,11 +92,13 @@ theorem audit_eq_state_proj_dim {ι : Type u} [Fintype ι] [MeasurableSpace ι]
 whose projective system has no exact overlaps, and let `μ` be an
 `s`-equilibrium state for `s = dimaff(X)`. If
 `dimaff(X) ≤ 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`, or if `X` satisfies the strong open set condition, then
-`dim_H(X) = dimaff(X)`. Any `s`-equilibrium state may serve as `μ`. The proof uses the cited
-theorems of Feng (the planar Ledrappier–Young formula) and Kittle–Kogler; the inputs the paper
-takes from Morris–Shmerkin and Feng–Käenmäki are theorems of the library. -/
+`dim_H(X) = dimaff(X)`. Any `s`-equilibrium state may serve as `μ`. No cited theorem is used:
+Feng's planar Ledrappier–Young formula is the library theorem `BoxLike.fengLedrappierYoung_holds`,
+Kittle–Kogler's dimension formula is the library theorem `BoxLike.kittleKoglerDimension_holds`,
+derived from its authors' Lean formalisation, and the inputs the paper takes from Morris–Shmerkin
+and Feng–Käenmäki are theorems of the library. -/
 theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-    (S : System ι) (hly : FengLedrappierYoung.{u}) (hkk : KittleKoglerDimension.{u})
+    (S : System ι)
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hfree : S.NoExactOverlaps) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
@@ -101,34 +110,36 @@ theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableS
     at hrot hprox hfree hinv heq hor
   rw [attractor_eq, dimaff_eq]
   exact (toLib S).main2_prose BoxLike.shannonMcMillanBreiman BoxLike.morrisShmerkinLyapunov_holds
-    BoxLike.equilibriumGibbs BoxLike.fraserJordanJurgaDecomposition_holds (fengLedrappierYoung hly)
-    (kittleKoglerDimension hkk) hrot hprox hfree μ hinv heq hor
+    BoxLike.equilibriumGibbs BoxLike.fraserJordanJurgaDecomposition_holds BoxLike.fengLedrappierYoung_holds
+    BoxLike.kittleKoglerDimension_holds hrot hprox hfree μ hinv heq hor
 
 /-- Theorem 4.16 (`thm:main_extended`). Let `X` be a proximal box-like self-affine set with
 rotations satisfying the projective exponential separation condition, and let `μ` be an
 `s`-equilibrium state for `s = dimaff(𝖠)`. If `h_0(μ) ≤ -λ_2(𝖠, μ)` or `X` satisfies the strong
 open set condition, then `π_*μ` is exact-dimensional with `dim(π_*μ) = min{2, dimaff(𝖠)}`. The
 conclusion holds for every `s`-equilibrium state, so its uniqueness in the paper is not needed.
-The proof uses the cited theorems of Jordan–Rapaport and Feng (the planar Ledrappier–Young
-formula, which gives the scalar one through
-`BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung`); the inputs the paper takes from
-Morris–Shmerkin and Feng–Käenmäki are theorems of the library. -/
+The proof uses Shmerkin's theorem (`BoxLike.shmerkinLqDimension_holds`) through
+Jordan–Rapaport's argument (`BoxLike.jordanRapaportDimension_of_shmerkin`); Feng's planar
+Ledrappier–Young formula and the scalar one are the library theorems
+`BoxLike.fengLedrappierYoung_holds` and `BoxLike.fengLedrappierYoungBar_holds`, and the inputs
+the paper takes from Morris–Shmerkin and Feng–Käenmäki are theorems of the library. -/
 theorem audit_main_extended {ι : Type u} [Fintype ι] [MeasurableSpace ι]
-    [MeasurableSingletonClass ι] (S : System ι) (hjr : JordanRapaportDimension.{u})
-    (hly : FengLedrappierYoung.{u})
+    [MeasurableSingletonClass ι] (S : System ι)
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsep : S.ProjExpSeparation) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
     (hor : entropy μ ≤ -S.lyapunov₂ μ ∨ S.StrongOpenSet) :
     IsExactDim (μ.map S.proj) (min 2 S.dimaff) := by
+  have hjr : BoxLike.JordanRapaportDimension.{u} :=
+    BoxLike.jordanRapaportDimension_of_shmerkin BoxLike.shmerkinLqDimension_holds
   simp only [withRotations_iff, proximal_iff, projExpSeparation_iff, dimaff_eq, shift_eq,
     isEquilibriumState_iff, entropy_eq, lyapunov₂_eq, strongOpenSet_iff]
     at hrot hprox hsep hinv heq hor
   rw [isExactDim_iff, proj_eq, dimaff_eq]
   exact (toLib S).main_extended_min BoxLike.morrisShmerkinLyapunov_holds BoxLike.equilibriumGibbs
-    BoxLike.fraserJordanJurgaDecomposition_holds (jordanRapaportDimension hjr)
-    BoxLike.fengInfoSum_holds BoxLike.fengInfoSumBar_holds (fengLedrappierYoung hly)
-    (BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung (fengLedrappierYoung hly)) hrot hprox
+    BoxLike.fraserJordanJurgaDecomposition_holds hjr
+    BoxLike.fengInfoSum_holds BoxLike.fengInfoSumBar_holds BoxLike.fengLedrappierYoung_holds
+    BoxLike.fengLedrappierYoungBar_holds hrot hprox
     hsep μ hinv heq hor
 
 /-- Theorem 4.16 (`thm:main_extended`), the case `s = dimaff(𝖠) ≥ 2`, with `s` entering as a
@@ -154,27 +165,30 @@ the formula that the paper derives in the paragraph after (4.4)
 `dim(π_*μ) ≤ dim_H(X)`, and the upper bound is Falconer's bound (3.7)
 (`eq:hausdorff_affinity_upper_bound`), which holds for every box-like set. For `dimaff(X) < 2`
 and the first alternative in the form `dimaff(X) ≤ 2 - λ_1/λ_2` this is Theorem 1.3. Any
-`s`-equilibrium state for `s = dimaff(X)` may serve as `μ`. The proof uses the cited theorems
-of Jordan–Rapaport and Feng (the planar Ledrappier–Young formula, which gives the scalar one
-through `BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung`); the inputs the paper takes from
-Morris–Shmerkin and Feng–Käenmäki are theorems of the library. -/
+`s`-equilibrium state for `s = dimaff(X)` may serve as `μ`. The proof uses Shmerkin's theorem
+(`BoxLike.shmerkinLqDimension_holds`) through Jordan–Rapaport's argument
+(`BoxLike.jordanRapaportDimension_of_shmerkin`); Feng's planar Ledrappier–Young formula and the
+scalar one are the library theorems `BoxLike.fengLedrappierYoung_holds` and
+`BoxLike.fengLedrappierYoungBar_holds`, and the inputs the paper takes from Morris–Shmerkin and
+Feng–Käenmäki are theorems of the library. -/
 theorem audit_dimH_eq_min {ι : Type u} [Fintype ι] [MeasurableSpace ι]
-    [MeasurableSingletonClass ι] (S : System ι) (hjr : JordanRapaportDimension.{u})
-    (hly : FengLedrappierYoung.{u})
+    [MeasurableSingletonClass ι] (S : System ι)
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsep : S.ProjExpSeparation) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
     (hor : entropy μ ≤ -S.lyapunov₂ μ ∨ S.StrongOpenSet) :
     dimH S.attractor = ENNReal.ofReal (min 2 S.dimaff) := by
+  have hjr : BoxLike.JordanRapaportDimension.{u} :=
+    BoxLike.jordanRapaportDimension_of_shmerkin BoxLike.shmerkinLqDimension_holds
   simp only [withRotations_iff, proximal_iff, projExpSeparation_iff, dimaff_eq, shift_eq,
     isEquilibriumState_iff, entropy_eq, lyapunov₂_eq, strongOpenSet_iff]
     at hrot hprox hsep hinv heq hor
   rw [attractor_eq, dimaff_eq]
   exact (toLib S).dimH_attractor_eq_min BoxLike.morrisShmerkinLyapunov_holds
     BoxLike.equilibriumGibbs BoxLike.fraserJordanJurgaDecomposition_holds
-    (jordanRapaportDimension hjr) BoxLike.fengInfoSum_holds BoxLike.fengInfoSumBar_holds
-    (fengLedrappierYoung hly)
-    (BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung (fengLedrappierYoung hly)) hrot hprox
+    hjr BoxLike.fengInfoSum_holds BoxLike.fengInfoSumBar_holds
+    BoxLike.fengLedrappierYoung_holds
+    BoxLike.fengLedrappierYoungBar_holds hrot hprox
     hsep μ hinv heq hor
 
 /-- `dim_H(X) = 2` when `dimaff(X) ≥ 2` and `X` satisfies the strong open set condition: the
@@ -289,8 +303,11 @@ theorem paper_1_1_14 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.Syste
 
 -- PAPER_ENTRY thm:main1
 /-! 1.2 (`thm:main1`): formalized.
-Literature hypotheses: BoxLike.JordanRapaportDimension.
-  BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
+Literature hypotheses: none.
+Proved input: BoxLike.ShmerkinLqDimension (`shmerkinLqDimension_holds`, Shmerkin, Theorem 6.6,
+proved in BoxLike/Shmerkin.lean along the source), which gives Jordan-Rapaport, Theorem 1.1
+(BoxLike.JordanRapaportDimension, `jordanRapaportDimension_of_shmerkin`,
+BoxLike/JordanRapaport.lean).
 Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
 proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
 statements take it as a hypothesis and Solution discharges it.
@@ -326,9 +343,14 @@ noncomputable abbrev paper_1_2_6 := @BoxLike.System.eq_state_proj_dim_all
 
 -- PAPER_ENTRY thm:main2
 /-! 1.3 (`thm:main2`): formalized.
-Literature hypotheses: BoxLike.FengLedrappierYoung, BoxLike.KittleKoglerDimension.
-  BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
-  BoxLike.KittleKoglerDimension: Kittle-Kogler, Theorem 1.1, arXiv:2610.10511v1, 7 October 2026.
+Literature hypotheses: none.
+Proved input: BoxLike.FengLedrappierYoung (`fengLedrappierYoung_holds`, Feng, Theorems 1.2 and 1.3,
+proved in BoxLike/FengLedrappierYoung.lean from the planar statement, along Feng's Sections 4 to 6
+in the plane); the library statements take it as a hypothesis and Solution discharges it.
+Proved input: BoxLike.KittleKoglerDimension (`kittleKoglerDimension_holds`, Kittle-Kogler,
+Theorem 1.1, arXiv:2610.10511v1, 7 October 2026, derived in BoxLike/KittleKogler.lean from the
+authors' Lean formalisation of the source, the library ExactOverlaps in vendor/); the library
+statements take it as a hypothesis and Solution discharges it.
 Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
 proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
 statements take it as a hypothesis and Solution discharges it.
@@ -368,8 +390,8 @@ averages (`frequently_measure_inter_shift_ge`) along infinitely many lengths; th
 mixing of μ₁, which is not formalised and not needed.
 
 PROOF DEVIATION: the scalar formula for the coordinate entropies of the diagonal subsystem
-(tex 3716-3721) is derived from the authorised planar `FengLedrappierYoung` applied to the
-auxiliary box-like system `lineSystem` (z ↦ diag(r, r/2) z + (t_k, 0)), which carries the line
+(tex 3716-3721) is derived from the planar `FengLedrappierYoung`, a theorem of the library
+(`fengLedrappierYoung_holds`), applied to the auxiliary box-like system `lineSystem` (z ↦ diag(r, r/2) z + (t_k, 0)), which carries the line
 system on the horizontal axis; the prose cites Feng's scalar theorem directly. The same
 argument gives the scalar formula for the projective system of every box-like system from
 `FengLedrappierYoung` (`System.isExactDim_map_projBar_of_fengLedrappierYoung`); this proof does
@@ -542,20 +564,25 @@ noncomputable abbrev paper_2_6_2 := @BoxLike.System.gap_le_diagGap
 
 -- PAPER_ENTRY prop:ssc_no_overlap_not_pesc
 /-! 2.7 (`prop:ssc_no_overlap_not_pesc`): formalized.
-Literature hypotheses: BoxLike.NoOverlap.BaranyKaenmakiTheorem.
-  BoxLike.NoOverlap.BaranyKaenmakiTheorem: Barany-Kaenmaki, Theorem 2.1.
+Literature hypotheses: none.
+Proved input: BoxLike.NoOverlap.BaranyKaenmakiPair (`baranyKaenmakiPair_holds`, the theorem of
+Barany-Kaenmaki in the form the article uses: a free pair with Δ_n ≤ C_0 exp(-n²) for all n ≥ 1,
+proved in BoxLike/BaranyKaenmaki.lean by a Baire category argument); the endpoint takes it as a
+hypothesis and `prop_ssc_no_overlap_not_pesc_holds` discharges it. Theorem 2.1 of the source as
+stated, BoxLike.NoOverlap.BaranyKaenmakiTheorem, is false (`not_baranyKaenmakiTheorem` in
+BoxLike/BaranyKaenmakiCounterexample.lean); the citation at tex lines 1424 to 1429 should refer
+to the proof of Theorem 2.1, which gives the bound with a constant, see docs/correspondence.md.
 
-Other inputs: Only the displayed universal cited theorem premise; all construction parameters and
-all stated properties are produced in Lean
+Other inputs: all construction parameters and all stated properties are produced in Lean
 
 Fidelity: Exact four-map, three-diagonal/one-antidiagonal construction, proximality,
 irreducibility, failure of strong irreducibility, proximal diagonal generator, SSC, free full
 projective semigroup and failure of PESC. Lean also proves determinant sum<1. Freeness includes
 all words, not merely admissible orientation paths. The prose requests no transcendence of
-lambda; both endpoints take the source theorem `BaranyKaenmakiTheorem`.
+lambda; the endpoint takes `BaranyKaenmakiPair`, which holds.
 
 Proof: the prose argument (`NoOverlap.prop_ssc_no_overlap_not_pesc`, the same statement and
-premise as `ssc_no_overlap_not_pesc'`). The parameters lie outside the countable union of proper
+premise as `ssc_no_overlap_not_pesc`). The parameters lie outside the countable union of proper
 algebraic hypersurfaces over Q(λ,t) (Baire). Freeness goes through the multiplicative
 independence of λ, r_1..r_5, equal symbol counts and lengths, freeness of the conjugated three-map
 subsystem, the no-r coefficient of the translation variable of the first non-λ symbol and the
@@ -565,7 +592,7 @@ transcendental route (`exists_params`, `Params.freeProjective`) is a retained al
 not used by the endpoint.
 -/
 noncomputable abbrev paper_2_7_1 := @BoxLike.NoOverlap.prop_ssc_no_overlap_not_pesc
-noncomputable abbrev paper_2_7_2 := @BoxLike.NoOverlap.exists_pair_of_baranyKaenmakiTheorem
+noncomputable abbrev paper_2_7_2 := @BoxLike.NoOverlap.baranyKaenmakiPair_holds
 noncomputable abbrev paper_2_7_3 := @BoxLike.NoOverlap.exists_params_not_mem_exceptionalSet
 noncomputable abbrev paper_2_7_4 := @BoxLike.NoOverlap.Params.mulIndependent
 noncomputable abbrev paper_2_7_5 := @BoxLike.NoOverlap.Params.count_eq_of_gDeriv_eq
@@ -573,7 +600,7 @@ noncomputable abbrev paper_2_7_6 := @BoxLike.NoOverlap.eq_of_valPoly_eq
 noncomputable abbrev paper_2_7_7 := @BoxLike.NoOverlap.Params.freeProjective_of_mulIndependent
 noncomputable abbrev paper_2_7_8 := @BoxLike.NoOverlap.Params.strongSeparation
 noncomputable abbrev paper_2_7_9 := @BoxLike.NoOverlap.Params.not_projExpSeparation
-noncomputable abbrev paper_2_7_10 := @BoxLike.NoOverlap.ssc_no_overlap_not_pesc'
+noncomputable abbrev paper_2_7_10 := @BoxLike.NoOverlap.prop_ssc_no_overlap_not_pesc_holds
 
 -- PAPER_ENTRY thm:lyapunov_exponents_via_g_system
 /-! 3.1 (`thm:lyapunov_exponents_via_g_system`): formalized.
@@ -1100,16 +1127,19 @@ noncomputable abbrev paper_4_1_5 := @BoxLike.IsExactDim.measure_hasLocalDim_add_
 noncomputable abbrev paper_4_1_6 := @BoxLike.isExactDim_add_iff
 
 -- PAPER_ENTRY thm:feng1
-/-! 4.2 (`thm:feng1`): cited.
-Literature hypotheses: BoxLike.PlanarFengLedrappierYoung; the headlines use the box-like
-specialisation BoxLike.FengLedrappierYoung.
-  BoxLike.PlanarFengLedrappierYoung: Feng, Duke Math. J. 172 (2023), Theorems 1.2 (ii) and 1.3,
-    formula (1.6), for planar self-affine systems (arXiv:1901.01691v2); authorised by the
-    project owner.
-  BoxLike.FengLedrappierYoung: its box-like specialisation
-    (`PlanarFengLedrappierYoung.fengLedrappierYoung`).
-Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
-the second part of thm:feng1 from FengLedrappierYoung, proved in
+/-! 4.2 (`thm:feng1`): formalized.
+Literature hypotheses: none.
+Proved input: BoxLike.PlanarFengLedrappierYoung (`planarFengLedrappierYoung_holds`, Feng, Duke
+Math. J. 172 (2023), Theorems 1.2 (ii) and 1.3, formula (1.6), for planar self-affine systems,
+arXiv:1901.01691v2; proved in BoxLike/FengLedrappierYoung.lean along Feng's Sections 4 to 6 in the
+plane: the claims (C1) to (C3) by general theorems about nested measurable partitions,
+Proposition 5.1 from the planar form of Lemma 5.4, Proposition 5.5 by Besicovitch differentiation
+and the weak maximal inequality on the atoms); `planar_feng1` takes it as a hypothesis and
+`paper_4_2_12` discharges it.
+Proved input: BoxLike.FengLedrappierYoung (`fengLedrappierYoung_holds`), its box-like
+specialisation (`PlanarFengLedrappierYoung.fengLedrappierYoung`).
+Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_holds`, the second part of
+thm:feng1 from the first, `fengLedrappierYoungBar_of_fengLedrappierYoung` in
 BoxLike/ProjectiveLineSystem.lean); `planar_feng1` takes it as a hypothesis and `paper_4_2_10`
 discharges it from BoxLike.PlanarFengLedrappierYoung.
 
@@ -1118,8 +1148,8 @@ probability measure, λ₂<λ₁. Scalar clause: proximal box-like System with r
 invariant probability measure carried by Σ_Z; its proof needs neither rotations nor
 proximality.
 
-Fidelity: both clauses at the article's scope (`planar_feng1`), as cited results; the article
-gives no proof. Both follow from PlanarFengLedrappierYoung (`paper_4_2_11`): the planar clause
+Fidelity: both clauses at the article's scope (`planar_feng1`), proved (`paper_4_2_12`); the
+article gives no proof. Both follow from PlanarFengLedrappierYoung (`paper_4_2_11`): the planar clause
 is `PlanarSystem.feng1`, and the scalar clause is the planar formula for the planar system
 z ↦ diag(g'_j, g'_j/2) z + (g_j(0), 0) of the projective system, whose attractor lies on the
 horizontal axis, whose exponents are \overline{λ} and \overline{λ} - log 2 and whose partitions
@@ -1159,6 +1189,9 @@ theorem paper_4_2_11 (h : PlanarFengLedrappierYoung.{u}) :
       IsExactDim (ν.map S.projBar)
         ((S.dimEntropyBar ν 1 - S.dimEntropyBar ν 0) / S.lyapBar ν)) :=
   planar_feng1 h (paper_4_2_10 h)
+noncomputable abbrev paper_4_2_12 := @BoxLike.planarFengLedrappierYoung_holds
+noncomputable abbrev paper_4_2_13 := @BoxLike.fengLedrappierYoung_holds
+noncomputable abbrev paper_4_2_14 := @BoxLike.fengLedrappierYoungBar_holds
 
 -- PAPER_ENTRY thm:entropy_eq_gibbs
 /-! 4.3 (`thm:entropy_eq_gibbs`): formalized.
@@ -1197,8 +1230,11 @@ noncomputable abbrev paper_4_3_8 := @BoxLike.System.dimEntropyBar_zero_eq_entrop
 
 -- PAPER_ENTRY thm:eq_state_proj_dim
 /-! 4.4 (`thm:eq_state_proj_dim`): formalized.
-Literature hypotheses: BoxLike.JordanRapaportDimension.
-  BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
+Literature hypotheses: none.
+Proved input: BoxLike.ShmerkinLqDimension (`shmerkinLqDimension_holds`, Shmerkin, Theorem 6.6,
+proved in BoxLike/Shmerkin.lean along the source), which gives Jordan-Rapaport, Theorem 1.1
+(BoxLike.JordanRapaportDimension, `jordanRapaportDimension_of_shmerkin`,
+BoxLike/JordanRapaport.lean).
 Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
 proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
 statements take it as a hypothesis and Solution discharges it.
@@ -1217,7 +1253,7 @@ Fidelity: Exact double-dimensionality and the upper packing and lower Hausdorff 
 are proved for every s>0 (eq_state_proj_dim_all), for every s-equilibrium state.
 
 PROOF DEVIATION: For 0<s<2 the proof follows the normalized Gibbs decomposition and exact-
-dimensional mixture argument. Feng–Hu is unnecessary under separation because hjr already gives
+dimensional mixture argument. Feng–Hu is unnecessary under separation because Jordan–Rapaport already gives
 exact-dimensionality.
 
 Proof for s >= 2: as in the prose. Lemma 3.12 gives the Bernoulli state (eq_bernoulli); the lift
@@ -1248,8 +1284,11 @@ noncomputable abbrev paper_4_4_14 := @BoxLike.System.marginal_decomposition_norm
 
 -- PAPER_ENTRY ex:projection_double_dimensional
 /-! 4.5 (`ex:projection_double_dimensional`): formalized.
-Literature hypotheses: BoxLike.JordanRapaportDimension.
-  BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1 (through thm:eq_state_proj_dim).
+Literature hypotheses: none.
+Proved input: BoxLike.ShmerkinLqDimension (`shmerkinLqDimension_holds`, Shmerkin, Theorem 6.6,
+proved in BoxLike/Shmerkin.lean along the source), which gives Jordan-Rapaport, Theorem 1.1
+(BoxLike.JordanRapaportDimension, `jordanRapaportDimension_of_shmerkin`,
+BoxLike/JordanRapaport.lean), used through thm:eq_state_proj_dim.
 Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
 proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
 statements take it as a hypothesis and Solution discharges it.
@@ -1361,13 +1400,16 @@ noncomputable abbrev paper_4_7_7 := @BoxLike.condMeas_transport
 
 -- PAPER_ENTRY thm:overline_h1_zero
 /-! 4.8 (`thm:overline_h1_zero`): formalized.
-Literature hypotheses: BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung.
-  BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
-  BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
-Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
-the second part of thm:feng1 from FengLedrappierYoung, proved in
-BoxLike/ProjectiveLineSystem.lean); the library statements take it as a hypothesis and Solution
-discharges it.
+Literature hypotheses: none.
+Proved input: BoxLike.ShmerkinLqDimension (`shmerkinLqDimension_holds`, Shmerkin, Theorem 6.6,
+proved in BoxLike/Shmerkin.lean along the source), which gives Jordan-Rapaport, Theorem 1.1
+(BoxLike.JordanRapaportDimension, `jordanRapaportDimension_of_shmerkin`,
+BoxLike/JordanRapaport.lean).
+Proved input: BoxLike.FengLedrappierYoung (`fengLedrappierYoung_holds`, Feng, Theorems 1.2 and 1.3,
+proved in BoxLike/FengLedrappierYoung.lean from the planar statement, along Feng's Sections 4 to 6
+in the plane) and BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_holds`, the second part
+of thm:feng1 from the first, BoxLike/ProjectiveLineSystem.lean); the library statements take
+them as hypotheses and Solution discharges them.
 Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
 proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
 statements take it as a hypothesis and Solution discharges it.
@@ -1394,13 +1436,16 @@ noncomputable abbrev paper_4_8_1 := @BoxLike.System.overline_h1_zero
 
 -- PAPER_ENTRY thm:overline_h1_zero_large
 /-! 4.9 (`thm:overline_h1_zero_large`): formalized.
-Literature hypotheses: BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung.
-  BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
-  BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
-Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
-the second part of thm:feng1 from FengLedrappierYoung, proved in
-BoxLike/ProjectiveLineSystem.lean); the library statements take it as a hypothesis and Solution
-discharges it.
+Literature hypotheses: none.
+Proved input: BoxLike.ShmerkinLqDimension (`shmerkinLqDimension_holds`, Shmerkin, Theorem 6.6,
+proved in BoxLike/Shmerkin.lean along the source), which gives Jordan-Rapaport, Theorem 1.1
+(BoxLike.JordanRapaportDimension, `jordanRapaportDimension_of_shmerkin`,
+BoxLike/JordanRapaport.lean).
+Proved input: BoxLike.FengLedrappierYoung (`fengLedrappierYoung_holds`, Feng, Theorems 1.2 and 1.3,
+proved in BoxLike/FengLedrappierYoung.lean from the planar statement, along Feng's Sections 4 to 6
+in the plane) and BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_holds`, the second part
+of thm:feng1 from the first, BoxLike/ProjectiveLineSystem.lean); the library statements take
+them as hypotheses and Solution discharges them.
 Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
 proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
 statements take it as a hypothesis and Solution discharges it.
@@ -1454,13 +1499,16 @@ noncomputable abbrev paper_4_10_1 := @BoxLike.System.overline_h1_large
 
 -- PAPER_ENTRY thm:eq_state_h1_zero
 /-! 4.11 (`thm:eq_state_h1_zero`): formalized.
-Literature hypotheses: BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung.
-  BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
-  BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
-Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
-the second part of thm:feng1 from FengLedrappierYoung, proved in
-BoxLike/ProjectiveLineSystem.lean); the library statements take it as a hypothesis and Solution
-discharges it.
+Literature hypotheses: none.
+Proved input: BoxLike.ShmerkinLqDimension (`shmerkinLqDimension_holds`, Shmerkin, Theorem 6.6,
+proved in BoxLike/Shmerkin.lean along the source), which gives Jordan-Rapaport, Theorem 1.1
+(BoxLike.JordanRapaportDimension, `jordanRapaportDimension_of_shmerkin`,
+BoxLike/JordanRapaport.lean).
+Proved input: BoxLike.FengLedrappierYoung (`fengLedrappierYoung_holds`, Feng, Theorems 1.2 and 1.3,
+proved in BoxLike/FengLedrappierYoung.lean from the planar statement, along Feng's Sections 4 to 6
+in the plane) and BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_holds`, the second part
+of thm:feng1 from the first, BoxLike/ProjectiveLineSystem.lean); the library statements take
+them as hypotheses and Solution discharges them.
 Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
 proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
 statements take it as a hypothesis and Solution discharges it.
@@ -1488,13 +1536,16 @@ noncomputable abbrev paper_4_11_1 := @BoxLike.System.eq_state_h1_zero
 
 -- PAPER_ENTRY thm:eq_state_h1_large
 /-! 4.12 (`thm:eq_state_h1_large`): formalized.
-Literature hypotheses: BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung.
-  BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
-  BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
-Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
-the second part of thm:feng1 from FengLedrappierYoung, proved in
-BoxLike/ProjectiveLineSystem.lean); the library statements take it as a hypothesis and Solution
-discharges it.
+Literature hypotheses: none.
+Proved input: BoxLike.ShmerkinLqDimension (`shmerkinLqDimension_holds`, Shmerkin, Theorem 6.6,
+proved in BoxLike/Shmerkin.lean along the source), which gives Jordan-Rapaport, Theorem 1.1
+(BoxLike.JordanRapaportDimension, `jordanRapaportDimension_of_shmerkin`,
+BoxLike/JordanRapaport.lean).
+Proved input: BoxLike.FengLedrappierYoung (`fengLedrappierYoung_holds`, Feng, Theorems 1.2 and 1.3,
+proved in BoxLike/FengLedrappierYoung.lean from the planar statement, along Feng's Sections 4 to 6
+in the plane) and BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_holds`, the second part
+of thm:feng1 from the first, BoxLike/ProjectiveLineSystem.lean); the library statements take
+them as hypotheses and Solution discharges them.
 Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
 proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
 statements take it as a hypothesis and Solution discharges it.
@@ -1520,13 +1571,16 @@ noncomputable abbrev paper_4_12_1 := @BoxLike.System.eq_state_h1_large
 
 -- PAPER_ENTRY thm:eq_state_h2_zero
 /-! 4.13 (`thm:eq_state_h2_zero`): formalized.
-Literature hypotheses: BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung.
-  BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
-  BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
-Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
-the second part of thm:feng1 from FengLedrappierYoung, proved in
-BoxLike/ProjectiveLineSystem.lean); the library statements take it as a hypothesis and Solution
-discharges it.
+Literature hypotheses: none.
+Proved input: BoxLike.ShmerkinLqDimension (`shmerkinLqDimension_holds`, Shmerkin, Theorem 6.6,
+proved in BoxLike/Shmerkin.lean along the source), which gives Jordan-Rapaport, Theorem 1.1
+(BoxLike.JordanRapaportDimension, `jordanRapaportDimension_of_shmerkin`,
+BoxLike/JordanRapaport.lean).
+Proved input: BoxLike.FengLedrappierYoung (`fengLedrappierYoung_holds`, Feng, Theorems 1.2 and 1.3,
+proved in BoxLike/FengLedrappierYoung.lean from the planar statement, along Feng's Sections 4 to 6
+in the plane) and BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_holds`, the second part
+of thm:feng1 from the first, BoxLike/ProjectiveLineSystem.lean); the library statements take
+them as hypotheses and Solution discharges them.
 Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
 proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
 statements take it as a hypothesis and Solution discharges it.
@@ -1551,13 +1605,16 @@ noncomputable abbrev paper_4_13_1 := @BoxLike.System.eq_state_h2_zero
 
 -- PAPER_ENTRY thm:orto_partition_dirac
 /-! 4.14 (`thm:orto_partition_dirac`): formalized.
-Literature hypotheses: BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung.
-  BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
-  BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
-Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
-the second part of thm:feng1 from FengLedrappierYoung, proved in
-BoxLike/ProjectiveLineSystem.lean); the library statements take it as a hypothesis and Solution
-discharges it.
+Literature hypotheses: none.
+Proved input: BoxLike.ShmerkinLqDimension (`shmerkinLqDimension_holds`, Shmerkin, Theorem 6.6,
+proved in BoxLike/Shmerkin.lean along the source), which gives Jordan-Rapaport, Theorem 1.1
+(BoxLike.JordanRapaportDimension, `jordanRapaportDimension_of_shmerkin`,
+BoxLike/JordanRapaport.lean).
+Proved input: BoxLike.FengLedrappierYoung (`fengLedrappierYoung_holds`, Feng, Theorems 1.2 and 1.3,
+proved in BoxLike/FengLedrappierYoung.lean from the planar statement, along Feng's Sections 4 to 6
+in the plane) and BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_holds`, the second part
+of thm:feng1 from the first, BoxLike/ProjectiveLineSystem.lean); the library statements take
+them as hypotheses and Solution discharges them.
 Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
 proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
 statements take it as a hypothesis and Solution discharges it.
@@ -1609,13 +1666,16 @@ noncomputable abbrev paper_4_15_1 := @BoxLike.System.SOSC_h2_zero
 
 -- PAPER_ENTRY thm:main_extended
 /-! 4.16 (`thm:main_extended`): formalized.
-Literature hypotheses: BoxLike.JordanRapaportDimension, BoxLike.FengLedrappierYoung.
-  BoxLike.JordanRapaportDimension: Jordan-Rapaport, Theorem 1.1.
-  BoxLike.FengLedrappierYoung: Feng, Theorems 1.2 and 1.3.
-Proved input: BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_of_fengLedrappierYoung`,
-the second part of thm:feng1 from FengLedrappierYoung, proved in
-BoxLike/ProjectiveLineSystem.lean); the library statements take it as a hypothesis and Solution
-discharges it.
+Literature hypotheses: none.
+Proved input: BoxLike.ShmerkinLqDimension (`shmerkinLqDimension_holds`, Shmerkin, Theorem 6.6,
+proved in BoxLike/Shmerkin.lean along the source), which gives Jordan-Rapaport, Theorem 1.1
+(BoxLike.JordanRapaportDimension, `jordanRapaportDimension_of_shmerkin`,
+BoxLike/JordanRapaport.lean).
+Proved input: BoxLike.FengLedrappierYoung (`fengLedrappierYoung_holds`, Feng, Theorems 1.2 and 1.3,
+proved in BoxLike/FengLedrappierYoung.lean from the planar statement, along Feng's Sections 4 to 6
+in the plane) and BoxLike.FengLedrappierYoungBar (`fengLedrappierYoungBar_holds`, the second part
+of thm:feng1 from the first, BoxLike/ProjectiveLineSystem.lean); the library statements take
+them as hypotheses and Solution discharges them.
 Proved input: BoxLike.MorrisShmerkinLyapunov (`morrisShmerkinLyapunov_holds`, eq:simple_lyapunov,
 proved in BoxLike/MorrisShmerkin.lean along Morris-Shmerkin, Lemmas 3.4 and 3.5); the library
 statements take it as a hypothesis and Solution discharges it.
