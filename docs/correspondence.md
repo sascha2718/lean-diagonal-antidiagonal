@@ -1,6 +1,7 @@
 # Correspondence with the manuscript
 
-All 41 numbered statements are assessed: 40 formalised and 1 open question (1.4).
+All 41 numbered statements are assessed: 40 formalised, and Question 1.4, the question the
+paper poses, recorded as a proposition with no answer claimed.
 [Solution.lean](../Solution.lean) has one `PAPER_ENTRY` per statement with the declarations that
 cover it; [paper-correspondence.yaml](../paper-correspondence.yaml) fingerprints the statements
 and 45 prose spans (85 formalised, 1 intentionally unformalised, no literature hypothesis).
@@ -46,14 +47,14 @@ column names the library theorems that stand in for a result the manuscript cite
 | 1.1 | `thm:fraser` | Formalised | Fraser, Theorem 2.3 (`System.FraserBound`, `System.FraserROSC`) and Corollary 2.5 |
 | 1.2 | `thm:main1` | Formalised | `ShmerkinLqDimension` (`shmerkinLqDimension_holds`), `JordanRapaportDimension` (from `ShmerkinLqDimension`), `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition` |
 | 1.3 | `thm:main2` | Formalised | `FengLedrappierYoung` (`fengLedrappierYoung_holds`), `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`, `KittleKoglerDimension` (from the authors' Lean formalisation of Kittle–Kogler), Shannon–McMillan–Breiman, Falconer's bound |
-| 1.4 | `q:coincident-projection-dimensions` | Open question, recorded as `CoincidentProjectionDimensionsQuestion` | |
+| 1.4 | `q:coincident-projection-dimensions` | The question the paper poses, recorded as `CoincidentProjectionDimensionsQuestion` | |
 | 2.1 | `thm:box_like_sa` | Formalised | |
 | 2.2 | `thm:A_classification` | Formalised | Bárány–Käenmäki–Rossi, Bárány–Käenmäki–Yu |
 | 2.3 | `thm:box_like_proximal` | Formalised | |
 | 2.4 | `thm:tau_omega_sigma_commutative` | Formalised | |
 | 2.5 | `thm:matrix_products_g_derivatives` | Formalised | |
 | 2.6 | `lem:proj_gap_dominated` | Formalised | |
-| 2.7 | `prop:ssc_no_overlap_not_pesc` | Formalised | Bárány–Käenmäki in the form the article uses (`NoOverlap.BaranyKaenmakiPair`, `NoOverlap.baranyKaenmakiPair_holds`); Theorem 2.1 as stated is false (`NoOverlap.not_baranyKaenmakiTheorem`) |
+| 2.7 | `prop:ssc_no_overlap_not_pesc` | Formalised | Bárány–Käenmäki, Theorem 2.1, with the constant `C_0` as the proof uses it (`NoOverlap.BaranyKaenmakiPair`, `NoOverlap.baranyKaenmakiPair_holds`) |
 | 3.1 | `thm:lyapunov_exponents_via_g_system` | Formalised | Oseledets (box-like case), Froyland–Lloyd–Quas |
 | 3.2 | `thm:conditional_measures_of_a_conditional_measure` | Formalised | |
 | 3.3 | `thm:double_conditional` | Formalised | Einsiedler–Ward, Proposition 5.20 and Theorem 5.14 |
@@ -87,13 +88,6 @@ column names the library theorems that stand in for a result the manuscript cite
 
 ## Remaining work
 
-- **1.4** (`q:coincident-projection-dimensions`). Open; recorded as the proposition
-  `CoincidentProjectionDimensionsQuestion` (`BoxLike/OpenQuestion.lean`), with no answer asserted.
-- **2.7, the citation of Bárány–Käenmäki** (tex lines 1424 to 1429). The manuscript cites
-  Theorem 2.1 of the source as stated, which is false (`NoOverlap.not_baranyKaenmakiTheorem`).
-  The proof uses only a free pair with `Δ_n ≤ C_0 exp(-n²)` for all `n ≥ 1`, which the library
-  proves (`NoOverlap.baranyKaenmakiPair_holds`). The citation should refer to the proof of
-  Theorem 2.1 or to the corrected statement (`NoOverlap.not_countable_condensation`).
 - **Bourgain's structure theorem.** Shmerkin's Theorem 3.1 is proved only in the weak form
   `Shmerkin.Bourgain.theorem31Weak` (some positive doubling exponent in place of `2^{-2T-1}`),
   which suffices for `shmerkinLqDimension_holds`; the source's form `Shmerkin.Theorem31` has no
@@ -119,7 +113,8 @@ Changes of proof, not missing statements. Entries not listed follow the prose.
   product, and each generator preserves or swaps the two lines. No citation is used.
 - **2.4 to 2.6.** The recursion runs in `ZMod 2`; the product formula is proved for a generic
   word first; the finite minimum is an extended-real infimum.
-- **2.7.** Bárány–Käenmäki enters as `NoOverlap.BaranyKaenmakiPair`, proved; see Remaining work.
+- **2.7.** Bárány–Käenmäki's Theorem 2.1 enters as `NoOverlap.BaranyKaenmakiPair`, with the
+  constant `C_0` as the proof uses it, proved by a Baire category argument.
 - **3.1.** Oseledets and Froyland–Lloyd–Quas are proved for the box-like case through
   Birkhoff's theorem.
 - **3.3.** Einsiedler–Ward, Proposition 5.20 and Theorem 5.14, are proved directly.
@@ -215,7 +210,7 @@ the manuscript at commit `2e45bb0`.
 | the absence of exact overlaps passes to `Φ^(2)` (proof of `thm:main2`, tex lines 3634 to 3636) | `System.NoExactOverlaps.sq` | `SecondIterate` | **done** |
 | `Δ_{m+1}^Ψ ≤ Δ_m^Ψ` (proof of `thm:two-block-normalisation`) | `System.gap_succ_le` | `Separation` | **done** |
 | `lem:proj_gap_dominated` | `System.diagGap`, `System.gap_le_diagGap` | `Separation` | **done** |
-| `prop:ssc_no_overlap_not_pesc` | `NoOverlap.prop_ssc_no_overlap_not_pesc`, `NoOverlap.prop_ssc_no_overlap_not_pesc_holds`, `NoOverlap.ssc_no_overlap_not_pesc`, `NoOverlap.exists_system_of_homFree`, `NoOverlap.BaranyKaenmakiPair`, `NoOverlap.baranyKaenmakiPair_holds`, `NoOverlap.BaranyKaenmakiTheorem`, `NoOverlap.not_baranyKaenmakiTheorem`, `System.FreeProjective`, `System.not_projExpSeparation_of_diagGap` | `Aligned/NoOverlapPESC`, `BaranyKaenmaki`, `BaranyKaenmakiCounterexample`, `NoOverlapExample`, `NoOverlapExampleFree`, `Separation` | **done** with no literature input: the endpoints take `NoOverlap.BaranyKaenmakiPair`, the form of the theorem of Bárány and Käenmäki that the article uses, which `NoOverlap.baranyKaenmakiPair_holds` proves; Theorem 2.1 of the source as stated, `NoOverlap.BaranyKaenmakiTheorem`, is false (`NoOverlap.not_baranyKaenmakiTheorem`), see the literature table and "Remaining work". "Not strongly irreducible" is `¬ TupleStronglyIrreducible` of `Classification` |
+| `prop:ssc_no_overlap_not_pesc` | `NoOverlap.prop_ssc_no_overlap_not_pesc`, `NoOverlap.prop_ssc_no_overlap_not_pesc_holds`, `NoOverlap.ssc_no_overlap_not_pesc`, `NoOverlap.exists_system_of_homFree`, `NoOverlap.BaranyKaenmakiPair`, `NoOverlap.baranyKaenmakiPair_holds`, `NoOverlap.BaranyKaenmakiTheorem`, `NoOverlap.not_baranyKaenmakiTheorem`, `System.FreeProjective`, `System.not_projExpSeparation_of_diagGap` | `Aligned/NoOverlapPESC`, `BaranyKaenmaki`, `BaranyKaenmakiCounterexample`, `NoOverlapExample`, `NoOverlapExampleFree`, `Separation` | **done** with no literature input: the endpoints take `NoOverlap.BaranyKaenmakiPair`, Bárány–Käenmäki's theorem with the constant `C_0` as the proof uses it, which `NoOverlap.baranyKaenmakiPair_holds` proves (see the literature table). "Not strongly irreducible" is `¬ TupleStronglyIrreducible` of `Classification` |
 | freeness of the projective semigroup and the choice of parameters in the proof of `prop:ssc_no_overlap_not_pesc` (tex lines 1429 to 1443, 1482 to 1511) | `NoOverlap.exists_params_not_mem_exceptionalSet`, `NoOverlap.Params.mulIndependent`, `NoOverlap.Params.count_eq_of_gDeriv_eq`, `NoOverlap.eq_of_valPoly_eq`, `NoOverlap.Params.freeProjective_of_mulIndependent`, `NoOverlap.exists_algebraicIndependent_mem_Ioo`, `NoOverlap.exists_params`, `NoOverlap.genDeriv_transfer`, `NoOverlap.genVal_transfer`, `NoOverlap.eq_of_genDeriv_eq_of_genVal_eq`, `NoOverlap.Params.freeProjective` | `Aligned/NoOverlapPESCParams`, `Aligned/NoOverlapPESCFree`, `NoOverlapExampleFree`, `NoOverlapExample` | **done**, along the prose: parameters outside a countable union of proper algebraic hypersurfaces, multiplicative independence, symbol counts and coefficient extraction; the sequential transcendental choice is a second proof |
 | the paragraph after `prop:ssc_no_overlap_not_pesc`: planar exponential separation does not imply projective exponential separation (tex lines 1527 to 1537) | `System.StrongSeparation.exists_le_dist_phiWord`, `NoOverlap.planar_separation_not_pesc`, `NoOverlap.planar_separation_not_pesc_holds` | `NoOverlapExample`, `BaranyKaenmaki` | **done**; `NoOverlap.BaranyKaenmakiPair` holds (`NoOverlap.baranyKaenmakiPair_holds`), and `NoOverlap.planar_separation_not_pesc_holds` states the paragraph with no hypothesis |
 | `φ^s`, sub-multiplicativity | `svf`, `svf_mul_le` | `SingularValue` | **done**, on all real `2 × 2` matrices with the `ℓ²` operator norm |
@@ -373,7 +368,7 @@ Every literature statement is a theorem of the library:
 | Shmerkin, Theorem 6.6 (arXiv:1609.07802v3) | `ShmerkinLqDimension` (`hsh`) | `shmerkinLqDimension_holds` | the lower bound over finite families of dyadic intervals; Theorem 3.1 in weak form |
 | Falconer (1988) | `System.FalconerBoxBound` | `System.falconerBoxBound` | theorem number unchecked |
 | Fraser, Theorem 2.3, Corollary 2.5 (arXiv:1108.2639v1) | `System.FraserBound`, `System.FraserROSC` | `System.fraserBound_holds`, `System.fraserROSC_holds` | upper Minkowski dimension, as in the source |
-| Bárány–Käenmäki, Theorem 2.1 (arXiv:1910.04623v4) | `NoOverlap.BaranyKaenmakiPair`; `NoOverlap.BaranyKaenmakiTheorem` | `NoOverlap.baranyKaenmakiPair_holds`; the source's form is refuted (`NoOverlap.not_baranyKaenmakiTheorem`) | the pair form is what the proof of 2.7 uses |
+| Bárány–Käenmäki, Theorem 2.1 (arXiv:1910.04623v4) | `NoOverlap.BaranyKaenmakiPair` | `NoOverlap.baranyKaenmakiPair_holds` | with the constant `C_0`, as the proof of 2.7 uses it; the printed form without the constant, `NoOverlap.BaranyKaenmakiTheorem`, does not hold literally (`NoOverlap.not_baranyKaenmakiTheorem`), and nothing depends on it |
 | Rossi, Theorem 2.2 | `System.RossiBound` | `System.rossiBound` | no theorem takes it |
 | Feng, Theorems 1.2 and 1.3 (arXiv:1901.01691v2) | `PlanarFengLedrappierYoung`, `FengLedrappierYoung` (`hly`), `FengLedrappierYoungBar` (`hlyb`) | `planarFengLedrappierYoung_holds`, `fengLedrappierYoung_holds`, `fengLedrappierYoungBar_holds` | Feng's `Σ'` inside the box-like `Σ'`, with a.e. equal conditional measures; supremum-norm balls |
 | Feng, Lemma 4.6 | `FengInfoSum` (`hfi`), `FengInfoSumBar` (`hfib`) | `fengInfoSum_holds`, `fengInfoSumBar_holds` | neither ergodicity nor his (4.7) |
@@ -383,7 +378,8 @@ Every literature statement is a theorem of the library:
 Other cited results, proved: Birkhoff (`birkhoff_ergodic`), Shannon–McMillan–Breiman
 (`shannonMcMillanBreiman`), the Kolmogorov–Sinai generator theorem (`ksEntropy_shift_eq_entropy`),
 Oseledets for invertible planar cocycles (`MatrixTuple.measure_regularSet_compl_of_ergodic`),
-Käenmäki's existence of ergodic equilibrium states (`MatrixTuple.exists_ergodic_isEquilibriumState`),
+Käenmäki's existence of ergodic equilibrium states
+(`MatrixTuple.exists_ergodic_isEquilibriumState`),
 Käenmäki–Vilppolainen's monotonicity of the pressure (`System.strictAntiOn_pressure`), Hutchinson
 (`PlanarSystem.eq_attractor`, `System.IsInvariantMeasure.unique`), Walters' mixing of `Σ_Z`
 (`isTopologicallyMixing_subshiftShift_iff`), Sarig's Gibbs measures as Bowen's theorem

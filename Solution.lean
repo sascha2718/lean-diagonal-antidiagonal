@@ -305,9 +305,8 @@ noncomputable abbrev paper_2_6_2 := @BoxLike.System.gap_le_diagGap
 
 -- PAPER_ENTRY prop:ssc_no_overlap_not_pesc
 /-! 2.7 (`prop:ssc_no_overlap_not_pesc`): formalized.
-Along the prose, with `BaranyKaenmakiPair`, the form of Bárány–Käenmäki's theorem the proof
-uses, proved (`baranyKaenmakiPair_holds`). Theorem 2.1 of the source as stated is false
-(`not_baranyKaenmakiTheorem`); the citation at tex lines 1424 to 1429 needs a fix.
+Along the prose, with `BaranyKaenmakiPair`, Bárány–Käenmäki's theorem with the constant `C_0`
+as the proof uses it, proved (`baranyKaenmakiPair_holds`).
 -/
 noncomputable abbrev paper_2_7_1 := @BoxLike.NoOverlap.prop_ssc_no_overlap_not_pesc
 noncomputable abbrev paper_2_7_2 := @BoxLike.NoOverlap.baranyKaenmakiPair_holds
