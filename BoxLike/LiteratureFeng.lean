@@ -2,34 +2,18 @@ module
 
 /-
 The results of D.-J. Feng, *Dimension of invariant measures for affine iterated function
-systems*, Duke Math. J. 172 (2023), arXiv:1901.01691, which the article cites without proof in
-`sec:entropies` and `sec:ledrappier_young_formula`, as `Prop`-valued definitions. A result that
-uses one of them takes it as a hypothesis. `BoxLike/Literature.lean` holds the citations that
-need only the symbolic and thermodynamic vocabulary; the ones here need the partitions `ξ_i`,
-`\overline{ξ}_i`, the conditional measures and the entropies `h_i`, `\overline{h}_i` of
-`BoxLike/DimPartitions.lean`. `docs/correspondence.md`, "Fidelity boundary", states the rules.
+systems*, Duke Math. J. 172 (2023), arXiv:1901.01691v2, cited in `sec:entropies` and
+`sec:ledrappier_young_formula`, as `Prop`-valued definitions about the partitions and entropies
+of `BoxLike/DimPartitions.lean`. All are proved elsewhere in the library.
 
-Feng's set `Σ'` is an invariant Borel set of full measure on which his properties (4.1) to
-(4.4) hold, some of which concern forward time; it can be taken inside the article's box-like
-set `Σ'`, which is the one used here, with each partition extended to the whole shift by one
-null atom. Feng's atom at a point of his set is the box-like atom cut down to his set, so the
-atoms differ pointwise in general. The conditional measures agree almost everywhere
-(`System.condMeas_fengXi_ae_eq` of `BoxLike/OseledetsBridge.lean`), hence so do the
-conditional informations and the entropies, and the information-sum identity holds for one
-family of partitions exactly when it holds for the other (`System.infoSum_fengXi_iff`). The
-statements were compared with the arXiv version (v2) of the source on 2026-09-20.
+Feng's set `Σ'` lies inside the article's box-like `Σ'`, with each partition extended by one
+null atom; the conditional measures agree almost everywhere (`System.condMeas_fengXi_ae_eq`), so
+the statements for Feng's partitions and for the library's are equivalent.
 
-* `FengInfoSum`, `FengInfoSumBar`: Feng, Lemma 4.6, first identity of (4.16), behind
-  `thm:feng_entropy_as_limit` and `thm:feng_entropy_zero`. Both are theorems of the library
-  (`fengInfoSum_holds` in `BoxLike/FengIdentity.lean`, `fengInfoSumBar_holds` in
-  `BoxLike/FengIdentityBar.lean`); the results that state them as hypotheses receive these
-  proofs, and no headline statement takes them.
-* `FengLedrappierYoung`, `FengLedrappierYoungBar`: `thm:feng1`, from Feng, Theorems 1.2
-  and 1.3. Both are theorems of the library: the first from the planar statement
-  `PlanarFengLedrappierYoung` (`fengLedrappierYoung_holds` in `BoxLike/FengLedrappierYoung.lean`),
-  the second from the first (`fengLedrappierYoungBar_of_fengLedrappierYoung` in
-  `BoxLike/ProjectiveLineSystem.lean`, `fengLedrappierYoungBar_holds`); the results that state
-  them as hypotheses receive these proofs, and no headline statement takes them.
+* `FengInfoSum`, `FengInfoSumBar`: Lemma 4.6, first identity of (4.16) (`fengInfoSum_holds`,
+  `fengInfoSumBar_holds`).
+* `FengLedrappierYoung`, `FengLedrappierYoungBar`: `thm:feng1`, Theorems 1.2 and 1.3
+  (`fengLedrappierYoung_holds`, `fengLedrappierYoungBar_holds`).
 -/
 public import BoxLike.DimPartitions
 
@@ -44,8 +28,7 @@ universe u
 /-- Feng, Lemma 4.6, first identity of (4.16), for the planar partitions:
 `-log μ_𝐢^{ξ_i}(𝒫_0^{n-1}(𝐢)) = ∑_{k<n} I_μ(𝒫 | \widehat{ξ}_i)(σ^k 𝐢)` for all `n`, on one set of
 full measure. The proof of `thm:feng_entropy_zero` uses it. Hypotheses as in
-`thm:feng_entropy_as_limit`. The library proves it along Feng's Lemmas 4.4 and 4.5
-(`fengInfoSum_holds`, `BoxLike/FengIdentity.lean`). -/
+`thm:feng_entropy_as_limit`. -/
 def FengInfoSum : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ], MeasurePreserving (shift 1) μ μ →
@@ -55,9 +38,8 @@ def FengInfoSum : Prop :=
 
 /-- Feng, Lemma 4.6, first identity of (4.16), for the projective system and an
 invariant measure `ν` on `Σ_Z`, ergodic or not; the article checks Feng's constant-multiplicity
-hypothesis (4.7) in `sec:entropies`, tex lines 1921 to 1924. The library proves it, with neither
-that hypothesis nor rotations nor proximality (`fengInfoSumBar_holds`,
-`BoxLike/FengIdentityBar.lean`). -/
+hypothesis (4.7) in `sec:entropies`, tex lines 1921 to 1924. Rotations and proximality are
+not needed. -/
 def FengInfoSumBar : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.WithRotations → S.Proximal → ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],
@@ -70,8 +52,7 @@ and simple Lyapunov spectrum: if `μ` is ergodic with `λ_2(𝖠, μ) < λ_1(�
 exact-dimensional with
 `dim π_*μ = (h_1(μ) - h_0(μ)) / λ_1(𝖠, μ) + (h_2(μ) - h_1(μ)) / λ_2(𝖠, μ)`.
 Feng works with closed Euclidean balls; `IsExactDim` on `ℝ × ℝ` uses closed balls of the
-supremum norm, which gives the same pointwise dimension. The library proves the statement from
-`PlanarFengLedrappierYoung` (`fengLedrappierYoung_holds` in `BoxLike/FengLedrappierYoung.lean`). -/
+supremum norm, which gives the same pointwise dimension. -/
 def FengLedrappierYoung : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ], MeasurePreserving (shift 1) μ μ →
@@ -84,11 +65,7 @@ def FengLedrappierYoung : Prop :=
 `Ψ` on `ℝ`: if `ν` is an ergodic invariant measure on `Σ_Z`, then `\overline{π}_*ν` is
 exact-dimensional with
 `dim \overline{π}_*ν = (\overline{h}_1(ν) - \overline{h}_0(ν)) / \overline{λ}(𝖠, ν)`.
-It follows from `FengLedrappierYoung` applied to the planar system
-`z ↦ diag(g'_j, g'_j / 2) z + (g_j(0), 0)` of `Ψ`, whose attractor lies on the horizontal axis
-(`fengLedrappierYoungBar_of_fengLedrappierYoung`, `BoxLike/ProjectiveLineSystem.lean`), so the
-library proves it (`fengLedrappierYoungBar_holds`); the hypotheses `S.WithRotations` and
-`S.Proximal` are not needed. -/
+Rotations and proximality are not needed. -/
 def FengLedrappierYoungBar : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.WithRotations → S.Proximal → ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],

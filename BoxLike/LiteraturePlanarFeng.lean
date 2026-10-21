@@ -1,19 +1,14 @@
 module
 
 /-
-The result of D.-J. Feng, *Dimension of invariant measures for affine iterated function systems*,
-Duke Math. J. 172 (2023), arXiv:1901.01691, that the article cites in `thm:feng1` for every
-planar self-affine set, as a `Prop`-valued definition about the planar systems, partitions and
-entropies of `BoxLike/Planar/`. A result that uses it takes it as a hypothesis. The library
-proves it (`planarFengLedrappierYoung_holds` in `BoxLike/FengLedrappierYoung.lean`), along Feng's
-Sections 4 to 6 for `d = 2`. `docs/correspondence.md`, "Fidelity boundary", states the rules; the
-project owner authorised this statement. The box-like predicate `FengLedrappierYoung` of `BoxLike/LiteratureFeng.lean`
-is its specialisation.
+Feng's Ledrappier–Young formula (Duke Math. J. 172 (2023), arXiv:1901.01691v2, Theorems 1.2 (ii)
+and 1.3) for the planar systems of `BoxLike/Planar/`, as a `Prop`-valued definition; proved in
+`BoxLike/FengLedrappierYoung.lean` (`planarFengLedrappierYoung_holds`).
 
-* `PlanarFengLedrappierYoung`: Feng, Theorems 1.2 and 1.3, for planar systems.
-* `PlanarFengLedrappierYoung.fengLedrappierYoung`: the reduction to `FengLedrappierYoung`.
-* `planarFengLedrappierYoung_of_fengXi`: the statement follows from the source statement for
-  Feng's own partitions on any Borel set of full measure inside `Σ'`, with no premise.
+* `PlanarFengLedrappierYoung`: the statement.
+* `PlanarFengLedrappierYoung.fengLedrappierYoung`: the box-like specialisation.
+* `planarFengLedrappierYoung_of_fengXi`: the source statement, for Feng's own partitions, implies
+  it.
 -/
 public import BoxLike.Planar.FengEntropy
 public import BoxLike.Planar.FengPartitions
@@ -53,13 +48,9 @@ balls of radii `r` and `√2 r`, which gives the same pointwise dimension. The o
 matrix products (`A_{𝐢|_n} = A_{i_0} ⋯ A_{i_{n-1}}` for `λ_i`, `A_{i_{-n}} ⋯ A_{i_{-1}}` for the
 filtration) and the signs of the formula agree with Feng's (1.3), Section 1.2 and (1.6).
 
-Degenerate instances, by hand. One letter with `A = diag(1/2, 1/4)`: `π_*μ` is a Dirac mass, of
-pointwise dimension `0`, and all `h_i` vanish since `𝒫` has one atom. Two letters, all
-translations zero, Bernoulli `μ`: `π_*μ = δ_0` and `h_0 = h_1 = h_2`, so both sides vanish.
-Scaled rotations: `λ_1 = λ_2`, the statement is silent.
-
-Used by: `PlanarFengLedrappierYoung.fengLedrappierYoung`, `PlanarSystem.feng1`, `planar_feng1`.
-Proved: `planarFengLedrappierYoung_holds` (`BoxLike/FengLedrappierYoung.lean`). -/
+Degenerate instances: one letter with `A = diag(1/2, 1/4)` (`π_*μ` a Dirac mass, all `h_i`
+zero); two letters with zero translations and Bernoulli `μ` (both sides vanish); scaled
+rotations (`λ_1 = λ_2`, the statement is silent). -/
 def PlanarFengLedrappierYoung : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
     (P : PlanarSystem ι) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ],
@@ -68,9 +59,7 @@ def PlanarFengLedrappierYoung : Prop :=
       ((P.dimEntropy μ 1 - P.dimEntropy μ 0) / P.lyapunov₁ μ +
         (P.dimEntropy μ 2 - P.dimEntropy μ 1) / P.lyapunov₂ μ)
 
-/-- The planar premise `PlanarFengLedrappierYoung` implies the authorised box-like predicate
-`FengLedrappierYoung`: apply it to the planar system `S.toPlanar`, whose projection, entropies
-and exponents are those of `S` (`System.toPlanar_proj`, `System.toPlanar_dimEntropy`). -/
+/-- The box-like specialisation, through `S.toPlanar`. -/
 theorem PlanarFengLedrappierYoung.fengLedrappierYoung (h : PlanarFengLedrappierYoung.{u}) :
     FengLedrappierYoung.{u} := by
   intro ι _ _ _ S μ _ hinv herg hlt
@@ -78,10 +67,8 @@ theorem PlanarFengLedrappierYoung.fengLedrappierYoung (h : PlanarFengLedrappierY
   rwa [S.toPlanar_proj, S.toPlanar_dimEntropy μ hlt, S.toPlanar_dimEntropy μ hlt,
     S.toPlanar_dimEntropy μ hlt, S.toPlanar_lyapunov₁, S.toPlanar_lyapunov₂] at this
 
-/-- The source form of Feng, Theorems 1.2 and 1.3, implies `PlanarFengLedrappierYoung`, with no
-premise: if for every planar system and every ergodic `μ` with `λ_2 < λ_1` the formula holds with
-Feng's entropies `H_μ(𝒫 | \widehat{ξ}_i)` for his partitions on some Borel set `D ⊆ Σ'` of full
-measure, then it holds with the library's entropies. -/
+/-- The source form, with Feng's entropies for his partitions on a Borel set `D ⊆ Σ'` of full
+measure, implies the statement. -/
 theorem planarFengLedrappierYoung_of_fengXi
     (h : ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
       (P : PlanarSystem ι) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ],

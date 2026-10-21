@@ -1,26 +1,17 @@
 module
 
 /-
-The result of Feng and Käenmäki that the article cites in `thm:irred_eq_state` (tex lines 2222
-to 2239) for every irreducible tuple of invertible planar matrices, as a `Prop`-valued definition
-in the form of the source: the potential `‖·‖^q` on the one-sided shift. A result that uses it
-takes it as a hypothesis. `docs/correspondence.md`, "Fidelity boundary", states the rules; the
-project owner authorised this statement. The predicates `FengKaenmakiGibbs` and
-`FengKaenmakiUnique` of `BoxLike/Literature.lean` and `BoxLike/LiteratureRemarks.lean` are its
-box-like specialisations. The library proves the statement (`fengKaenmakiNormEquilibrium_holds`
-in `BoxLike/QuasiMultiplicative/Main.lean`) and with it the two box-like predicates
-(`fengKaenmakiGibbs_holds`, `fengKaenmakiUnique_holds`). That module imports this one, so the
-results that use the statement take it as a hypothesis, and `Solution.lean` passes the proof.
+Feng–Käenmäki, Proposition 1.2, in the form of the source (the potential `‖·‖^q` on the one-sided
+shift), as a `Prop`-valued definition; proved in `BoxLike/QuasiMultiplicative/Main.lean`
+(`fengKaenmakiNormEquilibrium_holds`). `FengKaenmakiGibbs` and `FengKaenmakiUnique` are its
+box-like specialisations.
 
-* `FengKaenmakiNormEquilibrium`: Feng–Käenmäki, Proposition 1.2, for real planar invertible
-  tuples, with its source boundary record.
-* `FengKaenmakiNormEquilibrium.degenerate_quarterTurn`: the conclusion holds at the degenerate
-  instance of one letter, the quarter turn.
+* `FengKaenmakiNormEquilibrium`: the statement, with its source record.
+* `FengKaenmakiNormEquilibrium.degenerate_quarterTurn`: the degenerate instance of one letter.
 * `FengKaenmakiNormEquilibrium.twoSided`: the reduction to the two-sided shift.
-* `FengKaenmakiNormEquilibrium.svf`: the singular value potential for `0 < s < 2`, by `q = s` for
-  `s ≤ 1` and the rescaled tuple with `q = 2 - s` for `1 < s < 2`.
+* `FengKaenmakiNormEquilibrium.svf`: the singular value potential for `0 < s < 2`.
 * `FengKaenmakiNormEquilibrium.fengKaenmakiGibbs`, `FengKaenmakiNormEquilibrium.fengKaenmakiUnique`:
-  the statement implies the two box-like predicates.
+  the box-like specialisations.
 -/
 public import BoxLike.Literature
 public import BoxLike.LiteratureRemarks

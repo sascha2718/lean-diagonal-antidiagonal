@@ -1,31 +1,17 @@
 module
 
 /-
-`KittleKoglerDimension` of `BoxLike/Literature.lean`, the dimension of self-similar measures on
-the line without exact overlaps, derived from the Lean formalisation of Kittle–Kogler, *The exact
-overlaps conjecture for self-similar measures on the real line* (arXiv:2610.10511), by its authors:
-the library `ExactOverlaps` of github.com/ckkogler/exact-overlaps-one-dim-lean, a verbatim copy in
-`vendor/` (commit in `vendor/README.md`). That library proves Theorem 1.1 for every stationary
-probability measure of a finite weighted system of contracting similarities `g_j(x) = r_j x + t_j`
-with `0 < |r_j| < 1`: the lower Hausdorff dimension of the measure is `min{1, h / |χ|}`, with `h`
-the entropy rate of the random walk on the similarities and `χ = ∑_j p_j log |r_j|`
-(`ExactOverlaps.SelfSimilar.System.theorem_1_1`); the measure is exact-dimensional, with closed
-balls, of this dimension
-(`ExactOverlaps.SelfSimilar.System.hasExactDimension_lowerHausdorffDimension`); and without exact
-overlaps `h = H(p)`
-(`ExactOverlaps.SelfSimilar.System.randomWalkEntropyRate_eq_of_noExactOverlaps`). The axiom audit
-of `tools/AuditAxioms.lean` covers every constant of that library in the environment of `Solution`.
+`KittleKoglerDimension` from the Lean formalisation of Kittle–Kogler, arXiv:2610.10511, by its
+authors, the library `ExactOverlaps` in `vendor/`: its `theorem_1_1` (lower Hausdorff dimension
+`min{1, h/|χ|}`), `hasExactDimension_lowerHausdorffDimension` (exact-dimensionality) and
+`randomWalkEntropyRate_eq_of_noExactOverlaps` (`h = H(p)` without exact overlaps).
 
-* `KittleKogler.system`: the weighted system of the source library with the data `r`, `t`, `p`
-  of `KittleKoglerDimension`.
-* `KittleKogler.wordList`, `KittleKogler.system_wordMap_apply`: the words of the source library
-  as lists; the composed similarity of a word is `simWord r t` of its list.
-* `KittleKogler.wordList_injective`, `KittleKogler.system_hasNoExactOverlaps`: injectivity of
-  `simWord r t` is the freeness condition of the source library.
-* `KittleKogler.system_isStationary`, `KittleKogler.system_lyapunov`: the two stationarity
-  equations agree, and the Lyapunov exponent is `χ`.
-* `kittleKoglerDimension_holds`: the statement `KittleKoglerDimension`. No literature premise is
-  used.
+* `KittleKogler.system`: the weighted system of the source library with the data `r`, `t`, `p`.
+* `KittleKogler.wordList`, `KittleKogler.system_wordMap_apply`, `KittleKogler.wordList_injective`,
+  `KittleKogler.system_hasNoExactOverlaps`: words as lists; injectivity of `simWord r t` is the
+  freeness condition of the source library.
+* `KittleKogler.system_isStationary`, `KittleKogler.system_lyapunov`: stationarity and `χ`.
+* `kittleKoglerDimension_holds`: the statement.
 -/
 public import BoxLike.Literature
 public import ExactOverlaps.MainTheorem.Theorem11

@@ -1,55 +1,23 @@
 module
 
 /-
-The literature theorems of the main line that the article cites without proof, as `Prop`-valued
-definitions. A result that uses one of them takes it as a hypothesis. `BoxLike/LiteratureFeng.lean`
-holds the results of Feng, and `BoxLike/LiteratureRemarks.lean` the citations that no main result
-depends on. `docs/correspondence.md`, "Fidelity boundary", states the rules: every citation is a statement about
-defined objects and carries the hypotheses under which the article uses the cited result.
+Theorems the article cites in its main line, as `Prop`-valued definitions; a result that uses one
+takes it as a hypothesis. Each is proved elsewhere in the library:
 
-Standing conventions: `μ` is a Borel probability measure on `Σ = ℤ → ι`, invariant under the
-left shift `shift 1`; the alphabet `ι` is finite with the discrete `σ`-algebra.
+* `MorrisShmerkinLyapunov`: `eq:simple_lyapunov`; Morris–Shmerkin, Theorem 3.1
+  (`morrisShmerkinLyapunov_holds`).
+* `FengKaenmakiGibbs`: the Gibbs bounds of `thm:irred_eq_state`; Feng–Käenmäki, Proposition 1.2
+  (`fengKaenmakiGibbs_holds`; for tuples with rotations, `equilibriumGibbs`).
+* `FraserJordanJurgaDecomposition`: `thm:eq_state_is_sum`; Fraser–Jordan–Jurga, Lemma 1.3 and
+  Corollaries 1.5 and 1.6 (`fraserJordanJurgaDecomposition_holds`).
+* `JordanRapaportDimension`: `eq:gibbs_proj_dim`; Jordan–Rapaport, Theorem 1.1
+  (`jordanRapaportDimension_of_shmerkin`).
+* `KittleKoglerDimension`: Kittle–Kogler, Theorem 1.1, used in `thm:main2`
+  (`kittleKoglerDimension_holds`).
+* `ShmerkinStopping`, `ShmerkinExpSeparation`, `ShmerkinLqDimension`: Shmerkin, Definition 6.5
+  and the lower bound of Theorem 6.6 (`shmerkinLqDimension_holds`).
 
-* `MorrisShmerkinLyapunov`: `eq:simple_lyapunov` in the normalised case, from
-  Morris–Shmerkin, Trans. Amer. Math. Soc. 371 (2019), Theorem 3.1, which combines their
-  Proposition 3.3 and Lemmas 3.4 and 3.5 (numbering of arXiv:1602.08789v3). The library proves
-  it (`morrisShmerkinLyapunov_holds` in `BoxLike/MorrisShmerkin.lean`).
-* `FengKaenmakiGibbs`: the Gibbs bounds of `thm:irred_eq_state`, from Feng–Käenmäki, Discrete
-  Contin. Dyn. Syst. 30 (2011), Proposition 1.2, applied with `q = s` for `0 < s ≤ 1` and to a
-  rescaled tuple with `q = 2 - s` for `1 < s < 2`. The library proves it
-  (`fengKaenmakiGibbs_holds` in `BoxLike/QuasiMultiplicative/Main.lean`), and the conclusion for
-  tuples with rotations, which need not be irreducible (`equilibriumGibbs` in
-  `BoxLike/EquilibriumGibbs.lean`); the main line takes that statement,
-  `EquilibriumGibbsStatement`, and results stated for irreducible tuples take
-  `FengKaenmakiGibbs`.
-* `FraserJordanJurgaDecomposition`: `thm:eq_state_is_sum`, from Fraser–Jordan–Jurga,
-  J. Fractal Geom. 7 (2020), Lemma 1.3 and Corollaries 1.5 and 1.6, together with the existence
-  of ergodic Gibbs measures on a mixing sub-shift of finite type (Bowen). The library proves it
-  (`fraserJordanJurgaDecomposition_holds` in `BoxLike/FraserJordanJurga/Main.lean`).
-* `JordanRapaportDimension`: the dimension formula used in `eq:gibbs_proj_dim`, from
-  Jordan–Rapaport, Proc. Lond. Math. Soc. (3) 122 (2021), Theorem 1.1. The library proves it
-  from `ShmerkinLqDimension` along the source's own argument
-  (`jordanRapaportDimension_of_shmerkin` in `BoxLike/JordanRapaport.lean`).
-* `KittleKoglerDimension`: the dimension of self-similar measures on the line without exact
-  overlaps, from Kittle–Kogler, arXiv:2610.10511, Theorem 1.1, used in the proof of `thm:main2`.
-  The library proves it (`kittleKoglerDimension_holds` in `BoxLike/KittleKogler.lean`), from the
-  Lean formalisation of the source by its authors, the library `ExactOverlaps` in `vendor/`.
-* `ShmerkinStopping`, `ShmerkinExpSeparation`, `ShmerkinLqDimension`: Shmerkin's family `Ω_M`,
-  his exponential separation (Definition 6.5) and the lower bound of his Theorem 6.6 on the
-  `L^q` dimension of self-similar measures on the line, Ann. of Math. (2) 189 (2019), numbering
-  of arXiv:1609.07802v3, the input of Jordan–Rapaport's proof and so of `thm:main1` and
-  `thm:main_extended`. Authorised by the project owner on 2026-10-21. The library proves it
-  (`shmerkinLqDimension_holds` in `BoxLike/Shmerkin.lean`, along the source).
-
-Falconer's bound `eq:hausdorff_affinity_upper_bound`, which the article cites, is a theorem of
-the library (`System.dimH_attractor_le` in `BoxLike/FalconerBound.lean`).
-
-The statements were compared with the sources on 2026-09-20, Shmerkin's on 2026-10-21;
-`docs/correspondence.md`, "Fidelity boundary",
-records the reductions between each source and its statement.
-
-Each statement quantifies over every finite alphabet `ι : Type u` with the discrete
-`σ`-algebra, the instance `MeasurableSingletonClass ι`, as the cited theorems do.
+`μ` is a shift-invariant Borel probability measure on `Σ = ℤ → ι`, with `ι` finite and discrete.
 -/
 public import BoxLike.AffinityDim
 public import BoxLike.MeasureDim
@@ -71,9 +39,7 @@ universe u
 generator with `|a_i| ≠ |b_i|` is hyperbolic, and together with an anti-diagonal generator it
 makes the tuple irreducible. The source works on the one-sided shift with the products
 `A_{x_n} ⋯ A_{x_1}`; it applies to the transposed tuple, which has the same norms of products,
-the same pressure and the same equilibrium states. The library proves the statement
-(`morrisShmerkinLyapunov_holds`), along Morris–Shmerkin's Lemmas 3.4 and 3.5 with the Gibbs
-bounds of `equilibriumGibbs`. -/
+the same pressure and the same equilibrium states. -/
 def MorrisShmerkinLyapunov : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.WithRotations → S.HasProximalDiagonal → ∀ {s : ℝ}, 0 < s → s < 2 →
@@ -88,12 +54,7 @@ value function is `‖·‖^s` and `q = s`. For `1 < s < 2` and planar matrices
 `φ^s(A) = |det A|^{s-1} ‖A‖^{2-s} = ‖A'‖^{2-s}` with the rescaled tuple
 `A'_i = |det A_i|^{(s-1)/(2-s)} A_i`, which is irreducible when `𝖠` is, so the proposition
 applies with `q = 2 - s`. The article states `thm:irred_eq_state` for every `s > 0`, with
-uniqueness and ergodicity; the statement covers the range `0 < s < 2` and the Gibbs bounds. The
-library proves the statement (`fengKaenmakiGibbs_holds` in
-`BoxLike/QuasiMultiplicative/Main.lean`), and its conclusion for tuples with rotations, which
-need not be irreducible (`System.IsEquilibriumState.hasGibbsBounds_of_withRotations`,
-`equilibriumGibbs`); the main line takes that statement, `EquilibriumGibbsStatement`, and results
-stated for irreducible tuples take `FengKaenmakiGibbs`. -/
+uniqueness and ergodicity; the statement covers the range `0 < s < 2` and the Gibbs bounds. -/
 def FengKaenmakiGibbs : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.Irreducible → ∀ {s : ℝ}, 0 < s → s < 2 →
@@ -110,8 +71,7 @@ the existence of the ergodic Gibbs measures on the mixing sub-shift `Σ_Z`. The 
 non-negative entries on the one-sided shift and states the first decomposition; all
 quantities here depend on the entries through their moduli, and the other three
 decompositions follow from the symmetry exchanging the two axes. The identity
-`P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s})` of the proposition is not part of the statement. The
-library proves the statement (`fraserJordanJurgaDecomposition_holds`). -/
+`P(𝖠, s) = P_Z(f_{1,s}) = P_Z(f_{2,s})` of the proposition is not part of the statement. -/
 def FraserJordanJurgaDecomposition : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.WithRotations → S.HasProximalDiagonal → ∀ {s : ℝ}, 0 < s → s < 2 →
@@ -124,9 +84,7 @@ which for `Ψ` is the projective exponential separation condition, and `ν` is a
 shift-invariant probability measure, then `\overline{π}_*ν` is exact-dimensional with
 `dim(\overline{π}_*ν) = min{1, -\overline{h}_0(ν) / \overline{λ}(𝖠, ν)}`. The source works on
 the one-sided shift, with the Lyapunov exponent `∑_j ν[j] log |r_j|` and closed intervals in
-the definition of exact-dimensionality. The library proves the statement from
-`ShmerkinLqDimension` (`jordanRapaportDimension_of_shmerkin` in `BoxLike/JordanRapaport.lean`),
-along Section 2 of the source. -/
+the definition of exact-dimensionality. -/
 def JordanRapaportDimension : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.ProjExpSeparation → ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],
@@ -144,12 +102,7 @@ exact dimension with closed intervals, and that `h_μ = H(p) = -∑_j p_j log p_
 similarities generate a free semigroup, that is, when there are no exact overlaps. The statement
 takes the latter hypothesis and the conclusion `dim ν = min{1, H(p) / |χ_μ|}`, which is the
 exact overlaps conjecture the source proves. Every solution `ν` of the stationarity equation is
-the self-similar measure, by Hutchinson's uniqueness. The library proves the statement
-(`kittleKoglerDimension_holds` in `BoxLike/KittleKogler.lean`), from the Lean formalisation of the
-source by its authors, the library `ExactOverlaps` in `vendor/`: its Theorem 1.1 gives the lower
-Hausdorff dimension `min{1, h_μ / |χ_μ|}` of every stationary measure, its exact-dimensionality
-theorem the pointwise form, and its entropy identity `h_μ = H(p)` without exact overlaps the form
-stated here. -/
+the self-similar measure, by Hutchinson's uniqueness. -/
 def KittleKoglerDimension : Prop :=
   ∀ {κ : Type u} [Fintype κ] (r t p : κ → ℝ), (∀ j, r j ≠ 0) → (∀ j, |r j| < 1) →
     (∀ j, 0 < p j) → ∑ j, p j = 1 → Function.Injective (simWord r t) →
@@ -194,19 +147,9 @@ The statement. Since `τ ↦ ∑_j p_j^q |r_j|^{-τ}` is strictly increasing, `�
 for every finite family of dyadic intervals. The statement is this consequence of the source:
 the lower bound only, for every finite family, with the weights `p_j > 0`.
 
-Degenerate instances, by hand. One map `x ↦ x/2`, `μ = δ_0`: the family `Ω_M` has one word, so
-exponential separation holds with every `R`; `τ̃(q) = 0`, so the statement speaks only for
-`α < 0`, where `2^{-M(q-1)α} ≥ 1 ≥ μ(I)^q`. The two maps `x ↦ x/2`, `x ↦ x/2 + 1/2` with
-`p = (1/2, 1/2)`, `μ` Lebesgue measure on `[0, 1]`: the words of length `M` have the distinct
-values `k 2^{-M}`, so exponential separation holds with `R = 1`; `τ̃(q) = q - 1`, and
-`∑_{I ∈ 𝒟_M} μ(I)^q = 2^{-M(q-1)} ≤ 2^{-M(q-1)α}` for every `α < 1`. The map `x ↦ x/2`
-repeated twice: distinct words of equal length have equal maps, so exponential separation
-fails and the statement is silent.
-
-Proved by `shmerkinLqDimension_holds` (`BoxLike/Shmerkin.lean`) along the source, with Bourgain's
-structure theorem (Shmerkin's Theorem 3.1) in a weak form whose doubling exponent is some
-`ε(T) > 0`. Used by: `jordanRapaportDimension_of_shmerkin` (`BoxLike/JordanRapaport.lean`), and
-through it `Challenge.audit_main1` and `Challenge.audit_main_extended`. -/
+Degenerate instances: `x ↦ x/2` with `μ = δ_0` (`τ̃(q) = 0`, the statement speaks for `α < 0`
+only); `x ↦ x/2`, `x ↦ x/2 + 1/2` with `p = (1/2, 1/2)` and Lebesgue `μ` (`τ̃(q) = q - 1`, the
+bound is `2^{-M(q-1)}`); `x ↦ x/2` twice (separation fails, the statement is silent). -/
 def ShmerkinLqDimension : Prop :=
   ∀ {κ : Type u} [Fintype κ] (r t p : κ → ℝ), (∀ j, r j ≠ 0) → (∀ j, |r j| < 1) →
     (∀ j, 0 < p j) → ∑ j, p j = 1 → ShmerkinExpSeparation r t →

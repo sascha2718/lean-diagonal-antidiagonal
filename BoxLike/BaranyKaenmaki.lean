@@ -1,40 +1,27 @@
 module
 
 /-
-A proof of `BoxLike.NoOverlap.BaranyKaenmakiPair`: there are `0 < λ < 1/3` transcendental,
-`0 < t < λ/(1-λ)` and `C_0 > 0` such that the homogeneous system `(λx, λx + t, λx + 1)` generates
-a free semigroup and `Δ_n^{λ,t} ≤ C_0 exp(-n²)` for every `n ≥ 1`. This is the form of the
-theorem of B. Bárány and A. Käenmäki (Super-exponential condensation without exact overlaps,
-Adv. Math. 379 (2021), arXiv:1910.04623v4) that the proof of `prop:ssc_no_overlap_not_pesc`
-uses. A corrected form of their Theorem 2.1 is proved as well: for every sequence `η` of positive
-numbers the free pairs with `Δ_n < η_n` for every `n ≥ 5` have uncountably many transcendental
-first coordinates.
+`NoOverlap.BaranyKaenmakiPair`: there are `0 < λ < 1/3` transcendental, `0 < t < λ/(1-λ)` and
+`C_0 > 0` such that `(λx, λx + t, λx + 1)` generates a free semigroup and
+`Δ_n^{λ,t} ≤ C_0 exp(-n²)` for every `n ≥ 1`, the form of Bárány–Käenmäki, Adv. Math. 379
+(2021), arXiv:1910.04623v4, that `prop:ssc_no_overlap_not_pesc` uses; and a corrected form of
+their Theorem 2.1: for every positive sequence `η` the free pairs with `Δ_n < η_n` for every
+`n ≥ 5` have uncountably many transcendental first coordinates.
 
-The proof is a Baire category argument and differs from the source, which builds a Cantor set
-of parameters. A pair `π = (𝐰, 𝐰')` of distinct words of a common length gives
-`h_𝐰(0) - h_{𝐰'}(0) = U_π(λ) + t V_π(λ)` with integer polynomials `U_π, V_π`, so that its zero
-set is the graph of `t = -U_π(λ)/V_π(λ)`. Two such curves cross at a simple root of
-`U_π V_{π'} - U_{π'} V_π`. Let `D_η` be the set of crossing points near the crossing at
-`λ = (√13 - 3)/2` of the two pairs of words of length `5` of Bárány and Käenmäki (their
-Lemma 3.8) at which `Δ_n < η_n` for every `n ≥ 5`. Concatenation
-`π'' = (𝐰 0^a 𝐯 0^b 1, 𝐰' 0^a 𝐯' 0^b 0)` produces crossings of the curve of `π` at distinct
-parameters arbitrarily close to every point of `D_η` (`exists_crossPt_near`), so that in the
-complete metric space `K = closure D_η` the conditions `Δ_n < η_n`, `h_𝐰(0) ≠ h_{𝐰'}(0)` and
-`λ ∉ L` for a countable set `L` containing the algebraic numbers define countably many dense
-open sets. A point of their intersection is the pair.
+Proof by Baire category. The zero set of `h_𝐰(0) - h_{𝐰'}(0) = U_π(λ) + t V_π(λ)` is a curve;
+concatenation produces crossings of curves arbitrarily close to every point of the set `D_η` of
+crossing points near the crossing of Bárány and Käenmäki (their Lemma 3.8), so in `closure D_η`
+the conditions `Δ_n < η_n`, `h_𝐰(0) ≠ h_{𝐰'}(0)` and `λ ∉ L` (`L` countable) are dense open.
 
-Main declarations, in the namespace `BoxLike.NoOverlap`:
+In the namespace `BoxLike.NoOverlap`:
 
-* `pairDiff`, `pU`, `pV`, `pairCross`: the difference of a pair, its polynomials and the
-  crossing polynomial of two pairs.
-* `extPair`, `pU_extPair`, `pV_extPair`, `pairCross_extPair`: concatenation.
+* `pairDiff`, `pU`, `pV`, `pairCross`, `extPair`: the polynomials of a pair and concatenation.
 * `IsCrossPt`, `exists_root_near`, `exists_crossPt_near`: the crossing lemma.
 * `basePair₁`, `basePair₂`, `lamB`, `isCrossPt_base`: the crossing of Bárány and Käenmäki.
 * `goodCross`, `exists_goodCross_pairDiff_ne`, `exists_good_point`: the Baire argument.
-* `baranyKaenmakiPair_holds`: `BaranyKaenmakiPair`.
-* `not_countable_fst_condensation`, `not_countable_condensation`: the corrected Theorem 2.1.
-* `prop_ssc_no_overlap_not_pesc_holds`, `planar_separation_not_pesc_holds`: the proposition
-  and the paragraph after it with no literature hypothesis.
+* `baranyKaenmakiPair_holds`, `not_countable_fst_condensation`, `not_countable_condensation`.
+* `prop_ssc_no_overlap_not_pesc_holds`, `planar_separation_not_pesc_holds`: the proposition and
+  the paragraph after it with no hypothesis.
 -/
 public import BoxLike.Aligned.NoOverlapPESC
 public import BoxLike.NoOverlapExample

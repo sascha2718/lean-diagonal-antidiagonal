@@ -1,52 +1,21 @@
 module
 
 /-
-`FengHuExactDim` of `BoxLike/LiteratureRemarks.lean`, which the remark of
-`sec:dimension_of_projections` before `thm:eq_state_proj_dim` uses: for every ergodic
-shift-invariant probability measure `ν` on `(ι × ZMod 2)^ℤ`, the projection `\overline{π}_*ν`
-under the projective system `Ψ` is exact-dimensional (D.-J. Feng and H. Hu, *Dimension theory of
-iterated function systems*, Comm. Pure Appl. Math. 62 (2009), arXiv:1002.2036, Theorem 2.8, for
-the similarities of `Ψ`).
-
-The proof is Feng–Hu's argument for weakly conformal systems, written for a coding of a
-self-similar system on the line by an ergodic measure-preserving map `T`. Write `μ = p_*m` for
-the projection of `m`, `[a] = {x : s(x) = a}` for the cylinders, `B(z, ρ)` for closed balls,
-`κ_a = p_*(m|_{[a]})` and `κ'_a = (p ∘ T)_*(m|_{[a]})`; both are at most `μ`, the second by
-invariance of `m`.
-
-1. Geometry: for `s(y) = s(x) = a` the relation `p(y) = c_a p(T y) + t_a` gives
-   `|p(y) - p(x)| = |c_a| |p(T y) - p(T x)|`, hence `κ_a(B(p(x), |c_a| ρ)) = κ'_a(B(p(T x), ρ))`
-   (`Coding.branch_closedBall_scaled`).
-2. One step: with `I(x, ρ) = -log μ(B(p(x), ρ))` and `a = s(x)`,
-   `I(x, |c_a| ρ) = I(T x, ρ) - log (κ'_a/μ)(B(p(T x), ρ)) + log (κ_a/μ)(B(p(x), |c_a| ρ))`
-   (`Coding.info_step`).
-3. Telescoping along the radii `ρ_n(x) = R_0 |c_{s(x)} ⋯ c_{s(T^{n-1} x)}|`, where `R_0`
-   exceeds the diameter of the image of `p`, writes `I(x, ρ_n(x))` as the triangular sum
-   `∑_{j<n} φ_{n-j}(T^j x)` of the one-step increments (`Coding.info_rad_eq_sum`).
-4. As the radius shrinks the increments converge almost everywhere, to the difference of the
-   logarithmic Radon–Nikodym densities, by Besicovitch's differentiation theorem
-   (`Coding.ae_tendsto_incr`); they are dominated by an integrable function, by the Besicovitch
-   maximal inequality of the library `ExactOverlaps` (`Coding.exists_incr_envelope`).
-5. Maker's theorem in triangular form for an ergodic map (`ae_tendsto_triangularAverage`) gives
-   `I(x, ρ_n(x)) / n → h`, and Birkhoff's theorem gives `-log ρ_n(x) / n → λ > 0`
-   (`Coding.ae_tendsto_log_rad`).
-6. Interpolation between the radii `ρ_n(x)` and transfer through `p`, both from
-   `ExactOverlaps`, give exact dimension `h / λ` for `μ` (`Coding.exists_isExactDim`).
-
-No separation condition, no independence and no distinctness of the maps is used. The library
-`ExactOverlaps` supplies the deterministic estimates for triangular averages, the integrable
-envelope of logarithmic ball ratios, the interpolation between radii and the transfer through
-`p`; the pointwise limits come from Birkhoff's theorem of this library.
+`FengHuExactDim`: the projection of an ergodic measure under the projective system `Ψ` is
+exact-dimensional (Feng–Hu, Comm. Pure Appl. Math. 62 (2009), Theorem 2.8), along Feng–Hu's
+density argument for a coding of a self-similar system on the line: the information
+`-log μ(B(p(x), ρ_n(x)))` along the radii `ρ_n(x) = R_0 |c_{s(x)} ⋯ c_{s(T^{n-1} x)}|` is a
+triangular sum of one-step increments, which converge almost everywhere by Besicovitch
+differentiation and are dominated by an integrable envelope; Maker's theorem and Birkhoff's
+theorem give the dimension `h / λ`. The deterministic estimates come from `ExactOverlaps`.
 
 * `FengHu.ratioInfo`, `FengHu.densityInfo`, `FengHu.ae_tendsto_ratioInfo`: logarithmic ball
   ratios on the line and their differentiation.
-* `FengHu.ae_tendsto_triangularAverage`: Maker's theorem in triangular form for an ergodic map.
-* `FengHu.branch`, `FengHu.ae_of_branch`, `FengHu.integrable_of_branch`: the branch measures
-  `q_*(m|_{[a]})` and the transfer of statements about them to `m`.
-* `FengHu.Coding`: the data of a coding of a self-similar system on the line.
-* `FengHu.Coding.exists_isExactDim`: the projection of an ergodic measure is exact-dimensional.
-* `System.Bounds.abs_projBar_le`, `System.Bounds.coding`: the coding of `Ψ` by the shift.
-* `fengHuExactDim_holds`: the predicate `FengHuExactDim` holds.
+* `FengHu.ae_tendsto_triangularAverage`: Maker's theorem in triangular form.
+* `FengHu.branch`, `FengHu.ae_of_branch`, `FengHu.integrable_of_branch`: the branch measures.
+* `FengHu.Coding`, `FengHu.Coding.exists_isExactDim`: a coding of a self-similar system on the
+  line, and the exact dimension of the projection of an ergodic measure.
+* `System.Bounds.coding`, `fengHuExactDim_holds`: the coding of `Ψ`, and the statement.
 -/
 public import BoxLike.LiteratureRemarks
 public import BoxLike.Measurable

@@ -1,33 +1,14 @@
 module
 
 /-
-Literature theorems behind results off the main line of the article, as `Prop`-valued
-definitions; a result that uses one of them takes it as a hypothesis. The four main results
-`thm:main1`, `thm:main2`, `thm:eq_state_proj_dim` and `thm:main_extended` do not depend on this
-module. The rules of `docs/correspondence.md`, "Fidelity boundary", apply.
+Theorems the article cites off its main line, as `Prop`-valued definitions; a result that uses one
+takes it as a hypothesis. Both are proved elsewhere in the library:
 
-Standing conventions: measures on `Σ = ℤ → ι` and on `Σ_Z ⊆ (ι × ZMod 2)^ℤ` are Borel
-probability measures, invariant under the left shift `shift 1`; the alphabet `ι` is finite with
-the discrete `σ`-algebra.
-
-* `FengHuExactDim`: exact-dimensionality of the projections of ergodic measures under the
-  self-similar system `Ψ`, without separation, from Feng–Hu, Comm. Pure Appl. Math. 62 (2009),
-  Theorem 2.8. The article uses it in `sec:dimension_of_projections`. The library proves it
-  (`fengHuExactDim_holds` in `BoxLike/FengHu.lean`), along Feng–Hu's density argument; the
-  results of `BoxLike/NoSeparation.lean` take it as a hypothesis.
-* `FengKaenmakiUnique`: the uniqueness part of `thm:irred_eq_state`, from Feng–Käenmäki,
-  Discrete Contin. Dyn. Syst. 30 (2011), Proposition 1.2, applied with `q = s` for
-  `0 < s ≤ 1` and to a rescaled tuple with `q = 2 - s` for `1 < s < 2`. The library proves it
-  (`fengKaenmakiUnique_holds` in `BoxLike/QuasiMultiplicative/Main.lean`), and the conclusion
-  for tuples with rotations (`System.unique_of_withRotations` in
-  `BoxLike/EquilibriumGibbs.lean`); results stated for irreducible tuples take it.
-
-The statements were compared with the sources on 2026-09-21 (arXiv:1002.2036v1 and the journal
-version of Feng–Hu, arXiv:1009.3129v1 and the journal version of Feng–Käenmäki); `docs/correspondence.md`,
-"Fidelity boundary", records the reductions.
-
-Each statement quantifies over every finite alphabet `ι : Type u` with the discrete
-`σ`-algebra, as in `BoxLike/Literature.lean`.
+* `FengHuExactDim`: Feng–Hu, Theorem 2.8, for the projective system `Ψ`, used in
+  `sec:dimension_of_projections` (`fengHuExactDim_holds`).
+* `FengKaenmakiUnique`: the uniqueness part of `thm:irred_eq_state`; Feng–Käenmäki,
+  Proposition 1.2 (`fengKaenmakiUnique_holds`; for tuples with rotations,
+  `System.unique_of_withRotations`).
 -/
 public import BoxLike.MeasureDim
 public import BoxLike.Proximal
@@ -48,9 +29,7 @@ are similarities of the line, so `Ψ` is weakly conformal and hence `m`-conforma
 No separation condition is assumed, the maps need not be distinct, and the measure need not be
 carried by `Σ_Z`. The source works on the one-sided shift with closed balls; `\overline{π}`
 depends on the non-negative coordinates only, and the measure obtained by forgetting the
-negative coordinates is invariant and ergodic. The library proves the statement
-(`fengHuExactDim_holds` in `BoxLike/FengHu.lean`), directly on the two-sided shift, along
-Feng–Hu's density argument. -/
+negative coordinates is invariant and ergodic. -/
 def FengHuExactDim : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
     (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν], Ergodic (shift 1) ν →
@@ -65,10 +44,7 @@ function is `‖·‖^s` and `q = s`. For `1 < s < 2` and planar matrices
 applies with `q = 2 - s`. The source works on the one-sided shift; pressure, entropy and energy
 depend on the cylinders at non-negative positions only, and an invariant measure on `Σ` is
 determined by them. For `s ≥ 2` the potential is multiplicative and the library proves
-uniqueness directly. The library proves the statement (`fengKaenmakiUnique_holds` in
-`BoxLike/QuasiMultiplicative/Main.lean`), and its conclusion for tuples with rotations, which need
-not be irreducible, and every `s > 0` (`System.unique_of_withRotations`); results stated for
-irreducible tuples (`BoxLike/IrreducibleEquilibrium.lean`) take `FengKaenmakiUnique`. -/
+uniqueness directly. -/
 def FengKaenmakiUnique : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
     S.Irreducible → ∀ {s : ℝ}, 0 < s → s < 2 →

@@ -4,18 +4,11 @@ module
 `BoxLike`: a formalisation of `diagonal-antidiagonal.tex`, "Hausdorff dimension of planar
 box-like self-affine sets with rotations" (Allen, Käenmäki, Prokaj, Simon, Troscheit).
 
-The library is built on Mathlib and on the Lean formalisation of Kittle–Kogler's exact
-overlaps theorem by its authors, the library `ExactOverlaps` carried verbatim in `vendor/`
-(`BoxLike/KittleKogler.lean`); it contains no `sorry` and declares no axiom: every constant
-depends on `propext`, `Classical.choice` and `Quot.sound` only. Literature theorems
-cited by the article without proof are `Prop`-valued definitions of the modules
-`BoxLike/Literature.lean`, `BoxLike/LiteratureFeng.lean`, `BoxLike/LiteraturePlanarFeng.lean`,
-`BoxLike/LiteratureFengKaenmaki.lean` and `BoxLike/LiteratureRemarks.lean`, and every result that
-uses one takes it as a hypothesis; the last module holds the ones that no main result depends
-on. The library proves every statement the headline results take, and `Solution.lean` passes
-the proofs to the results that take them. A premise that is not authorised goes in `BoxLike/Proposals/`,
-which this module does not import; none is pending. `docs/correspondence.md` records the state of every numbered result, the remaining work
-and the fidelity boundary.
+Built on Mathlib and on the Kittle–Kogler library `ExactOverlaps` (`vendor/`). No `sorry`, no
+axiom beyond `propext`, `Classical.choice` and `Quot.sound`. Theorems the article cites are
+`Prop`-valued definitions in the `Literature*` modules, taken as hypotheses by the results that
+use them and proved elsewhere in the library. `docs/correspondence.md` records the state of every
+numbered result.
 
 * `Orientation`: the two-sided shift `σ^n` and the orientation cocycle `ε_n` of
   `eq:def_of_eps_mod2`, with the cocycle identity `eq:tau_omega_sigma_commutative1`.
@@ -45,9 +38,7 @@ and the fidelity boundary.
 * `EntropyFactor`: the two-lift comparison of block entropies behind `thm:entropy_eq_gibbs`.
 * `Thermodynamic`: Lyapunov exponents, `eq:eq_state_def`, the potentials `f_{1,s}`, `f_{2,s}`,
   Gibbs measures on `Σ_Z`, the conclusion of `thm:eq_state_is_sum`, the coordinate marginals.
-* `Literature`: the literature theorems of the main line as `Prop`s: Morris–Shmerkin,
-  Feng–Käenmäki (the Gibbs bounds), Fraser–Jordan–Jurga, Jordan–Rapaport, Kittle–Kogler and
-  Shmerkin's `L^q` dimension theorem. The library proves every one of them.
+* `Literature`: the literature theorems of the main line as `Prop`s, all proved.
 * `Main`: `thm:entropy_eq_gibbs` and the decomposition `eq:proj_eq_is_sum`, `eq:gibbs_proj_dim`
   of the coordinate marginals, for a tuple containing a proximal diagonal generator.
 * `Proximal`: proximal matrices and tuples, `thm:box_like_proximal`.
@@ -116,62 +107,33 @@ and the fidelity boundary.
   the statement of Rossi's bound `eq:hausdorff_ergodic_lyapunov`, which `RossiBound` proves, and
   equality in it for the equilibrium state.
 * `LiteraturePlanarFeng`, `Planar.FengOne`: Feng's Ledrappier–Young formula for planar
-  self-affine systems as a `Prop`, its box-like specialisation, and `thm:feng1` at the article's
-  scope.
-* `LiteratureFengKaenmaki`, `IrreducibleEquilibriumTuple`: Feng–Käenmäki, Proposition 1.2, for
-  irreducible invertible planar tuples as a `Prop`, its reductions and box-like specialisations,
-  and `thm:irred_eq_state` at the article's scope; `QuasiMultiplicative` proves the `Prop`.
-* `Bowen`: Bowen's theorem, the existence of an ergodic Gibbs measure for every Hölder potential
-  on the mixing sub-shift `Σ_Z` (`bowenGibbsExistence`): the weighted periodic-orbit measures
-  satisfy uniform Gibbs bounds up to every length, a limit by compactness is an invariant Gibbs
-  measure, and a Gibbs measure is ergodic by a quasi-Bernoulli lower bound; with uniqueness,
-  `existsUnique_ergodic_isGibbsPotential`.
-* `FraserJordanJurga`: `thm:eq_state_is_sum`, the decomposition of the equilibrium state into the
-  two `s`-Gibbs measures and its Lyapunov exponents (`fraserJordanJurgaDecomposition_holds`), from
-  Bowen's theorem, the Gibbs bounds of the image of `μ_1` under forgetting the orientation, and a
-  relative-entropy comparison of the two projective exponents.
-* `EquilibriumGibbsStatement`, `Support.RelativeEntropy`, `EquilibriumGibbs`: `thm:irred_eq_state`
-  for box-like tuples with rotations and every `s > 0`, with no literature premise: every
-  equilibrium state is the image of Bowen's Gibbs measure, by a uniform bound on the relative
-  entropy over the cylinders (`equilibriumGibbs`, `System.irred_eq_state_of_withRotations`).
-* `MorrisShmerkin`: `eq:simple_lyapunov` from Morris–Shmerkin's Lemmas 3.4 and 3.5, proved, and
-  the statement `MorrisShmerkinLyapunov` (`morrisShmerkinLyapunov_holds`).
-* `KittleKogler`: the statement `KittleKoglerDimension` (`kittleKoglerDimension_holds`), from the
-  Lean formalisation of Kittle–Kogler's Theorem 1.1 by its authors, the library `ExactOverlaps`
-  in `vendor/`.
-* `FengHu`: the statement `FengHuExactDim` (`fengHuExactDim_holds`), Feng–Hu's Theorem 2.8 for
-  the projective system `Ψ`, along Feng–Hu's density argument with no literature premise.
-* `JordanRapaport`: the statement `JordanRapaportDimension` from `ShmerkinLqDimension`
-  (`jordanRapaportDimension_of_shmerkin`), along Section 2 of
-  Jordan–Rapaport: block Bernoulli measures, Shmerkin's Lemma 1.7 and the counting of the typical
-  cylinders.
-* `FengLedrappierYoung`: the statements `PlanarFengLedrappierYoung`
-  (`planarFengLedrappierYoung_holds`), `FengLedrappierYoung` (`fengLedrappierYoung_holds`) and
-  `FengLedrappierYoungBar` (`fengLedrappierYoungBar_holds`), Feng's Theorems 1.2 (ii) and 1.3 in
-  the plane, along Feng's Sections 4 to 6 with no literature premise.
-* `Shmerkin`: the statement `ShmerkinLqDimension` (`shmerkinLqDimension_holds`), the lower bound
-  of Shmerkin's Theorem 6.6 on the `L^q` dimension of self-similar measures, along the source
-  (`BoxLike/Shmerkin/`): the inverse theorem for `L^q` norms of convolutions from the asymmetric
-  Balog–Szemerédi–Gowers theorem and a weak form of Bourgain's structure theorem, proved from
-  Hochman's saturation theorem of the vendored library `ExactOverlaps`.
-* `Fraser`: `thm:fraser` for every box-like self-affine set, with no literature premise: the
-  upper bound `\overline{\dim}_M X ≤ dimmaff(X)` after Fraser's §5 (`Upper`) and the statement
-  `System.FraserBound` (`UpperBound`, `System.fraserBound_holds`); the `δ`-stoppings and Fraser's
-  Lemma 5.1 (2) (`LowerStop`); the lower bound `dimmaff(X) ≤ \underline{\dim}_M X` under the
-  rectangular open set condition (`LowerCover`, `Lower`); and the statement `System.FraserROSC`
-  (`Main`, `System.fraserROSC_holds`).
-* `Rossi`, `RossiBound`: Rossi's bound `eq:hausdorff_ergodic_lyapunov` by a covering argument,
-  from the Shannon–McMillan–Breiman theorem and the Furstenberg–Kesten limits along the forward
-  products, and the statement `System.RossiBound` (`System.rossiBound`).
-* `QuasiMultiplicative`: Feng–Käenmäki, Proposition 1.2, for every irreducible tuple of
-  invertible planar matrices, with no literature premise: the norm of an irreducible tuple is
-  quasi-multiplicative, the potential `‖·‖^q` has an ergodic Gibbs measure by Bowen's
-  construction, and every invariant `q`-equilibrium state equals it by a relative-entropy bound;
-  the statements `FengKaenmakiNormEquilibrium`, `FengKaenmakiGibbs` and `FengKaenmakiUnique` hold
+  self-affine systems as a `Prop`, its box-like specialisation, and `thm:feng1`.
+* `LiteratureFengKaenmaki`, `IrreducibleEquilibriumTuple`: Feng–Käenmäki, Proposition 1.2, as
+  a `Prop`, its reductions, and `thm:irred_eq_state` at the article's scope.
+* `Bowen`: Bowen's theorem, the unique ergodic Gibbs measure of a Hölder potential on `Σ_Z`
+  (`bowenGibbsExistence`, `existsUnique_ergodic_isGibbsPotential`).
+* `FraserJordanJurga`: `thm:eq_state_is_sum` (`fraserJordanJurgaDecomposition_holds`).
+* `EquilibriumGibbsStatement`, `Support.RelativeEntropy`, `EquilibriumGibbs`:
+  `thm:irred_eq_state` for box-like tuples with rotations and every `s > 0`
+  (`equilibriumGibbs`, `System.irred_eq_state_of_withRotations`).
+* `MorrisShmerkin`: `eq:simple_lyapunov` (`morrisShmerkinLyapunov_holds`).
+* `KittleKogler`: `KittleKoglerDimension` from the vendored library
+  (`kittleKoglerDimension_holds`).
+* `FengHu`: `FengHuExactDim`, Feng–Hu's Theorem 2.8 for `Ψ` (`fengHuExactDim_holds`).
+* `JordanRapaport`: `JordanRapaportDimension` from `ShmerkinLqDimension`
+  (`jordanRapaportDimension_of_shmerkin`), along Section 2 of the source.
+* `FengLedrappierYoung`: `PlanarFengLedrappierYoung`, `FengLedrappierYoung` and
+  `FengLedrappierYoungBar` (`planarFengLedrappierYoung_holds`, `fengLedrappierYoung_holds`,
+  `fengLedrappierYoungBar_holds`), along Feng's Sections 4 to 6 in the plane.
+* `Shmerkin`: `ShmerkinLqDimension` (`shmerkinLqDimension_holds`), along the source
+  (`BoxLike/Shmerkin/`), with Bourgain's structure theorem in a weak form.
+* `Fraser`: `thm:fraser` along Fraser's Section 5 (`System.fraserBound_holds`,
+  `System.fraserROSC_holds`).
+* `Rossi`, `RossiBound`: Rossi's bound `eq:hausdorff_ergodic_lyapunov` (`System.rossiBound`).
+* `QuasiMultiplicative`: Feng–Käenmäki, Proposition 1.2, for irreducible planar tuples
   (`fengKaenmakiNormEquilibrium_holds`, `fengKaenmakiGibbs_holds`, `fengKaenmakiUnique_holds`).
-* `LiteratureRemarks`: the literature theorems that no main result depends on, as `Prop`s:
-  Feng–Hu, Theorem 2.8, which `FengHu` proves, and the uniqueness part of `thm:irred_eq_state`,
-  which `QuasiMultiplicative` proves.
+* `LiteratureRemarks`: Feng–Hu, Theorem 2.8, and the uniqueness part of `thm:irred_eq_state` as
+  `Prop`s, both proved.
 * `NoSeparation`: the remark before `thm:eq_state_proj_dim` that the coordinate marginals are
   double-dimensional without separation, and the uniqueness of `μ^(2)` in
   `thm:two-block-normalisation`.
@@ -219,14 +181,12 @@ and the fidelity boundary.
   `dimmaff(X) = dimaff(X)` from the first part of `thm:fraser`.
 * `NoOverlapExampleFree`: the algebraic part of `prop:ssc_no_overlap_not_pesc`: algebraically
   independent parameters and the freeness of the semigroup generated by the projective system.
-* `NoOverlapExample`: `prop:ssc_no_overlap_not_pesc` and the paragraph after its proof, with the
-  theorem of Bárány and Käenmäki as a hypothesis, in the form the article uses and in the form
-  of the source.
-* `BaranyKaenmaki`: the form the article uses, `NoOverlap.BaranyKaenmakiPair`, proved by a Baire
-  category argument (`NoOverlap.baranyKaenmakiPair_holds`), a corrected form of Theorem 2.1 of
-  the source, and `prop:ssc_no_overlap_not_pesc` with no literature hypothesis.
-* `BaranyKaenmakiCounterexample`: Theorem 2.1 of the source as stated,
-  `NoOverlap.BaranyKaenmakiTheorem`, is false (`NoOverlap.not_baranyKaenmakiTheorem`).
+* `NoOverlapExample`: `prop:ssc_no_overlap_not_pesc` and the paragraph after its proof, from
+  the theorem of Bárány and Käenmäki in the form the article uses and in the form of the source.
+* `BaranyKaenmaki`: `NoOverlap.BaranyKaenmakiPair` (`NoOverlap.baranyKaenmakiPair_holds`), a
+  corrected Theorem 2.1 of the source, and `prop:ssc_no_overlap_not_pesc` with no hypothesis.
+* `BaranyKaenmakiCounterexample`: Theorem 2.1 of the source as stated is false
+  (`NoOverlap.not_baranyKaenmakiTheorem`).
 * `Subsystem`: finite subsystems `(φ_{w_k})_k` of a box-like system, the absence of exact
   overlaps of their coordinate maps, and their unique coding inside a feasible open set.
 * `TypicalWords`: the families `W_n` of diagonal words of the proof of `thm:main2`, with
@@ -261,9 +221,7 @@ and the fidelity boundary.
   `prop:ssc_no_overlap_not_pesc`, `thm:sigma_tau_omega_positive_eq_measure`,
   `thm:conditional_two_ways` and `eq:haus_dim_sum`, and the all-anti-diagonal example of
   `sec:irreducibility`.
-* `SMB`, `ShannonMcMillanBreiman`: Maker's generalised ergodic theorem, the informations of the
-  finite pasts with Chung's maximal inequality, and the Shannon–McMillan–Breiman theorem by
-  Breiman's argument, with an interface for typical words.
+* `SMB`, `ShannonMcMillanBreiman`: the Shannon–McMillan–Breiman theorem by Breiman's argument.
 * `KolmogorovSinai`: the entropy of finite partitions, the Kolmogorov–Sinai entropy as a supremum
   over finite Borel partitions, and the generator theorem for the two-sided shift.
 * `CylinderEntropy`: `thm:feng_entropy_kolmogorov_sinai` for box-like systems.
@@ -271,9 +229,8 @@ and the fidelity boundary.
   `TupleEquilibriumExistence`: equilibrium states of arbitrary tuples of invertible matrices: the
   variational inequality, existence, the case `s ≥ 2`, the norm and rescaled potentials, the
   reduction to the one-sided shift, and ergodicity of a unique equilibrium state.
-* `TupleErgodicEquilibrium`: existence of an ergodic equilibrium state for every tuple of
-  invertible matrices and every `s ≥ 0`: the set of equilibrium states is compact, and a maximiser
-  of a strictly convex functional of the cylinder masses is extreme, hence ergodic.
+* `TupleErgodicEquilibrium`: an ergodic equilibrium state exists for every tuple of invertible
+  matrices and every `s ≥ 0`.
 * `IrreducibleEquilibrium`: `thm:irred_eq_state` for irreducible box-like systems, from
   `FengKaenmakiGibbs` and `FengKaenmakiUnique`, which `QuasiMultiplicative` proves.
 * `BernoulliGrouping`, `TwoBlockNormalisation`: grouping a Bernoulli measure into pairs, and
@@ -283,30 +240,16 @@ and the fidelity boundary.
   predicates `FengInfoSum` and `FengInfoSumBar` hold.
 * `Kingman`, `FurstenbergKesten`: Kingman's subadditive ergodic theorem, proved from Birkhoff's
   theorem, and the Furstenberg–Kesten limits along the backward products of an invertible tuple.
-* `Planar`: arbitrary planar self-affine systems: the backward rates, the regular set `Σ'` and
-  the filtration, the partitions `ξ_i` and entropies `h_i`, the Lyapunov limits, the box-like
-  specialisation, `thm:feng_entropy_as_limit` and `thm:feng_entropy_zero` from Feng's identity,
-  `thm:feng_entropy_kolmogorov_sinai` given `μ(Σ') = 1`, the comparison with Feng's partitions,
-  the affinity dimension and Falconer's bound `eq:hausdorff_affinity_upper_bound` for every
-  planar self-affine set, Oseledets' theorem for invertible planar cocycles (`OseledetsTheorem`),
-  and `thm:feng_entropy_as_limit`, `thm:feng_entropy_kolmogorov_sinai` and `thm:feng_entropy_zero`
-  for every planar self-affine set (`FengGeneral`), and the invariance of the pressure, the
-  exponents, the equilibrium states, the separation conditions and the dimensions of sets and
-  measures under linear changes of coordinates (`ChangeOfBasis`).
-* `Support`: supporting claims of the prose: topological mixing of `Σ_Z`, the one-sided
-  canonical projection `π^+` of a contracting affine system and `(π^+)_*μ^+ = π_*μ`, convexity
-  and continuity of the pressure of a general tuple, metric doubling of Gibbs measures,
-  information and entropy for countable partitions and sub-`σ`-algebras, the pressure of Hölder
-  potentials on `Σ_Z` and the uniqueness of ergodic Gibbs measures, and the projection of a
-  general planar system; the threshold remarks of the introduction (`IntroductionClaims`) and the
-  coincidence of the potentials at `s = 2` (`PotentialsAtTwo`).
-* `MainTwoProse`: `thm:main2` along the prose proof: typical words by the
-  Shannon–McMillan–Breiman theorem and returns to horizontal orientation, the pigeonhole over
-  count vectors, the diagonal subsystem, the entropy threshold by conditional-entropy
-  monotonicity, strong separation in the open-set branch, and the endpoint.
-* `ProjectiveLineSystem`: the second part of `thm:feng1` from the first, through the planar
-  system `z ↦ diag(g'_j, g'_j / 2) z + (g_j(0), 0)` of the projective system: `FengLedrappierYoung`
-  implies `FengLedrappierYoungBar` (`fengLedrappierYoungBar_of_fengLedrappierYoung`).
+* `Planar`: arbitrary planar self-affine systems: Oseledets' theorem, the partitions `ξ_i` and
+  entropies `h_i`, `thm:feng_entropy_as_limit`, `thm:feng_entropy_kolmogorov_sinai` and
+  `thm:feng_entropy_zero` for every planar self-affine set, Falconer's bound, and the invariance
+  under linear changes of coordinates (`ChangeOfBasis`).
+* `Support`: supporting claims of the prose: mixing of `Σ_Z`, the one-sided projection,
+  convexity of the pressure, Gibbs doubling, conditional information, Hölder pressure and Gibbs
+  uniqueness on `Σ_Z`, the introduction's threshold remarks and the potentials at `s = 2`.
+* `MainTwoProse`: `thm:main2` along the prose proof.
+* `ProjectiveLineSystem`: `FengLedrappierYoung` implies `FengLedrappierYoungBar`
+  (`fengLedrappierYoungBar_of_fengLedrappierYoung`).
 -/
 public import BoxLike.Orientation
 public import BoxLike.Coding

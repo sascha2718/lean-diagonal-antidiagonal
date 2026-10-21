@@ -8,15 +8,9 @@ public import BoxLike
 /-!
 # Transport between the challenge vocabulary and the library
 
-`toLib` and `ofLib` identify a `Challenge.System` with the `BoxLike.System` carrying the same
-data. Every challenge notion that the three headline statements and the internal supporting
-statements use agrees with its library namesake on the identified system. Most agreements hold
-by `rfl`. The structurally recursive `gWord` agrees by induction, since the elaborator does not
-unfold its recursor at a variable, and the projective gap built on it follows by rewriting. The
-challenge `dimaff` takes no `[Nonempty ι]` and chooses a zero of the pressure when a unique one
-exists; `dimaff_eq` identifies it with the library's under `[Nonempty ι]`. The challenge
-vocabulary states no cited theorem: every literature input of the headline results is a theorem
-of the library.
+`toLib` identifies a `Challenge.System` with the `BoxLike.System` of the same data; every
+challenge notion agrees with its library namesake on `toLib S`, by `rfl` except `gWord` (by
+induction) and `dimaff` (which needs `[Nonempty ι]`).
 -/
 
 open MeasureTheory

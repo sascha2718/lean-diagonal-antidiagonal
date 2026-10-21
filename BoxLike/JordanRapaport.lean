@@ -1,31 +1,16 @@
 module
 
 /-
-Jordan–Rapaport, *Dimension of ergodic measures projected onto self-similar sets with overlaps*,
-Proc. Lond. Math. Soc. (3) 122 (2021), Theorem 1.1 (numbering of arXiv:1908.00271), for the
-projective system `Ψ`: the statement `JordanRapaportDimension` of `BoxLike/Literature.lean`, which
-the article cites in `eq:gibbs_proj_dim`, derived from Shmerkin's theorem on the `L^q` dimension
-of self-similar measures, the literature hypothesis `ShmerkinLqDimension` of the same module
-(Ann. of Math. (2) 189 (2019), Theorem 6.6, numbering of arXiv:1609.07802v3).
-
-The upper bound `dim ≤ min{1, h/|χ|}` uses the Shannon–McMillan–Breiman and Birkhoff theorems
-only. The lower bound follows Section 2 of the source: Bernoulli measures on blocks of length `m`
-with weights close to the `ν`-masses of the typical blocks (`exists_blockWeights`), Lemma 2.1
-(`lq_sum_lt_one`), Lemma 2.2 in Shmerkin's form (`System.ProjExpSeparation.shmerkinExpSeparation`),
-Shmerkin's Lemma 1.7 (`frostman_of_lq`), Lemma 2.3 (`System.Bounds.frostman_map_shift`), the set
-`Ω_0` (`System.exists_typicalSet`), Lemma 2.4 (`exists_shift_cylinder_ge`) and the counting of the
-typical cylinders (`System.Bounds.measureReal_restrict_closedBall_le`). Exact-dimensionality is
-part of the conclusion: no theorem of Feng–Hu is used.
+`JordanRapaportDimension` from `ShmerkinLqDimension`, along Section 2 of Jordan–Rapaport,
+Proc. Lond. Math. Soc. (3) 122 (2021), arXiv:1908.00271. The upper bound uses the
+Shannon–McMillan–Breiman and Birkhoff theorems; exact-dimensionality is part of the conclusion.
 
 * `frostman_of_lq`: Shmerkin's Lemma 1.7, Frostman bounds from the `L^q` bound.
-* `System.ProjExpSeparation.shmerkinExpSeparation`: the projective exponential separation
-  condition gives Shmerkin's exponential separation of every block system (Lemma 2.2).
-* `JordanRapaportFrostman`: the core of the source's Section 2, Frostman bounds for the
-  projections of `ν` restricted to sets of measure close to one.
-* `jordanRapaportFrostman_of_shmerkin`: Section 2 of the source.
+* `System.ProjExpSeparation.shmerkinExpSeparation`: Lemma 2.2, Shmerkin's exponential separation
+  of every block system.
+* `JordanRapaportFrostman`, `jordanRapaportFrostman_of_shmerkin`: Section 2 of the source.
 * `System.ae_eventually_log_div_log_le_entropy`: the upper bound `h/|χ|`.
-* `jordanRapaportDimension_of_frostman`: the dimension formula from the core.
-* `jordanRapaportDimension_of_shmerkin`: `JordanRapaportDimension` from `ShmerkinLqDimension`.
+* `jordanRapaportDimension_of_frostman`, `jordanRapaportDimension_of_shmerkin`: the statement.
 -/
 public import BoxLike.Birkhoff
 public import BoxLike.EquilibriumExistence

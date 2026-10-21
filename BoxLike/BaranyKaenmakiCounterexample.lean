@@ -1,36 +1,21 @@
 module
 
 /-
-A counterexample to `BoxLike.NoOverlap.BaranyKaenmakiTheorem`, the transcription of Theorem 2.1
-of B. Bárány and A. Käenmäki, Super-exponential condensation without exact overlaps, Adv. Math.
-379 (2021), arXiv:1910.04623v4. The theorem asserts that `𝒞_η ∖ ℰ` is uncountable for every
-monotone decreasing positive sequence `η` with `n⁻¹ log η_n → -∞`, where `𝒞_η` is the set of
-pairs `(λ, t)` with `Δ_n^{λ,t} < η_n` for every `n ≥ 1`. For
-`η_n = (6n + 3)^{-3n} / 15` the set `𝒞_η ∖ ℰ` is empty.
+`NoOverlap.BaranyKaenmakiTheorem`, Theorem 2.1 of Bárány–Käenmäki, Adv. Math. 379 (2021),
+arXiv:1910.04623v4, as stated, is false: for `η_n = (6n + 3)^{-3n} / 15`, no free pair `(λ, t)`
+has `Δ_n^{λ,t} < η_n` for every `n ≥ 1`. For words `𝐩, 𝐪` of a common length `k`,
+`φ(𝐩, 𝐪) = h_{1𝐩}(0) - h_{0𝐪}(0) = t + λ(U + tV)` with integer polynomials `U, V`; a combination
+of two such values has no `t`-term and is a non-zero integer polynomial with coefficients at most
+`3k + 1`, hence at least `λ^{deg}/2` in modulus when `λ` is small, which separates the minimal
+gaps at lengths `k` and `M` by `λ^{k+M}`.
 
-The argument. Write `φ(𝐩, 𝐪) = h_{1𝐩}(0) - h_{0𝐪}(0)` for words `𝐩, 𝐪` of a common length.
-Then `φ(𝐩, 𝐪) = t + λ(U + tV)` with `U, V` integer polynomials in `λ` with coefficients in
-`{-1, 0, 1}`, and for two such pairs the combination
-`φ(𝐩, 𝐪)(1 + λV') - φ(𝐩', 𝐪')(1 + λV) = λ N(λ)` has no `t`-term, where
-`N = U - U' + X(UV' - U'V)` has integer coefficients bounded by `3k + 1`, `k = |𝐩|`. If
-`(3k + 1)λ ≤ (1 - λ)/2`, a non-zero value of `N` is at least `λ^{deg}/2`. Hence the pair that
-minimises `|φ|` at length `k` is separated from every better pair of length `M` by
-`λ^{k + M}`, and the minimal gap at length `M` is at least `λ^{3M}/15`. With
-`k = ⌊(1 - 3λ)/(6λ)⌋` this beats `η_M`.
+In the namespace `BoxLike.NoOverlap`:
 
-Main declarations, in the namespace `BoxLike.NoOverlap`:
-
-* `oneZeroDiff`: the difference `h_{1𝐩}(0) - h_{0𝐪}(0)`.
-* `le_abs_homWord_sub`, `le_homGap_of_forall`: the minimal gap at length `n` is at least
-  `λ^{n-1} δ` when every `|φ(𝐩, 𝐪)|` at length `n - 1` is at least `δ ≤ 1/4`.
-* `crossPoly`, `oneZeroDiff_cross`: the cross polynomial of two pairs, from the integer
-  polynomials `polyD` of `BoxLike/BaranyKaenmaki.lean`, and the identity without `t`.
-* `pow_le_two_mul_abs_aeval`: the lower bound for a non-zero value of an integer polynomial with
-  bounded coefficients at a small point.
-* `separation`: the separation of two pairs.
+* `oneZeroDiff`, `le_abs_homWord_sub`, `le_homGap_of_forall`: the difference and the minimal gap.
+* `crossPoly`, `oneZeroDiff_cross`, `pow_le_two_mul_abs_aeval`, `separation`: the cross
+  polynomial, the lower bound and the separation of two pairs.
 * `fastEta`, `antitone_fastEta`, `fastEta_pos`, `tendsto_log_fastEta`: the sequence.
-* `false_of_forall_homGap_lt`: no free pair satisfies `Δ_n < η_n` for every `n ≥ 1`.
-* `not_baranyKaenmakiTheorem`: `¬ BaranyKaenmakiTheorem`.
+* `false_of_forall_homGap_lt`, `not_baranyKaenmakiTheorem`.
 -/
 public import BoxLike.BaranyKaenmaki
 public import BoxLike.NoOverlapExample

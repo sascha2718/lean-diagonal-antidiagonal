@@ -7,11 +7,8 @@ public import Mathlib
 /-!
 # The challenge vocabulary
 
-This file repeats the definitions of `Challenge.lean`, with the same names, types and values,
-so that the solution does not import the challenge. Comparator checks that the definitions used
-by the three headline theorems agree between the two modules. Theorem, equation and section references
-are to D. Allen, A. Käenmäki, R. D. Prokaj, K. Simon and S. Troscheit, *Hausdorff dimension of
-planar box-like self-affine sets with rotations*.
+The definitions of `Challenge.lean`, repeated so that the solution does not import it. The
+definition block must stay identical to that of `Challenge.lean`.
 -/
 
 namespace Challenge

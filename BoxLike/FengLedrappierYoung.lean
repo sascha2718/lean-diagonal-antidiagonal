@@ -1,61 +1,33 @@
 module
 
 /-
-The planar Ledrappier–Young formula of D.-J. Feng, *Dimension of invariant measures for affine
-iterated function systems*, Duke Math. J. 172 (2023), arXiv:1901.01691v2, Theorems 1.2 (ii) and
-1.3, for the planar systems of `BoxLike/Planar/` with simple Lyapunov spectrum: the statement
-`PlanarFengLedrappierYoung` of `BoxLike/LiteraturePlanarFeng.lean`, along Feng's Sections 4 to 6
-for `d = 2`, `s = 2`, `k_1 = k_2 = 1`.
+`PlanarFengLedrappierYoung`, Feng's Theorems 1.2 (ii) and 1.3 (Duke Math. J. 172 (2023),
+arXiv:1901.01691v2) in the plane, along his Sections 4 to 6 with `d = 2`, `s = 2`,
+`k_1 = k_2 = 1`. With `ν^i_𝐢 = π_* μ_𝐢^{ξ_i}`, `δ_i` its pointwise dimension at `π(𝐢)`,
+`c_1 = (h_1 - h_0)/λ_1` and `c_2 = (h_2 - h_1)/λ_2`, the claims are (C1) `δ_2 = 0`, (C2)
+`\overline{δ}_i ≤ c_{i+1} + \overline{δ}_{i+1}`, (C3) `\underline{δ}_i ≥ \underline{δ}_{i+1} + ϑ_i`
+and Proposition 5.1, `ϑ_0 ≥ c_1`, `ϑ_1 ≥ c_2`; combined downwards they give `δ_{-1} = c_1 + c_2`.
+(C1) to (C3) are theorems about nested measurable partitions; Proposition 5.1 comes from the planar
+form of Lemma 5.4 (with `ℓ = 1`, no induced map) and Proposition 5.5, Besicovitch differentiation
+on the atoms with the weak maximal inequality.
 
-Write `ν^i_𝐢 = π_* μ_𝐢^{ξ_i}` for `i ∈ {0, 1, 2}` and `ν^{-1} = π_* μ`, `δ_i` for the pointwise
-dimension of `ν^i_𝐢` at `π(𝐢)`, `c_1 = (h_1 - h_0)/λ_1`, `c_2 = (h_2 - h_1)/λ_2`. Feng's proof of
-Theorem 1.2 (pp. 38 to 44) consists of the claims (C1) to (C3) and of Proposition 5.1 (the
-transverse dimensions, p. 30); in the plane they are:
-
-* (C1): `δ_2 = 0`, since `ξ_2(𝐢) ⊆ π⁻¹{π(𝐢)}`.
-* (C2) for `i = 1, 0, -1`: `\overline{δ}_i ≤ c_{i+1} + \overline{δ}_{i+1}`, with `c_0 = 0`.
-* (C3) for `i = 0, -1`: `\underline{δ}_i ≥ \underline{δ}_{i+1} + ϑ_i`, with `ϑ_{-1} = 0`.
-* Proposition 5.1 for `i = 1, 2`: `ϑ_0 ≥ c_1` and `ϑ_1 = \underline{δ}_1 ≥ c_2`.
-
-Combined downwards from `δ_2 = 0` (Feng, (6.7) to (6.9)) they give `δ_{-1} = c_1 + c_2` almost
-everywhere, which is the exact-dimensionality of `π_* μ`. (C1), (C2) and (C3) are proved here, by
-general theorems about nested measurable partitions. Proposition 5.1 is proved from the planar
-form of Feng's Lemma 5.4, which in the plane holds with `ℓ = 1`, equality and no induced map,
-since `A_{i_0}` acts on the slow line and on the quotient by it by scalars `κ_2`, `κ_1` with
-`∫ log κ_i dμ = λ_i`, and from Feng's Proposition 5.5, the density limit and the integrable
-envelope for the tubes of `ξ_1` and of `ξ_0`. Proposition 5.5 is proved for a coordinate on the
-atoms of a measurable partition whose fibres are the atoms of a finer one: Besicovitch's
-differentiation theorem on each atom, with the density identified by `double_conditional`, and
-the weak maximal inequality of the Besicovitch covering theorem, integrated over the atoms.
-
-Main declarations:
-
-* `LowerLocalDimGe`, `UpperLocalDimLe`, `isExactDim_map_of_ae_hasLocalDim`: pointwise
-  dimension bounds, and exact dimension of an image measure from an almost sure pointwise
-  dimension along the coding map.
-* `ae_condMeas_density`: Feng, Lemmas 2.5 (1) and 2.2, for conditional measures along a map into
-  a Besicovitch space.
-* `ae_lowerLocalDimGe_map_of_condMeas`, `ae_lowerLocalDimGe_condMeas_of_tube`: (C3) for
-  nested measurable partitions, after Ledrappier–Young, Lemma 11.3.1.
-* `ae_upperLocalDimLe_condMeas_of_counting`: (C2) for nested measurable partitions of the
-  shift space, by Feng's counting of cylinders.
+* `LowerLocalDimGe`, `UpperLocalDimLe`, `isExactDim_map_of_ae_hasLocalDim`: pointwise bounds.
+* `ae_condMeas_density`: Feng, Lemmas 2.5 (1) and 2.2.
+* `ae_lowerLocalDimGe_map_of_condMeas`, `ae_lowerLocalDimGe_condMeas_of_tube`: (C3).
+* `ae_upperLocalDimLe_condMeas_of_counting`: (C2).
 * `maker_triangular_ergodic`: Maker's theorem in triangular form, Feng, Lemma 2.3.
-* `ae_transverseDimGe_of_step`: Feng's proof of (5.6) with `ℓ = 1` and exact scaling.
-* `coordTube`, `IsFibreCoordinate`, `ae_tendsto_ratio_coordTube`, `exists_envelope_coordTube`:
-  Feng's Proposition 5.5 for a coordinate on the atoms, with
-  `exists_ballRatio_maximal_constant_of_besicovitch`, the weak maximal inequality (5.18), and
-  `ae_ae_rnDeriv_eq_condMeas`, the identification of the density.
-* `PlanarSystem.slowScale`, `PlanarSystem.transScale`, `PlanarSystem.integral_log_slowScale`,
-  `PlanarSystem.integral_log_transScale`, `PlanarSystem.condMeas_eucTube_step`,
-  `PlanarSystem.condMeas_transTube_step`: the planar scalings and Feng's Lemmas 5.4 and 4.5 (3).
-* `PlanarSystem.eucCoord`, `PlanarSystem.transCoord`, `PlanarSystem.tendsto_condMeas_eucTube_ratio`,
-  `PlanarSystem.exists_envelope_eucTube`, `PlanarSystem.tendsto_condMeas_transTube_ratio`,
-  `PlanarSystem.exists_envelope_transTube`: Feng's Proposition 5.5 in the plane.
+* `ae_transverseDimGe_of_step`: Feng's (5.6) with `ℓ = 1`.
+* `coordTube`, `IsFibreCoordinate`, `ae_tendsto_ratio_coordTube`, `exists_envelope_coordTube`,
+  `exists_ballRatio_maximal_constant_of_besicovitch`, `ae_ae_rnDeriv_eq_condMeas`:
+  Proposition 5.5 for a coordinate on the atoms.
+* `PlanarSystem.slowScale`, `PlanarSystem.transScale`, `PlanarSystem.condMeas_eucTube_step`,
+  `PlanarSystem.condMeas_transTube_step`: the planar scalings, Lemmas 5.4 and 4.5 (3).
+* `PlanarSystem.tendsto_condMeas_eucTube_ratio`, `PlanarSystem.exists_envelope_eucTube`,
+  `PlanarSystem.tendsto_condMeas_transTube_ratio`, `PlanarSystem.exists_envelope_transTube`:
+  Proposition 5.5 in the plane.
 * `PlanarSystem.FengSteps`, `PlanarSystem.isExactDim_of_fengSteps`, `PlanarSystem.fengSteps`:
-  the steps, their combination, and their proof for every ergodic `μ` with `λ_2 < λ_1`.
-* `planarFengLedrappierYoung_of_fengSteps`, `planarFengLedrappierYoung_holds`: the target.
-* `fengLedrappierYoung_holds`, `fengLedrappierYoungBar_holds`: the box-like statements
-  `FengLedrappierYoung` and `FengLedrappierYoungBar` of `thm:feng1`, from the planar one.
+  the steps and their combination.
+* `planarFengLedrappierYoung_holds`, `fengLedrappierYoung_holds`, `fengLedrappierYoungBar_holds`.
 -/
 public import BoxLike.LiteraturePlanarFeng
 public import BoxLike.Planar.OseledetsTheorem
