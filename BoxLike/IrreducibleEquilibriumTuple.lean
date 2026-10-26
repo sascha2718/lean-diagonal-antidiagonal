@@ -32,7 +32,7 @@ there is an invariant `s`-equilibrium state `μ`, every invariant `s`-equilibriu
 `C⁻¹ exp(-|𝐢| P(𝖠, s)) φ^s(A_𝐢) ≤ μ([𝐢]) ≤ C exp(-|𝐢| P(𝖠, s)) φ^s(A_𝐢)` for all finite words.
 Existence is the variational construction (`MatrixTuple.exists_isEquilibriumState`); for
 `0 < s < 2` uniqueness and the Gibbs bounds come from the statement through the reductions of
-tex lines 2235 to 2239 (`FengKaenmakiNormEquilibrium.svf`); for `s ≥ 2` they are the determinant
+tex lines 2123 to 2127 (`FengKaenmakiNormEquilibrium.svf`); for `s ≥ 2` they are the determinant
 calculation (`MatrixTuple.irred_eq_state_of_two_le`); ergodicity follows from uniqueness
 (`MatrixTuple.ergodic_of_unique`). -/
 theorem MatrixTuple.irred_eq_state_of_fengKaenmaki (h : FengKaenmakiNormEquilibrium.{u})

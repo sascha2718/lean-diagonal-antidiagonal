@@ -131,14 +131,14 @@ theorem map_unCode_restrict_map_flipAxis {R : Set (ℤ → ι × ZMod 2)} (hR : 
 
 variable [Fintype ι] [MeasurableSingletonClass ι]
 
-/-- `\overline{τ}_*(flip_*ν) = \overline{ω}_*ν`, as noted in `sec:gibbs_measures` (tex lines 2606
+/-- `\overline{τ}_*(flip_*ν) = \overline{ω}_*ν`, as noted in `sec:gibbs_measures` (tex lines 2487
 to 2607) for `ν = μ_1`, `flip_*ν = μ_2`. -/
 theorem map_unCode_restrict_range_tau_map_flipAxis :
     ((ν.map flipAxis).restrict (range (tau o))).map unCode =
       (ν.restrict (range (omega o))).map unCode := by
   rw [map_unCode_restrict_map_flipAxis (measurableSet_range_tau o), preimage_flipAxis_range_tau]
 
-/-- `\overline{ω}_*(flip_*ν) = \overline{τ}_*ν`, as noted in `sec:gibbs_measures` (tex lines 2606
+/-- `\overline{ω}_*(flip_*ν) = \overline{τ}_*ν`, as noted in `sec:gibbs_measures` (tex lines 2487
 to 2607) for `ν = μ_1`, `flip_*ν = μ_2`. -/
 theorem map_unCode_restrict_range_omega_map_flipAxis :
     ((ν.map flipAxis).restrict (range (omega o))).map unCode =

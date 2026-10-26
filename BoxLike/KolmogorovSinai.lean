@@ -1,7 +1,7 @@
 module
 
 /-
-The Kolmogorov–Sinai entropy of `sec:entropies` (tex lines 1965 to 1972, after Bowen, §2):
+The Kolmogorov–Sinai entropy of `sec:entropies` (tex lines 1877 to 1884, after Bowen, §2):
 `h(μ) = sup_𝒬 lim_n n⁻¹ H_μ(⋁_{i<n} σ^{-i} 𝒬)`, the supremum over the finite Borel partitions
 `𝒬` of `Σ`, and its equality with `lim_n n⁻¹ H_μ(𝒫_0^{n-1})`, the entropy rate `entropy μ` of the
 library, by the generator theorem for the time-zero partition `𝒫` of the two-sided shift.
@@ -34,7 +34,7 @@ theorem, since the `ℛ_k` generate the Borel `σ`-algebra of `ℤ → α`.
 * `partEntropy_partJoin_le`, `partEntropyRate_le_entropy`: the generator inequality.
 * `partEntropyRate_coord_zero`, `isGreatest_partEntropyRate`, `ksEntropy_shift_eq_entropy`:
   `h(μ) = lim_n n⁻¹ H_μ(𝒫_0^{n-1})`, with the supremum attained at `𝒫`.
-* `tendsto_neg_log_cylinder_ksEntropy`: the Shannon–McMillan–Breiman theorem of tex lines 1973
+* `tendsto_neg_log_cylinder_ksEntropy`: the Shannon–McMillan–Breiman theorem of tex lines 1885
   to 1977 with the Kolmogorov–Sinai entropy.
 -/
 public import BoxLike.PastEntropy
@@ -55,7 +55,7 @@ section PartEntropy
 variable {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
   {β γ δ : Type*} [Fintype β] [Fintype γ] [Fintype δ]
 
-/-- The Shannon entropy `H_μ(𝒬) = -∑_{Q ∈ 𝒬} μ(Q) log μ(Q)` of `sec:conditional` (tex lines 1741
+/-- The Shannon entropy `H_μ(𝒬) = -∑_{Q ∈ 𝒬} μ(Q) log μ(Q)` of `sec:conditional` (tex lines 1664
 to 1746) for the finite partition `𝒬` into the fibres of `f`. -/
 noncomputable def partEntropy (f : Ω → β) : ℝ :=
   ∑ b, Real.negMulLog (μ.real (f ⁻¹' {b}))
@@ -65,18 +65,18 @@ fibres of `f` given the finite partition into the fibres of `g`. -/
 noncomputable def condPartEntropy (f : Ω → β) (g : Ω → γ) : ℝ :=
   partEntropy μ (fun x => (f x, g x)) - partEntropy μ g
 
-/-- The join `⋁_{i<n} T^{-i} 𝒬` of `sec:entropies` (tex lines 1965 to 1972), as the map
+/-- The join `⋁_{i<n} T^{-i} 𝒬` of `sec:entropies` (tex lines 1877 to 1884), as the map
 `x ↦ (f(T^i x))_{i<n}` whose fibres are its atoms. -/
 def partJoin (T : Ω → Ω) (f : Ω → β) (n : ℕ) (x : Ω) : Fin n → β :=
   fun i => f (T^[i] x)
 
-/-- The entropy rate `lim_n n⁻¹ H_μ(⋁_{i<n} T^{-i} 𝒬)` of a finite partition (tex lines 1965 to
+/-- The entropy rate `lim_n n⁻¹ H_μ(⋁_{i<n} T^{-i} 𝒬)` of a finite partition (tex lines 1877 to
 1972). The limit exists for an invariant measure (`tendsto_partEntropyRate`). -/
 noncomputable def partEntropyRate (T : Ω → Ω) (f : Ω → β) : ℝ :=
   limUnder atTop fun n : ℕ => partEntropy μ (partJoin T f n) / n
 
 /-- The Kolmogorov–Sinai entropy `h(μ) = sup_𝒬 lim_n n⁻¹ H_μ(⋁_{i<n} T^{-i} 𝒬)` of
-`sec:entropies` (tex lines 1965 to 1972), the supremum over the finite Borel partitions `𝒬`,
+`sec:entropies` (tex lines 1877 to 1884), the supremum over the finite Borel partitions `𝒬`,
 each given by the Borel map `Q : Ω → Fin m` to the indices of its atoms. -/
 noncomputable def ksEntropy (T : Ω → Ω) : ℝ :=
   sSup {r | ∃ (m : ℕ) (Q : Ω → Fin m), Measurable Q ∧ partEntropyRate μ T Q = r}
@@ -156,7 +156,7 @@ variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
 
 /-- The conditional entropy of finite partitions as an integral of conditional expectations:
 `H_μ(𝒬 | ℛ) = ∫ ∑_{Q ∈ 𝒬} η(E_μ(1_Q | ℛ)) dμ` with `η(t) = -t log t`, which is
-`∫ I_μ(𝒬 | ℛ) dμ` of `sec:conditional` (tex lines 1729 to 1739). -/
+`∫ I_μ(𝒬 | ℛ) dμ` of `sec:conditional` (tex lines 1652 to 1662). -/
 theorem condPartEntropy_eq_integral [IsFiniteMeasure μ] {f : Ω → β} {g : Ω → γ}
     (hf : Measurable f) (hg : Measurable g) :
     condPartEntropy μ f g =
@@ -370,7 +370,7 @@ theorem partEntropy_partJoin_add_le [IsProbabilityMeasure μ] (hT : MeasurePrese
   linarith
 
 /-- The limit defining the entropy rate of a Borel partition exists for an invariant measure, by
-Fekete's lemma (tex lines 1965 to 1972). -/
+Fekete's lemma (tex lines 1877 to 1884). -/
 theorem tendsto_partEntropyRate [IsProbabilityMeasure μ] (hT : MeasurePreserving T μ μ)
     {f : Ω → β} (hf : Measurable f) :
     Tendsto (fun n : ℕ => partEntropy μ (partJoin T f n) / n) atTop
@@ -555,7 +555,7 @@ theorem partEntropy_partJoin_le (hinv : MeasurePreserving (shift 1) μ μ) {β :
 
 /-- The generator theorem for the time-zero partition of the two-sided shift: for every finite
 Borel partition `𝒬` of `ℤ → α` and every invariant probability measure,
-`lim_n n⁻¹ H_μ(⋁_{i<n} σ^{-i} 𝒬) ≤ lim_n n⁻¹ H_μ(𝒫_0^{n-1}) = h(μ)` (tex lines 1965 to 1972). -/
+`lim_n n⁻¹ H_μ(⋁_{i<n} σ^{-i} 𝒬) ≤ lim_n n⁻¹ H_μ(𝒫_0^{n-1}) = h(μ)` (tex lines 1877 to 1884). -/
 theorem partEntropyRate_le_entropy (hinv : MeasurePreserving (shift 1) μ μ) {β : Type*}
     [Fintype β] [MeasurableSpace β] [MeasurableSingletonClass β] {f : (ℤ → α) → β}
     (hf : Measurable f) : partEntropyRate μ (shift 1) f ≤ entropy μ := by
@@ -605,7 +605,7 @@ theorem partEntropyRate_coord_zero :
     rw [cylinder_eq_preimage]
   simp only [partEntropyRate, entropy, e]
 
-/-- `sec:entropies`, tex lines 1965 to 1972: the rates of the finite Borel partitions of the
+/-- `sec:entropies`, tex lines 1877 to 1884: the rates of the finite Borel partitions of the
 two-sided shift have the greatest element `lim_n n⁻¹ H_μ(𝒫_0^{n-1})`, attained at the time-zero
 partition `𝒫`, relabelled by `Fin #α`. -/
 theorem isGreatest_partEntropyRate (hinv : MeasurePreserving (shift 1) μ μ) :
@@ -622,14 +622,14 @@ theorem isGreatest_partEntropyRate (hinv : MeasurePreserving (shift 1) μ μ) :
   · rintro _ ⟨m, Q, hQ, rfl⟩
     exact partEntropyRate_le_entropy hinv hQ
 
-/-- `sec:entropies`, tex lines 1965 to 1972: the Kolmogorov–Sinai entropy of an invariant
+/-- `sec:entropies`, tex lines 1877 to 1884: the Kolmogorov–Sinai entropy of an invariant
 probability measure on the two-sided shift over a finite alphabet, the supremum over finite Borel
 partitions, is `lim_n n⁻¹ H_μ(𝒫_0^{n-1})`, the entropy rate `entropy μ` of the library. -/
 theorem ksEntropy_shift_eq_entropy (hinv : MeasurePreserving (shift 1) μ μ) :
     ksEntropy μ (shift 1) = entropy μ :=
   (isGreatest_partEntropyRate hinv).csSup_eq
 
-/-- The Shannon–McMillan–Breiman theorem as `sec:entropies` states it (tex lines 1973 to 1977),
+/-- The Shannon–McMillan–Breiman theorem as `sec:entropies` states it (tex lines 1885 to 1889),
 with `h(μ)` the Kolmogorov–Sinai entropy, the supremum over finite Borel partitions: for an
 ergodic `μ`, `h(μ) = -lim_n n⁻¹ log μ(𝒫_0^{n-1}(𝐢))` for `μ`-almost every `𝐢`. -/
 theorem tendsto_neg_log_cylinder_ksEntropy (herg : Ergodic (shift 1) μ) :

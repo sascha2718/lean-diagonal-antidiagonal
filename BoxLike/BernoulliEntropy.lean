@@ -346,7 +346,7 @@ theorem measureReal_cylinder_eq_prod_of_entropy_eq {μ : Measure (ℤ → α)} [
     rw [ha, Fin.prod_univ_castSucc]
     rfl
 
-/-- If `h(μ) = H_μ(𝒫)`, then `μ` is a Bernoulli measure in the sense of tex lines 2355 to 2360,
+/-- If `h(μ) = H_μ(𝒫)`, then `μ` is a Bernoulli measure in the sense of tex lines 2236 to 2241,
 with the probability vector `p_i = μ[i]`: the cylinder `σ^{-k}[w] = {x : x_k ⋯ x_{k+n-1} = w}`
 at an arbitrary position `k ∈ ℤ` has measure `∏_j p_{w_j}`. -/
 theorem measureReal_preimage_shift_cylinder_eq_prod_of_entropy_eq {μ : Measure (ℤ → α)}

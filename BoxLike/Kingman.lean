@@ -650,7 +650,7 @@ B. Weiss, Israel J. Math. 42 (1982), and J. M. Steele, Ann. Inst. H. Poincaré P
 25 (1989)). For an ergodic map `T` of a probability space and measurable integrable functions
 `f_n` forming a subadditive cocycle with `inf_{n ≥ 1} n⁻¹ ∫ f_n > -∞`,
 `n⁻¹ f_n(x) → inf_{n ≥ 1} n⁻¹ ∫ f_n` for almost every `x`. It is the basis of Oseledets'
-theorem cited in `sec:lyapunov_exponents` (tex line 1585). -/
+theorem cited in `sec:lyapunov_exponents` (tex line 1508). -/
 theorem kingman_ergodic [IsProbabilityMeasure μ]
     (hT : Ergodic T μ) {f : ℕ → X → ℝ} (hf : IsSubadditiveCocycle T f)
     (hmeas : ∀ n, Measurable (f n)) (hint : ∀ n, Integrable (f n) μ)

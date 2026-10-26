@@ -55,7 +55,7 @@ noncomputable def lyapunov₁ (μ : Measure (ℤ → ι)) : ℝ := MatrixTuple.l
 /-- The Lyapunov exponent `λ_2(𝖠, μ)` of the linear parts (`sec:lyapunov_exponents`). -/
 noncomputable def lyapunov₂ (μ : Measure (ℤ → ι)) : ℝ := MatrixTuple.lyapunov₂ P.mat μ
 
-/-- The set `Σ'` of `sec:lyapunov_exponents` (tex lines 1598 to 1600 and 1617 to 1618): the
+/-- The set `Σ'` of `sec:lyapunov_exponents` (tex lines 1521 to 1523 and 1617 to 1618): the
 points at which the Oseledets properties (V1) to (V3) hold for the exponents `λ_1(𝖠, μ)`,
 `λ_2(𝖠, μ)`. It is the largest such set; it is Borel, invariant and saturated with respect to
 the past (`measurableSet_SigmaPrime`, `shift_mem_SigmaPrime_iff`, `mem_SigmaPrime_of_samePast`).
@@ -73,12 +73,12 @@ noncomputable def oseledets (μ : Measure (ℤ → ι)) (x : ℤ → ι) (i : �
 noncomputable def slowAngle (μ : Measure (ℤ → ι)) (x : ℤ → ι) : ℝ :=
   MatrixTuple.slowAngle P.mat (P.lyapunov₁ μ) (P.lyapunov₂ μ) x
 
-/-- `Σ'` is saturated with respect to the past (tex lines 1617 to 1618). -/
+/-- `Σ'` is saturated with respect to the past (tex lines 1540 to 1541). -/
 theorem mem_SigmaPrime_of_samePast (μ : Measure (ℤ → ι)) {x y : ℤ → ι} (h : SamePast x y)
     (hx : x ∈ P.SigmaPrime μ) : y ∈ P.SigmaPrime μ :=
   MatrixTuple.mem_regularSet_of_samePast h hx
 
-/-- `σ(Σ') = Σ'` (tex line 1598). -/
+/-- `σ(Σ') = Σ'` (tex line 1521). -/
 theorem shift_mem_SigmaPrime_iff (μ : Measure (ℤ → ι)) (x : ℤ → ι) :
     shift 1 x ∈ P.SigmaPrime μ ↔ x ∈ P.SigmaPrime μ :=
   MatrixTuple.shift_mem_regularSet_iff P.det_ne_zero _ _ x
@@ -127,7 +127,7 @@ section Measurability
 
 variable [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
 
-/-- `Σ'` is Borel (tex line 1598), when `λ_2(𝖠, μ) < λ_1(𝖠, μ)`. -/
+/-- `Σ'` is Borel (tex line 1521), when `λ_2(𝖠, μ) < λ_1(𝖠, μ)`. -/
 theorem measurableSet_SigmaPrime (μ : Measure (ℤ → ι)) (hlt : P.lyapunov₂ μ < P.lyapunov₁ μ) :
     MeasurableSet (P.SigmaPrime μ) :=
   MatrixTuple.measurableSet_regularSet P.det_ne_zero hlt
@@ -145,14 +145,14 @@ section Partitions
 
 variable [MeasurableSpace ι]
 
-/-- The partitions `ξ_0, ξ_1, ξ_2` of `Σ'` (`sec:entropies`, tex lines 1858 to 1863):
+/-- The partitions `ξ_0, ξ_1, ξ_2` of `Σ'` (`sec:entropies`, tex lines 1779 to 1784):
 `ξ_i(𝐢) = {𝐣 ∈ Σ' : 𝐣^- = 𝐢^-, π(𝐣) - π(𝐢) ∈ V_𝐢^i}`, extended to `Σ` by the atom `Σ ∖ Σ'`.
 Indices above `2` repeat `ξ_2`. -/
 noncomputable def xi (μ : Measure (ℤ → ι)) (i : ℕ) : (ℤ → ι) → Set (ℤ → ι) :=
   atomsOn (P.SigmaPrime μ) fun x =>
     {y | SamePast y x ∧ toVec (P.proj y - P.proj x) ∈ P.oseledets μ x i}
 
-/-- The partition `ξ_1^⊥` of `Σ'` (`sec:entropies`, tex lines 1864 to 1867):
+/-- The partition `ξ_1^⊥` of `Σ'` (`sec:entropies`, tex lines 1785 to 1788):
 `ξ_1^⊥(𝐢) = {𝐣 ∈ Σ' : 𝐣^- = 𝐢^-, π(𝐣) - π(𝐢) ⊥ V_𝐢^1}`, extended to `Σ` by the atom
 `Σ ∖ Σ'`. Orthogonality is for the Euclidean inner product, the dot product of coordinate
 vectors. -/
@@ -205,7 +205,7 @@ theorem xi_eq_of_mem (μ : Measure (ℤ → ι)) (hlt : P.lyapunov₂ μ < P.lya
   · rw [atomsOn_of_notMem hx] at h
     rw [atomsOn_of_notMem hx, atomsOn_of_notMem h]
 
-/-- `ξ_2(𝐢) ⊆ ξ_1(𝐢) ⊆ ξ_0(𝐢)` (`sec:entropies`, tex line 1873). -/
+/-- `ξ_2(𝐢) ⊆ ξ_1(𝐢) ⊆ ξ_0(𝐢)` (`sec:entropies`, tex line 1794). -/
 theorem xi_succ_subset (μ : Measure (ℤ → ι)) (i : ℕ) (x : ℤ → ι) :
     P.xi μ (i + 1) x ⊆ P.xi μ i x := by
   unfold xi
@@ -215,7 +215,7 @@ theorem xi_succ_subset (μ : Measure (ℤ → ι)) (i : ℕ) (x : ℤ → ι) :
     exact ⟨⟨hp, MatrixTuple.filtration_succ_subset _ _ i hv⟩, hy⟩
   · rw [atomsOn_of_notMem hx, atomsOn_of_notMem hx]
 
-/-- `ξ_2(𝐢) ⊆ ξ_1^⊥(𝐢)` (`sec:entropies`, tex line 1874). -/
+/-- `ξ_2(𝐢) ⊆ ξ_1^⊥(𝐢)` (`sec:entropies`, tex line 1795). -/
 theorem xi_two_subset_xiPerp (μ : Measure (ℤ → ι)) (x : ℤ → ι) :
     P.xi μ 2 x ⊆ P.xiPerp μ x := by
   unfold xi xiPerp
@@ -227,7 +227,7 @@ theorem xi_two_subset_xiPerp (μ : Measure (ℤ → ι)) (x : ℤ → ι) :
     rw [hv, zero_dotProduct]
   · rw [atomsOn_of_notMem hx, atomsOn_of_notMem hx]
 
-/-- `ξ_1^⊥(𝐢) ⊆ ξ_0(𝐢)` (`sec:entropies`, tex line 1874). -/
+/-- `ξ_1^⊥(𝐢) ⊆ ξ_0(𝐢)` (`sec:entropies`, tex line 1795). -/
 theorem xiPerp_subset_xi_zero (μ : Measure (ℤ → ι)) (x : ℤ → ι) :
     P.xiPerp μ x ⊆ P.xi μ 0 x := by
   unfold xi xiPerp
@@ -277,7 +277,7 @@ theorem measurable_dot_slowAngle_proj (μ : Measure (ℤ → ι))
     ((measurable_snd.comp hp).mul (Real.measurable_sin.comp h))
 
 /-- Feng, *Dimension of invariant measures for affine iterated function systems*, Duke Math. J.
-172 (2023), Lemma 4.2, for a planar self-affine system (`sec:entropies`, tex lines 1868 to 1869):
+172 (2023), Lemma 4.2, for a planar self-affine system (`sec:entropies`, tex lines 1789 to 1790):
 `ξ_0, ξ_1, ξ_2` are measurable partitions, being the fibres of `𝐢 ↦ 𝐢^-`,
 `𝐢 ↦ (𝐢^-, V_𝐢^1 + π(𝐢))` and `𝐢 ↦ (𝐢^-, π(𝐢))` on `Σ'`. The affine line `V_𝐢^1 + π(𝐢)` is
 recorded by the slow angle, which depends only on the past, and the value at `π(𝐢)` of the
@@ -329,7 +329,7 @@ theorem forall_dotProduct_oseledets_iff (μ : Measure (ℤ → ι))
     rw [dotProduct_smul, h, smul_zero]
 
 /-- `ξ_1^⊥` is a measurable partition: "the same argument" as Feng, Lemma 4.2 (`sec:entropies`,
-tex line 1869), with the dot product with the slow direction in place of the linear form
+tex line 1790), with the dot product with the slow direction in place of the linear form
 vanishing on `V_𝐢^1`. -/
 theorem isMeasurablePartition_xiPerp (μ : Measure (ℤ → ι))
     (hlt : P.lyapunov₂ μ < P.lyapunov₁ μ) : IsMeasurablePartition (P.xiPerp μ) := by
@@ -360,17 +360,17 @@ noncomputable def dimEntropy (μ : Measure (ℤ → ι)) [IsFiniteMeasure μ] (i
   condEntropy μ (P.xi μ i)
 
 /-- The pointwise `i`-dimensional entropy `h_i(μ, 𝐢) = E_μ(I_μ(𝒫 | \widehat{ξ}_i) | ℐ)(𝐢)`
-(`sec:entropies`, tex lines 1884 to 1890), determined up to a `μ`-null set. -/
+(`sec:entropies`, tex lines 1805 to 1811), determined up to a `μ`-null set. -/
 noncomputable def dimEntropyAt (μ : Measure (ℤ → ι)) [IsFiniteMeasure μ] (i : ℕ) :
     (ℤ → ι) → ℝ :=
   localEntropy μ (P.xi μ i)
 
-/-- `h_i(μ) = ∫ h_i(μ, 𝐢) dμ(𝐢)` (`sec:entropies`, tex lines 1892 to 1896). -/
+/-- `h_i(μ) = ∫ h_i(μ, 𝐢) dμ(𝐢)` (`sec:entropies`, tex lines 1813 to 1817). -/
 theorem integral_dimEntropyAt (μ : Measure (ℤ → ι)) [IsFiniteMeasure μ] (i : ℕ) :
     ∫ x, P.dimEntropyAt μ i x ∂μ = P.dimEntropy μ i :=
   integral_localEntropy μ (P.xi μ i)
 
-/-- `sec:entropies`, tex lines 1989 to 1990: `h_0(μ) = h(μ)`, the Kolmogorov–Sinai entropy, for
+/-- `sec:entropies`, tex lines 1901 to 1901: `h_0(μ) = h(μ)`, the Kolmogorov–Sinai entropy, for
 every invariant measure `μ` with `λ_2 < λ_1` and `μ(Σ') = 1`: the atoms of `ξ_0` in `Σ'` are the
 classes of the relation `𝐢^- = 𝐣^-`. -/
 theorem dimEntropy_zero_eq_entropy' (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]

@@ -120,7 +120,7 @@ noncomputable def optionWeight : Option κ → ℝ :=
 /-- The probability measure on `Option κ` with the weights `optionWeight`. -/
 noncomputable def optionUniform : Measure (Option κ) := weightMeasure (optionWeight κ)
 
-/-- The Bernoulli measure `ν_n` of tex lines 3702 to 3703: equal probabilities on the maps
+/-- The Bernoulli measure `ν_n` of tex lines 3522 to 3523: equal probabilities on the maps
 `φ_w`, `w ∈ W_n`, that is, on the symbols `some k`, and none on `none`. -/
 noncomputable def optionBernoulli : Measure (ℤ → Option κ) := bernoulli (optionUniform κ)
 
@@ -199,7 +199,7 @@ theorem ae_isSome_optionBernoulli [Nonempty κ] :
   obtain rfl : j = 0 := Subsingleton.elim j 0
   simpa using hx
 
-/-- The entropy of `ν_n` is `H_n = log #W_n` (tex line 3700). -/
+/-- The entropy of `ν_n` is `H_n = log #W_n` (tex line 3520). -/
 theorem entropy_optionBernoulli [Nonempty κ] :
     entropy (optionBernoulli κ) = Real.log (Fintype.card κ) := by
   have hc : (Fintype.card κ : ℝ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
@@ -232,7 +232,7 @@ namespace System
 
 variable {κ : Type*} [Fintype κ]
 
-/-- The subsystem of the proof of `thm:main2` (tex lines 3676 to 3682): the symbols `some k`
+/-- The subsystem of the proof of `thm:main2` (tex lines 3496 to 3502): the symbols `some k`
 have the common diagonal linear part `diag(a, b)` and the symbol `none` has an anti-diagonal
 linear part. -/
 structure IsHomogeneousOption (T : System (Option κ)) (a b : ℝ) : Prop where
@@ -319,7 +319,7 @@ theorem log_abs_det_div_norm_matWord_of_forall_isSome [Nonempty κ] (hab : |b| �
     max_eq_left (pow_le_pow_left₀ (abs_nonneg b) hab _),
     mul_div_cancel_left₀ _ (pow_ne_zero _ (abs_ne_zero.2 hT.a_ne_zero)), Real.log_pow]
 
-/-- `λ_1(𝖠_n, ν_n) = log |a|` for the subsystem: tex lines 3698 to 3700, with
+/-- `λ_1(𝖠_n, ν_n) = log |a|` for the subsystem: tex lines 3518 to 3520, with
 `χ_{1,n} = -log |a_n|`. -/
 theorem lyapunov₁_optionBernoulli [Nonempty κ] (hab : |b| ≤ |a|) :
     T.lyapunov₁ (optionBernoulli κ) = Real.log |a| :=
@@ -327,7 +327,7 @@ theorem lyapunov₁_optionBernoulli [Nonempty κ] (hab : |b| ≤ |a|) :
     (tendsto_integral_futureWord_div (G := fun w => Real.log ‖T.matWord w‖)
       fun u hu => hT.log_norm_matWord_of_forall_isSome hab u hu)
 
-/-- `λ_2(𝖠_n, ν_n) = log |b|` for the subsystem: tex lines 3698 to 3700, with
+/-- `λ_2(𝖠_n, ν_n) = log |b|` for the subsystem: tex lines 3518 to 3520, with
 `χ_{2,n} = -log |b_n|`. -/
 theorem lyapunov₂_optionBernoulli [Nonempty κ] (hab : |b| ≤ |a|) :
     T.lyapunov₂ (optionBernoulli κ) = Real.log |b| :=
@@ -390,7 +390,7 @@ theorem measure_SigmaPrime_compl [Nonempty κ] (hab : |b| ≤ |a|) :
     optionBernoulli κ (T.SigmaPrime (optionBernoulli κ))ᶜ = 0 :=
   measure_mono_null (fun _ hx hx' => hx (Or.inl hx')) (ae_iff.1 (hT.ae_mem_SigmaTau hab))
 
-/-- `h_0(ν_n) = H_n = log #W_n` (tex line 3700 and 3728). -/
+/-- `h_0(ν_n) = H_n = log #W_n` (tex line 3520 and 3551). -/
 theorem dimEntropy_zero [Nonempty κ] (hab : |b| ≤ |a|) :
     T.dimEntropy (optionBernoulli κ) 0 = Real.log (Fintype.card κ) := by
   rw [T.dimEntropy_zero_eq_entropy' _ (measurePreserving_shift_optionBernoulli 1)
@@ -478,7 +478,7 @@ theorem lyapBar_map_omega [Nonempty κ] :
   rw [← mul_assoc, mul_one_div_cancel (Nat.cast_ne_zero.2 Fintype.card_ne_zero), one_mul]
 
 /-- Each coordinate marginal of `ν_n` is the self-similar measure of the coordinate maps
-`g_{(some k, c)}` of the subsystem with equal weights (tex lines 3703 to 3704): the
+`g_{(some k, c)}` of the subsystem with equal weights (tex lines 3523 to 3524): the
 stationarity equation of a self-similar measure, from the invariance of the projection of a
 Bernoulli measure (`isInvariantMeasure_map_proj`) and `eq:phi_def_by_g`. -/
 theorem marginal_eq_sum [Nonempty κ] (c : ZMod 2) :

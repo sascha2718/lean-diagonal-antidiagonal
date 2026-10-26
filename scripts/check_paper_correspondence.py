@@ -42,7 +42,7 @@ from typing import Any
 
 # The theorem-like environments of the manuscript that share the theorem counter, which is
 # numbered within sections. `claim` is starred in the preamble and so unnumbered.
-NUMBERED_ENVIRONMENTS = {
+SECTION_NUMBERED_ENVIRONMENTS = {
     "theorem",
     "proposition",
     "lemma",
@@ -54,6 +54,10 @@ NUMBERED_ENVIRONMENTS = {
     "definition",
     "question",
 }
+# The environments with their own counter, printed as capital letters (`\Alph`) and never
+# reset: the main theorems of the introduction.
+LETTERED_ENVIRONMENTS = {"maintheorem"}
+NUMBERED_ENVIRONMENTS = SECTION_NUMBERED_ENVIRONMENTS | LETTERED_ENVIRONMENTS
 # Label prefixes the manuscript uses for statement environments.
 LABEL_PREFIXES = ("thm", "lem", "prop", "cor", "def", "rem", "ex", "q", "conj")
 LABEL_RE = re.compile(r"\\label\{((?:" + "|".join(LABEL_PREFIXES) + r"):[^}]+)\}")
@@ -307,8 +311,10 @@ def validate_manifest(data: dict[str, Any], path: Path) -> tuple[list[str], list
             elif not isinstance(entry["match"], str) or not entry["match"].strip():
                 raise ManifestError(f"{where}: an unlabelled entry needs a unique text match")
             number = entry.get("number")
-            if not isinstance(number, str) or not re.fullmatch(r"[A-Z0-9]+\.\d+", number):
-                raise ManifestError(f"{where}: number must be the printed number, such as \"3.10\"")
+            if not isinstance(number, str) or not re.fullmatch(r"[A-Z0-9]+\.\d+|[A-Z]+", number):
+                raise ManifestError(
+                    f"{where}: number must be the printed number, such as \"3.10\" or \"A\""
+                )
         if status not in ALLOWED_STATUSES:
             raise ManifestError(f"{where}: status must be one of {sorted(ALLOWED_STATUSES)}")
         lean = _name_list(entry, "lean", where)
@@ -376,10 +382,11 @@ def _appendix_letter(index: int) -> str:
 def scan_paper_file(path: Path) -> tuple[list[PaperDeclaration], list[str]]:
     """Return the numbered statements of a manuscript file with their printed numbers.
 
-    The theorem counter is shared by every numbered environment and reset by every numbered
-    `\\section`; after `\\appendix` the sections are lettered. Only the document body is
-    scanned. The second component lists numbered environments that the preamble declares and
-    the body uses but that this script does not know.
+    The theorem counter is shared by every section-numbered environment and reset by every
+    numbered `\\section`; after `\\appendix` the sections are lettered. The lettered
+    environments (`maintheorem`) have their own counter, printed as a capital letter and never
+    reset. Only the document body is scanned. The second component lists numbered environments
+    that the preamble declares and the body uses but that this script does not know.
     """
 
     text = strip_tex_comments(path.read_text(encoding="utf-8"))
@@ -395,6 +402,7 @@ def scan_paper_file(path: Path) -> tuple[list[PaperDeclaration], list[str]]:
     section = 0
     appendix = False
     counter = 0
+    lettered = 0
     for match in NUMBERING_RE.finditer(text, body_offset):
         token = match.group(0)
         if token.startswith(r"\section*"):
@@ -409,8 +417,13 @@ def scan_paper_file(path: Path) -> tuple[list[PaperDeclaration], list[str]]:
             counter = 0
             continue
         kind = match.group(1)
-        counter += 1
-        prefix = _appendix_letter(section) if appendix else str(section)
+        if kind in LETTERED_ENVIRONMENTS:
+            lettered += 1
+            number = _appendix_letter(lettered)
+        else:
+            counter += 1
+            prefix = _appendix_letter(section) if appendix else str(section)
+            number = f"{prefix}.{counter}"
         end = re.search(rf"\\end\{{{kind}\}}", text[match.end() :])
         line = text.count("\n", 0, match.start()) + 1
         if end is None:
@@ -420,7 +433,7 @@ def scan_paper_file(path: Path) -> tuple[list[PaperDeclaration], list[str]]:
             raise ManifestError(f"{path}:{line}: {kind} environment has multiple primary labels: {labels}")
         statement = text[match.start() : match.end() + end.end()]
         declarations.append(
-            PaperDeclaration(labels[0] if labels else None, kind, f"{prefix}.{counter}", path, line, statement)
+            PaperDeclaration(labels[0] if labels else None, kind, number, path, line, statement)
         )
     return declarations, unknown
 

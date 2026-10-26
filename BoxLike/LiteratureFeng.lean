@@ -38,7 +38,7 @@ def FengInfoSum : Prop :=
 
 /-- Feng, Lemma 4.6, first identity of (4.16), for the projective system and an
 invariant measure `ν` on `Σ_Z`, ergodic or not; the article checks Feng's constant-multiplicity
-hypothesis (4.7) in `sec:entropies`, tex lines 1921 to 1924. Rotations and proximality are
+hypothesis (4.7) in `sec:entropies`, tex lines 1842 to 1842. Rotations and proximality are
 not needed. -/
 def FengInfoSumBar : Prop :=
   ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),

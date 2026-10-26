@@ -3,7 +3,7 @@ module
 /-
 The periodic-orbit measures of a Hölder potential on the mixing sub-shift `Σ_Z`, the finite-level
 approximants in the proof of Bowen's theorem in `BoxLike/Bowen/`: the existence of an ergodic
-Gibbs measure for a Hölder potential, which `sec:gibbs_measures` asserts at tex lines 2501 to
+Gibbs measure for a Hölder potential, which `sec:gibbs_measures` asserts at tex lines 2382 to
 2503 with a citation of Sarig's notes. For a period `p ≥ 1` the measure
 `ν_p = Z_p⁻¹ ∑_{𝐢 ∈ Σ_Z, σ^p 𝐢 = 𝐢} exp(S_p f(𝐢)) δ_𝐢` is a shift-invariant probability measure
 carried by `Σ_Z`, since `σ` permutes the periodic points of period `p` and `S_p f` is constant
@@ -66,7 +66,7 @@ theorem periodicPartition_pos (h0 : ∃ i, o i = 0) {p : ℕ} (hp : 0 < p) :
 
 variable (o f) in
 /-- The periodic-orbit measure `ν_p = Z_p⁻¹ ∑_{𝐢 ∈ Σ_Z, σ^p 𝐢 = 𝐢} exp(S_p f(𝐢)) δ_𝐢` of Bowen's
-construction (tex lines 2501 to 2503). -/
+construction (tex lines 2382 to 2384). -/
 noncomputable def periodicMeasure (p : ℕ) : Measure (ℤ → ι × ZMod 2) :=
   ∑ x ∈ periodicFinset o p,
     ENNReal.ofReal (Real.exp (birkhoffSum (shift 1) f p x) / periodicPartition o f p) •
@@ -148,7 +148,7 @@ end Measures
 
 /-! ### The Gibbs bounds up to a given length -/
 
-/-- The finite-level approximants of Bowen's theorem (tex lines 2501 to 2503): for a Hölder
+/-- The finite-level approximants of Bowen's theorem (tex lines 2382 to 2384): for a Hölder
 potential `f` on the mixing sub-shift `Σ_Z` there is `C > 0` such that for every `N` some
 shift-invariant probability measure carried by `Σ_Z`, the periodic-orbit measure `ν_{N+4}`,
 satisfies the Gibbs bounds with constants `P_Z(f)` and `C` for the cylinders of length at most

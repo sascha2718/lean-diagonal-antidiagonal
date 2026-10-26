@@ -3,7 +3,7 @@ module
 /-
 The limit step of the proof of Bowen's theorem in `BoxLike/Bowen/`, the existence of an ergodic
 Gibbs measure for a Hölder potential on the mixing sub-shift `Σ_Z` that `sec:gibbs_measures`
-asserts at tex lines 2501 to 2503 with a citation of Sarig's notes. If for every length `N` some
+asserts at tex lines 2382 to 2384 with a citation of Sarig's notes. If for every length `N` some
 invariant probability measure carried by `Σ_Z` satisfies the Gibbs bounds up to length `N`, with
 constants `P` and `C` that do not depend on `N`, then some invariant probability measure carried
 by `Σ_Z` is a Gibbs measure with the same constants. The sets of such measures are weak-star
@@ -38,7 +38,7 @@ variable {X : Type*} [TopologicalSpace X] [CompactSpace X] [MeasurableSpace X]
   [OpensMeasurableSpace X]
 
 /-- The mass `ν(U)` of a clopen set `U` of a compact space is a weak-star continuous function of
-the Borel probability measure `ν`, since the indicator of `U` is continuous (tex lines 2501 to
+the Borel probability measure `ν`, since the indicator of `U` is continuous (tex lines 2382 to
 2503, the limit step of Bowen's theorem). -/
 theorem continuous_measureReal_of_isClopen {U : Set X} (hU : IsClopen U) :
     Continuous fun ν : ProbabilityMeasure X => (ν : Measure X).real U := by
@@ -79,7 +79,7 @@ variable [TopologicalSpace ι] [DiscreteTopology ι]
 
 /-- Being carried by `Σ_Z` is a weak-star closed condition on the Borel probability measures on
 the full shift: it is the vanishing of the continuous masses of the clopen sets
-`notTransSet o k`, `k ∈ ℤ` (tex lines 2501 to 2503, the limit step of Bowen's theorem). -/
+`notTransSet o k`, `k ∈ ℤ` (tex lines 2382 to 2384, the limit step of Bowen's theorem). -/
 theorem isClosed_setOf_carried :
     IsClosed {ν : ProbabilityMeasure (ℤ → ι × ZMod 2) | (ν : Measure _) (subshift o)ᶜ = 0} := by
   have he : {ν : ProbabilityMeasure (ℤ → ι × ZMod 2) | (ν : Measure _) (subshift o)ᶜ = 0} =
@@ -94,7 +94,7 @@ theorem isClosed_setOf_carried :
 
 /-- The Gibbs bounds up to length `N` with constants `P` and `C` are a weak-star closed condition
 on the Borel probability measures on the full shift: each bound concerns the continuous mass of
-a clopen cylinder (tex lines 2501 to 2503, the limit step of Bowen's theorem). -/
+a clopen cylinder (tex lines 2382 to 2384, the limit step of Bowen's theorem). -/
 theorem isClosed_setOf_gibbsUpTo (f : (ℤ → ι × ZMod 2) → ℝ) (P C : ℝ) (N : ℕ) :
     IsClosed {ν : ProbabilityMeasure (ℤ → ι × ZMod 2) | GibbsUpTo o f ν P C N} := by
   simp only [GibbsUpTo, ofPred_and, ofPred_forall]
@@ -118,7 +118,7 @@ theorem GibbsUpTo.mono {M N : ℕ} (h : GibbsUpTo o f ν P C N) (hMN : M ≤ N) 
     GibbsUpTo o f ν P C M :=
   ⟨h.1, fun y hy n hn hnM => h.2 y hy n hn (hnM.trans hMN)⟩
 
-/-- The limit step of Bowen's theorem (tex lines 2501 to 2503): if for every length `N` some
+/-- The limit step of Bowen's theorem (tex lines 2382 to 2384): if for every length `N` some
 invariant probability measure carried by `Σ_Z` has the Gibbs bounds up to length `N` with the
 constants `P` and `C`, then some invariant probability measure carried by `Σ_Z` is a Gibbs
 measure with the constants `P` and `C`. The sets of these measures form a decreasing sequence of

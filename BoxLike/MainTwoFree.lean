@@ -2,9 +2,9 @@ module
 
 /-
 `thm:main2` under the absence of projective exact overlaps, by finite diagonal subsystems:
-the assembly of the proof of `sec:dimension_result_proof` (tex lines 3625 to 3738), its
-consequences for the dimension chain of the introduction (tex lines 540 to 556), and the
-application to the example of `prop:ssc_no_overlap_not_pesc` (tex lines 1522 to 1525).
+the assembly of the proof of `sec:dimension_result_proof` (tex lines 3451 to 3569), its
+consequences for the dimension chain of the introduction (tex lines 509 to 515), and the
+application to the example of `prop:ssc_no_overlap_not_pesc` (tex lines 1447 to 1450).
 
 The typical words of `BoxLike/TypicalWords.lean` give families `W_n` of words of a common
 length with a common diagonal linear part `diag(a_n, b_n)` and the asymptotics `H_n ∼ n h_0(μ)`,
@@ -20,7 +20,7 @@ distribution principle bounds `\dim_H X` from below by these dimensions, which t
 * `System.antiWord`, `System.subWords`: the words `v w`, `w ∈ W`, and the anti-diagonal word
   `v i_1 i_0^{n-1}` of the same length.
 * `System.le_dimH_attractor_of_words`: the lower bound `\dim_H X ≥ dim ν_n` for one family.
-* `tendsto_add_div_add`, `le_dimH_of_subsystemDim`: the passage to the limit (tex line 3734
+* `tendsto_add_div_add`, `le_dimH_of_subsystemDim`: the passage to the limit (tex line 3557
   to 3737).
 * `System.main2_noExactOverlaps_normalised`: the lower bound for a tuple containing a proximal
   diagonal generator; `System.main2_noExactOverlaps_of_pressure`: for every proximal tuple,
@@ -55,7 +55,7 @@ universe u
 /-! ### The passage to the limit -/
 
 /-- Bounded perturbations of the data and of the lengths do not change the limits of the
-ratios (tex lines 3691 to 3693). -/
+ratios (tex lines 3511 to 3513). -/
 theorem tendsto_add_div_add {x : ℕ → ℝ} {n : ℕ → ℕ} {L c d : ℝ} (hd : 0 ≤ d)
     (hn : Tendsto n atTop atTop) (hx : Tendsto (fun m => x m / n m) atTop (𝓝 L)) :
     Tendsto (fun m => (c + x m) / (n m + d)) atTop (𝓝 L) := by
@@ -71,7 +71,7 @@ theorem tendsto_add_div_add {x : ℕ → ℝ} {n : ℕ → ℕ} {L c d : ℝ} (h
   have hm' : (0 : ℝ) < n m := by exact_mod_cast hm
   field_simp
 
-/-- The limit step of the proof of `thm:main2` (tex lines 3734 to 3737): lower bounds
+/-- The limit step of the proof of `thm:main2` (tex lines 3557 to 3560): lower bounds
 `\dim_H X ≥ dim ν_n` with `H_n / n → h`, `χ_{i,n} / n → -λ_i` give `\dim_H X ≥ dim_L = s`. -/
 theorem le_dimH_of_subsystemDim {H χ₁ χ₂ : ℕ → ℝ} {n : ℕ → ℝ} {h l₁ l₂ s : ℝ} (hl : l₂ < l₁)
     (hl₁ : l₁ < 0) (hh₂ : h ≤ -l₁ - l₂) (hdim : lyapDim h l₁ l₂ = s)
@@ -126,7 +126,7 @@ omit [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] in
 omit [MeasurableSpace ι] [MeasurableSingletonClass ι] in
 /-- The lower bound `\dim_H X ≥ dim ν_n` for one family `W` of diagonal words of length `n`
 with the common linear part `diag(a, b)`, prefixed by the diagonal word `v`, in either of the two
-cases of tex lines 3685 to 3695: the trimmed family with `H ≤ χ_2`, or a feasible open set
+cases of tex lines 3505 to 3515: the trimmed family with `H ≤ χ_2`, or a feasible open set
 `U ⊇ φ_v(X)`. -/
 theorem le_dimH_attractor_of_words (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
     (hlyb : FengLedrappierYoungBar.{u}) (hkk : KittleKoglerDimension.{u}) [Nonempty ι]
@@ -240,7 +240,7 @@ theorem le_dimH_attractor_of_words (hfib : FengInfoSumBar.{u}) (hly : FengLedrap
 
 /-- `thm:main2`, the lower bound `\dim_H X ≥ s` for a tuple containing a proximal diagonal
 generator, with `s` the zero of the pressure in `(0, 2)` and the alternative in the entropy
-form `h_0(μ) ≤ -λ_2(𝖠, μ)` of tex lines 3638 to 3646. -/
+form `h_0(μ) ≤ -λ_2(𝖠, μ)` of tex lines 3460 to 3468. -/
 theorem main2_noExactOverlaps_normalised (hms : MorrisShmerkinLyapunov.{u})
     (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
@@ -291,7 +291,7 @@ theorem main2_noExactOverlaps_normalised (hms : MorrisShmerkinLyapunov.{u})
   have hb' : Tendsto (fun m => -Real.log |b m| / n m) atTop (𝓝 (-S.lyapunov₂ μ)) := by
     simpa only [neg_div] using hb.neg
   rcases hor with hent | hsosc
-  · -- The entropy case: trim the families (tex lines 3685 to 3687).
+  · -- The entropy case: trim the families (tex lines 3505 to 3507).
     have hfloor : ∀ m, 1 ≤ ⌊|b m|⁻¹⌋₊ := fun m =>
       (Nat.one_le_floor_iff _).2 (one_le_inv_iff₀.2 ⟨abs_pos.2 (hab0 m).2.1, (hab0 m).2.2.le⟩)
     have hex : ∀ m, ∃ W' ⊆ W m, W'.card = min (W m).card ⌊|b m|⁻¹⌋₊ := fun m =>
@@ -348,7 +348,7 @@ theorem main2_noExactOverlaps_normalised (hms : MorrisShmerkinLyapunov.{u})
       exact hH.min hfl
     exact le_dimH_of_subsystemDim hl hl1 hh2 hdim hn0 hH' ha' hb' hle
   · -- The strong open set case: prefix every word by `v` with `φ_v(X) ⊆ U`
-    -- (tex lines 3688 to 3695).
+    -- (tex lines 3508 to 3515).
     obtain ⟨U, hU, hne, hsub, hdisj⟩ := hsosc
     obtain ⟨v₀, hv₀⟩ := S.exists_phiWord_image_subset hU hne
     obtain ⟨v, hv, hUv⟩ : ∃ v : List ι, S.oWord v = 0 ∧ S.phiWord v '' S.attractor ⊆ U := by
@@ -399,7 +399,7 @@ theorem main2_noExactOverlaps_normalised (hms : MorrisShmerkinLyapunov.{u})
 
 /-- `thm:main2`, with `s` the zero of the pressure in `(0, 2)` and the alternative in the
 entropy form, for every proximal tuple: the reduction to a tuple containing a proximal diagonal
-generator through `thm:two-block-normalisation` (tex lines 3633 to 3636), as in
+generator through `thm:two-block-normalisation` (tex lines 3455 to 3458), as in
 `main_extended_lt_two_aux`. -/
 theorem main2_noExactOverlaps_of_pressure (hms : MorrisShmerkinLyapunov.{u})
     (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
@@ -458,7 +458,7 @@ theorem main2_noExactOverlaps (hms : MorrisShmerkinLyapunov.{u})
 
 /-! ### Consequences for the dimension chain -/
 
-/-- The chain `\dim_H X = \dim_P X = \dim_M X = dimaff(X)` of tex lines 543 to 547 under the
+/-- The chain `\dim_H X = \dim_P X = \dim_M X = dimaff(X)` of tex lines 510 to 514 under the
 hypotheses of `thm:main2`. -/
 theorem dim_chain_noExactOverlaps (hms : MorrisShmerkinLyapunov.{u})
     (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
@@ -475,7 +475,7 @@ theorem dim_chain_noExactOverlaps (hms : MorrisShmerkinLyapunov.{u})
   S.dim_chain (S.main2_noExactOverlaps hms hfk hfjj hfib hly hlyb hkk hrot hprox hfree h2 μ hinv
     heq hor)
 
-/-- The squeeze `dimmaff(X) = dimaff(X)` of tex lines 548 to 550 under the hypotheses of
+/-- The squeeze `dimmaff(X) = dimaff(X)` of tex lines 515 to 515 under the hypotheses of
 `thm:main2`, with the first part of `thm:fraser` as the hypothesis `hB`, which
 `System.fraserBound_holds` proves. -/
 theorem dimmaff_eq_dimaff_noExactOverlaps (hms : MorrisShmerkinLyapunov.{u})
@@ -504,7 +504,7 @@ theorem dimaff_lt_of_pressure_neg [Nonempty ι] {s : ℝ} (hs : 0 ≤ s) (h : S.
   exact absurd h (not_lt.2 this)
 
 omit [MeasurableSpace ι] [MeasurableSingletonClass ι] in
-/-- `∑_i |det A_i| < 1` gives `P(𝖠, 2) < 0` and `dimaff(X) < 2` (tex lines 1522 to 1524). -/
+/-- `∑_i |det A_i| < 1` gives `P(𝖠, 2) < 0` and `dimaff(X) < 2` (tex lines 1447 to 1449). -/
 theorem dimaff_lt_two_of_sum_abs_det_lt_one [Nonempty ι] (h : ∑ i, |(S.mat i).det| < 1) :
     S.dimaff < 2 := by
   refine S.dimaff_lt_of_pressure_neg zero_le_two ?_
@@ -520,7 +520,7 @@ theorem dimaff_lt_two_of_sum_abs_det_lt_one [Nonempty ι] (h : ∑ i, |(S.mat i)
 end System
 
 /-- The example of `prop:ssc_no_overlap_not_pesc` satisfies the hypotheses of `thm:main2` and
-`\dim_H X = dimaff(X)` (tex lines 1522 to 1525): it satisfies the strong separation condition,
+`\dim_H X = dimaff(X)` (tex lines 1447 to 1450): it satisfies the strong separation condition,
 hence the strong open set condition, its projective system has no exact overlaps, it fails the
 projective exponential separation condition, and `dimaff(X) < 2` since `∑_i |det A_i| < 1`.
 The theorem of Bárány and Käenmäki enters as the hypothesis `NoOverlap.BaranyKaenmakiPair`. -/

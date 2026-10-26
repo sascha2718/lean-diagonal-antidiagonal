@@ -2,7 +2,7 @@ module
 
 /-
 The Lebesgue measure of the open set of the strong open set condition: the case `s ≥ 2` of
-`thm:main_extended` in `sec:dimension_result_proof`, tex lines 3557 to 3581.
+`thm:main_extended` in `sec:dimension_result_proof`, tex lines 3385 to 3409.
 
 The plane `ℝ × ℝ` carries the sup metric, so a closed ball of radius `r` is a square of side
 `2r`, and `volume` is the product of the Lebesgue measures of the two axes.
@@ -15,7 +15,7 @@ The plane `ℝ × ℝ` carries the sup metric, so a closed ball of radius `r` is
 * `System.volume_image_phi`: `φ_i` scales Lebesgue measure by `|det A_i|`.
 * `System.measurableEmbedding_phi`, `System.measurableSet_image_phi`: `φ_i` maps Borel sets to
   Borel sets.
-* `System.volume_iUnion_image_phi`: the change of variables of tex lines 3562 to 3566 for
+* `System.volume_iUnion_image_phi`: the change of variables of tex lines 3390 to 3394 for
   pairwise disjoint images.
 * `System.Bounds.image_ball_subset`, `System.StrongOpenSet.exists_isBounded`: a large open ball
   is forward invariant, and the open set of the strong open set condition may be taken bounded.
@@ -45,7 +45,7 @@ open scoped ENNReal
 /-! ### Normalised Lebesgue measure on an open set has dimension two -/
 
 /-- `log(c r²) / log r → 2` as `r ↓ 0`, for every `c > 0`. This is the limit behind the last
-step of the case `s ≥ 2` of `thm:main_extended`, tex lines 3579 to 3581. -/
+step of the case `s ≥ 2` of `thm:main_extended`, tex lines 3407 to 3409. -/
 theorem tendsto_log_mul_sq_div_log {c : ℝ} (hc : 0 < c) :
     Tendsto (fun r : ℝ => Real.log (c * r ^ 2) / Real.log r) (𝓝[>] 0) (𝓝 2) := by
   have h : Tendsto (fun r : ℝ => Real.log c / Real.log r + 2) (𝓝[>] 0) (𝓝 (0 + 2)) :=
@@ -69,7 +69,7 @@ theorem volume_closedBall_plane (x : ℝ × ℝ) {r : ℝ} (hr : 0 ≤ r) :
   ring
 
 /-- Normalised Lebesgue measure on an open set `U` of positive finite measure has pointwise
-dimension two at every point of `U`, as in tex lines 3579 to 3581: a small closed ball about
+dimension two at every point of `U`, as in tex lines 3407 to 3409: a small closed ball about
 the point lies in `U` and has measure `4r² / 𝓛²(U)`. -/
 theorem hasLocalDim_normalised_volume {U : Set (ℝ × ℝ)} (hU : IsOpen U) (h0 : volume U ≠ 0)
     (htop : volume U ≠ ∞) {x : ℝ × ℝ} (hx : x ∈ U) :
@@ -90,7 +90,7 @@ theorem hasLocalDim_normalised_volume {U : Set (ℝ × ℝ)} (hU : IsOpen U) (h0
   rw [hreal]
 
 /-- Normalised Lebesgue measure on an open set of positive finite measure is exact-dimensional
-of dimension two, as in tex lines 3579 to 3581. -/
+of dimension two, as in tex lines 3407 to 3409. -/
 theorem isExactDim_normalised_volume {U : Set (ℝ × ℝ)} (hU : IsOpen U) (h0 : volume U ≠ 0)
     (htop : volume U ≠ ∞) : IsExactDim ((volume U)⁻¹ • volume.restrict U) 2 :=
   Measure.ae_smul_measure ((ae_restrict_mem hU.measurableSet).mono fun _ hx =>
@@ -135,7 +135,7 @@ theorem measurableSet_image_phi (i : ι) {U : Set (ℝ × ℝ)} (hU : Measurable
     MeasurableSet (S.phi i '' U) :=
   (S.measurableEmbedding_phi i).measurableSet_image.2 hU
 
-/-- The change of variables of tex lines 3562 to 3566: if the images `φ_i(U)` of a Borel set
+/-- The change of variables of tex lines 3390 to 3394: if the images `φ_i(U)` of a Borel set
 `U` are pairwise disjoint, then their union has Lebesgue measure `∑_i |det A_i|` times that of
 `U`. -/
 theorem volume_iUnion_image_phi [Fintype ι] {U : Set (ℝ × ℝ)} (hU : MeasurableSet U)
@@ -149,7 +149,7 @@ theorem volume_iUnion_image_phi [Fintype ι] {U : Set (ℝ × ℝ)} (hU : Measur
 
 variable {S} in
 /-- Under uniform bounds, an open ball about the origin of radius `R` with `rR + M < R` is
-mapped into itself by every `φ_i`. This is the large ball of tex lines 3557 to 3558. -/
+mapped into itself by every `φ_i`. This is the large ball of tex lines 3385 to 3386. -/
 theorem Bounds.image_ball_subset {r M : ℝ} (hS : S.Bounds r M) {R : ℝ} (hR : r * R + M < R)
     (i : ι) : S.phi i '' ball 0 R ⊆ ball 0 R := by
   rintro _ ⟨z, hz, rfl⟩
@@ -165,7 +165,7 @@ theorem Bounds.image_ball_subset {r M : ℝ} (hS : S.Bounds r M) {R : ℝ} (hR :
   have h3 := dist_triangle (S.phi i z) (S.phi i 0) 0
   linarith
 
-/-- The open set of the strong open set condition may be taken bounded, as in tex lines 3557 to
+/-- The open set of the strong open set condition may be taken bounded, as in tex lines 3385 to
 3560: intersect it with a large forward invariant open ball that contains `X`. -/
 theorem StrongOpenSet.exists_isBounded [Finite ι] (h : S.StrongOpenSet) :
     ∃ U : Set (ℝ × ℝ), IsOpen U ∧ Bornology.IsBounded U ∧ (U ∩ S.attractor).Nonempty ∧
@@ -184,7 +184,7 @@ theorem StrongOpenSet.exists_isBounded [Finite ι] (h : S.StrongOpenSet) :
       (inter_subset_inter (hsub i) (hS.image_ball_subset hMR i))
   · exact (hdisj hij).mono (image_mono inter_subset_left) (image_mono inter_subset_left)
 
-/-- Under the strong open set condition `∑_i |det A_i| ≤ 1`, as in tex lines 3559 to 3567: the
+/-- Under the strong open set condition `∑_i |det A_i| ≤ 1`, as in tex lines 3387 to 3395: the
 images `φ_i(V)` of a bounded feasible open set `V` are pairwise disjoint subsets of `V`, and
 `0 < 𝓛²(V) < ∞`. -/
 theorem StrongOpenSet.sum_abs_det_le_one [Fintype ι] (h : S.StrongOpenSet) :
@@ -200,7 +200,7 @@ theorem StrongOpenSet.sum_abs_det_le_one [Fintype ι] (h : S.StrongOpenSet) :
 /-! ### The invariant measure -/
 
 /-- The push-forward of Lebesgue measure on `U` under `φ_i`, multiplied by `|det A_i|`, is
-Lebesgue measure on `φ_i(U)`. This is the first equality of tex lines 3572 to 3575. -/
+Lebesgue measure on `φ_i(U)`. This is the first equality of tex lines 3400 to 3403. -/
 theorem smul_map_restrict_phi (i : ι) (U : Set (ℝ × ℝ)) :
     ENNReal.ofReal |(S.mat i).det| • (volume.restrict U).map (S.phi i) =
       volume.restrict (S.phi i '' U) := by
@@ -210,7 +210,7 @@ theorem smul_map_restrict_phi (i : ι) (U : Set (ℝ × ℝ)) :
     Measure.restrict_apply hE, smul_eq_mul, ← volume_image_phi, image_preimage_inter]
 
 /-- If `∑_i |det A_i| = 1`, then the pairwise disjoint sets `φ_i(U) ⊆ U` cover `U` up to a
-Lebesgue-null set, as in tex lines 3568 to 3570. -/
+Lebesgue-null set, as in tex lines 3396 to 3398. -/
 theorem restrict_iUnion_image_phi [Fintype ι] {U : Set (ℝ × ℝ)} (hU : MeasurableSet U)
     (htop : volume U ≠ ∞) (hsub : ∀ i, S.phi i '' U ⊆ U)
     (hdisj : Pairwise fun i j => Disjoint (S.phi i '' U) (S.phi j '' U))
@@ -222,7 +222,7 @@ theorem restrict_iUnion_image_phi [Fintype ι] {U : Set (ℝ × ℝ)} (hU : Meas
 
 /-- If `∑_i |det A_i| = 1` and the sets `φ_i(U)` are pairwise disjoint subsets of the Borel set
 `U` of finite measure, then normalised Lebesgue measure `ν` on `U` satisfies
-`ν = ∑_i |det A_i| (φ_i)_*ν`, as in tex lines 3570 to 3575. -/
+`ν = ∑_i |det A_i| (φ_i)_*ν`, as in tex lines 3398 to 3403. -/
 theorem isInvariantMeasure_normalised_volume [Fintype ι] {U : Set (ℝ × ℝ)}
     (hU : MeasurableSet U) (htop : volume U ≠ ∞) (hsub : ∀ i, S.phi i '' U ⊆ U)
     (hdisj : Pairwise fun i j => Disjoint (S.phi i '' U) (S.phi j '' U))
@@ -242,7 +242,7 @@ theorem isInvariantMeasure_normalised_volume [Fintype ι] {U : Set (ℝ × ℝ)}
 
 /-- If `∑_i |det A_i| = 1` under the strong open set condition, then normalised Lebesgue measure
 on the open set is an invariant probability measure of exact dimension two. This is the
-measure `ν` of the case `s ≥ 2` of `thm:main_extended`, tex lines 3568 to 3581. -/
+measure `ν` of the case `s ≥ 2` of `thm:main_extended`, tex lines 3396 to 3409. -/
 theorem StrongOpenSet.exists_isInvariantMeasure_isExactDim [Fintype ι]
     (h : S.StrongOpenSet) (hsum : ∑ i, |(S.mat i).det| = 1) :
     ∃ ν : Measure (ℝ × ℝ), IsProbabilityMeasure ν ∧

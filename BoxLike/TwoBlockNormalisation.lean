@@ -2,7 +2,7 @@ module
 
 /-
 `thm:two-block-normalisation` of `sec:normalisation`, assembled, and the consequences stated
-after it (tex lines 2349 to 2351) and in tex lines 2362 to 2369. Let `Φ` be a proximal box-like
+after it (tex lines 2230 to 2232) and in tex lines 2243 to 2250. Let `Φ` be a proximal box-like
 system with rotations, `Φ^(2)` its second iterate with linear parts `𝖠²`, `β` the grouping map,
 `s > 0`, `μ` the `s`-equilibrium state of `𝖠` and `μ^(2) = β_*μ`.
 
@@ -21,7 +21,7 @@ system with rotations, `Φ^(2)` its second iterate with linear parts `𝖠²`, `
   and grouping a Bernoulli measure in pairs gives a Bernoulli measure.
 * `System.IsEquilibriumState.not_isBernoulli_of_two_block`: the equilibrium state is not
   Bernoulli for `0 < s < 2`, through `𝖠²` and the grouping of Bernoulli measures when `𝖠` has
-  no proximal diagonal generator, as in tex lines 2362 to 2369.
+  no proximal diagonal generator, as in tex lines 2243 to 2250.
 
 The uniqueness and the ergodicity of `μ^(2)` come from `thm:irred_eq_state` for the tuple `𝖠²`,
 as in the prose; `𝖠²` has rotations, and the library proves `thm:irred_eq_state` for tuples with
@@ -139,8 +139,8 @@ theorem two_block_normalisation (hrot : S.WithRotations)
     S.lyapunov₂_sq_map_group (S.tendsto_lyapunov₂ hinv), S.map_proj_sq_map_group μ⟩
   exact S.sq.unique_of_withRotations hrot₂ hs0 ν (μ.map group) hνinv hinv₂ hνeq heq₂
 
-/-- The consequences of `thm:two-block-normalisation` stated after it (tex lines 2349 to 2351)
-and in tex lines 2367 to 2368: the affinity dimension of `𝖠²` is that of `𝖠`, the Lyapunov
+/-- The consequences of `thm:two-block-normalisation` stated after it (tex lines 2230 to 2232)
+and in tex lines 2248 to 2249: the affinity dimension of `𝖠²` is that of `𝖠`, the Lyapunov
 dimension of `μ^(2)` for `𝖠²` is that of `μ` for `𝖠`, both coordinate projections of the
 projected measure are unchanged, and `μ^(2)` is Bernoulli when `μ` is, so that `μ` is not
 Bernoulli when `μ^(2)` is not. -/

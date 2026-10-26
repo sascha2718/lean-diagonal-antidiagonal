@@ -2,7 +2,7 @@ module
 
 /-
 The sets `Σ^τ`, `Σ^ω`, `Σ'` and the Oseledets filtration of `sec:lyapunov_exponents`, in the
-box-like form of tex lines 1598 to 1630: `Σ'` is the set of sequences for which the two backward
+box-like form of tex lines 1521 to 1553: `Σ'` is the set of sequences for which the two backward
 coordinate growth rates exist and equal `λ_1(𝖠, μ)` and `λ_2(𝖠, μ)` in either order, and the
 slow subspace `V_𝐢^1` is a coordinate axis. The measure enters through the two exponents only.
 
@@ -36,7 +36,7 @@ open MeasureTheory Filter Topology Set Matrix
 /-! ### The past of a sequence -/
 
 /-- `𝐢^- = 𝐣^-`: the two sequences agree at all negative coordinates
-(`sec:two_sided_shift_space`, tex line 809). -/
+(`sec:two_sided_shift_space`, tex line 728). -/
 def SamePast {α : Type*} (x y : ℤ → α) : Prop := ∀ n : ℤ, n < 0 → x n = y n
 
 /-- The relation `𝐢^- = 𝐣^-` of `sec:two_sided_shift_space` is reflexive. -/
@@ -118,7 +118,7 @@ grows backwards at the rate `λ_2(𝖠, μ)` and `e_2` at the rate `λ_1(𝖠, �
 noncomputable def SigmaOmega (μ : Measure (ℤ → ι)) : Set (ℤ → ι) :=
   {x | S.HasBackRate (tau S.o x) (S.lyapunov₂ μ) ∧ S.HasBackRate (omega S.o x) (S.lyapunov₁ μ)}
 
-/-- The set `Σ'` of `sec:lyapunov_exponents` in the box-like case (tex lines 1598 to 1600): "all
+/-- The set `Σ'` of `sec:lyapunov_exponents` in the box-like case (tex lines 1521 to 1523): "all
 sequences for which the two backward coordinate growth rates exist and equal `λ_1(𝖠, μ)` and
 `λ_2(𝖠, μ)` in either order". It depends on `μ` through the two exponents only. -/
 noncomputable def SigmaPrime (μ : Measure (ℤ → ι)) : Set (ℤ → ι) :=
@@ -171,7 +171,7 @@ theorem disjoint_SigmaTau_SigmaOmega (μ : Measure (ℤ → ι))
   rintro x ⟨h1, -⟩ ⟨h2, -⟩
   exact hlt.ne (tendsto_nhds_unique h2 h1)
 
-/-- `sec:lyapunov_exponents`, tex lines 1617 to 1618, proved: `Σ^τ` is saturated with respect to
+/-- `sec:lyapunov_exponents`, tex lines 1540 to 1541, proved: `Σ^τ` is saturated with respect to
 the past. -/
 theorem mem_SigmaTau_of_samePast (μ : Measure (ℤ → ι)) {x y : ℤ → ι} (h : SamePast x y)
     (hx : x ∈ S.SigmaTau μ) : y ∈ S.SigmaTau μ := by
@@ -183,7 +183,7 @@ theorem mem_SigmaTau_of_samePast (μ : Measure (ℤ → ι)) {x y : ℤ → ι} 
       ← S.oWord_pastWord, pastWord_congr h n]
   simpa only [SigmaTau, HasBackRate, mem_ofPred_eq, e1, e2] using hx
 
-/-- `sec:lyapunov_exponents`, tex lines 1617 to 1618, proved: `Σ^ω` is saturated with respect to
+/-- `sec:lyapunov_exponents`, tex lines 1540 to 1541, proved: `Σ^ω` is saturated with respect to
 the past. -/
 theorem mem_SigmaOmega_of_samePast (μ : Measure (ℤ → ι)) {x y : ℤ → ι} (h : SamePast x y)
     (hx : x ∈ S.SigmaOmega μ) : y ∈ S.SigmaOmega μ := by
@@ -238,17 +238,17 @@ theorem measurableSet_hasBackRate {T : (ℤ → ι) → ℤ → ι × ZMod 2} (h
   exact ((measurable_comp_futureWord (fun w => Real.log |S.gDeriv w| / n) n).comp
     (measurable_shift _)).comp hT
 
-/-- `sec:lyapunov_exponents`, tex line 1622, proved: `Σ^τ` is Borel. -/
+/-- `sec:lyapunov_exponents`, tex line 1545, proved: `Σ^τ` is Borel. -/
 theorem measurableSet_SigmaTau (μ : Measure (ℤ → ι)) : MeasurableSet (S.SigmaTau μ) :=
   (S.measurableSet_hasBackRate (measurable_tau S.o) _).inter
     (S.measurableSet_hasBackRate (measurable_omega S.o) _)
 
-/-- `sec:lyapunov_exponents`, tex line 1623, proved: `Σ^ω` is Borel. -/
+/-- `sec:lyapunov_exponents`, tex line 1546, proved: `Σ^ω` is Borel. -/
 theorem measurableSet_SigmaOmega (μ : Measure (ℤ → ι)) : MeasurableSet (S.SigmaOmega μ) :=
   (S.measurableSet_hasBackRate (measurable_tau S.o) _).inter
     (S.measurableSet_hasBackRate (measurable_omega S.o) _)
 
-/-- `sec:lyapunov_exponents`, tex line 1598, proved: `Σ'` is Borel. -/
+/-- `sec:lyapunov_exponents`, tex line 1521, proved: `Σ'` is Borel. -/
 theorem measurableSet_SigmaPrime (μ : Measure (ℤ → ι)) : MeasurableSet (S.SigmaPrime μ) :=
   (S.measurableSet_SigmaTau μ).union (S.measurableSet_SigmaOmega μ)
 

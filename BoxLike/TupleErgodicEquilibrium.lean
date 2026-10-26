@@ -3,7 +3,7 @@ module
 /-
 The existence of an ergodic `s`-equilibrium state for every tuple `𝖠 = (A_1, …, A_N)` of
 invertible planar matrices and every `s ≥ 0`, with no irreducibility hypothesis: the assertion of
-`sec:affinity_dim` (tex lines 2217 to 2218) that the article attributes to Käenmäki, Ann. Acad.
+`sec:affinity_dim` (tex lines 2105 to 2106) that the article attributes to Käenmäki, Ann. Acad.
 Sci. Fenn. Math. 29 (2004), Theorems 2.6 and 4.1. No literature premise is used.
 
 The set `𝒦` of invariant `s`-equilibrium states is a non-empty compact subset of the space of
@@ -55,7 +55,7 @@ open scoped ENNReal Matrix.Norms.L2Operator
 /-! ### A strictly convex functional of the cylinder masses -/
 
 /-- The weights `2^{-e(c)}` of an injective map `e` into `ℕ` are summable; they are the weights
-of the functional `cylinderQuad` (tex lines 2217 to 2218). -/
+of the functional `cylinderQuad` (tex lines 2105 to 2106). -/
 theorem summable_half_pow_of_injective {β : Type*} {e : β → ℕ} (he : Function.Injective e) :
     Summable fun c => (1 / 2 : ℝ) ^ e c :=
   summable_geometric_two.comp_injective he
@@ -67,7 +67,7 @@ variable {ι : Type*} [MeasurableSpace ι]
 /-- The functional `Q(μ) = ∑_𝐢 2^{-e(𝐢)} μ([𝐢])²` over all finite words `𝐢`, for an enumeration
 `e` of the words. For injective `e` it is weak-star continuous and strictly convex on the
 invariant probability measures; its maximisers over the set of equilibrium states are extreme
-points of that set (tex lines 2217 to 2218). -/
+points of that set (tex lines 2105 to 2106). -/
 noncomputable def cylinderQuad (e : (Σ n : ℕ, Fin n → ι) → ℕ) (μ : Measure (ℤ → ι)) : ℝ :=
   ∑' c : (Σ n : ℕ, Fin n → ι), (1 / 2 : ℝ) ^ e c * μ.real (cylinder c.2) ^ 2
 
@@ -91,7 +91,7 @@ theorem summable_cylinderQuad {e : (Σ n : ℕ, Fin n → ι) → ℕ} (he : Fun
 /-- Strict convexity of `cylinderQuad`: if `μ = t μ_1 + (1 - t) μ_2` on the cylinders with
 `0 < t < 1`, and `μ_1([𝐢]) ≠ μ_2([𝐢])` for some word `𝐢`, then
 `Q(μ) < t Q(μ_1) + (1 - t) Q(μ_2)`. The defect of each term is
-`2^{-e(𝐢)} t (1 - t) (μ_1([𝐢]) - μ_2([𝐢]))²` (tex lines 2217 to 2218). -/
+`2^{-e(𝐢)} t (1 - t) (μ_1([𝐢]) - μ_2([𝐢]))²` (tex lines 2105 to 2106). -/
 theorem cylinderQuad_mix_lt {e : (Σ n : ℕ, Fin n → ι) → ℕ} (he : Function.Injective e)
     {μ μ₁ μ₂ : Measure (ℤ → ι)} [IsProbabilityMeasure μ] [IsProbabilityMeasure μ₁]
     [IsProbabilityMeasure μ₂] {t : ℝ} (ht0 : 0 < t) (ht1 : t < 1)
@@ -149,7 +149,7 @@ theorem eq_of_measureReal_cylinder_eq [Fintype ι] [MeasurableSingletonClass ι]
 /-- A maximiser of `cylinderQuad` is not a non-trivial combination of two distinct invariant
 probability measures with smaller values of `Q`: if `μ = t μ_1 + (1 - t) μ_2` on the cylinders
 with `0 < t < 1` and `Q(μ_1), Q(μ_2) ≤ Q(μ)`, then `μ_1 = μ_2`, since otherwise
-`Q(μ) < t Q(μ_1) + (1 - t) Q(μ_2) ≤ Q(μ)` (tex lines 2217 to 2218). -/
+`Q(μ) < t Q(μ_1) + (1 - t) Q(μ_2) ≤ Q(μ)` (tex lines 2105 to 2106). -/
 theorem eq_of_mix_of_cylinderQuad_le [Fintype ι] [MeasurableSingletonClass ι]
     {e : (Σ n : ℕ, Fin n → ι) → ℕ} (he : Function.Injective e) {μ μ₁ μ₂ : Measure (ℤ → ι)}
     [IsProbabilityMeasure μ] [IsProbabilityMeasure μ₁] [IsProbabilityMeasure μ₂]
@@ -178,7 +178,7 @@ variable {ι : Type*} [Fintype ι] [TopologicalSpace ι] [DiscreteTopology ι] [
 
 /-- `cylinderQuad` is weak-star continuous on the Borel probability measures on `Σ`: each term
 is a continuous function of the mass of a clopen cylinder, and the terms are dominated by the
-summable weights `2^{-e(𝐢)}` (tex lines 2217 to 2218). -/
+summable weights `2^{-e(𝐢)}` (tex lines 2105 to 2106). -/
 theorem continuous_cylinderQuad {e : (Σ n : ℕ, Fin n → ι) → ℕ} (he : Function.Injective e) :
     Continuous fun ν : ProbabilityMeasure (ℤ → ι) => cylinderQuad e (ν : Measure (ℤ → ι)) := by
   refine continuous_tsum (u := fun c => (1 / 2 : ℝ) ^ e c)
@@ -219,7 +219,7 @@ theorem energyLim_le_blockEnergy_div (hA : ∀ i, (A i).det ≠ 0) (hs : 0 ≤ s
 if `m P(𝖠, s) ≤ H_μ(𝒫_0^{m-1}) + ∫ log φ^s(A_{𝐢|_m}) dμ(𝐢)` for every `m ≥ 1`. The entropy and
 the energy are the infima of the averages at level `m`, and `eq:variational` gives the reverse
 inequality. Each condition is weak-star closed, which is the upper semicontinuity of
-`h_0 + Λ(𝖠, ·, s)` (tex lines 2217 to 2218). -/
+`h_0 + Λ(𝖠, ·, s)` (tex lines 2105 to 2106). -/
 theorem isEquilibriumState_iff_forall (hA : ∀ i, (A i).det ≠ 0) (hs : 0 ≤ s)
     {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ] (hμ : MeasurePreserving (shift 1) μ μ) :
     IsEquilibriumState A s μ ↔
@@ -251,7 +251,7 @@ cylinders: whenever `μ([𝐢]) = t μ_1([𝐢]) + (1 - t) μ_2([𝐢])` for all
 invariant equilibrium states `μ_1`, `μ_2`, then `μ_1 = μ_2`. If an invariant set `E` had
 `0 < μ(E) < 1`, the conditional measures `μ[·|E]` and `μ[·|Eᶜ]` would be such a pair, both
 equilibrium states by `IsEquilibriumState.of_mix`, but `μ[E|E] = 1` and `μ[E|Eᶜ] = 0`
-(tex lines 2217 to 2218). -/
+(tex lines 2105 to 2106). -/
 theorem IsEquilibriumState.ergodic_of_extreme (hA : ∀ i, (A i).det ≠ 0) (hs : 0 ≤ s)
     {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ] (hμ : MeasurePreserving (shift 1) μ μ)
     (heq : IsEquilibriumState A s μ)
@@ -298,7 +298,7 @@ theorem IsEquilibriumState.ergodic_of_extreme (hA : ∀ i, (A i).det ≠ 0) (hs 
 
 variable (A s) in
 /-- The set `𝒦` of invariant Borel probability measures on `Σ` that are `s`-equilibrium states
-of the tuple, `eq:eq_state_def` (tex lines 2212 to 2216). -/
+of the tuple, `eq:eq_state_def` (tex lines 2100 to 2104). -/
 def EquilibriumStates : Set (ProbabilityMeasure (ℤ → ι)) :=
   {ν | ν ∈ InvariantMeasures ι ∧ IsEquilibriumState A s (ν : Measure (ℤ → ι))}
 
@@ -349,7 +349,7 @@ end Compact
 /-! ### Existence of an ergodic equilibrium state -/
 
 /-- **Existence of an ergodic `s`-equilibrium state** for every tuple of invertible planar
-matrices and every `s ≥ 0`, reducible or not: the assertion of `sec:affinity_dim` (tex lines 2217
+matrices and every `s ≥ 0`, reducible or not: the assertion of `sec:affinity_dim` (tex lines 2105
 to 2218) that the article attributes to Käenmäki, Theorems 2.6 and 4.1. A maximiser of the
 weak-star continuous functional `cylinderQuad` over the non-empty compact set of equilibrium
 states is an extreme point of that set (`eq_of_mix_of_cylinderQuad_le`), hence ergodic
@@ -381,7 +381,7 @@ variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClas
 
 /-- `MatrixTuple.exists_ergodic_isEquilibriumState` for a box-like system, whose linear parts are
 invertible by `System.det_mat_ne_zero`: an ergodic `s`-equilibrium state exists for every
-`s ≥ 0` (tex lines 2217 to 2218). -/
+`s ≥ 0` (tex lines 2105 to 2106). -/
 theorem exists_ergodic_isEquilibriumState (hs : 0 ≤ s) :
     ∃ μ : Measure (ℤ → ι), IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ ∧
       Ergodic (shift 1) μ ∧ S.IsEquilibriumState s μ :=

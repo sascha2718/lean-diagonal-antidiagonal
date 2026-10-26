@@ -7,9 +7,10 @@ public import Mathlib
 /-!
 # Hausdorff dimension of planar box-like self-affine sets with rotations
 
-Theorems 1.2, 1.3 and 4.16 of Allen–Käenmäki–Prokaj–Simon–Troscheit.
+Theorems A, B and 4.16 of Käenmäki–Prokaj–Simon–Troscheit.
 The symbolic space is `ℤ → ι`; the plane is `ℝ × ℝ` with the supremum metric.
-Pointwise dimensions use closed balls. The literature predicates below are explicit hypotheses.
+Pointwise dimensions use closed balls. Rapaport's theorem, the one cited result the headline
+statements take, is the explicit hypothesis `RapaportDiagonalDimension`.
 Source comparisons and reductions are recorded in `docs/correspondence.md`.
 -/
 
@@ -150,6 +151,10 @@ section Separation
 
 open scoped ENNReal
 
+/-- The projective word `(i_0, c) ⋯ (i_{n-1}, c)` over a planar word, the path of `Σ_Z` over the
+word in a system with diagonal linear parts (the definition before `thm:rapaport`). -/
+def axisWord {ι : Type*} (c : ZMod 2) (u : List ι) : List (ι × ZMod 2) := u.map fun i => (i, c)
+
 namespace System
 
 variable {ι : Type*} (S : System ι)
@@ -170,6 +175,18 @@ def ProjExpSeparation : Prop :=
 
 /-- No exact overlaps among all finite projective words (`sec:exponential_separation`). -/
 def NoExactOverlaps : Prop := ∀ u u' : List (ι × ZMod 2), u ≠ u' → S.gWord u ≠ S.gWord u'
+
+/-- The gap `Δ_n` of the system induced on the axis `c` by a system with diagonal linear parts
+(the definition before `thm:rapaport`); an empty infimum is `∞`. -/
+noncomputable def axisGap (c : ZMod 2) (n : ℕ) : ℝ≥0∞ :=
+  ⨅ (u : List ι) (u' : List ι) (_ : u.length = n) (_ : u'.length = n) (_ : u ≠ u')
+    (_ : S.gDeriv (axisWord c u) = S.gDeriv (axisWord c u')),
+    ENNReal.ofReal |S.gWord (axisWord c u) 0 - S.gWord (axisWord c u') 0|
+
+/-- Exponential separation of the system induced on the axis `c` (the definition before
+`thm:rapaport`). -/
+def AxisExpSeparation (c : ZMod 2) : Prop :=
+  ∃ r : ℝ, 0 < r ∧ ∃ n : ℕ → ℕ, StrictMono n ∧ ∀ k, ENNReal.ofReal (r ^ n k) ≤ S.axisGap c (n k)
 
 end System
 
@@ -300,9 +317,11 @@ def HasLocalDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
 def IsExactDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
     (μ : Measure X) (d : ℝ) : Prop := ∀ᵐ x ∂μ, HasLocalDim μ x d
 
-/-- Pointwise dimension equals `d₁` or `d₂` almost everywhere (`sec:ledrappier_young_formula`). -/
-def IsDoubleDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
-    (μ : Measure X) (d₁ d₂ : ℝ) : Prop := ∀ᵐ x ∂μ, HasLocalDim μ x d₁ ∨ HasLocalDim μ x d₂
+/-- Double-dimensional (`sec:ledrappier_young_formula`): the pointwise dimension exists almost
+everywhere and takes exactly two values, each on a set of positive measure. -/
+def IsDoubleDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X] (μ : Measure X) : Prop :=
+  ∃ d₁ d₂ : ℝ, d₁ ≠ d₂ ∧ (∀ᵐ x ∂μ, HasLocalDim μ x d₁ ∨ HasLocalDim μ x d₂) ∧
+    0 < μ {x | HasLocalDim μ x d₁} ∧ 0 < μ {x | HasLocalDim μ x d₂}
 
 end MeasureDim
 
@@ -344,33 +363,55 @@ end System
 
 end Thermodynamic
 
+/-! ## The cited theorem of Rapaport -/
+
+section Literature
+
+open MeasureTheory
+open scoped ENNReal
+
+/-- Rapaport, Theorem 1.3 (`thm:rapaport`): a proximal box-like self-affine set without rotations
+whose induced systems on both coordinate axes are exponentially separated has Hausdorff
+dimension `min{2, dimaff(X)}`. The hypothesis of case (iii) of `thm:main2`. -/
+def RapaportDiagonalDimension : Prop :=
+  ∀ {ι : Type u} [Fintype ι] [Nonempty ι] (S : System ι), (∀ i, S.o i = 0) → S.Proximal →
+    S.AxisExpSeparation 0 → S.AxisExpSeparation 1 →
+    dimH S.attractor = ENNReal.ofReal (min 2 S.dimaff)
+
+end Literature
+
 /-! ## Dimension of the projections of the equilibrium state -/
 
 open MeasureTheory
 
-/-- Theorem 1.2 (`thm:main1`): coordinate dimensions and the exact-dimensionality threshold. -/
+/-- Theorem A (`thm:main1`): the coordinate projections of `π_*μ` are double-dimensional below
+the threshold `2 - λ₁/λ₂` and exact-dimensional of dimension one from the threshold on. -/
 theorem audit_main1 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
     (S : System ι)
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ) (c : ZMod 2) :
-    IsDoubleDim (S.marginal c μ) (min 1 (-entropy μ / S.lyapunov₁ μ))
-        (min 1 (-entropy μ / S.lyapunov₂ μ)) ∧
-      ((¬ ∃ d, IsExactDim (S.marginal c μ) d) ↔
-        S.dimaff < 2 - S.lyapunov₁ μ / S.lyapunov₂ μ) ∧
+    (S.dimaff < 2 - S.lyapunov₁ μ / S.lyapunov₂ μ → IsDoubleDim (S.marginal c μ)) ∧
       (2 - S.lyapunov₁ μ / S.lyapunov₂ μ ≤ S.dimaff → IsExactDim (S.marginal c μ) 1) := sorry
 
 /-! ## Dimension of the equilibrium state and of the self-affine set -/
 
-/-- Theorem 1.3 (`thm:main2`): Hausdorff dimension equals affinity dimension. -/
+/-- Theorem B (`thm:main2`): `dim_H X = min{2, dimaff(X)}` under any one of the threshold
+condition, the strong open set condition or projective exponential separation, with Rapaport's
+theorem (`thm:rapaport`) as the explicit hypothesis of the third case; and, under projective
+exponential separation together with the first or the second condition, `π_*μ` is
+exact-dimensional with `dim(π_*μ) = dimaff(X) ≤ 2`. -/
 theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-    (S : System ι)
+    (S : System ι) (hrap : RapaportDiagonalDimension.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hfree : S.NoExactOverlaps) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState S.dimaff μ)
-    (hor : S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∨ S.StrongOpenSet) :
-    dimH S.attractor = ENNReal.ofReal S.dimaff := sorry
+    (hor : S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∨ S.StrongOpenSet ∨
+      S.ProjExpSeparation) :
+    dimH S.attractor = ENNReal.ofReal (min 2 S.dimaff) ∧
+      (S.ProjExpSeparation → S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∨ S.StrongOpenSet →
+        IsExactDim (μ.map S.proj) S.dimaff ∧ S.dimaff ≤ 2) := sorry
 
 /-- Theorem 4.16 (`thm:main_extended`): dimension of the projected equilibrium state. -/
 theorem audit_main_extended {ι : Type u} [Fintype ι] [MeasurableSpace ι]

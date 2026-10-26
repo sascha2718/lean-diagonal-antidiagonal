@@ -17,7 +17,7 @@ Bounds for the pointwise dimensions of a finite Borel measure on `ℝ^d` and the
 * `upperPackingDim_le`, `lowerHausdorffDim_le`, `upperPackingDim_add_of_finiteDimensional`: the
   dimensions of `μ` are at most `d`, and the first line of `eq:haus_dim_sum` holds for all finite
   Borel measures on `E`.
-* `mem_Icc_of_measure_hasLocalDim_pos`, `IsExactDim.dim_mem_Icc`, `IsDoubleDim.dim_mem_Icc`,
+* `mem_Icc_of_measure_hasLocalDim_pos`, `IsExactDim.dim_mem_Icc`, `HasLocalDimPair.dim_mem_Icc`,
   `IsExactDim.dim_mem_Icc_one`, `IsExactDim.dim_mem_Icc_two`: the dimension of a nonzero
   exact-dimensional measure lies in `[0, d]`.
 * `isExactDim_iff_upperPackingDim_eq_lowerHausdorffDim`: `μ` is exact-dimensional if and only if
@@ -252,11 +252,13 @@ theorem IsExactDim.dim_mem_Icc [IsFiniteMeasure μ] (h : IsExactDim μ d) (hne :
     d ∈ Icc (0 : ℝ) (finrank ℝ E) :=
   mem_Icc_of_measure_hasLocalDim_pos (h.measure_hasLocalDim_pos hne)
 
-/-- One of the two values of a nonzero finite double-dimensional Borel measure on a
-finite-dimensional real normed space `E` lies in `[0, dim E]`. A value that occurs on a set of
-positive measure lies in `[0, dim E]` by `mem_Icc_of_measure_hasLocalDim_pos`; a value that
-occurs on a null set is not constrained by the definition. -/
-theorem IsDoubleDim.dim_mem_Icc [IsFiniteMeasure μ] (h : IsDoubleDim μ d₁ d₂) (hne : μ ≠ 0) :
+/-- If the pointwise dimension of a nonzero finite Borel measure on a finite-dimensional real
+normed space `E` is `d₁` or `d₂` almost everywhere, then one of the two values lies in
+`[0, dim E]`. A value that occurs on a set of positive measure lies in `[0, dim E]` by
+`mem_Icc_of_measure_hasLocalDim_pos`; a value that occurs on a null set is not constrained by
+the definition. -/
+theorem HasLocalDimPair.dim_mem_Icc [IsFiniteMeasure μ] (h : HasLocalDimPair μ d₁ d₂)
+    (hne : μ ≠ 0) :
     d₁ ∈ Icc (0 : ℝ) (finrank ℝ E) ∨ d₂ ∈ Icc (0 : ℝ) (finrank ℝ E) := by
   have : (ae μ).NeBot := ae_neBot.2 hne
   obtain ⟨x, hx, hx'⟩ := (h.and (ae_upperLocalDim_le (μ := μ))).exists

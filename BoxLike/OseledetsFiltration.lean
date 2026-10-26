@@ -1,7 +1,7 @@
 module
 
 /-
-The Oseledets filtration of `sec:lyapunov_exponents` (tex lines 1585 to 1630) and
+The Oseledets filtration of `sec:lyapunov_exponents` (tex lines 1508 to 1553) and
 `thm:lyapunov_exponents_via_g_system` in the form of the article. The article takes from
 Oseledets' theorem a Borel set `Σ'` with `σ(Σ') = Σ'` and `μ(Σ') = 1`, saturated with respect
 to the past, and measurable subspaces `{0} = V_𝐢^2 ⊊ V_𝐢^1 ⊊ V_𝐢^0 = ℝ²` with the properties
@@ -241,7 +241,7 @@ theorem HasEucPastRate.unique {x : ℤ → ι} {v : Fin 2 → ℝ} {l l' : ℝ} 
     (h' : HasEucPastRate A x v l') : l = l' :=
   tendsto_nhds_unique h h'
 
-/-- The backward growth rate depends only on the past `𝐢^-` (tex lines 1600 to 1606). -/
+/-- The backward growth rate depends only on the past `𝐢^-` (tex lines 1523 to 1529). -/
 theorem hasEucPastRate_congr {x y : ℤ → ι} (h : SamePast x y) (v : Fin 2 → ℝ) (l : ℝ) :
     HasEucPastRate A x v l ↔ HasEucPastRate A y v l := by
   simp only [HasEucPastRate, pastWord_congr h]
@@ -281,7 +281,7 @@ structure OseledetsSet (μ : Measure (ℤ → ι)) where
   image_shift : shift 1 '' carrier = carrier
   /-- `μ(Σ') = 1`, for the probability measure `μ`. -/
   measure_compl : μ carrierᶜ = 0
-  /-- `Σ'` contains every sequence sharing the past of one of its elements (tex lines 1617
+  /-- `Σ'` contains every sequence sharing the past of one of its elements (tex lines 1540
   to 1618). -/
   mem_of_samePast : ∀ x ∈ carrier, ∀ y, SamePast y x → y ∈ carrier
   /-- The subspaces are measurable: their graphs are Borel. -/
@@ -376,7 +376,7 @@ theorem mem_V_one_iff (hlt : lyapunov₂ A μ < lyapunov₁ A μ) {x : ℤ → �
       have := hl.unique (O.hasEucPastRate_of_notMem hx hv)
       linarith
 
-/-- `V_𝐢^1` depends only on the past `𝐢^-` (tex lines 1600 to 1606), by `eq:V_lyapunov`. -/
+/-- `V_𝐢^1` depends only on the past `𝐢^-` (tex lines 1523 to 1529), by `eq:V_lyapunov`. -/
 theorem V_one_eq_of_samePast (hlt : lyapunov₂ A μ < lyapunov₁ A μ) {x y : ℤ → ι}
     (hx : x ∈ O.carrier) (hy : y ∈ O.carrier) (h : SamePast x y) : O.V x 1 = O.V y 1 := by
   ext v
@@ -636,7 +636,7 @@ theorem finrank_oseledetsSub (μ : Measure (ℤ → ι)) (x : ℤ → ι) {i : �
   | 2, _ => show finrank ℝ (⊥ : Submodule ℝ (Fin 2 → ℝ)) = 2 - 2 by simp
   | _ + 3, h => by omega
 
-/-- `σ(Σ') = Σ'` for the box-like `Σ'` (tex line 1598). -/
+/-- `σ(Σ') = Σ'` for the box-like `Σ'` (tex line 1521). -/
 theorem image_shift_SigmaPrime (μ : Measure (ℤ → ι)) :
     shift 1 '' S.SigmaPrime μ = S.SigmaPrime μ := by
   ext y

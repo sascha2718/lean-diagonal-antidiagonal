@@ -124,7 +124,7 @@ Lyapunov identities of `thm:eq_state_is_sum`. The Gibbs bounds of `μ_1` at `�
 compare `μ_2 = flip_*μ_1` with `μ_1` on the cylinders,
 `μ_2[𝐣|_n] ≥ C⁻² exp(S_n (f_{2,s} - f_{1,s})(𝐣)) μ_1[𝐣|_n]`, and the non-negativity of the relative
 entropy of `μ_1` and `μ_2` on the cylinders of length `n` gives
-`n ∫ (f_{2,s} - f_{1,s}) dμ_1 ≤ 2 log C`. By the calculation of tex lines 2675 to 2679,
+`n ∫ (f_{2,s} - f_{1,s}) dμ_1 ≤ 2 log C`. By the calculation of tex lines 2551 to 2555,
 `f_{2,s} - f_{1,s} = c_s (log |g'_{j_0 ± N}| - log |g'_{j_0}|)` with `c_s > 0`. -/
 theorem lyapBar_map_flipAxis_le_of_isGibbs {s : ℝ} (hs0 : 0 < s) (hs2 : s < 2)
     (μ₁ : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure μ₁]

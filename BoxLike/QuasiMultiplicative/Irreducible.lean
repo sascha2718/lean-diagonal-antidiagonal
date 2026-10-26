@@ -3,7 +3,7 @@ module
 /-
 The quasi-multiplicativity of the norm for an irreducible planar tuple, the first step of the
 proof of Feng–Käenmäki, Proposition 1.2 (Discrete Contin. Dyn. Syst. 30 (2011)), which the
-article quotes as `thm:irred_eq_state` (tex lines 2225 to 2239).
+article quotes as `thm:irred_eq_state` (tex lines 2113 to 2127).
 
 For an irreducible tuple there is `c > 0` such that any two matrices `B`, `C` of norm one
 satisfy `‖B A_𝐤 C‖ ≥ c` for a word `𝐤` of length at most one. Otherwise there are matrices
@@ -111,7 +111,7 @@ theorem exists_pos_le_norm_mul_word_mul (hirr : TupleIrreducible A) :
 
 /-- The quasi-multiplicativity of the norm for an irreducible tuple, Feng–Käenmäki,
 Proposition 1.2 (Discrete Contin. Dyn. Syst. 30 (2011)), the step from irreducibility to the
-Gibbs property in `thm:irred_eq_state` (tex lines 2225 to 2239), with connecting words of length
+Gibbs property in `thm:irred_eq_state` (tex lines 2113 to 2127), with connecting words of length
 at most one: there is `c > 0` such that for all words `𝐮`, `𝐯` some word `𝐤` with `|𝐤| ≤ 1`
 satisfies `c ‖A_𝐮‖ ‖A_𝐯‖ ≤ ‖A_{𝐮𝐤𝐯}‖`. It is `exists_pos_le_norm_mul_word_mul` for the
 normalised products `A_𝐮 / ‖A_𝐮‖` and `A_𝐯 / ‖A_𝐯‖`. -/
@@ -139,7 +139,7 @@ theorem normQuasiMultiplicative_of_tupleIrreducible (hirr : TupleIrreducible A) 
 
 /-- `MatrixTuple.NormQuasiMultiplicative` for an irreducible tuple of invertible planar
 matrices, Feng–Käenmäki, Proposition 1.2 (Discrete Contin. Dyn. Syst. 30 (2011)), the step from
-irreducibility to the Gibbs property in `thm:irred_eq_state` (tex lines 2225 to 2239). The
+irreducibility to the Gibbs property in `thm:irred_eq_state` (tex lines 2113 to 2127). The
 connecting words have length at most one (`normQuasiMultiplicative_of_tupleIrreducible`), and
 invertibility is not used. -/
 theorem normQuasiMultiplicative_of_irreducible (hirr : TupleIrreducible A) :

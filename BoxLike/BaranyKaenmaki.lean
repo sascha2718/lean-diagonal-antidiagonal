@@ -1131,7 +1131,7 @@ theorem prop_ssc_no_overlap_not_pesc_holds :
   exact exists_system_of_homFree_of_exceptionalSet hlam0 hlam1 ht0 ht1 hfree fun c hc =>
     homGap_lt_of_le_mul_exp hC hgap hc
 
-/-- The paragraph after `prop:ssc_no_overlap_not_pesc` (tex lines 1527 to 1537) with no
+/-- The paragraph after `prop:ssc_no_overlap_not_pesc` (tex lines 1452 to 1460) with no
 literature hypothesis: `planar_separation_not_pesc` applied to `baranyKaenmakiPair_holds`. -/
 theorem planar_separation_not_pesc_holds :
     ∃ S : System (Fin 4), S.StrongSeparation ∧

@@ -1,7 +1,7 @@
 module
 
 /-
-The upper bound of `thm:fraser` (tex lines 422 to 436), after Fraser, "On the packing dimension
+The upper bound of `thm:fraser` (tex lines 398 to 473), after Fraser, "On the packing dimension
 of box-like self-affine sets in the plane", Theorem 2.3 (numbering of arXiv:1108.2639v1), for
 every box-like self-affine set: `\overline{\dim}_M X ≤ dimmaff(X)`. The proof is Fraser's,
 Section 5, "Upper bound (assuming no separation conditions)"; no separation condition enters.
@@ -513,9 +513,9 @@ theorem upperBoxDim_attractor_le_of_modPressure_neg {s : ℝ} (hs : 0 ≤ s)
         rw [hexp, mul_right_comm]
         exact ENNReal.ofReal_mul (by positivity)
 
-/-- The upper bound of `thm:fraser` (tex lines 422 to 436), Fraser, Theorem 2.3, for every
+/-- The upper bound of `thm:fraser` (tex lines 398 to 473), Fraser, Theorem 2.3, for every
 box-like self-affine set: `\overline{\dim}_M X ≤ dimmaff(X)`, which is also the first inequality
-of tex line 2184. The modified pressure is negative at every `s > dimmaff(X)`
+of tex line 2077. The modified pressure is negative at every `s > dimmaff(X)`
 (`strictAntiOn_modPressure`), so `upperBoxDim_attractor_le_of_modPressure_neg` applies. No
 separation condition is assumed. -/
 theorem upperBoxDim_attractor_le_dimmaff :

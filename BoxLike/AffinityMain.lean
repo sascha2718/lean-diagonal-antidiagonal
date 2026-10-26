@@ -58,18 +58,19 @@ theorem IsEquilibriumState.lyapDim_eq_dimaff [Nonempty ι] {μ : Measure (ℤ �
   lyapDim_eq (S.lyapunov₂_le_lyapunov₁ hinv) (S.lyapunov₁_neg hinv)
     ((heq.pressure_eq hinv S.dimaff_nonneg).symm.trans S.pressure_dimaff)
 
-/-- The case `0 < s < 2` of `thm:main1`. Let `X` be a proximal box-like self-affine set with rotations satisfying the
-projective exponential separation condition such that `dimaff(X) < 2`, and let `μ` be the
-`s`-equilibrium state for `s = dimaff(X)`. Then the coordinate projections of `μ` are
-double-dimensional. Both projections fail to be exact-dimensional precisely when
-`s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`. At equality and above, both projections are exact-dimensional
-of dimension one. -/
+/-- The case `0 < s < 2` of `thm:main1`, with the values. Let `X` be a proximal box-like
+self-affine set with rotations satisfying the projective exponential separation condition such
+that `dimaff(X) < 2`, and let `μ` be the `s`-equilibrium state for `s = dimaff(X)`. Then the
+pointwise dimension of each coordinate projection of `μ` is `min{1, -h_0(μ)/λ_1(𝖠, μ)}` or
+`min{1, -h_0(μ)/λ_2(𝖠, μ)}` almost everywhere. Both projections fail to be exact-dimensional
+precisely when `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`. At equality and above, both projections are
+exact-dimensional of dimension one. -/
 theorem main1_dimaff (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation)
     (h2 : S.dimaff < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ) (c : ZMod 2) :
-    IsDoubleDim (S.marginal c μ) (min 1 (-entropy μ / S.lyapunov₁ μ))
+    HasLocalDimPair (S.marginal c μ) (min 1 (-entropy μ / S.lyapunov₁ μ))
         (min 1 (-entropy μ / S.lyapunov₂ μ)) ∧
       ((¬ ∃ d, IsExactDim (S.marginal c μ) d) ↔
         S.dimaff < 2 - S.lyapunov₁ μ / S.lyapunov₂ μ) ∧

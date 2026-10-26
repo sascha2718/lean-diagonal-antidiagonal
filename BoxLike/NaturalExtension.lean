@@ -2,7 +2,7 @@ module
 
 /-
 The natural extension of an invariant measure of the one-sided shift, `sec:two_sided_shift_space`
-(tex lines 836 to 850): every `μ^+ ∈ ℳ_σ(Σ^+)` is `η_*μ` for a unique `μ ∈ ℳ_σ(Σ)`, so that
+(tex lines 755 to 769): every `μ^+ ∈ ℳ_σ(Σ^+)` is `η_*μ` for a unique `μ ∈ ℳ_σ(Σ)`, so that
 `η_* : ℳ_σ(Σ) → ℳ_σ(Σ^+)` is a bijection, and it preserves ergodicity in both directions.
 
 The alphabet `ι` is finite with the discrete `σ`-algebra. The measure `μ` is the Carathéodory
@@ -45,7 +45,7 @@ variable {α : Type*}
 
 /-- A section `Σ^+ → Σ` of the map `η ∘ σ^{-m}`: the sequence `y` occupies the coordinates
 `k ≥ -m`, and the coordinates `k < -m` repeat the symbol `y 0`. It plays the role of the embedding
-`e` of tex line 804, without a padding symbol. -/
+`e` of tex line 723, without a padding symbol. -/
 def padFrom (m : ℕ) (y : ℕ → α) : ℤ → α := fun k => y ((m : ℤ) + k).toNat
 
 /-- The coordinates `k ≥ -m` of the sequence `y` placed at the coordinates `k ≥ -(m + j)` are
@@ -66,7 +66,7 @@ theorem etaFrom_padFrom_add (m j : ℕ) (y : ℕ → α) :
 theorem etaFrom_surjective (m : ℕ) : Function.Surjective (etaFrom m : (ℤ → α) → ℕ → α) :=
   fun y => ⟨padFrom m y, etaFrom_padFrom m y⟩
 
-/-- `(η ∘ σ^{-m}) ∘ σ = σ^+ ∘ (η ∘ σ^{-m})`, the identity `η ∘ σ = σ^+ ∘ η` of tex line 811 at
+/-- `(η ∘ σ^{-m}) ∘ σ = σ^+ ∘ (η ∘ σ^{-m})`, the identity `η ∘ σ = σ^+ ∘ η` of tex line 730 at
 the coordinates `k ≥ -m`. -/
 theorem etaFrom_shift_one (m : ℕ) (x : ℤ → α) :
     etaFrom m (shift 1 x) = shiftPlus (etaFrom m x) := by
@@ -99,7 +99,7 @@ section Content
 
 variable {α : Type*} [MeasurableSpace α] {ν : Measure (ℕ → α)}
 
-/-- The set function `μ([i_k ⋯ i_ℓ]) = μ^+(\{j_0 = i_k, …, j_{ℓ-k} = i_ℓ\})` of tex lines 837 and
+/-- The set function `μ([i_k ⋯ i_ℓ]) = μ^+(\{j_0 = i_k, …, j_{ℓ-k} = i_ℓ\})` of tex lines 756 and
 838, as the limit of the measures `(padFrom j)_*μ^+`. On a set `(η ∘ σ^{-m})^{-1} B` the sequence
 is constant from `j = m` on, and the value is `μ^+(B)`; see `futureFun_preimage_etaFrom`. -/
 noncomputable def futureFun (ν : Measure (ℕ → α)) (s : Set (ℤ → α)) : ℝ≥0∞ :=
@@ -121,7 +121,7 @@ theorem measure_preimage_padFrom (hν : MeasurePreserving shiftPlus ν ν) {m j 
   ext y
   simp only [mem_preimage, etaFrom_padFrom_add]
 
-/-- The set function of tex lines 837 and 838 is well defined: its value at
+/-- The set function of tex lines 756 and 757 is well defined: its value at
 `(η ∘ σ^{-m})^{-1} B` is `μ^+(B)`, whatever the representation of the set. This uses the
 invariance of `μ^+`. -/
 theorem futureFun_preimage_etaFrom (hν : MeasurePreserving shiftPlus ν ν) (m : ℕ)
@@ -129,11 +129,11 @@ theorem futureFun_preimage_etaFrom (hν : MeasurePreserving shiftPlus ν ν) (m 
   futureFun_eq_of_eventually_eq <|
     (eventually_ge_atTop m).mono fun _ hj => measure_preimage_padFrom hν hj hB
 
-/-- The set function of tex lines 837 and 838 vanishes at the empty set. -/
+/-- The set function of tex lines 756 and 757 vanishes at the empty set. -/
 @[simp] theorem futureFun_empty (ν : Measure (ℕ → α)) : futureFun ν ∅ = 0 :=
   futureFun_eq_of_eventually_eq <| Eventually.of_forall fun _ => by simp
 
-/-- The set function of tex lines 837 and 838 is finitely additive on the algebra of the sets
+/-- The set function of tex lines 756 and 757 is finitely additive on the algebra of the sets
 that depend on the coordinates `k ≥ -m` for some `m`. -/
 theorem futureFun_union (hν : MeasurePreserving shiftPlus ν ν) {s t : Set (ℤ → α)}
     (hs : s ∈ futureSets α) (ht : t ∈ futureSets α) (hst : Disjoint s t) :
@@ -157,7 +157,7 @@ variable {α : Type*} [TopologicalSpace α]
 
 variable (α) in
 /-- The sets `(η ∘ σ^{-m})^{-1} B` with `m ∈ ℕ` and `B ⊆ Σ^+` clopen. For a discrete alphabet
-they contain the cylinders `[i_k ⋯ i_ℓ]` of tex line 802, and over a finite alphabet they are the
+they contain the cylinders `[i_k ⋯ i_ℓ]` of tex line 721, and over a finite alphabet they are the
 finite unions of cylinders. -/
 def clopenFutureSets : Set (Set (ℤ → α)) :=
   {C | ∃ (m : ℕ) (B : Set (ℕ → α)), IsClopen B ∧ C = etaFrom m ⁻¹' B}
@@ -225,7 +225,7 @@ theorem generateFrom_isClopen_oneSided [Countable α] :
 
 variable {ν : Measure (ℕ → α)}
 
-/-- The content `μ((η ∘ σ^{-m})^{-1} B) = μ^+(B)` of tex lines 837 and 838 on the algebra of the
+/-- The content `μ((η ∘ σ^{-m})^{-1} B) = μ^+(B)` of tex lines 756 and 757 on the algebra of the
 sets `(η ∘ σ^{-m})^{-1} B` with `B` clopen. -/
 noncomputable def futureContent [Countable α] (hν : MeasurePreserving shiftPlus ν ν) :
     AddContent ℝ≥0∞ (clopenFutureSets α) :=
@@ -233,15 +233,15 @@ noncomputable def futureContent [Countable α] (hν : MeasurePreserving shiftPlu
     fun hs ht hst => futureFun_union hν (clopenFutureSets_subset_futureSets hs)
       (clopenFutureSets_subset_futureSets ht) hst
 
-/-- The content of tex lines 837 and 838 at `(η ∘ σ^{-m})^{-1} B` is `μ^+(B)`. -/
+/-- The content of tex lines 756 and 757 at `(η ∘ σ^{-m})^{-1} B` is `μ^+(B)`. -/
 theorem futureContent_apply [Countable α] (hν : MeasurePreserving shiftPlus ν ν) (m : ℕ)
     {B : Set (ℕ → α)} (hB : IsClopen B) : futureContent hν (etaFrom m ⁻¹' B) = ν B :=
   futureFun_preimage_etaFrom hν m hB.isOpen.measurableSet
 
-/-- Over a finite alphabet the content of tex lines 837 and 838 is `σ`-subadditive. The space `Σ`
+/-- Over a finite alphabet the content of tex lines 756 and 757 is `σ`-subadditive. The space `Σ`
 is compact and the sets of the algebra are closed, so a decreasing sequence of them with empty
 intersection is eventually empty; the content is therefore continuous at `∅`. This is the
-hypothesis of the Hahn–Kolmogorov extension theorem of tex line 839. -/
+hypothesis of the Hahn–Kolmogorov extension theorem of tex line 758. -/
 theorem isSigmaSubadditive_futureContent [Finite α] [IsFiniteMeasure ν]
     (hν : MeasurePreserving shiftPlus ν ν) : (futureContent hν).IsSigmaSubadditive := by
   have hC := (isSetAlgebra_clopenFutureSets (α := α)).isSetRing
@@ -273,7 +273,7 @@ section Extension
 variable {ι : Type*} [Finite ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
 
 /-- Every finite `σ^+`-invariant measure `μ^+` on `Σ^+` over a finite alphabet is `η_*μ` for a
-finite `σ`-invariant measure `μ` on `Σ` (tex lines 836 to 846). The measure `μ` is the
+finite `σ`-invariant measure `μ` on `Σ` (tex lines 755 to 765). The measure `μ` is the
 Carathéodory extension of the content `μ((η ∘ σ^{-m})^{-1} B) = μ^+(B)`, `B` clopen. -/
 theorem exists_isFiniteMeasure_map_eta_eq {ν : Measure (ℕ → ι)} [IsFiniteMeasure ν]
     (hν : MeasurePreserving shiftPlus ν ν) :
@@ -309,7 +309,7 @@ theorem exists_isFiniteMeasure_map_eta_eq {ν : Measure (ℕ → ι)} [IsFiniteM
       rw [Measure.map_apply measurable_eta hB'.isOpen.measurableSet, ← etaFrom_zero, hμ 0 hB']
     · rw [Measure.map_apply measurable_eta MeasurableSet.univ, preimage_univ, huniv]
 
-/-- The push-forward `η_* : ℳ_σ(Σ) → ℳ_σ(Σ^+)` is surjective (tex lines 836 to 846): every
+/-- The push-forward `η_* : ℳ_σ(Σ) → ℳ_σ(Σ^+)` is surjective (tex lines 755 to 765): every
 `σ^+`-invariant Borel probability measure `μ^+` on `Σ^+` is `η_*μ` for a `σ`-invariant Borel
 probability measure `μ` on `Σ`. -/
 theorem exists_map_eta_eq {ν : Measure (ℕ → ι)} [IsProbabilityMeasure ν]
@@ -321,7 +321,7 @@ theorem exists_map_eta_eq {ν : Measure (ℕ → ι)} [IsProbabilityMeasure ν]
   rw [← preimage_univ (f := eta), ← Measure.map_apply measurable_eta MeasurableSet.univ, hmap,
     measure_univ]
 
-/-- The push-forward `η_* : ℳ_σ(Σ) → ℳ_σ(Σ^+)` is bijective (tex lines 846 and 847): every
+/-- The push-forward `η_* : ℳ_σ(Σ) → ℳ_σ(Σ^+)` is bijective (tex lines 765 and 766): every
 `μ^+ ∈ ℳ_σ(Σ^+)` is `η_*μ` for exactly one `μ ∈ ℳ_σ(Σ)`. -/
 theorem existsUnique_map_eta_eq {ν : Measure (ℕ → ι)} [IsProbabilityMeasure ν]
     (hν : MeasurePreserving shiftPlus ν ν) :
@@ -333,7 +333,7 @@ theorem existsUnique_map_eta_eq {ν : Measure (ℕ → ι)} [IsProbabilityMeasur
   exact map_eta_injective hinv' hinv (hmap'.trans hmap.symm)
 
 omit [Finite ι] [MeasurableSingletonClass ι] in
-/-- An invariant measure `μ` on `Σ` whose image `η_*μ = μ^+` is ergodic is ergodic (tex lines 848
+/-- An invariant measure `μ` on `Σ` whose image `η_*μ = μ^+` is ergodic is ergodic (tex lines 767
 and 849). -/
 theorem ergodic_of_map_eta_eq {μ : Measure (ℤ → ι)} [IsFiniteMeasure μ] {ν : Measure (ℕ → ι)}
     (hμ : MeasurePreserving (shift 1) μ μ) (hmap : μ.map eta = ν) (hν : Ergodic shiftPlus ν) :
@@ -341,7 +341,7 @@ theorem ergodic_of_map_eta_eq {μ : Measure (ℤ → ι)} [IsFiniteMeasure μ] {
   subst hmap
   exact (ergodic_map_eta_iff hμ).1 hν
 
-/-- Every ergodic `μ^+ ∈ ℳ_σ(Σ^+)` is `η_*μ` for an ergodic `μ ∈ ℳ_σ(Σ)` (tex lines 846 to
+/-- Every ergodic `μ^+ ∈ ℳ_σ(Σ^+)` is `η_*μ` for an ergodic `μ ∈ ℳ_σ(Σ)` (tex lines 765 to
 849). -/
 theorem exists_ergodic_map_eta_eq {ν : Measure (ℕ → ι)} [IsProbabilityMeasure ν]
     (hν : Ergodic shiftPlus ν) :
@@ -350,9 +350,9 @@ theorem exists_ergodic_map_eta_eq {ν : Measure (ℕ → ι)} [IsProbabilityMeas
   exact ⟨μ, hμ, ergodic_of_map_eta_eq hinv hmap hν, hmap⟩
 
 variable (ι) in
-/-- The bijection `η_* : ℳ_σ(Σ) → ℳ_σ(Σ^+)` of tex lines 846 and 847 between the invariant Borel
+/-- The bijection `η_* : ℳ_σ(Σ) → ℳ_σ(Σ^+)` of tex lines 765 and 766 between the invariant Borel
 probability measures of the two-sided and of the one-sided full shift. Its inverse sends `μ^+`
-to the measure `μ = (η_*)^{-1}μ^+` of tex line 850. -/
+to the measure `μ = (η_*)^{-1}μ^+` of tex line 769. -/
 noncomputable def mapEtaEquiv :
     {μ : Measure (ℤ → ι) // IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ} ≃
       {ν : Measure (ℕ → ι) // IsProbabilityMeasure ν ∧ MeasurePreserving shiftPlus ν ν} :=
@@ -380,7 +380,7 @@ noncomputable def mapEtaEquiv :
     ((mapEtaEquiv ι).symm ν : Measure (ℤ → ι)).map eta = ν := by
   rw [← coe_mapEtaEquiv_apply, Equiv.apply_symm_apply]
 
-/-- `η_*μ` is ergodic if and only if `μ` is ergodic (tex lines 848 and 849), for the bijection
+/-- `η_*μ` is ergodic if and only if `μ` is ergodic (tex lines 767 and 768), for the bijection
 `mapEtaEquiv`. -/
 theorem ergodic_mapEtaEquiv_iff
     (μ : {μ : Measure (ℤ → ι) // IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ}) :
@@ -389,7 +389,7 @@ theorem ergodic_mapEtaEquiv_iff
   have := μ.2.1
   exact ergodic_map_eta_iff μ.2.2
 
-/-- The measure `(η_*)^{-1}μ^+` is ergodic if and only if `μ^+` is ergodic (tex lines 848 to
+/-- The measure `(η_*)^{-1}μ^+` is ergodic if and only if `μ^+` is ergodic (tex lines 767 to
 850). -/
 theorem ergodic_mapEtaEquiv_symm_iff
     (ν : {ν : Measure (ℕ → ι) // IsProbabilityMeasure ν ∧ MeasurePreserving shiftPlus ν ν}) :

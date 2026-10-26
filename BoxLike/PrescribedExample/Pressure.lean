@@ -1,7 +1,7 @@
 module
 
 /-
-The tuple and the pressure of `ex:projection_double_dimensional`, tex lines 2948 to 2954 and
+The tuple and the pressure of `ex:projection_double_dimensional`, tex lines 2779 to 2785 and
 3014 to 3029: the four maps form a proximal irreducible box-like tuple with rotations, the
 matrix `M(u) = 2 (a^u, a^u; b^u, b^u)` has the only non-zero eigenvalue `2 a^u + 2 b^u`, the
 partition sums `∑_{|𝐢| = n} φ^u(A_𝐢)` are comparable with `(1, 1) M(u)^n (1, 1)ᵀ`, and hence

@@ -75,7 +75,7 @@ Relation to the library. The existing predicates `FengKaenmakiGibbs` and `FengKa
 are the box-like specialisations of the singular value form for `0 < s < 2`; they follow from
 this statement (`FengKaenmakiNormEquilibrium.fengKaenmakiGibbs`,
 `FengKaenmakiNormEquilibrium.fengKaenmakiUnique`) through the two-sided-shift reduction and the
-rescaling `A'_i = |det A_i|^{(s-1)/(2-s)} A_i` of tex lines 2235 to 2239, both proved in
+rescaling `A'_i = |det A_i|^{(s-1)/(2-s)} A_i` of tex lines 2123 to 2127, both proved in
 `BoxLike/TupleEquilibriumNorm.lean`. The statement covers all irreducible invertible planar
 tuples, the scope at which the article states `thm:irred_eq_state`. Downstream use:
 `MatrixTuple.irred_eq_state_of_fengKaenmaki`.
@@ -178,7 +178,7 @@ theorem twoSided (h : FengKaenmakiNormEquilibrium.{u}) (hA : ∀ i, (A i).det �
   exact map_eta_injective hinv' hμ (hU (μ'.map eta) (measurePreserving_shiftPlus_map_eta hinv')
     ((MatrixTuple.isNormEquilibriumPlus_map_eta_iff μ').2 heq'))
 
-/-- The singular value potential for `0 < s < 2`, tex lines 2235 to 2239: an invariant
+/-- The singular value potential for `0 < s < 2`, tex lines 2123 to 2127: an invariant
 `s`-equilibrium state of an irreducible tuple of invertible planar matrices has the Gibbs bounds
 of `thm:irred_eq_state` and is the only invariant `s`-equilibrium state. For `0 < s ≤ 1` the
 premise applies with `q = s`, since `φ^s = ‖·‖^s`; for `1 < s < 2` it applies to the rescaled

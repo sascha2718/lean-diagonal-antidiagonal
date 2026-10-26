@@ -1,7 +1,7 @@
 module
 
 /-
-The typical words of the proof of `thm:main2` in `sec:dimension_result_proof` (tex line 3648
+The typical words of the proof of `thm:main2` in `sec:dimension_result_proof` (tex line 3470
 to 3683): for the equilibrium state `μ` of a box-like system with rotations containing a
 proximal diagonal generator, with `0 < s < 2` and `P(𝖠, s) = 0`, finite families `W_n` of words
 of length `n → ∞` with a common diagonal planar matrix `A_w = diag(a_n, b_n)`, with
@@ -12,9 +12,9 @@ averages of `f_{1,1}` and `f_{2,1}` converge in measure, the good set is covered
 cylinders of the good words, whose measures the Gibbs bounds control, and a pigeonhole on the
 count vectors and the orientation of the words gives a class on which the two coordinate
 derivatives and the orientation are constant. The article returns to the horizontal orientation
-through the mixing of `μ_1` (tex lines 3654 to 3657); here one anti-diagonal generator is appended
+through the mixing of `μ_1` (tex lines 3474 to 3477); here one anti-diagonal generator is appended
 to the words of a class of odd orientation instead, which changes the lengths by at most one and
-none of the limits. The Shannon–McMillan–Breiman theorem of tex line 3658 is not needed: the
+none of the limits. The Shannon–McMillan–Breiman theorem of tex line 3478 is not needed: the
 Gibbs bounds and the Birkhoff averages of `f_{1,1}`, `f_{2,1}` give the cardinality bounds.
 
 * `exists_block_eq_of_pos`, `System.codeWord_add_one`, `System.count_codeWord_one`,
@@ -29,7 +29,7 @@ Gibbs bounds and the Birkhoff averages of `f_{1,1}`, `f_{2,1}` give the cardinal
 * `System.exists_class`: the counting step for one tolerance `ε` and one length `n`.
 * `System.exists_class_of_gibbs`: the selection for one tolerance `ε`.
 * `System.exists_typical_words_of_gibbs`: the typical words of a Gibbs measure on `Σ_Z`.
-* `System.exists_typical_words`: the typical words of the equilibrium state, tex line 3648 to
+* `System.exists_typical_words`: the typical words of the equilibrium state, tex line 3470 to
   3683.
 -/
 public import BoxLike.EquilibriumGibbsStatement
@@ -84,7 +84,7 @@ theorem count_codeWord_one [DecidableEq ι] (w : List ι) (p : ι × ZMod 2) :
   exact List.count_map_of_injective _ _ flipSymbol_injective _
 
 /-- The derivative `g'_𝐣` is a function of the count vector of `𝐣`: it is the product of the
-`g'_j` to the number of occurrences of `j`, as in tex lines 3671 to 3674. -/
+`g'_j` to the number of occurrences of `j`, as in tex lines 3491 to 3494. -/
 theorem gDeriv_eq_prod_count [Fintype ι] [DecidableEq ι] (u : List (ι × ZMod 2)) :
     S.gDeriv u = ∏ p, S.ratio p ^ u.count p := by
   rw [gDeriv, Finset.prod_list_map_count]
@@ -118,7 +118,7 @@ theorem exists_abs_log_abs_ratio_le [Fintype ι] :
 /-- A class of words of length `n` with common orientation `c` and common coordinate
 derivatives `a`, `b` becomes a class of words of length `n + e`, `e ≤ 1`, with diagonal planar
 matrix `diag(a', b')`: for `c = 1` one anti-diagonal generator is appended, which multiplies
-the derivatives by its entries. This replaces the use of mixing in tex lines 3654 to 3657. -/
+the derivatives by its entries. This replaces the use of mixing in tex lines 3474 to 3477. -/
 theorem exists_diagonal_of_class [Nonempty ι] {K : ℝ} (hK : ∀ p, abs (Real.log |S.ratio p|) ≤ K)
     {W : Finset (List ι)} (hW : W.Nonempty) {n : ℕ} {a b : ℝ} {c : ZMod 2}
     (hmem : ∀ w ∈ W, w.length = n ∧ S.oWord w = c ∧ S.gDeriv (S.codeWord 0 w) = a ∧
@@ -232,7 +232,7 @@ section Birkhoff
 
 variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
 
-/-- The Birkhoff theorem of tex line 3658 in the form of convergence in measure: for an ergodic
+/-- The Birkhoff theorem of tex line 3478 in the form of convergence in measure: for an ergodic
 measure `ν` on the shift over `ι × ZMod 2` and a function `f` of the symbol `y_0`, the measure
 of the set where the average `n⁻¹ ∑_{k<n} f(y_k)` is at distance at least `ε` from `∫ f dν`
 tends to zero. -/
@@ -271,7 +271,7 @@ namespace System
 
 variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
 
-/-- The counting step of tex lines 3656 to 3674 for one tolerance `ε` and one length `n`. Let
+/-- The counting step of tex lines 3476 to 3494 for one tolerance `ε` and one length `n`. Let
 `ν` be a probability measure on the shift over `ι × ZMod 2` with the Gibbs bounds for `f_{1,s}`
 at pressure `0` with constant `C`, and suppose that the set of points of `τ(Σ)` whose Birkhoff
 averages of `f_{1,1}` and `f_{2,1}` of length `n` lie within `ε` of `l₁` and `l₂` has measure at
@@ -511,7 +511,7 @@ theorem exists_class {s l₁ l₂ : ℝ} (hs0 : 0 < s) (hs2 : s < 2)
   · rw [Finset.card_image_of_injective _ List.ofFn_injective]
     linarith
 
-/-- The selection of tex lines 3656 to 3674 for one tolerance `ε`: for an ergodic Gibbs
+/-- The selection of tex lines 3476 to 3494 for one tolerance `ε`: for an ergodic Gibbs
 measure `ν` of `f_{1,s}` at pressure `0` carried by `Σ_Z`, with `∫ f_{1,1} dν = l₁` and
 `∫ f_{2,1} dν = l₂`, and for every `m`, there are a length `n ≥ m` and a non-empty class `W` of
 words of length `n` with common orientation and common coordinate derivatives `a`, `b`, such
@@ -580,14 +580,14 @@ theorem exists_class_of_gibbs {s l₁ l₂ : ℝ} (hs0 : 0 < s) (hs2 : s < 2)
   constructor <;> linarith [le_abs_self (Real.log C), neg_abs_le (Real.log C),
     le_abs_self (Real.log η), neg_abs_le (Real.log η)]
 
-/-- The typical words of a Gibbs measure, tex lines 3648 to 3683 for a measure on `Σ_Z`: let
+/-- The typical words of a Gibbs measure, tex lines 3470 to 3503 for a measure on `Σ_Z`: let
 `ν` be an ergodic probability measure carried by `Σ_Z` with the Gibbs bounds for `f_{1,s}` at
 pressure `0`, `0 < s < 2`, and let `l₁ = ∫ f_{1,1} dν`, `l₂ = ∫ f_{2,1} dν`. Then there are
 lengths `n_m → ∞` and non-empty finite families `W_m` of words of length `n_m` with a common
 diagonal planar matrix `A_w = diag(a_m, b_m)`, such that `log #W_m / n_m → -Λ`,
 `log |a_m| / n_m → l₁` and `log |b_m| / n_m → l₂`, where `Λ = energy l₁ l₂ s` is the
 `s`-energy of `eq:energy_def` at `l₁`, `l₂`. The article's use of mixing to return to the
-horizontal orientation (tex lines 3654 to 3657) is replaced by appending one anti-diagonal
+horizontal orientation (tex lines 3474 to 3477) is replaced by appending one anti-diagonal
 generator to the words of a class of odd orientation. -/
 theorem exists_typical_words_of_gibbs {s l₁ l₂ : ℝ} (hs0 : 0 < s) (hs2 : s < 2)
     (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν] (herg : Ergodic (shift 1) ν)
@@ -628,7 +628,7 @@ theorem exists_typical_words_of_gibbs {s l₁ l₂ : ℝ} (hs0 : 0 < s) (hs2 : s
   · exact tendsto_div_add_of_tendsto_div hL he (tendsto_of_abs_sub_le ha) ha'
   · exact tendsto_div_add_of_tendsto_div hL he (tendsto_of_abs_sub_le hb) hb'
 
-/-- The typical words of the equilibrium state, tex lines 3648 to 3683 in the proof of
+/-- The typical words of the equilibrium state, tex lines 3470 to 3503 in the proof of
 `thm:main2`: for a box-like system with rotations containing a proximal diagonal generator,
 `0 < s < 2` with `P(𝖠, s) = 0`, and an invariant `s`-equilibrium state `μ`, there are lengths
 `n_m → ∞` and non-empty finite families `W_m` of words of length `n_m` with a common diagonal

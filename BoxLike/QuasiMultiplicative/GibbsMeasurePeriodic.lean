@@ -2,7 +2,7 @@ module
 
 /-
 The approximating measures in the proof of the existence half of Feng–Käenmäki,
-Proposition 1.2 (`thm:irred_eq_state`, tex lines 2225 to 2239), after Feng–Käenmäki,
+Proposition 1.2 (`thm:irred_eq_state`, tex lines 2113 to 2127), after Feng–Käenmäki,
 *Equilibrium states of the pressure function for products of matrices*, Discrete Contin. Dyn.
 Syst. 30 (2011), and Bowen's construction. For `N = p + 1` the measure
 `ν_N = (N Z_N)⁻¹ ∑_{0 ≤ k < N} ∑_{|𝐰| = N} ψ(𝐰) δ_{σ^k 𝐰^∞}`, with `ψ = ‖·‖^q` and the periodic

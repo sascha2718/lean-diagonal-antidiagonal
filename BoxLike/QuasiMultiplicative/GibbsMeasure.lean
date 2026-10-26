@@ -1,7 +1,7 @@
 module
 
 /-
-The existence half of Feng–Käenmäki, Proposition 1.2 (`thm:irred_eq_state`, tex lines 2225 to
+The existence half of Feng–Käenmäki, Proposition 1.2 (`thm:irred_eq_state`, tex lines 2113 to
 2239): a quasi-multiplicative tuple of invertible planar matrices has, for every `q > 0`, an
 ergodic invariant probability measure on `Σ = ℤ → ι` with the Gibbs property of the potential
 `‖·‖^q`. The source is De-Jun Feng and Antti Käenmäki, *Equilibrium states of the pressure
@@ -83,7 +83,7 @@ namespace MatrixTuple
 variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   {A : ι → Matrix (Fin 2) (Fin 2) ℝ} {q C : ℝ}
 
-/-- The limit step of Feng–Käenmäki, Proposition 1.2 (`thm:irred_eq_state`, tex lines 2225 to
+/-- The limit step of Feng–Käenmäki, Proposition 1.2 (`thm:irred_eq_state`, tex lines 2113 to
 2234): if `C > 0` and for every length `M` some invariant probability measure on `Σ` has the
 Gibbs bounds of `‖·‖^q` with constant `C` up to length `M`, then some invariant probability
 measure has the Gibbs property of `‖·‖^q`. The sets of these measures form a decreasing sequence
@@ -109,7 +109,7 @@ theorem exists_hasNormGibbs_of_forall_normGibbsUpTo (hC : 0 < C)
   exact ⟨ν, inferInstance, (hν 0).1, C, hC, fun n hn w => (hν n).2 n hn le_rfl w⟩
 
 /-- **Existence of the Gibbs measure** (Feng–Käenmäki, Proposition 1.2, `thm:irred_eq_state`,
-tex lines 2225 to 2234): for a quasi-multiplicative tuple of invertible planar matrices over a
+tex lines 2113 to 2122): for a quasi-multiplicative tuple of invertible planar matrices over a
 non-empty finite alphabet and `q > 0` there is an ergodic invariant probability measure on `Σ`
 with the Gibbs property of `‖·‖^q`. The approximating measures `ν_N` have the Gibbs bounds up to
 every length for large `N`, a weak-star limit point is an invariant Gibbs measure, and a Gibbs
@@ -141,7 +141,7 @@ theorem NormQuasiMultiplicative.exists_ergodic_hasNormGibbs [Nonempty ι]
 end MatrixTuple
 
 /-- **Feng–Käenmäki, Proposition 1.2, existence of the Gibbs measure** (`thm:irred_eq_state`,
-tex lines 2225 to 2234): `NormGibbsExistenceStatement` holds. For a non-empty finite alphabet, a
+tex lines 2113 to 2122): `NormGibbsExistenceStatement` holds. For a non-empty finite alphabet, a
 quasi-multiplicative tuple of invertible planar matrices and `q > 0`, some ergodic invariant
 probability measure on the two-sided shift `Σ = ℤ → ι` has the Gibbs property of `‖·‖^q`. The
 source is Feng–Käenmäki, Discrete Contin. Dyn. Syst. 30 (2011), Proposition 1.2. No literature

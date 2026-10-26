@@ -2,7 +2,7 @@ module
 
 /-
 Ergodicity of the Gibbs measures on the mixing sub-shift `Σ_Z`, a step of the proof of Bowen's
-theorem in `BoxLike/Bowen/` (tex lines 2501 to 2503: "since the sub-shift `Σ_Z` is mixing, for
+theorem in `BoxLike/Bowen/` (tex lines 2382 to 2384: "since the sub-shift `Σ_Z` is mixing, for
 each Hölder continuous potential `f` there exists a unique ergodic Gibbs measure"). Let `ν` be an
 invariant Gibbs probability measure carried by `Σ_Z` for a potential of bounded distortion, and
 let both orientations occur. Gluing two points of `Σ_Z` through one bridging symbol, which
@@ -34,7 +34,7 @@ open MeasureTheory Filter Topology Set
 open scoped ENNReal symmDiff
 
 /-- The quasi-Bernoulli constant `c = C⁻³ exp(-(P + B + 2D))` of a Gibbs measure with constants
-`P` and `C` for a potential with `|f| ≤ B` and distortion `D` (tex lines 2501 to 2503, the
+`P` and `C` for a potential with `|f| ≤ B` and distortion `D` (tex lines 2382 to 2384, the
 ergodicity step of Bowen's theorem). -/
 noncomputable def quasiBernoulliConst (P C B D : ℝ) : ℝ :=
   (C ^ 3)⁻¹ * Real.exp (-(P + B + 2 * D))
@@ -63,7 +63,7 @@ theorem IsGibbsPotential.measureReal_cylinder_le_exp [IsProbabilityMeasure ν]
   · exact (hg.2 y hy n hn).2
 
 omit [Fintype ι] [MeasurableSingletonClass ι] in
-/-- The quasi-Bernoulli bound for two cylinders (tex lines 2501 to 2503, the ergodicity step of
+/-- The quasi-Bernoulli bound for two cylinders (tex lines 2382 to 2384, the ergodicity step of
 Bowen's theorem): `c ν([v]) ν([w]) ≤ ν([v] ∩ σ^{-(|v|+1)}[w])` with `c = C⁻³ exp(-(P + B + 2D))`,
 for a Gibbs probability measure carried by `Σ_Z` and a potential of bounded distortion, when both
 orientations occur. Points `𝐲 ∈ [v]` and `𝐳 ∈ [w]` of `Σ_Z` are glued through one bridging
@@ -150,7 +150,7 @@ theorem IsGibbsPotential.quasiBernoulli_cylinder [IsProbabilityMeasure ν]
     _ ≤ ν.real (cylinder v ∩ shift b ⁻¹' cylinder w) := measureReal_mono hsub
 
 /-- The quasi-Bernoulli bound for a cylinder `[v]` followed, after a gap of one symbol, by a set
-`S = {𝐢 : (i_{-M}, …, i_M) ∈ F}` determined by finitely many coordinates (tex lines 2501 to 2503,
+`S = {𝐢 : (i_{-M}, …, i_M) ∈ F}` determined by finitely many coordinates (tex lines 2382 to 2384,
 the ergodicity step of Bowen's theorem): `c ν([v]) ν(S) ≤ ν([v] ∩ σ^{-(|v|+1+M)} S)`. The set
 `σ^{-(|v|+1+M)} S` is the disjoint union of the sets `σ^{-(|v|+1)}[w]`, `w ∈ F`, and by invariance
 `ν(S) = ∑_{w ∈ F} ν([w])`. -/
@@ -194,7 +194,7 @@ theorem IsGibbsPotential.quasiBernoulli_window [IsProbabilityMeasure ν]
   rw [hsum, hwin, Finset.mul_sum]
   exact Finset.sum_le_sum fun w _ => hg.quasiBernoulli_cylinder hν h h0 h1 v w
 
-/-- The quasi-Bernoulli bound for a cylinder `[v]` and an invariant Borel set `E` (tex lines 2501
+/-- The quasi-Bernoulli bound for a cylinder `[v]` and an invariant Borel set `E` (tex lines 2382
 to 2503, the ergodicity step of Bowen's theorem): `c ν([v]) ν(E) ≤ ν([v] ∩ E)`. The set `E` is
 approximated by a set `S` determined by the coordinates `|k| ≤ M`; by invariance `E` equals
 `σ^{-(|v|+1+M)} E`, and `quasiBernoulli_window` applies to `S`. -/
@@ -265,7 +265,7 @@ theorem IsGibbsPotential.quasiBernoulli_invariant [IsProbabilityMeasure ν]
         nlinarith
     _ ≤ ν.real (cylinder v ∩ E) + ε := by nlinarith
 
-/-- **Ergodicity of Gibbs measures** (tex lines 2501 to 2503, the ergodicity step of Bowen's
+/-- **Ergodicity of Gibbs measures** (tex lines 2382 to 2384, the ergodicity step of Bowen's
 theorem): an invariant Gibbs probability measure carried by `Σ_Z` for a potential of bounded
 distortion is ergodic when both orientations occur, that is, when `Σ_Z` is mixing. For an
 invariant Borel set `E` with `ν(E) > 0` the quasi-Bernoulli bound gives
@@ -300,7 +300,7 @@ theorem IsGibbsPotential.ergodic [IsProbabilityMeasure ν]
   rw [Measure.restrict_apply hE.compl, compl_inter_self, measure_empty, mul_zero] at hle
   exact le_antisymm hle zero_le
 
-/-- **Ergodicity of Gibbs measures for Hölder potentials** (tex lines 2501 to 2503): an invariant
+/-- **Ergodicity of Gibbs measures for Hölder potentials** (tex lines 2382 to 2384): an invariant
 Gibbs probability measure carried by `Σ_Z` for a Hölder potential is ergodic when both
 orientations occur. -/
 theorem IsGibbsPotential.ergodic_of_isHolder [IsProbabilityMeasure ν]

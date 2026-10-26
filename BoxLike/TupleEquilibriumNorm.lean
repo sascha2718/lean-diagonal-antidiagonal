@@ -327,7 +327,7 @@ end SmallExponent
 /-! ### The rescaled tuple for `1 < s < 2` -/
 
 variable (A) in
-/-- The rescaled tuple `A'_i = |det A_i|^{(s-1)/(2-s)} A_i` of tex lines 2236 to 2239. -/
+/-- The rescaled tuple `A'_i = |det A_i|^{(s-1)/(2-s)} A_i` of tex lines 2124 to 2127. -/
 noncomputable def rescale (s : ℝ) (i : ι) : Matrix (Fin 2) (Fin 2) ℝ :=
   |(A i).det| ^ ((s - 1) / (2 - s)) • A i
 
@@ -357,7 +357,7 @@ theorem tupleIrreducible_rescale (hA : ∀ i, (A i).det ≠ 0) (s : ℝ) (h : Tu
   rw [rescale, Matrix.smul_mulVec] at hc
   rw [div_eq_inv_mul, mul_smul, ← hc, smul_smul, inv_mul_cancel₀ hpos.ne', one_smul]
 
-/-- `‖A'_𝐢‖^{2-s} = φ^s(A_𝐢)` for `1 < s < 2`, tex lines 2237 to 2238: the norm of the rescaled
+/-- `‖A'_𝐢‖^{2-s} = φ^s(A_𝐢)` for `1 < s < 2`, tex lines 2125 to 2126: the norm of the rescaled
 product is `|det A_𝐢|^{(s-1)/(2-s)} ‖A_𝐢‖`, and `φ^s(A) = ‖A‖^{2-s} |det A|^{s-1}`. -/
 theorem norm_word_rescale_rpow {s : ℝ} (hs1 : 1 < s) (hs2 : s < 2) (w : List ι) :
     ‖word (rescale A s) w‖ ^ (2 - s) = svf s (word A w) := by

@@ -2,7 +2,7 @@ module
 
 /-
 The deterministic core of Oseledets' multiplicative ergodic theorem in the plane, the classical
-two-dimensional argument behind the filtration of `sec:lyapunov_exponents` (tex lines 1585 to
+two-dimensional argument behind the filtration of `sec:lyapunov_exponents` (tex lines 1508 to
 1607). Let `M_{n+1} = B_n M_n` be invertible planar matrices with `‖B_n‖, ‖B_n⁻¹‖ ≤ K`, and
 suppose that `n⁻¹ log α_1(M_n) → l_1` and `n⁻¹ log α_2(M_n) → l_2 < l_1`. Then some non-zero
 vector `u` has `n⁻¹ log |M_n u| → l_2` and some non-zero `w` has `n⁻¹ log |M_n w| → l_1`.
@@ -394,7 +394,7 @@ planar matrices with `‖B_n‖, ‖B_n⁻¹‖ ≤ K`, `n⁻¹ log α_1(M_n) �
 `n⁻¹ log α_2(M_n) → l_2 < l_1`, where `α_2(M) = |det M| / ‖M‖`. Then a non-zero `u` grows at
 the rate `l_2` and a non-zero `w` grows at the rate `l_1`: `n⁻¹ log |M_n u| → l_2` and
 `n⁻¹ log |M_n w| → l_1`. This is the two-dimensional argument behind the filtration of
-`sec:lyapunov_exponents` (tex lines 1585 to 1607): `u` is the limit of the slow directions of
+`sec:lyapunov_exponents` (tex lines 1508 to 1530): `u` is the limit of the slow directions of
 `M_n`, and `w` is perpendicular to it. -/
 theorem exists_slow_fast_of_tendsto {M B : ℕ → Matrix (Fin 2) (Fin 2) ℝ}
     (hMB : ∀ n, M (n + 1) = B n * M n) (hM : ∀ n, (M n).det ≠ 0) (hB : ∀ n, (B n).det ≠ 0)

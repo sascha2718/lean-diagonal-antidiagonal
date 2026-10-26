@@ -8,9 +8,9 @@ The box-like objects of the library are the planar objects of a box-like system.
 `slowAxis`, and its partitions `ξ_i`, `ξ_1^⊥` and entropies `h_i(μ)`, `h_i(μ, 𝐢)` are those of
 `BoxLike/DimPartitions.lean`, pointwise. The partitions, the entropies, the exponents and the
 projection used by the headline results are therefore the specialisations of the general ones of
-`thm:feng_entropy_as_limit`, `thm:feng_entropy_zero` and `thm:feng1` (tex lines 1585 to 1631 and
+`thm:feng_entropy_as_limit`, `thm:feng_entropy_zero` and `thm:feng1` (tex lines 1508 to 1554 and
 1853 to 1906). This is the observation of `sec:lyapunov_exponents` that for diagonal and
-anti-diagonal matrices `V_𝐢^1` is a coordinate axis (tex lines 1614 to 1616).
+anti-diagonal matrices `V_𝐢^1` is a coordinate axis (tex lines 1537 to 1539).
 
 * `norm_fin_two`: the supremum norm of a planar vector.
 * `System.norm_pastProd_e1`, `System.norm_pastProd_e2`,
@@ -182,7 +182,7 @@ theorem isRegularWith_of_mem_SigmaOmega (μ : Measure (ℤ → ι))
   MatrixTuple.isRegularWith_of S.toPlanar.det_ne_zero hlt (by simp) (by simp)
     ((S.hasPastRate_e1_iff x _).2 hx.1) ((S.hasPastRate_e2_iff x _).2 hx.2)
 
-/-- `sec:lyapunov_exponents`, tex lines 1614 to 1630: for a box-like system with
+/-- `sec:lyapunov_exponents`, tex lines 1537 to 1553: for a box-like system with
 `λ_2(𝖠, μ) < λ_1(𝖠, μ)`, the set `Σ'` of the points at which the Oseledets properties hold is
 the box-like set `Σ' = Σ^τ ∪ Σ^ω` of sequences for which the two backward coordinate growth
 rates are `λ_1(𝖠, μ)` and `λ_2(𝖠, μ)` in either order. -/
@@ -226,7 +226,7 @@ theorem toPlanar_SigmaPrime (μ : Measure (ℤ → ι)) (hlt : S.lyapunov₂ μ 
     · exact ⟨_, S.isRegularWith_of_mem_SigmaTau μ hlt hx⟩
     · exact ⟨_, S.isRegularWith_of_mem_SigmaOmega μ hlt hx⟩
 
-/-- Oseledets' theorem for a box-like tuple (`sec:lyapunov_exponents`, tex lines 1585 to 1600):
+/-- Oseledets' theorem for a box-like tuple (`sec:lyapunov_exponents`, tex lines 1508 to 1523):
 for an ergodic `μ` with `λ_2(𝖠, μ) < λ_1(𝖠, μ)`, the set `Σ'` of the planar system of `S` has full
 measure. It is the box-like `μ(Σ') = 1` of `BoxLike/SigmaMeasure.lean`, proved from Birkhoff's
 theorem, through `toPlanar_SigmaPrime`. -/

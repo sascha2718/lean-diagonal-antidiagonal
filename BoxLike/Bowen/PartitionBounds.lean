@@ -44,7 +44,7 @@ open MeasureTheory Filter Topology Set
 
 /-! ### Fekete's lemma for super-additive sequences -/
 
-/-- Fekete's lemma, in the form used for the partition sums of Bowen's theorem (tex lines 2501 to
+/-- Fekete's lemma, in the form used for the partition sums of Bowen's theorem (tex lines 2382 to
 2503): a sequence with `a_m + a_n ≤ a_{m+n}` for `m, n ≥ 1` and `a_n / n → L` satisfies
 `a_n ≤ n L` for every `n ≥ 1`, since `k a_n ≤ a_{kn}` and `a_{kn} / (kn) → L`. -/
 theorem le_mul_of_superadditive {a : ℕ → ℝ} {L : ℝ}
@@ -124,7 +124,7 @@ variable {ι : Type*} [Fintype ι] {o : ι → ZMod 2} {f : (ℤ → ι × ZMod 
 
 variable (o f) in
 /-- The sum `Z_p = ∑_{𝐢 ∈ Σ_Z : σ^p(𝐢) = 𝐢} exp(S_p f(𝐢))` over the periodic points of period
-`p`, the normalisation of the periodic-orbit measures of Bowen's theorem (tex lines 2501 to
+`p`, the normalisation of the periodic-orbit measures of Bowen's theorem (tex lines 2382 to
 2503). -/
 noncomputable def periodicPartition (p : ℕ) : ℝ :=
   ∑ x ∈ periodicFinset o p, Real.exp (birkhoffSum (shift 1) f p x)
@@ -465,7 +465,7 @@ theorem HasBoundedDistortion.exp_le_periodicPartition (h : HasBoundedDistortion 
 
 open Classical in
 /-- The Gibbs bounds for the weights of the periodic points of period `N + 4`, uniformly in `N`,
-the core of Bowen's periodic-orbit construction (tex lines 2501 to 2503): there is `C > 0` such
+the core of Bowen's periodic-orbit construction (tex lines 2382 to 2384): there is `C > 0` such
 that for every `N`, every `𝐲 ∈ Σ_Z` and every `1 ≤ m ≤ N` the periodic points of period `N + 4`
 in the cylinder `[𝐲|_m]` carry the proportion between `C⁻¹ exp(-mP + S_m f(𝐲))` and
 `C exp(-mP + S_m f(𝐲))` of the total weight `Z_{N+4}`, where `P = P_Z(f)`, when both orientations

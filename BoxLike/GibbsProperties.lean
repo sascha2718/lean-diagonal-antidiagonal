@@ -2,8 +2,8 @@ module
 
 /-
 Unlabelled claims of the article about the equilibrium state and the two Gibbs measures: the
-comment on the method in the introduction (tex lines 517 to 525), `sec:affinity_dim` (tex lines
-2241 to 2256), `sec:normalisation` (tex lines 2355 to 2369) and `sec:gibbs_measures` (tex lines
+comment on the method in the introduction (tex lines 507 to 507), `sec:affinity_dim` (tex lines
+2241 to 2256), `sec:normalisation` (tex lines 2236 to 2250) and `sec:gibbs_measures` (tex lines
 2489 to 2500, 2581 to 2607 and 2634 to 2636), with `eq:tau_cylinder`.
 
 * `IsSubmultiplicative`, `IsQuasiBernoulli`, `IsBernoulli`: sub-multiplicative, quasi-Bernoulli
@@ -70,14 +70,14 @@ section Definitions
 
 variable {α : Type*} [MeasurableSpace α]
 
-/-- A sub-multiplicative measure, `sec:affinity_dim`, tex lines 2241 to 2243: there is `C ≥ 1`
+/-- A sub-multiplicative measure, `sec:affinity_dim`, tex lines 2129 to 2131: there is `C ≥ 1`
 with `μ[𝐢𝐣] ≤ C μ[𝐢] μ[𝐣]` for all finite words `𝐢, 𝐣 ∈ Σ_*^+`. The words of `Σ_*^+` are
 non-empty. -/
 def IsSubmultiplicative (μ : Measure (ℤ → α)) : Prop :=
   ∃ C : ℝ, 1 ≤ C ∧ ∀ m n : ℕ, 0 < m → 0 < n → ∀ (w : Fin m → α) (w' : Fin n → α),
     μ.real (cylinder (Fin.append w w')) ≤ C * (μ.real (cylinder w) * μ.real (cylinder w'))
 
-/-- A quasi-Bernoulli measure, tex lines 517 to 519: the measure of the concatenation of two
+/-- A quasi-Bernoulli measure, tex lines 507 to 507: the measure of the concatenation of two
 words is comparable to the product of the measures of the words,
 `C⁻¹ μ[𝐢] μ[𝐣] ≤ μ[𝐢𝐣] ≤ C μ[𝐢] μ[𝐣]` for all `𝐢, 𝐣 ∈ Σ_*^+`. -/
 def IsQuasiBernoulli (μ : Measure (ℤ → α)) : Prop :=
@@ -85,7 +85,7 @@ def IsQuasiBernoulli (μ : Measure (ℤ → α)) : Prop :=
     C⁻¹ * (μ.real (cylinder w) * μ.real (cylinder w')) ≤ μ.real (cylinder (Fin.append w w')) ∧
       μ.real (cylinder (Fin.append w w')) ≤ C * (μ.real (cylinder w) * μ.real (cylinder w'))
 
-/-- A Bernoulli measure, `sec:normalisation`, tex lines 2355 to 2360: there is a probability
+/-- A Bernoulli measure, `sec:normalisation`, tex lines 2236 to 2241: there is a probability
 vector `p` with `μ[i_k ⋯ i_ℓ] = p_{i_k} ⋯ p_{i_ℓ}` for every cylinder
 `[i_k ⋯ i_ℓ] = {𝐣 : j_k = i_k, …, j_ℓ = i_ℓ}` of the two-sided shift, which is
 `σ^{-k}[w]` for the word `w = i_k ⋯ i_ℓ`. -/
@@ -135,7 +135,7 @@ end Definitions
 
 /-! ### The singular value function through `c_s` -/
 
-/-- The constant `c_s` of `sec:gibbs_measures`, tex line 2589: `c_s = s` for `s < 1` and
+/-- The constant `c_s` of `sec:gibbs_measures`, tex line 2470: `c_s = s` for `s < 1` and
 `c_s = 2 - s` for `1 ≤ s`. -/
 noncomputable def gapExp (s : ℝ) : ℝ := if s < 1 then s else 2 - s
 
@@ -269,7 +269,7 @@ theorem Proximal.exists_matWord_eq (hprox : S.Proximal) :
   · rw [hmat, ho] at hu
     exact absurd hu (not_isProximalMatrix_boxMat_one _ _)
 
-/-- The failure of super-multiplicativity of the singular value function, tex lines 521 to 523:
+/-- The failure of super-multiplicativity of the singular value function, tex lines 507 to 507:
 for a proximal box-like tuple with rotations and `0 < s < 2` there are a diagonal block `D = A_𝐮`
 with entries `a`, `b` of distinct moduli and an anti-diagonal generator `R = A_j` such that
 `φ^s(D^n) φ^s(R D^n) ≥ c q^n φ^s(D^n R D^n)` with `q = (max{|a|, |b|} / min{|a|, |b|})^{c_s} > 1`.
@@ -328,7 +328,7 @@ theorem HasGibbsBoundsWith.measureReal_cylinder_pos (h : S.HasGibbsBoundsWith C 
   lt_of_lt_of_le (mul_pos (inv_pos.2 (one_pos.trans_le h.1))
     (mul_pos (Real.exp_pos _) (S.svf_matWord_pos s _))) (h.2 n hn w).1
 
-/-- The display of tex lines 2246 to 2249: by the Gibbs bounds with constant `C` and the
+/-- The display of tex lines 2134 to 2137: by the Gibbs bounds with constant `C` and the
 sub-multiplicativity of the singular value function,
 `μ[𝐢𝐣] ≤ C exp(-(|𝐢| + |𝐣|) P(𝖠, s)) φ^s(A_𝐢) φ^s(A_𝐣) ≤ C³ μ[𝐢] μ[𝐣]`. -/
 theorem HasGibbsBoundsWith.measureReal_cylinder_append_le (hs : 0 ≤ s)
@@ -367,7 +367,7 @@ theorem HasGibbsBoundsWith.measureReal_cylinder_append_le (hs : 0 ≤ s)
             (mul_nonneg hC0.le measureReal_nonneg)) hC0.le
       _ = C ^ 3 * (μ.real (cylinder w) * μ.real (cylinder w')) := by ring
 
-/-- The equilibrium state is sub-multiplicative, tex lines 2244 to 2250: a measure with the Gibbs
+/-- The equilibrium state is sub-multiplicative, tex lines 2132 to 2138: a measure with the Gibbs
 bounds of `thm:irred_eq_state` with constant `C` is sub-multiplicative with constant `C³`. -/
 theorem HasGibbsBounds.submultiplicative (hs : 0 ≤ s) (h : S.HasGibbsBounds s μ) :
     IsSubmultiplicative μ := by
@@ -438,7 +438,7 @@ theorem HasGibbsBoundsWith.mul_measureReal_cylinder_append_le (h : S.HasGibbsBou
         mul_le_mul h2 h3 (mul_nonneg (inv_pos.2 hC0).le
           (mul_nonneg (Real.exp_pos _).le (svf_nonneg _ _))) measureReal_nonneg
 
-/-- The failure of the lower quasi-Bernoulli bound, tex lines 520 to 524: for a proximal box-like
+/-- The failure of the lower quasi-Bernoulli bound, tex lines 507 to 507: for a proximal box-like
 tuple with rotations and `0 < s < 2` there are a diagonal block `D = A_𝐮` and an anti-diagonal
 generator `R = A_j` such that a measure with the Gibbs bounds of `thm:irred_eq_state` satisfies
 `μ[𝐮^n] μ[j 𝐮^n] ≥ c q^n μ[𝐮^n j 𝐮^n]` for all `n`, with `q > 1`. The word `𝐮^n` is
@@ -462,7 +462,7 @@ theorem HasGibbsBounds.exists_mul_measureReal_cylinder_le (hrot : S.WithRotation
     (mul_nonneg hc.le (pow_nonneg (zero_le_one.trans hq.le) n)) (hsvf n)
   rwa [mul_div_right_comm] at key
 
-/-- The equilibrium state is not quasi-Bernoulli, tex lines 520 to 524: for a proximal box-like
+/-- The equilibrium state is not quasi-Bernoulli, tex lines 507 to 507: for a proximal box-like
 tuple with rotations and `0 < s < 2`, a measure with the Gibbs bounds of `thm:irred_eq_state` is
 not quasi-Bernoulli. -/
 theorem not_quasiBernoulli (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 < s)
@@ -489,7 +489,7 @@ theorem not_quasiBernoulli (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 
   rw [div_lt_iff₀ hc] at hn
   nlinarith
 
-/-- The equilibrium state is not a Bernoulli measure, tex lines 524 to 525 and 2362 to 2368, in
+/-- The equilibrium state is not a Bernoulli measure, tex lines 507 to 507 and 2362 to 2368, in
 the strong form that the measures of the cylinders are not the products of the measures of their
 symbols. -/
 theorem not_forall_measureReal_cylinder_eq_prod (hrot : S.WithRotations) (hprox : S.Proximal)
@@ -499,7 +499,7 @@ theorem not_forall_measureReal_cylinder_eq_prod (hrot : S.WithRotations) (hprox 
   not_quasiBernoulli hrot hprox hs0 hs2 h
     (isQuasiBernoulli_of_measureReal_cylinder_eq_prod hprod)
 
-/-- The equilibrium state is not a Bernoulli measure, tex lines 524 to 525 and 2362 to 2368: for
+/-- The equilibrium state is not a Bernoulli measure, tex lines 507 to 507 and 2362 to 2368: for
 a proximal box-like tuple with rotations and `0 < s < 2`, a measure with the Gibbs bounds of
 `thm:irred_eq_state` is not Bernoulli. -/
 theorem not_isBernoulli (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 < s)
@@ -591,7 +591,7 @@ theorem IsGibbsWith.one_le (h : IsGibbsWith o φ ν P C) (hy : y ∈ subshift o)
   have h2 : 1 < C⁻¹ := (one_lt_inv₀ hC).2 (not_le.1 hlt)
   linarith
 
-/-- The sharp form of the display of tex lines 2494 to 2496:
+/-- The sharp form of the display of tex lines 2375 to 2377:
 `ν[𝐢|_n] ≤ C² exp(P - f(σ^n 𝐢)) ν[𝐢|_{n+1}]` for `𝐢 ∈ Σ_Z` and `n ≥ 1`. -/
 theorem IsGibbsWith.measureReal_cylinder_le_succ (h : IsGibbsWith o φ ν P C)
     (hy : y ∈ subshift o) {n : ℕ} (hn : 0 < n) :
@@ -621,7 +621,7 @@ theorem IsGibbsWith.measureReal_cylinder_le_succ (h : IsGibbsWith o φ ν P C)
 /-- The companion of `IsGibbsWith.measureReal_cylinder_le_succ` for an extension to the left, for
 an invariant Gibbs measure: `ν[i_1 ⋯ i_n] ≤ C² exp(P - f(𝐢)) ν[i_0 i_1 ⋯ i_n]` for `𝐢 ∈ Σ_Z` and
 `n ≥ 1`, where `[i_1 ⋯ i_n] = σ^{-1}[(σ𝐢)|_n]`. The balls of the two-sided shift are cylinders
-`[i_{-m} ⋯ i_n]`, so the doubling property of tex lines 2497 to 2500 uses both inequalities. -/
+`[i_{-m} ⋯ i_n]`, so the doubling property of tex lines 2378 to 2381 uses both inequalities. -/
 theorem IsGibbsWith.measureReal_preimage_shift_cylinder_le [MeasurableSingletonClass ι]
     (h : IsGibbsWith o φ ν P C) (hinv : MeasurePreserving (shift 1) ν ν) (hy : y ∈ subshift o)
     {n : ℕ} (hn : 0 < n) :
@@ -655,7 +655,7 @@ theorem IsGibbsWith.measureReal_preimage_shift_cylinder_le [MeasurableSingletonC
     _ = C ^ 2 * Real.exp (P - φ (y 0)) * ν.real (cylinder fun k : Fin (n + 1) => y k) := by
         ring
 
-/-- A Gibbs measure is doubling, tex lines 2493 to 2500:
+/-- A Gibbs measure is doubling, tex lines 2374 to 2381:
 `ν[𝐢|_n] ≤ C² exp(P_Z(f) + ‖f‖_∞) ν[𝐢|_{n+1}]` for all `𝐢 ∈ Σ_Z` and `n ∈ ℕ`. The norm `‖φ‖` of
 the one-symbol potential is the supremum norm `max_p |φ(p)|` over the alphabet, which is
 `‖f‖_∞` by `exists_mem_subshift_zero_eq`. The article's constant is an upper bound for the sharp
@@ -691,7 +691,7 @@ theorem IsGibbsWith.doubling [Fintype ι] [IsProbabilityMeasure ν] (h : IsGibbs
     exact mul_le_mul_of_nonneg_right
       (mul_le_mul_of_nonneg_left (hexp n) (sq_nonneg C)) measureReal_nonneg
 
-/-- A Gibbs measure is doubling, tex lines 2493 to 2500, for the constants `P` and `C` of the
+/-- A Gibbs measure is doubling, tex lines 2374 to 2381, for the constants `P` and `C` of the
 Gibbs property. -/
 theorem IsGibbs.doubling [Fintype ι] [IsProbabilityMeasure ν] (h : IsGibbs o φ ν) :
     ∃ P C : ℝ, IsGibbsWith o φ ν P C ∧ ∀ y ∈ subshift o, ∀ n : ℕ,
@@ -797,7 +797,7 @@ section Potentials
 
 variable {ι : Type u} (S : System ι) {s : ℝ}
 
-/-- `f_{1,s}(τ(𝐢)) = f_{2,s}(ω(𝐢))`, tex lines 2569 to 2570. The identity
+/-- `f_{1,s}(τ(𝐢)) = f_{2,s}(ω(𝐢))`, tex lines 2450 to 2451. The identity
 `f_{2,s}(τ(𝐢)) = f_{1,s}(ω(𝐢))` is `System.potential₂_tau`. -/
 theorem potential₁_tau (s : ℝ) (x : ℤ → ι) (k : ℤ) :
     S.potential₁ s (tau S.o x k) = S.potential₂ s (omega S.o x k) := by
@@ -805,7 +805,7 @@ theorem potential₁_tau (s : ℝ) (x : ℤ → ι) (k : ℤ) :
     show (1 : ZMod 2) + 1 = 0 from by decide, add_zero]
 
 /-- `f_{1,s} - f_{2,s} = c_s (log |g'_{j_0}| - log |g'_{j_0 ± N}|)`, the direct calculation of
-tex lines 2584 to 2589 for a single symbol. -/
+tex lines 2465 to 2470 for a single symbol. -/
 theorem potential₁_sub_potential₂ (s : ℝ) (p : ι × ZMod 2) :
     S.potential₁ s p - S.potential₂ s p =
       gapExp s * (Real.log |S.ratio p| - Real.log |S.ratio (p.1, p.2 + 1)|) := by
@@ -867,14 +867,14 @@ theorem not_isGibbs_potential₁_and_potential₂ (hprox : S.HasProximalDiagonal
 
 variable {S} {μ : Measure (ℤ → ι)} {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)}
 
-/-- `μ_1 ≠ μ_2`, tex lines 2582 to 2593, for a tuple with a proximal diagonal generator and
+/-- `μ_1 ≠ μ_2`, tex lines 2463 to 2474, for a tuple with a proximal diagonal generator and
 `0 < s < 2`. The proof does not use the identity `P_Z(f_{1,s}) = P_Z(f_{2,s})`. -/
 theorem GibbsDecomposition.ne (hprox : S.HasProximalDiagonal) (hs0 : 0 < s) (hs2 : s < 2)
     (hdec : S.GibbsDecomposition s μ μ₁ μ₂) : μ₁ ≠ μ₂ := by
   rintro rfl
   exact S.not_isGibbs_potential₁_and_potential₂ hprox hs0 hs2 hdec.gibbs₁ hdec.gibbs₂
 
-/-- The `s`-Gibbs measures `μ_1` and `μ_2` are mutually singular, tex lines 2593 to 2594: they
+/-- The `s`-Gibbs measures `μ_1` and `μ_2` are mutually singular, tex lines 2474 to 2475: they
 are distinct ergodic measures. -/
 theorem GibbsDecomposition.mutuallySingular (hprox : S.HasProximalDiagonal) (hs0 : 0 < s)
     (hs2 : s < 2) (hdec : S.GibbsDecomposition s μ μ₁ μ₂) : μ₁ ⟂ₘ μ₂ := by
@@ -915,7 +915,7 @@ theorem GibbsDecomposition.map_tau_cylinder [MeasurableSingletonClass ι]
     map_unCode_restrict_range_tau_cylinder hdec.supp₂ x hn,
     hdec.gibbs₂.map_unCode_restrict_range_tau_cylinder_pos hdec.supp₂ x hn⟩
 
-/-- `\overline{τ}_*μ_k(Σ) > 0` for both `k`, tex lines 2604 to 2605. -/
+/-- `\overline{τ}_*μ_k(Σ) > 0` for both `k`, tex lines 2485 to 2486. -/
 theorem GibbsDecomposition.map_tau_univ_pos (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
     0 < (μ₁.restrict (range (tau S.o))).map unCode univ ∧
       0 < (μ₂.restrict (range (tau S.o))).map unCode univ := by
@@ -927,7 +927,7 @@ theorem GibbsDecomposition.map_tau_univ_pos (hdec : S.GibbsDecomposition s μ μ
   exact ⟨hdec.gibbs₁.measure_range_tau_pos hdec.supp₁,
     hdec.gibbs₂.measure_range_tau_pos hdec.supp₂⟩
 
-/-- `\overline{ω}_*μ_k(Σ) > 0` for both `k`, the counterpart of tex lines 2604 to 2605 for
+/-- `\overline{ω}_*μ_k(Σ) > 0` for both `k`, the counterpart of tex lines 2485 to 2486 for
 `ω`. -/
 theorem GibbsDecomposition.map_omega_univ_pos (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
     0 < (μ₁.restrict (range (omega S.o))).map unCode univ ∧

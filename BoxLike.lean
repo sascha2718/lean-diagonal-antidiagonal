@@ -2,7 +2,7 @@ module
 
 /-
 `BoxLike`: a formalisation of `diagonal-antidiagonal.tex`, "Hausdorff dimension of planar
-box-like self-affine sets with rotations" (Allen, Käenmäki, Prokaj, Simon, Troscheit).
+box-like self-affine sets with rotations" (Käenmäki, Prokaj, Simon, Troscheit).
 
 Built on Mathlib and on the Kittle–Kogler library `ExactOverlaps` (`vendor/`). No `sorry`, no
 axiom beyond `propext`, `Classical.choice` and `Quot.sound`. Theorems the article cites are
@@ -18,6 +18,13 @@ numbered result.
   `eq:def_of_g_system`, `eq:phi_def_by_g` and `thm:matrix_products_g_derivatives`.
 * `Separation`: the projective gap `Δ_n^Ψ`, the projective exponential separation condition,
   the absence of exact overlaps, compositions of similarities and `lem:proj_gap_dominated`.
+* `AxisSeparation`: the gap and the exponential separation of the systems a diagonal system
+  induces on the coordinate axes, the definition before `thm:rapaport`.
+* `ProjExpNoOverlaps`: projective exponential separation implies the absence of exact overlaps
+  (`sec:exponential_separation`).
+* `LiteratureRapaport`, `LiteratureHochmanRapaport`: the cited theorems `thm:rapaport` and
+  `thm:hochman_rapaport` as `Prop`-valued statements, with their degenerate instances; the first is
+  the hypothesis of case (iii) of `thm:main2`.
 * `Projection`: the canonical projections `\overline{π}` and `π`, `eq:canonical_projection`,
   `eq:commutative_diagram` and `eq:self_affine_set_def` for `X = π(Σ)`.
 * `SingularValue`: the singular value function `φ^s` of `sec:Singular_value_function`, its
@@ -32,6 +39,9 @@ numbered result.
   `eq:main_extended2`.
 * `MeasureDim`: pointwise dimension, exact- and double-dimensional measures,
   `thm:exact-dimensional-mixture` and `eq:restricted-projection-dimensions`.
+* `MeasureDimDouble`: double-dimensional measures in the sense of `sec:ledrappier_young_formula`
+  (two distinct values, each on a set of positive measure), their characterisation by `udimp` and
+  `ldimh`, and `thm:exact-dimensional-mixture` in full.
 * `Measurable`: measurability of `τ`, `ω`, `\overline{π}` and `π`.
 * `Entropy`: block entropies and the Kolmogorov–Sinai entropy `h_0`, with the existence of its
   limit.
@@ -149,9 +159,9 @@ numbered result.
   `eq:haus_dim_sum` for all finite Borel measures, the second line of
   `eq:dimension_measure_def`.
 * `EquilibriumExistence`: an `s`-equilibrium state exists for every `s ≥ 0`, by the construction
-  of Misiurewicz (tex lines 2217 to 2218, Käenmäki); irreducibility is not needed.
+  of Misiurewicz (tex lines 2105 to 2106, Käenmäki); irreducibility is not needed.
 * `InvariantMeasures`: the invariant measures form a compact set in the weak-star topology and
-  `h_0 + Λ(𝖠, ·, s)` is upper semicontinuous on it, so it attains its maximum (tex lines 2217
+  `h_0 + Λ(𝖠, ·, s)` is upper semicontinuous on it, so it attains its maximum (tex lines 2105
   to 2218, Käenmäki).
 * `Example`: a separate rational two-map system accompanying `sec:dimension_of_projections`,
   whose coordinate marginals have two distinct pointwise dimensions, with `thm:main1` and
@@ -248,6 +258,19 @@ numbered result.
   convexity of the pressure, Gibbs doubling, conditional information, Hölder pressure and Gibbs
   uniqueness on `Σ_Z`, the introduction's threshold remarks and the potentials at `s = 2`.
 * `MainTwoProse`: `thm:main2` along the prose proof.
+* `MainTwoProse.ThresholdBound`: `rem:threshold_bound`, the lower bound
+  `min{dimaff(X), 2 - λ₁/λ₂}` without separation beyond the absence of exact overlaps.
+* `MainTwoProse.ProjectionDimension`: without projective exact overlaps and for `dimaff(X) < 2`,
+  both coordinate projections of `X` have Hausdorff and Minkowski dimension `min{1, dimaff(X)}`
+  (the paragraph of the proof of `thm:main2` after Kittle–Kogler).
+* `ModifiedAffinityEquality`: `dimmaff(X) = dimaff(X)` for `dimaff(X) < 2` without the threshold or
+  the strong open set condition (`sec:intro_fraser`).
+* `MainTwoProse.HomogeneousAffinity`, `MainTwoProse.AxisSeparationSubsystem`,
+  `MainTwoProse.ProjExpBranch`: case (iii) of `thm:main2`: the affinity dimension of a homogeneous
+  diagonal subsystem, the exponential separation of its induced axis systems from the projective
+  gap, and Rapaport's theorem applied to the subsystems (`System.main2_pesc`).
+* `MainTwoProse.Full`: `thm:main2` as printed, with its three cases and the furthermore clause
+  (`System.main2_full`, `System.main2_furthermore`).
 * `ProjectiveLineSystem`: `FengLedrappierYoung` implies `FengLedrappierYoungBar`
   (`fengLedrappierYoungBar_of_fengLedrappierYoung`).
 -/
@@ -255,6 +278,8 @@ public import BoxLike.Orientation
 public import BoxLike.Coding
 public import BoxLike.System
 public import BoxLike.Separation
+public import BoxLike.AxisSeparation
+public import BoxLike.ProjExpNoOverlaps
 public import BoxLike.Projection
 public import BoxLike.SingularValue
 public import BoxLike.Pressure
@@ -271,6 +296,7 @@ public import BoxLike.Proximal
 public import BoxLike.Lyapunov
 public import BoxLike.Grouping
 public import BoxLike.MeasureDimBounds
+public import BoxLike.MeasureDimDouble
 public import BoxLike.General
 public import BoxLike.AffinityDim
 public import BoxLike.Variational
@@ -307,6 +333,8 @@ public import BoxLike.MainExtended
 public import BoxLike.BernoulliEquilibrium
 public import BoxLike.DimensionFormula
 public import BoxLike.LiteratureRemarks
+public import BoxLike.LiteratureRapaport
+public import BoxLike.LiteratureHochmanRapaport
 public import BoxLike.NoSeparation
 public import BoxLike.UniqueEquilibrium
 public import BoxLike.CodingTopology
@@ -444,6 +472,13 @@ public import BoxLike.MainTwoProse.OpenSetBranch
 public import BoxLike.MainTwoProse.PastIndependence
 public import BoxLike.MainTwoProse.SubsystemEntropies
 public import BoxLike.MainTwoProse.Endpoint
+public import BoxLike.MainTwoProse.ThresholdBound
+public import BoxLike.MainTwoProse.HomogeneousAffinity
+public import BoxLike.MainTwoProse.AxisSeparationSubsystem
+public import BoxLike.MainTwoProse.ProjExpBranch
+public import BoxLike.MainTwoProse.Full
+public import BoxLike.MainTwoProse.ProjectionDimension
+public import BoxLike.ModifiedAffinityEquality
 public import BoxLike.Support.SubshiftMixing
 public import BoxLike.Support.OneSidedProjection
 public import BoxLike.Support.PressureConvexity

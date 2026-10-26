@@ -3,7 +3,7 @@ module
 /-
 The information functions of the finite pasts and Chung's maximal inequality: the analytic
 input of Breiman's proof of the Shannon–McMillan–Breiman theorem that `sec:entropies` cites
-before `thm:feng_entropy_kolmogorov_sinai` (tex lines 1973 to 1977).
+before `thm:feng_entropy_kolmogorov_sinai` (tex lines 1885 to 1889).
 
 For a probability measure `μ` on `ℤ → α`, `α` finite, write
 `p_k(a, x) = μ(x_0 = a | x_{-k} ⋯ x_{-1})` for the elementary conditional probability given the
@@ -43,7 +43,7 @@ section PastInfo
 variable {α : Type*} [MeasurableSpace α]
 
 /-- The conditional probability `p_k(a, x) = μ(x_0 = a | x_{-k} ⋯ x_{-1})` of the symbol `a` at
-time zero given the `k` symbols before time zero (`sec:entropies`, tex lines 1973 to 1977),
+time zero given the `k` symbols before time zero (`sec:entropies`, tex lines 1885 to 1889),
 the ratio `μ([x_{-k} ⋯ x_{-1} a]) / μ([x_{-k} ⋯ x_{-1}])` of the measures of the sets fixing
 these coordinates. -/
 noncomputable def pastCondProb (μ : Measure (ℤ → α)) (k : ℕ) (a : α) (x : ℤ → α) : ℝ :=
@@ -51,7 +51,7 @@ noncomputable def pastCondProb (μ : Measure (ℤ → α)) (k : ℕ) (a : α) (x
     μ.real (pastBlock k ⁻¹' {pastBlock k x})
 
 /-- The information `I_k(x) = -log μ(x_0 | x_{-k} ⋯ x_{-1})` of the coordinate zero given the
-`k` symbols before time zero (`sec:entropies`, tex lines 1973 to 1977). Lean's `log 0 = 0` gives
+`k` symbols before time zero (`sec:entropies`, tex lines 1885 to 1889). Lean's `log 0 = 0` gives
 `0` where the conditional probability vanishes, which happens on a null set. -/
 noncomputable def pastInfo (μ : Measure (ℤ → α)) (k : ℕ) (x : ℤ → α) : ℝ :=
   -Real.log (pastCondProb μ k (x 0) x)
@@ -135,7 +135,7 @@ theorem measureReal_inter_le_of_pastCondProb_lt [IsFiniteMeasure μ] {k : ℕ} {
     _ = c * μ.real B := by rw [setIntegral_const, smul_eq_mul, mul_comm]
 
 /-- Chung's maximal inequality (K. L. Chung, Ann. Math. Statist. 32 (1961)), the key estimate of
-the Shannon–McMillan–Breiman theorem cited in `sec:entropies`, tex lines 1973 to 1977: for every
+the Shannon–McMillan–Breiman theorem cited in `sec:entropies`, tex lines 1885 to 1889: for every
 symbol `a` and every `c ≥ 0`,
 `μ(x_0 = a, inf_k μ(x_0 = a | x_{-k} ⋯ x_{-1}) < c) ≤ c`. The sets on which the infimum first
 drops below `c` at time `k` are disjoint and lie in the `k`-th `σ`-algebra of the finite pasts. -/

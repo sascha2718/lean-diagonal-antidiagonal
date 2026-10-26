@@ -1,7 +1,7 @@
 module
 
 /-
-The first part of `thm:fraser` (tex lines 422 to 436), Fraser, "On the packing dimension of
+The first part of `thm:fraser` (tex lines 398 to 473), Fraser, "On the packing dimension of
 box-like self-affine sets in the plane", Theorem 2.3 (numbering of arXiv:1108.2639v1), as a
 theorem for every box-like self-affine set: `\dim_P X = \overline{\dim}_M X ≤ dimmaff(X)`.
 
@@ -24,7 +24,7 @@ universe u
 
 variable {ι : Type u} [Fintype ι] [Nonempty ι] (S : System ι)
 
-/-- `thm:fraser`, first part (tex lines 422 to 436), Fraser, Theorem 2.3: for every box-like
+/-- `thm:fraser`, first part (tex lines 398 to 473), Fraser, Theorem 2.3: for every box-like
 self-affine set `\dim_P X = \overline{\dim}_M X ≤ dimmaff(X)`. The equality is
 `packingDim_attractor` and the inequality `upperBoxDim_attractor_le_dimmaff`. -/
 theorem fraserBound_holds : S.FraserBound :=

@@ -148,6 +148,10 @@ section Separation
 
 open scoped ENNReal
 
+/-- The projective word `(i_0, c) ⋯ (i_{n-1}, c)` over a planar word, the path of `Σ_Z` over the
+word in a system with diagonal linear parts (the definition before `thm:rapaport`). -/
+def axisWord {ι : Type*} (c : ZMod 2) (u : List ι) : List (ι × ZMod 2) := u.map fun i => (i, c)
+
 namespace System
 
 variable {ι : Type*} (S : System ι)
@@ -168,6 +172,18 @@ def ProjExpSeparation : Prop :=
 
 /-- No exact overlaps among all finite projective words (`sec:exponential_separation`). -/
 def NoExactOverlaps : Prop := ∀ u u' : List (ι × ZMod 2), u ≠ u' → S.gWord u ≠ S.gWord u'
+
+/-- The gap `Δ_n` of the system induced on the axis `c` by a system with diagonal linear parts
+(the definition before `thm:rapaport`); an empty infimum is `∞`. -/
+noncomputable def axisGap (c : ZMod 2) (n : ℕ) : ℝ≥0∞ :=
+  ⨅ (u : List ι) (u' : List ι) (_ : u.length = n) (_ : u'.length = n) (_ : u ≠ u')
+    (_ : S.gDeriv (axisWord c u) = S.gDeriv (axisWord c u')),
+    ENNReal.ofReal |S.gWord (axisWord c u) 0 - S.gWord (axisWord c u') 0|
+
+/-- Exponential separation of the system induced on the axis `c` (the definition before
+`thm:rapaport`). -/
+def AxisExpSeparation (c : ZMod 2) : Prop :=
+  ∃ r : ℝ, 0 < r ∧ ∃ n : ℕ → ℕ, StrictMono n ∧ ∀ k, ENNReal.ofReal (r ^ n k) ≤ S.axisGap c (n k)
 
 end System
 
@@ -298,9 +314,11 @@ def HasLocalDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
 def IsExactDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
     (μ : Measure X) (d : ℝ) : Prop := ∀ᵐ x ∂μ, HasLocalDim μ x d
 
-/-- Pointwise dimension equals `d₁` or `d₂` almost everywhere (`sec:ledrappier_young_formula`). -/
-def IsDoubleDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
-    (μ : Measure X) (d₁ d₂ : ℝ) : Prop := ∀ᵐ x ∂μ, HasLocalDim μ x d₁ ∨ HasLocalDim μ x d₂
+/-- Double-dimensional (`sec:ledrappier_young_formula`): the pointwise dimension exists almost
+everywhere and takes exactly two values, each on a set of positive measure. -/
+def IsDoubleDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X] (μ : Measure X) : Prop :=
+  ∃ d₁ d₂ : ℝ, d₁ ≠ d₂ ∧ (∀ᵐ x ∂μ, HasLocalDim μ x d₁ ∨ HasLocalDim μ x d₂) ∧
+    0 < μ {x | HasLocalDim μ x d₁} ∧ 0 < μ {x | HasLocalDim μ x d₂}
 
 end MeasureDim
 
@@ -341,5 +359,22 @@ noncomputable def marginal (c : ZMod 2) (μ : Measure (ℤ → ι)) : Measure �
 end System
 
 end Thermodynamic
+
+/-! ## The cited theorem of Rapaport -/
+
+section Literature
+
+open MeasureTheory
+open scoped ENNReal
+
+/-- Rapaport, Theorem 1.3 (`thm:rapaport`): a proximal box-like self-affine set without rotations
+whose induced systems on both coordinate axes are exponentially separated has Hausdorff
+dimension `min{2, dimaff(X)}`. The hypothesis of case (iii) of `thm:main2`. -/
+def RapaportDiagonalDimension : Prop :=
+  ∀ {ι : Type u} [Fintype ι] [Nonempty ι] (S : System ι), (∀ i, S.o i = 0) → S.Proximal →
+    S.AxisExpSeparation 0 → S.AxisExpSeparation 1 →
+    dimH S.attractor = ENNReal.ofReal (min 2 S.dimaff)
+
+end Literature
 
 end Challenge

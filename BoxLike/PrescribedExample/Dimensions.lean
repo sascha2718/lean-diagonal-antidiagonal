@@ -2,7 +2,7 @@ module
 
 /-
 The dimensions of the coordinate projections of the equilibrium state in
-`ex:projection_double_dimensional`, tex lines 3042 to 3063: the exponents
+`ex:projection_double_dimensional`, tex lines 2872 to 2893: the exponents
 `λ_1(𝖠, μ) = -(log 2 + H(p))/s` and `λ_2(𝖠, μ) = -(log 2 + J(p))/s`, the ratios
 `-h_0(μ)/λ_1(𝖠, μ) = s` and `-h_0(μ)/λ_2(𝖠, μ) = s (log 2 + H(p))/(log 2 + J(p))`, and the
 double-dimensionality of both coordinate projections from `thm:eq_state_proj_dim`.
@@ -17,17 +17,16 @@ exponent satisfies `0 < s ≤ 1` and `2 a^s + 2 b^s = 1`, and `p = 2 a^s`. The t
   `0 < (log 2 + H(p))/(log 2 + J(p)) < 1` for `1/2 < p < 1`.
 * `Gibbs.half_lt_prob`: `p = 2 a^s > 1/2`, since `a > b`.
 * `Gibbs.mul_log_a`, `Gibbs.mul_log_b`, `Gibbs.lyap₁_value`, `Gibbs.lyap₂_value`: the display of
-  tex lines 3045 to 3048.
+  tex lines 2875 to 2878.
 * `Gibbs.isEquilibriumState_ratios`: `-h_0(μ)/λ_1(𝖠, μ) = s` and
-  `-h_0(μ)/λ_2(𝖠, μ) = s (log 2 + H(p))/(log 2 + J(p))`, tex lines 3049 to 3055.
-* `Gibbs.measure_hasLocalDim_pos_of_isDoubleDim`: a double-dimensional measure with distinct
-  values `d_2 < d_1`, upper packing dimension `d_1` and lower Hausdorff dimension `d_2` takes each
-  value on a set of positive measure.
-* `Gibbs.marginal_spec`: `thm:eq_state_proj_dim` for the example, with the values `s` and
-  `s (log 2 + H(p))/(log 2 + J(p))`, each on a set of positive measure, tex lines 3056 to 3063.
+  `-h_0(μ)/λ_2(𝖠, μ) = s (log 2 + H(p))/(log 2 + J(p))`, tex lines 2879 to 2885.
+* `Gibbs.marginal_spec`: `thm:eq_state_proj_dim` for the example: both coordinate projections
+  are double-dimensional with the values `s` and `s (log 2 + H(p))/(log 2 + J(p))`, each on a
+  set of positive measure, tex lines 3056 to 3063.
 -/
 public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.General
+public import BoxLike.MeasureDimDouble
 public import BoxLike.PrescribedExample.Measure
 
 @[expose] public section
@@ -110,7 +109,7 @@ theorem mul_log_b (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
     s * Real.log P.b = Real.log ((1 - prob P s) / 2) := by
   rw [show (1 - prob P s) / 2 = P.b ^ s by unfold prob; linarith, Real.log_rpow P.b_pos]
 
-/-- `λ_1 = p log a + (1 - p) log b = -(log 2 + H(p))/s`, tex line 3046. -/
+/-- `λ_1 = p log a + (1 - p) log b = -(log 2 + H(p))/s`, tex line 2876. -/
 theorem lyap₁_value (hs0 : 0 < s) (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
     prob P s * Real.log P.a + (1 - prob P s) * Real.log P.b =
       -(Real.log 2 + H (prob P s)) / s := by
@@ -122,7 +121,7 @@ theorem lyap₁_value (hs0 : 0 < s) (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
   rw [eq_div_iff hs0.ne', H]
   linear_combination prob P s * ha + (1 - prob P s) * hb
 
-/-- `λ_2 = p log b + (1 - p) log a = -(log 2 + J(p))/s`, tex line 3047. -/
+/-- `λ_2 = p log b + (1 - p) log a = -(log 2 + J(p))/s`, tex line 2877. -/
 theorem lyap₂_value (hs0 : 0 < s) (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
     prob P s * Real.log P.b + (1 - prob P s) * Real.log P.a =
       -(Real.log 2 + J (prob P s)) / s := by
@@ -136,7 +135,7 @@ theorem lyap₂_value (hs0 : 0 < s) (hP : 2 * P.a ^ s + 2 * P.b ^ s = 1) :
 
 variable (t : Fin 8 → ℝ)
 
-/-- The two exponents and the two ratios of `ex:projection_double_dimensional`, tex lines 3042
+/-- The two exponents and the two ratios of `ex:projection_double_dimensional`, tex lines 2872
 to 3055: for every invariant `s`-equilibrium state `μ`,
 `λ_1(𝖠, μ) = -(log 2 + H(p))/s`, `λ_2(𝖠, μ) = -(log 2 + J(p))/s`, `-h_0(μ)/λ_1(𝖠, μ) = s` and
 `-h_0(μ)/λ_2(𝖠, μ) = s (log 2 + H(p))/(log 2 + J(p))`. The entropy and the exponents are those of
@@ -166,31 +165,10 @@ end Exponents
 
 /-! ### The dimensions of the coordinate projections -/
 
-/-- A double-dimensional measure with values `d_2 < d_1`, upper packing dimension `d_1` and lower
-Hausdorff dimension `d_2` has pointwise dimension `d_1` on a set of positive measure and `d_2` on
-a set of positive measure. If one of the sets were null, the measure would be exact-dimensional
-with the other value, and both dimensions would equal it. Used for the last sentence of
-`ex:projection_double_dimensional`. -/
-theorem measure_hasLocalDim_pos_of_isDoubleDim {X : Type*} [PseudoMetricSpace X]
-    [MeasurableSpace X] {ν : Measure X} (hne : ν ≠ 0) {d₁ d₂ : ℝ} (h : IsDoubleDim ν d₁ d₂)
-    (hlt : d₂ < d₁) (hup : upperPackingDim ν = d₁) (hlow : lowerHausdorffDim ν = d₂) :
-    0 < ν {x | HasLocalDim ν x d₁} ∧ 0 < ν {x | HasLocalDim ν x d₂} := by
-  constructor
-  · refine pos_iff_ne_zero.2 fun h0 => ?_
-    have hae := measure_eq_zero_iff_ae_notMem.1 h0
-    have hex : IsExactDim ν d₂ := (h.and hae).mono fun x hx => hx.1.resolve_left hx.2
-    have := hex.upperPackingDim_eq hne
-    linarith
-  · refine pos_iff_ne_zero.2 fun h0 => ?_
-    have hae := measure_eq_zero_iff_ae_notMem.1 h0
-    have hex : IsExactDim ν d₁ := (h.and hae).mono fun x hx => hx.1.resolve_right hx.2
-    have := hex.lowerHausdorffDim_eq hne
-    linarith
-
-/-- `thm:eq_state_proj_dim` for `ex:projection_double_dimensional`, tex lines 3056 to 3063:
+/-- `thm:eq_state_proj_dim` for `ex:projection_double_dimensional`, tex lines 2886 to 2893:
 under the projective exponential separation condition, for every invariant `s`-equilibrium state
 `μ` with `0 < s ≤ 1`, `2 a^s + 2 b^s = 1` and `p = 2 a^s`, both coordinate projections
-`(proj_c)_*(π_*μ)` are double-dimensional with the values `s` and
+`(proj_c)_*(π_*μ)` are double-dimensional with the pointwise dimension values `s` and
 `s (log 2 + H(p))/(log 2 + J(p)) < s`, upper packing dimension `s` and lower Hausdorff dimension
 `s (log 2 + H(p))/(log 2 + J(p))`, and each value occurs on a set of positive measure. The values
 come from `isEquilibriumState_ratios` and `min{1, ·}` leaves them unchanged. -/
@@ -201,7 +179,8 @@ theorem marginal_spec (hms : MorrisShmerkinLyapunov.{0}) (hfk : EquilibriumGibbs
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : (sys P t).IsEquilibriumState s μ) (c : ZMod 2) :
     s * ratio (prob P s) < s ∧
-      IsDoubleDim ((sys P t).marginal c μ) s (s * ratio (prob P s)) ∧
+      IsDoubleDim ((sys P t).marginal c μ) ∧
+      HasLocalDimPair ((sys P t).marginal c μ) s (s * ratio (prob P s)) ∧
       upperPackingDim ((sys P t).marginal c μ) = s ∧
       lowerHausdorffDim ((sys P t).marginal c μ) = s * ratio (prob P s) ∧
       0 < (sys P t).marginal c μ {x | HasLocalDim ((sys P t).marginal c μ) x s} ∧
@@ -215,18 +194,12 @@ theorem marginal_spec (hms : MorrisShmerkinLyapunov.{0}) (hfk : EquilibriumGibbs
   have m₁ : min 1 (-entropy μ / (sys P t).lyapunov₁ μ) = s := by rw [e₁, min_eq_right hs1]
   have m₂ : min 1 (-entropy μ / (sys P t).lyapunov₂ μ) = s * ratio (prob P s) := by
     rw [e₂, min_eq_right (by linarith)]
-  obtain ⟨hdd, hup, hlow⟩ := (sys P t).eq_state_proj_dim hms hfk hfjj hjr (withRotations P t)
-    (proximal P t) hsep hs0 (by linarith) μ hinv heq c
+  obtain ⟨hdd, hup, hlow, hpos₁, hpos₂⟩ := (sys P t).eq_state_proj_dim hms hfk hfjj hjr
+    (withRotations P t) (proximal P t) hsep hs0 (by linarith) μ hinv heq c
   rw [m₁, m₂] at hdd
-  rw [m₁] at hup
-  rw [m₂] at hlow
-  have hne : (sys P t).marginal c μ ≠ 0 := by
-    have : IsProbabilityMeasure ((sys P t).marginal c μ) := by
-      unfold System.marginal
-      infer_instance
-    exact IsProbabilityMeasure.ne_zero _
-  obtain ⟨hpos₁, hpos₂⟩ := measure_hasLocalDim_pos_of_isDoubleDim hne hdd hlt hup hlow
-  exact ⟨hlt, hdd, hup, hlow, hpos₁, hpos₂⟩
+  rw [m₁] at hup hpos₁
+  rw [m₂] at hlow hpos₂
+  exact ⟨hlt, hdd.isDoubleDim hlt.ne' hpos₁ hpos₂, hdd, hup, hlow, hpos₁, hpos₂⟩
 
 end Gibbs
 

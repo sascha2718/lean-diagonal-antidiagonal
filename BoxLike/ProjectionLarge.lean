@@ -1,8 +1,11 @@
 module
 
 /-
-`thm:eq_state_proj_dim` for every `s > 0`, in `sec:dimension_of_projections`. The case
-`0 < s < 2` is `System.eq_state_proj_dim`. For `s ≥ 2` the proof follows the first paragraph of
+`thm:eq_state_proj_dim` for every `s > 0`, in `sec:dimension_of_projections`: the pointwise
+dimension of each coordinate projection exists almost everywhere and takes at most the two values
+`min{1, -h_0(μ)/λ_1(𝖠, μ)}` and `min{1, -h_0(μ)/λ_2(𝖠, μ)}`, the upper packing and the lower
+Hausdorff dimension, each on a set of positive measure. The case `0 < s < 2` is
+`System.eq_state_proj_dim`. For `s ≥ 2` the proof follows the first paragraph of
 the proof of `thm:eq_state_proj_dim`: by `thm:bernoulli_equilibrium` the equilibrium state `μ`
 is Bernoulli with the weights `p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}`; its orientation lift
 `\widetilde μ = (τ_*μ + ω_*μ) / 2` is a mixing Markov measure, hence ergodic, with
@@ -157,40 +160,52 @@ theorem isExactDim_marginal_of_two_le (hjr : JordanRapaportDimension.{u})
     · exact Measure.le_add_left le_rfl
   exact (isExactDim_smul_iff (by norm_num)).1 (hdim.of_le hle)
 
-/-- `thm:eq_state_proj_dim` for `s ≥ 2`: the coordinate projections of the `s`-equilibrium
-state are double-dimensional with the values `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and
-`min{1, -h_0(μ)/λ_2(𝖠, μ)}`, which coincide, with the upper packing dimension
-`min{1, -h_0(μ)/λ_1(𝖠, μ)}` and the lower Hausdorff dimension `min{1, -h_0(μ)/λ_2(𝖠, μ)}`. -/
+/-- `thm:eq_state_proj_dim` for `s ≥ 2`: the pointwise dimension of each coordinate projection
+of the `s`-equilibrium state is `min{1, -h_0(μ)/λ_1(𝖠, μ)}` or `min{1, -h_0(μ)/λ_2(𝖠, μ)}`
+almost everywhere, and the two values coincide; the upper packing dimension is
+`min{1, -h_0(μ)/λ_1(𝖠, μ)}`, the lower Hausdorff dimension is `min{1, -h_0(μ)/λ_2(𝖠, μ)}`, and
+each value occurs on a set of positive measure, namely a set of full measure. -/
 theorem eq_state_proj_dim_of_two_le (hjr : JordanRapaportDimension.{u})
     (hrot : S.WithRotations) (hsep : S.ProjExpSeparation) (hs : 2 ≤ s) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) (c : ZMod 2) :
-    IsDoubleDim (S.marginal c μ) (min 1 (-entropy μ / S.lyapunov₁ μ))
+    HasLocalDimPair (S.marginal c μ) (min 1 (-entropy μ / S.lyapunov₁ μ))
         (min 1 (-entropy μ / S.lyapunov₂ μ)) ∧
       upperPackingDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₁ μ) ∧
-      lowerHausdorffDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₂ μ) := by
+      lowerHausdorffDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₂ μ) ∧
+      0 < S.marginal c μ
+        {x | HasLocalDim (S.marginal c μ) x (min 1 (-entropy μ / S.lyapunov₁ μ))} ∧
+      0 < S.marginal c μ
+        {x | HasLocalDim (S.marginal c μ) x (min 1 (-entropy μ / S.lyapunov₂ μ))} := by
   obtain ⟨hl, hd⟩ := S.isExactDim_marginal_of_two_le hjr hrot hsep hs μ hinv heq c
   rw [← hl]
-  exact ⟨hd.isDoubleDim, hd.upperPackingDim_eq (IsProbabilityMeasure.ne_zero _),
-    hd.lowerHausdorffDim_eq (IsProbabilityMeasure.ne_zero _)⟩
+  have hpos := hd.measure_hasLocalDim_pos (IsProbabilityMeasure.ne_zero _)
+  exact ⟨hd.hasLocalDimPair, hd.upperPackingDim_eq (IsProbabilityMeasure.ne_zero _),
+    hd.lowerHausdorffDim_eq (IsProbabilityMeasure.ne_zero _), hpos, hpos⟩
 
 /-- `thm:eq_state_proj_dim`: if `X` is a proximal box-like self-affine set with rotations
 satisfying the projective exponential separation condition and `μ` is the `s`-equilibrium
-state with `s > 0`, then `(proj_x)_*(π_*μ)` (`c = 0`) and `(proj_y)_*(π_*μ)` (`c = 1`) are
-double-dimensional with upper packing dimension `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and lower Hausdorff
-dimension `min{1, -h_0(μ)/λ_2(𝖠, μ)}`. The conclusion holds for every invariant `s`-equilibrium
-state. For `s ≥ 2` the proof uses the orientation lift (`eq_state_proj_dim_of_two_le`), for
-`0 < s < 2` the Gibbs decomposition (`eq_state_proj_dim`). -/
+state with `s > 0`, then the pointwise dimension of each of `(proj_x)_*(π_*μ)` (`c = 0`) and
+`(proj_y)_*(π_*μ)` (`c = 1`) exists almost everywhere and takes at most two values, the upper
+packing dimension `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and the lower Hausdorff dimension
+`min{1, -h_0(μ)/λ_2(𝖠, μ)}`, each on a set of positive measure. The conclusion holds for every
+invariant `s`-equilibrium state. For `s ≥ 2` the proof uses the orientation lift
+(`eq_state_proj_dim_of_two_le`), for `0 < s < 2` the Gibbs decomposition
+(`eq_state_proj_dim`). -/
 theorem eq_state_proj_dim_all (hms : MorrisShmerkinLyapunov.{u})
     (hfk : EquilibriumGibbsStatement.{u})
     (hfjj : FraserJordanJurgaDecomposition.{u}) (hjr : JordanRapaportDimension.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation) (hs0 : 0 < s)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState s μ) (c : ZMod 2) :
-    IsDoubleDim (S.marginal c μ) (min 1 (-entropy μ / S.lyapunov₁ μ))
+    HasLocalDimPair (S.marginal c μ) (min 1 (-entropy μ / S.lyapunov₁ μ))
         (min 1 (-entropy μ / S.lyapunov₂ μ)) ∧
       upperPackingDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₁ μ) ∧
-      lowerHausdorffDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₂ μ) := by
+      lowerHausdorffDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₂ μ) ∧
+      0 < S.marginal c μ
+        {x | HasLocalDim (S.marginal c μ) x (min 1 (-entropy μ / S.lyapunov₁ μ))} ∧
+      0 < S.marginal c μ
+        {x | HasLocalDim (S.marginal c μ) x (min 1 (-entropy μ / S.lyapunov₂ μ))} := by
   rcases lt_or_ge s 2 with hs2 | hs2
   · exact S.eq_state_proj_dim hms hfk hfjj hjr hrot hprox hsep hs0 hs2 μ hinv heq c
   · exact S.eq_state_proj_dim_of_two_le hjr hrot hsep hs2 μ hinv heq c

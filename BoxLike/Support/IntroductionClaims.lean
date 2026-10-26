@@ -1,7 +1,7 @@
 module
 
 /-
-The comments after `thm:main2` in the introduction (tex lines 491 to 497): "When `s < 2`, the
+The comments after `thm:main2` in the introduction (tex lines 498 to 501): "When `s < 2`, the
 exponents are distinct and the threshold lies strictly between `1` and `2`. For `s ≥ 2`, the
 exponents coincide and the threshold is one. In particular, the absence of projective exact
 overlaps suffices whenever `dimaff(X) ≤ 1`, and the strong open set condition is needed only

@@ -155,7 +155,7 @@ theorem projExpSeparation_iff_frequently :
     exact ⟨c, hc, φ, hφ, hP⟩
 
 /-- The absence of projective exact overlaps passes from `Φ` to `Φ^(2)` (proof of `thm:main2`,
-tex lines 3634 to 3636): a word of `Ψ^(2)` is a word of `Ψ` of twice the length with the same
+tex lines 3456 to 3458): a word of `Ψ^(2)` is a word of `Ψ` of twice the length with the same
 map, and this correspondence is injective. -/
 theorem NoExactOverlaps.sq (h : S.NoExactOverlaps) : S.sq.NoExactOverlaps := by
   rw [noExactOverlaps_iff] at h ⊢

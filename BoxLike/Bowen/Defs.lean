@@ -3,7 +3,7 @@ module
 /-
 The shared vocabulary of the proof of Bowen's theorem in `BoxLike/Bowen/`: the existence of an
 ergodic Gibbs measure for a Hölder potential on the mixing sub-shift `Σ_Z`, which
-`sec:gibbs_measures` asserts (tex lines 2501 to 2503) with a citation of Sarig's notes.
+`sec:gibbs_measures` asserts (tex lines 2382 to 2384) with a citation of Sarig's notes.
 
 * `GibbsUpTo`: the Gibbs bounds of `IsGibbsPotential` for the cylinders of length at most `N`.
 * `isGibbsPotential_iff_forall_gibbsUpTo`: the Gibbs property is the conjunction of the bounds

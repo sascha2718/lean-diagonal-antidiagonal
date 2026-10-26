@@ -1,7 +1,7 @@
 module
 
 /-
-Rossi's bound `eq:hausdorff_ergodic_lyapunov` of `sec:ledrappier_young_formula` (tex lines 2728
+Rossi's bound `eq:hausdorff_ergodic_lyapunov` of `sec:ledrappier_young_formula` (tex lines 2598
 to 2731), after Rossi, J. Math. Anal. Appl. 413 (2014), Theorem 2.2, which the article cites, as
 a theorem of the library.
 
@@ -27,7 +27,7 @@ variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonCla
   (S : System ι)
 
 /-- Rossi's theorem `eq:hausdorff_ergodic_lyapunov` (Rossi, J. Math. Anal. Appl. 413 (2014),
-Theorem 2.2; tex lines 2728 to 2731): for every ergodic `μ ∈ M_σ(Σ)`,
+Theorem 2.2; tex lines 2598 to 2601): for every ergodic `μ ∈ M_σ(Σ)`,
 `\overline{dim}_H(π_*μ) ≤ min{2, dimL(𝖠, μ)}`. The upper Hausdorff dimension is the essential
 supremum of the lower pointwise dimension, bounded by `essSup_lowerLocalDim_map_proj_le`. -/
 theorem rossiBound : S.RossiBound := fun _ hμ herg =>

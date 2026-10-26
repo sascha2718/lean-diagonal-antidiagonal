@@ -1,7 +1,7 @@
 module
 
 /-
-The lower bound of `thm:fraser` (tex lines 422 to 436): under the rectangular open set condition,
+The lower bound of `thm:fraser` (tex lines 398 to 473): under the rectangular open set condition,
 `dimmaff(X) ≤ \underline{\dim}_M X`. This is the part "Lower bound (assuming the ROSC)" of the
 proof of Theorem 2.3 in Fraser, "On the packing dimension of box-like self-affine sets in the
 plane", §5, numbering of arXiv:1108.2639v1.
@@ -476,7 +476,7 @@ namespace System
 
 variable {ι : Type u} [Fintype ι] [Nonempty ι] (S : System ι)
 
-/-- `thm:fraser` (tex lines 422 to 436), the lower bound of its second part, Fraser's Theorem 2.3
+/-- `thm:fraser` (tex lines 398 to 473), the lower bound of its second part, Fraser's Theorem 2.3
 under the rectangular open set condition: `dimmaff(X) ≤ \underline{\dim}_M X`. For `q < dimmaff(X)`
 put `t = (q + dimmaff(X))/2` and `η = t - q`. For `0 < δ < 1` and a minimal cover `D` of `X` by
 closed squares of radius `δ`, every `𝐢 ∈ I_δ` has `C δ₀ δ^{-q} ψ^t(𝐢) ≤ N_δ(φ_𝐢 X)`, and

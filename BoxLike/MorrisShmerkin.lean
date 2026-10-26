@@ -1,7 +1,7 @@
 module
 
 /-
-`eq:simple_lyapunov` in `sec:normalisation`, tex lines 2362 to 2375: for a proximal box-like
+`eq:simple_lyapunov` in `sec:normalisation`, tex lines 2243 to 2256: for a proximal box-like
 tuple with rotations and `0 < s < 2` the equilibrium state has distinct Lyapunov exponents. The
 article quotes Morris–Shmerkin, Trans. Amer. Math. Soc. 371 (2019), Lemmas 3.4 and 3.5
 (numbering of arXiv:1602.08789v3): an equilibrium state with `λ_1 = λ_2` is Bernoulli, and a
@@ -182,7 +182,7 @@ theorem IsEquilibriumState.entropy_eq_blockEntropy_one_of_lyapunov_eq
   constructor <;> linarith
 
 /-- Morris–Shmerkin, Trans. Amer. Math. Soc. 371 (2019), Lemma 3.4 (numbering of
-arXiv:1602.08789v3), used for `eq:simple_lyapunov` (tex lines 2362 to 2366): an invariant
+arXiv:1602.08789v3), used for `eq:simple_lyapunov` (tex lines 2243 to 2247): an invariant
 `s`-equilibrium state with `λ_1(𝖠, μ) = λ_2(𝖠, μ)` is Bernoulli, with the probability vector
 `p_i = μ([i])`. The proof needs `s ≥ 0` only. -/
 theorem IsEquilibriumState.isBernoulli_of_lyapunov_eq (heq : S.IsEquilibriumState s μ)
@@ -195,7 +195,7 @@ theorem IsEquilibriumState.isBernoulli_of_lyapunov_eq (heq : S.IsEquilibriumStat
 
 /-- Morris–Shmerkin, Lemma 3.4, with the weights: an invariant `s`-equilibrium state with
 `λ_1(𝖠, μ) = λ_2(𝖠, μ)` is the Bernoulli measure with the weights
-`p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}` of tex line 2380, by the equality case of Gibbs'
+`p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}` of tex line 2261, by the equality case of Gibbs'
 inequality. Used for `eq:simple_lyapunov`. -/
 theorem IsEquilibriumState.eq_bernoulli_of_lyapunov_eq (heq : S.IsEquilibriumState s μ)
     (hinv : MeasurePreserving (shift 1) μ μ) (hs : 0 ≤ s)
@@ -217,7 +217,7 @@ section SimpleLyapunov
 variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   {S : System ι} {s : ℝ} {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ]
 
-/-- `eq:simple_lyapunov`, tex lines 2362 to 2375: for a proximal box-like tuple with rotations
+/-- `eq:simple_lyapunov`, tex lines 2243 to 2256: for a proximal box-like tuple with rotations
 and `0 < s < 2`, an invariant `s`-equilibrium state with the Gibbs bounds of
 `thm:irred_eq_state` has `λ_2(𝖠, μ) < λ_1(𝖠, μ)`. Morris–Shmerkin, Trans. Amer. Math. Soc. 371
 (2019), Lemma 3.5 (`System.not_isBernoulli`): the measure is not Bernoulli; Lemma 3.4
@@ -246,7 +246,7 @@ theorem morrisShmerkinLyapunov_of_equilibriumGibbs (h : EquilibriumGibbsStatemen
   exact heq.lyapunov₂_lt_lyapunov₁_of_hasGibbsBounds hinv hrot hpd.proximal hs0 hs2
     (h S hrot hs0 hs2 μ hinv heq)
 
-/-- `eq:simple_lyapunov` (tex lines 2362 to 2375): for a proximal box-like tuple with rotations
+/-- `eq:simple_lyapunov` (tex lines 2243 to 2256): for a proximal box-like tuple with rotations
 and `0 < s < 2` every invariant `s`-equilibrium state has `λ_2(𝖠, μ) < λ_1(𝖠, μ)`. The Gibbs
 bounds are `System.IsEquilibriumState.hasGibbsBounds_of_withRotations`; no literature premise is
 used. -/

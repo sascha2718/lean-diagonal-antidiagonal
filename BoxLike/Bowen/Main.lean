@@ -34,7 +34,7 @@ open MeasureTheory
 
 universe u
 
-/-- The assembly of Bowen's theorem (tex lines 2501 to 2503): if for every length `N` some
+/-- The assembly of Bowen's theorem (tex lines 2382 to 2384): if for every length `N` some
 invariant probability measure carried by `Σ_Z` has the Gibbs bounds up to length `N` with the
 constants `P` and `C`, then, for a Hölder potential and when both orientations occur, some
 ergodic probability measure carried by `Σ_Z` is a Gibbs measure with the constants `P` and `C`. -/
@@ -48,7 +48,7 @@ theorem exists_ergodic_isGibbsPotential_of_forall_gibbsUpTo {ι : Type*} [Fintyp
   obtain ⟨ν, hp, hinv, hs, hg⟩ := exists_isGibbsPotential_of_forall_gibbsUpTo h
   exact ⟨ν, hp, hs, hg.ergodic_of_isHolder hinv hs hf h0 h1, hg⟩
 
-/-- **Bowen's theorem**, existence half (tex lines 2501 to 2503): for a Hölder potential `f` on
+/-- **Bowen's theorem**, existence half (tex lines 2382 to 2384): for a Hölder potential `f` on
 the sub-shift `Σ_Z`, which is mixing when both orientations occur, there is an ergodic Gibbs
 probability measure carried by `Σ_Z`. The source is Bowen, *Equilibrium states and the ergodic
 theory of Anosov diffeomorphisms*, Lecture Notes in Mathematics 470, Chapter 1; the article cites
@@ -62,7 +62,7 @@ theorem bowenGibbsExistence {ι : Type u} [Fintype ι] [MeasurableSpace ι]
   obtain ⟨ν, hp, hs, herg, hg⟩ := exists_ergodic_isGibbsPotential_of_forall_gibbsUpTo h0 h1 hf hN
   exact ⟨ν, hp, hs, herg, _, C, hg⟩
 
-/-- **Bowen's theorem** (tex lines 2501 to 2503): for a box-like tuple with rotations and a
+/-- **Bowen's theorem** (tex lines 2382 to 2384): for a box-like tuple with rotations and a
 Hölder potential `f : Σ_Z → ℝ` there is exactly one ergodic Gibbs probability measure carried by
 `Σ_Z`, and its constant is the pressure `P_Z(f)`. Existence is `bowenGibbsExistence`, the value
 of the constant is `IsGibbsPotential.pressure_eq_of_isHolder`, and uniqueness is

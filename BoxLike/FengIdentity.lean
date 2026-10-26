@@ -3,7 +3,7 @@ module
 /-
 Feng's information-sum identity, D.-J. Feng, *Dimension of invariant measures for affine iterated
 function systems*, Duke Math. J. 172 (2023), arXiv:1901.01691v2, Lemma 4.6, first identity of
-(4.16), proved for the planar partitions `ξ_i` of `sec:entropies` (tex lines 1854 to 1871). The
+(4.16), proved for the planar partitions `ξ_i` of `sec:entropies` (tex lines 1775 to 1792). The
 proof is Feng's, with `n = 1` in his Lemmas 4.4 and 4.5: Lemma 4.4(1), the invariance property
 `ξ(𝐢) ∩ [i_0] = σ^{-1}(ξ(σ 𝐢))`; Lemma 4.5(1), the transport
 `μ_𝐢^{σ^{-1}ξ}(A) = μ_{σ 𝐢}^ξ(σ A)`; Lemma 4.5(2), the chain rule

@@ -1,7 +1,7 @@
 module
 
 /-
-The weak-star infrastructure behind the existence of an `s`-equilibrium state, tex lines 2217 to
+The weak-star infrastructure behind the existence of an `s`-equilibrium state, tex lines 2105 to
 2218, where the article cites Käenmäki, Ann. Acad. Sci. Fenn. Math. 29 (2004), Theorems 2.6 and
 4.1, for the existence part of `thm:irred_eq_state`. The alphabet `ι` is finite, non-empty and
 discrete, so `Σ = ℤ → ι` is a compact metrisable space whose product `σ`-algebra is the Borel
@@ -65,7 +65,7 @@ theorem metrizableSpace_twoSided : TopologicalSpace.MetrizableSpace (ℤ → ι)
 
 /-- The space of Borel probability measures on `Σ` is compact in the weak-star topology, since
 `Σ` is compact. This is the compactness of `ℳ(Σ)` behind the existence of an equilibrium state,
-tex lines 2217 to 2218. -/
+tex lines 2105 to 2106. -/
 theorem compactSpace_probabilityMeasure : CompactSpace (ProbabilityMeasure (ℤ → ι)) :=
   inferInstance
 
@@ -153,7 +153,7 @@ variable {ι : Type*} [Fintype ι] [TopologicalSpace ι] [DiscreteTopology ι] [
   [MeasurableSingletonClass ι]
 
 variable (ι) in
-/-- The set `ℳ_σ(Σ)` of `σ`-invariant Borel probability measures on `Σ`, tex line 826. -/
+/-- The set `ℳ_σ(Σ)` of `σ`-invariant Borel probability measures on `Σ`, tex line 745. -/
 def InvariantMeasures : Set (ProbabilityMeasure (ℤ → ι)) :=
   {ν | MeasurePreserving (shift 1) (ν : Measure (ℤ → ι)) (ν : Measure (ℤ → ι))}
 
@@ -329,7 +329,7 @@ theorem System.upperSemicontinuousOn_energyLim (S : System ι) {s : ℝ} (hs : 0
   exact h
 
 /-- The supremum of `h_0(μ) + Λ(𝖠, μ, s)` over the invariant Borel probability measures on `Σ` is
-attained, tex lines 2217 to 2218: both terms are upper semicontinuous on the non-empty compact
+attained, tex lines 2105 to 2106: both terms are upper semicontinuous on the non-empty compact
 set `ℳ_σ(Σ)`. -/
 theorem System.exists_maximiser (S : System ι) {s : ℝ} (hs : 0 ≤ s) :
     ∃ μ : Measure (ℤ → ι), IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ ∧

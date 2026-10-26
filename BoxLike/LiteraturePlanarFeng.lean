@@ -31,7 +31,7 @@ planar case of the source; the box-like `FengLedrappierYoung` is its specialisat
 
 Source. D.-J. Feng, Duke Math. J. 172 (2023); compared with arXiv:1901.01691v2 (2 June 2020),
 Theorem 1.2 (ii) (exact-dimensionality) and Theorem 1.3, formula (1.6), with the entropies
-`h_i = H_m(𝒫 | \widehat{ξ}_i)` of (1.5). The manuscript cites them at tex lines 2704 to 2724.
+`h_i = H_m(𝒫 | \widehat{ξ}_i)` of (1.5). The manuscript cites them at tex lines 2574 to 2594.
 
 Source hypotheses. An affine IFS on `ℝ^d`, not necessarily invertible or contracting; an ergodic
 `m ∈ M_σ(Σ)` on the two-sided full shift with respect to which `S` is average contracting; the

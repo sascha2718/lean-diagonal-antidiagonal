@@ -1,7 +1,7 @@
 module
 
 /-
-The `δ`-stoppings in the proof of `thm:fraser` (tex lines 422 to 436), after Fraser, "On the
+The `δ`-stoppings in the proof of `thm:fraser` (tex lines 398 to 473), after Fraser, "On the
 packing dimension of box-like self-affine sets in the plane", §5, numbering of
 arXiv:1108.2639v1: the stopping `I_δ = {𝐢 : α_2(𝐢) < δ ≤ α_2(𝐢^-)}`, where `𝐢^-` drops the
 last letter, and Fraser's Lemma 5.1 (2), the lower bound `∑_{𝐢 ∈ I_δ} ψ^t(𝐢) ≥ L(t) > 0` for
@@ -381,7 +381,7 @@ theorem exists_le_fraserStopSum_of_ge [Nonempty ι] {r M t : ℝ} (hS : S.Bounds
     _ ≤ K * S.fraserStopSum δ (S.modSvf t) k [] := h1.trans h2
     _ = S.fraserStopSum δ (S.modSvf t) k [] * K := mul_comm _ _
 
-/-- Fraser's Lemma 5.1 (2), in the proof of `thm:fraser` (tex lines 422 to 436): for
+/-- Fraser's Lemma 5.1 (2), in the proof of `thm:fraser` (tex lines 398 to 473): for
 `0 ≤ t < dimmaff(X)` there is `L > 0` with `∑_{𝐢 ∈ I_δ} ψ^t(𝐢) ≥ L` for all `δ ≤ 1`. -/
 theorem exists_le_fraserStopSum [Nonempty ι] {r M t : ℝ} (hS : S.Bounds r M) (ht0 : 0 ≤ t)
     (htd : t < S.dimmaff) :

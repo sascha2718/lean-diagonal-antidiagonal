@@ -1,7 +1,7 @@
 module
 
 /-
-The all-anti-diagonal case of `sec:irreducibility` (tex lines 744 to 746 and 777 to 779). The
+The all-anti-diagonal case of `sec:irreducibility` (tex lines 663 to 665 and 777 to 779). The
 argument of the proof of `thm:box_like_proximal` is in `BoxLike/Proximal.lean`
 (`System.Proximal.box_like_proximal`).
 
@@ -28,7 +28,7 @@ namespace System
 variable {ι : Type*}
 
 /-- If every generator is anti-diagonal, every matrix `A_i A_j` of the second iterate is diagonal
-(tex line 746); `Φ^(2)` has the attractor `X` (`System.attractor_sq`). -/
+(tex line 665); `Φ^(2)` has the attractor `X` (`System.attractor_sq`). -/
 theorem sq_o_of_forall_anti {S : System ι} (h : ∀ i, S.o i = 1) (p : ι × ι) : S.sq.o p = 0 := by
   change S.o p.1 + S.o p.2 = 0
   rw [h, h]
@@ -40,7 +40,7 @@ end System
 
 /-- A tuple of two anti-diagonal matrices, `A_1` with entries `1/2`, `1/3` and `A_2` with entries
 `1/3`, `1/2` in the first and second rows, and zero translations: the all-anti-diagonal case of
-`sec:irreducibility` (tex lines 744 to 746). -/
+`sec:irreducibility` (tex lines 663 to 665). -/
 noncomputable def antiDiagonalExample : System (Fin 2) where
   o _ := 1
   a := ![1 / 2, 1 / 3]
@@ -137,7 +137,7 @@ strongly irreducible, but it is not box-like with rotations in any basis: no cha
 makes its matrices simultaneously diagonal or anti-diagonal with both types present. The
 identification of the intermediate class with box-like tuples with rotations therefore needs the
 exception of the all-anti-diagonal tuples, which the paragraph after `thm:box_like_proximal`
-makes (tex lines 777 to 779). -/
+makes (tex lines 696 to 698). -/
 theorem antiDiagonalExample_not_withRotations_conj :
     TupleIrreducible antiDiagonalExample.mat ∧
       ¬ TupleStronglyIrreducible antiDiagonalExample.mat ∧

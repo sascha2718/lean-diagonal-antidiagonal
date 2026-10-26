@@ -21,43 +21,46 @@ open MeasureTheory Solution.Transport
 
 /-! ## Dimension of the projections of the equilibrium state -/
 
-/-- Theorem 1.2 (`thm:main1`), for every `s`-equilibrium state with `s = dimaff(X)`. -/
+/-- Theorem A (`thm:main1`), for every `s`-equilibrium state with `s = dimaff(X)`. -/
 theorem audit_main1 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
     (S : System ι)
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ) (c : ZMod 2) :
-    IsDoubleDim (S.marginal c μ) (min 1 (-entropy μ / S.lyapunov₁ μ))
-        (min 1 (-entropy μ / S.lyapunov₂ μ)) ∧
-      ((¬ ∃ d, IsExactDim (S.marginal c μ) d) ↔
-        S.dimaff < 2 - S.lyapunov₁ μ / S.lyapunov₂ μ) ∧
+    (S.dimaff < 2 - S.lyapunov₁ μ / S.lyapunov₂ μ → IsDoubleDim (S.marginal c μ)) ∧
       (2 - S.lyapunov₁ μ / S.lyapunov₂ μ ≤ S.dimaff → IsExactDim (S.marginal c μ) 1) := by
   have hjr : BoxLike.JordanRapaportDimension.{u} :=
     BoxLike.jordanRapaportDimension_of_shmerkin BoxLike.shmerkinLqDimension_holds
   simp only [withRotations_iff, proximal_iff, projExpSeparation_iff, dimaff_eq, shift_eq,
     isEquilibriumState_iff] at hrot hprox hsep hinv heq
-  simp only [isDoubleDim_iff, isExactDim_iff, marginal_eq, entropy_eq, lyapunov₁_eq,
-    lyapunov₂_eq, dimaff_eq]
-  exact (toLib S).main1_dimaff_all BoxLike.morrisShmerkinLyapunov_holds BoxLike.equilibriumGibbs
-    BoxLike.fraserJordanJurgaDecomposition_holds hjr hrot hprox hsep μ
+  simp only [isDoubleDim_iff, isExactDim_iff, marginal_eq, dimaff_eq, lyapunov₁_eq, lyapunov₂_eq]
+  exact (toLib S).main1_dimaff_all BoxLike.morrisShmerkinLyapunov_holds
+    BoxLike.equilibriumGibbs BoxLike.fraserJordanJurgaDecomposition_holds hjr hrot hprox hsep μ
     hinv heq c
 
-/-- Theorem 4.4 (`thm:eq_state_proj_dim`), for every `s`-equilibrium state, `s > 0`. -/
+/-- Theorem 4.4 (`thm:eq_state_proj_dim`), for every `s`-equilibrium state, `s > 0`: the
+pointwise dimension of each coordinate projection exists almost everywhere and takes at most the
+two values `min{1, -h_0(μ)/λ_1(𝖠, μ)}` and `min{1, -h_0(μ)/λ_2(𝖠, μ)}`, the upper packing and the
+lower Hausdorff dimension, each on a set of positive measure. -/
 theorem audit_eq_state_proj_dim {ι : Type u} [Fintype ι] [MeasurableSpace ι]
     [MeasurableSingletonClass ι] (S : System ι) {s : ℝ}
     (hrot : S.WithRotations) (hprox : S.Proximal)
     (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) (c : ZMod 2) :
-    IsDoubleDim (S.marginal c μ) (min 1 (-entropy μ / S.lyapunov₁ μ))
+    BoxLike.HasLocalDimPair (S.marginal c μ) (min 1 (-entropy μ / S.lyapunov₁ μ))
         (min 1 (-entropy μ / S.lyapunov₂ μ)) ∧
       upperPackingDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₁ μ) ∧
-      lowerHausdorffDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₂ μ) := by
+      lowerHausdorffDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₂ μ) ∧
+      0 < S.marginal c μ
+        {x | BoxLike.HasLocalDim (S.marginal c μ) x (min 1 (-entropy μ / S.lyapunov₁ μ))} ∧
+      0 < S.marginal c μ
+        {x | BoxLike.HasLocalDim (S.marginal c μ) x (min 1 (-entropy μ / S.lyapunov₂ μ))} := by
   have hjr : BoxLike.JordanRapaportDimension.{u} :=
     BoxLike.jordanRapaportDimension_of_shmerkin BoxLike.shmerkinLqDimension_holds
   simp only [withRotations_iff, proximal_iff, projExpSeparation_iff, shift_eq,
     isEquilibriumState_iff] at hrot hprox hsep hinv heq
-  simp only [isDoubleDim_iff, upperPackingDim_eq, lowerHausdorffDim_eq, marginal_eq, entropy_eq,
+  simp only [upperPackingDim_eq, lowerHausdorffDim_eq, marginal_eq, entropy_eq,
     lyapunov₁_eq, lyapunov₂_eq]
   exact (toLib S).eq_state_proj_dim_all BoxLike.morrisShmerkinLyapunov_holds
     BoxLike.equilibriumGibbs BoxLike.fraserJordanJurgaDecomposition_holds
@@ -65,23 +68,31 @@ theorem audit_eq_state_proj_dim {ι : Type u} [Fintype ι] [MeasurableSpace ι]
 
 /-! ## Dimension of the equilibrium state and of the self-affine set -/
 
-/-- Theorem 1.3 (`thm:main2`), for every `s`-equilibrium state with `s = dimaff(X)`. -/
+/-- Theorem B (`thm:main2`), for every `s`-equilibrium state with `s = dimaff(X)`: the dimension
+formula under any of the three conditions, with Rapaport's theorem as the hypothesis of the third
+case, and the furthermore clause. -/
 theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-    (S : System ι)
+    (S : System ι) (hrap : RapaportDiagonalDimension.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hfree : S.NoExactOverlaps) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState S.dimaff μ)
-    (hor : S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∨ S.StrongOpenSet) :
-    dimH S.attractor = ENNReal.ofReal S.dimaff := by
+    (hor : S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∨ S.StrongOpenSet ∨
+      S.ProjExpSeparation) :
+    dimH S.attractor = ENNReal.ofReal (min 2 S.dimaff) ∧
+      (S.ProjExpSeparation → S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∨ S.StrongOpenSet →
+        IsExactDim (μ.map S.proj) S.dimaff ∧ S.dimaff ≤ 2) := by
+  have hrap' : BoxLike.RapaportDiagonalDimension.{u} := rapaportDiagonalDimension_iff.1 hrap
   simp only [withRotations_iff, proximal_iff, noExactOverlaps_iff, dimaff_eq, shift_eq,
-    isEquilibriumState_iff, lyapunov₁_eq, lyapunov₂_eq, strongOpenSet_iff]
+    isEquilibriumState_iff, lyapunov₁_eq, lyapunov₂_eq, strongOpenSet_iff, projExpSeparation_iff]
     at hrot hprox hfree hinv heq hor
-  rw [attractor_eq, dimaff_eq]
-  exact (toLib S).main2_prose BoxLike.shannonMcMillanBreiman BoxLike.morrisShmerkinLyapunov_holds
-    BoxLike.equilibriumGibbs BoxLike.fraserJordanJurgaDecomposition_holds
-    BoxLike.fengLedrappierYoung_holds
-    BoxLike.kittleKoglerDimension_holds hrot hprox hfree μ hinv heq hor
+  refine ⟨?_, fun hsep hor' => ?_⟩
+  · rw [attractor_eq, dimaff_eq]
+    exact (toLib S).main2_full_of_library hrap' hrot hprox hfree μ hinv heq hor
+  · rw [projExpSeparation_iff] at hsep
+    simp only [dimaff_eq, lyapunov₁_eq, lyapunov₂_eq, strongOpenSet_iff] at hor'
+    rw [isExactDim_iff, proj_eq, dimaff_eq]
+    exact (toLib S).main2_furthermore_of_library hrot hprox hsep μ hinv heq hor'
 
 /-- Theorem 4.16 (`thm:main_extended`), for every `s`-equilibrium state with `s = dimaff(X)`. -/
 theorem audit_main_extended {ι : Type u} [Fintype ι] [MeasurableSpace ι]
@@ -164,30 +175,56 @@ namespace Solution.Paper
 
 universe u
 
+-- PAPER_ENTRY thm:hochman_rapaport
+/-! 1.1 (`thm:hochman_rapaport`): cited.
+Hochman–Rapaport's theorem as the `Prop`-valued statement `HochmanRapaportDimension`, with the
+distance of the affine coefficients in place of a left-invariant Riemannian metric. No result of
+the library uses it, and it is not proved; at one letter its hypotheses cannot all hold.
+-/
+/-- Theorem 1.1 as a proposition; nothing is asserted. -/
+abbrev paper_1_1_1 : Prop := BoxLike.HochmanRapaportDimension.{u}
+noncomputable abbrev paper_1_1_2 := @BoxLike.PlanarSystem.ExpSeparation
+noncomputable abbrev paper_1_1_3 := @BoxLike.HochmanRapaportDimension.degenerate_subsingleton
+
+-- PAPER_ENTRY thm:rapaport
+/-! 1.2 (`thm:rapaport`): cited.
+Rapaport's theorem as the `Prop`-valued statement `RapaportDiagonalDimension`, the hypothesis of
+case (iii) of `thm:main2`, restated in `Challenge.lean`; its one-letter instance is checked. It is
+not proved.
+-/
+/-- Theorem 1.2 as a proposition; nothing is asserted. -/
+abbrev paper_1_2_1 : Prop := BoxLike.RapaportDiagonalDimension.{u}
+abbrev paper_1_2_2 : Prop := Challenge.RapaportDiagonalDimension.{u}
+noncomputable abbrev paper_1_2_3 := @Solution.Transport.rapaportDiagonalDimension_iff
+noncomputable abbrev paper_1_2_4 := @BoxLike.System.AxisExpSeparation
+noncomputable abbrev paper_1_2_5 := @BoxLike.System.axisGap
+noncomputable abbrev paper_1_2_6 := @BoxLike.System.proximal_iff_of_diagonal
+noncomputable abbrev paper_1_2_7 := @BoxLike.RapaportDiagonalDimension.degenerate_oneLetter
+
 -- PAPER_ENTRY thm:fraser
-/-! 1.1 (`thm:fraser`): formalized.
-Both parts of Fraser's Theorem 2.3 (`paper_1_1_0`) and Corollary 2.5 (`paper_1_1_13`,
-`paper_1_1_14`), along Fraser's proof. Deviation: in the super-multiplicative case of his
+/-! 1.3 (`thm:fraser`): formalized.
+Both parts of Fraser's Theorem 2.3 (`paper_1_3_0`) and Corollary 2.5 (`paper_1_3_13`,
+`paper_1_3_14`), along Fraser's proof. Deviation: in the super-multiplicative case of his
 Lemma 5.1 (2) a block sum replaces the `k`-block stopping set, which need not be prefix-free.
 -/
 /-- `thm:fraser`: both parts of Fraser's Theorem 2.3. -/
-theorem paper_1_1_0 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι) :
+theorem paper_1_3_0 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι) :
     S.FraserBound ∧ S.FraserROSC :=
   ⟨S.fraserBound_holds, S.fraserROSC_holds⟩
-noncomputable abbrev paper_1_1_1 := @BoxLike.System.FraserBound
-noncomputable abbrev paper_1_1_2 := @BoxLike.System.FraserROSC
-noncomputable abbrev paper_1_1_3 := @BoxLike.System.packingDim_attractor
-noncomputable abbrev paper_1_1_4 := @BoxLike.System.FraserROSC.dimmaff_eq_dimaff
-noncomputable abbrev paper_1_1_5 := @BoxLike.System.FraserROSC.dim_eq_dimaff
-noncomputable abbrev paper_1_1_6 := @BoxLike.System.fraserBound_holds
-noncomputable abbrev paper_1_1_7 := @BoxLike.System.fraserROSC_holds
-noncomputable abbrev paper_1_1_8 := @BoxLike.System.upperBoxDim_attractor_le_dimmaff
-noncomputable abbrev paper_1_1_9 := @BoxLike.System.upperBoxDim_attractor_le_of_modPressure_neg
-noncomputable abbrev paper_1_1_10 := @BoxLike.System.dimmaff_le_lowerBoxDim
-noncomputable abbrev paper_1_1_11 := @BoxLike.System.exists_le_fraserStopSum
-noncomputable abbrev paper_1_1_12 := @BoxLike.System.fraserROSC_of_fraserBound
+noncomputable abbrev paper_1_3_1 := @BoxLike.System.FraserBound
+noncomputable abbrev paper_1_3_2 := @BoxLike.System.FraserROSC
+noncomputable abbrev paper_1_3_3 := @BoxLike.System.packingDim_attractor
+noncomputable abbrev paper_1_3_4 := @BoxLike.System.FraserROSC.dimmaff_eq_dimaff
+noncomputable abbrev paper_1_3_5 := @BoxLike.System.FraserROSC.dim_eq_dimaff
+noncomputable abbrev paper_1_3_6 := @BoxLike.System.fraserBound_holds
+noncomputable abbrev paper_1_3_7 := @BoxLike.System.fraserROSC_holds
+noncomputable abbrev paper_1_3_8 := @BoxLike.System.upperBoxDim_attractor_le_dimmaff
+noncomputable abbrev paper_1_3_9 := @BoxLike.System.upperBoxDim_attractor_le_of_modPressure_neg
+noncomputable abbrev paper_1_3_10 := @BoxLike.System.dimmaff_le_lowerBoxDim
+noncomputable abbrev paper_1_3_11 := @BoxLike.System.exists_le_fraserStopSum
+noncomputable abbrev paper_1_3_12 := @BoxLike.System.fraserROSC_of_fraserBound
 /-- `thm:fraser`, third part (Fraser's Corollary 2.5). -/
-theorem paper_1_1_13 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι)
+theorem paper_1_3_13 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι)
     (hrosc : S.RectangularOpenSet)
     (hproj : ∀ c, BoxLike.upperBoxDim (BoxLike.System.coord c '' S.attractor) = 1) :
     BoxLike.packingDim S.attractor = ENNReal.ofReal S.dimaff ∧
@@ -195,41 +232,65 @@ theorem paper_1_1_13 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.Syste
       BoxLike.upperBoxDim S.attractor = ENNReal.ofReal S.dimaff :=
   S.fraserROSC_holds.dim_eq_dimaff hrosc hproj
 /-- `thm:fraser`, third part, as the paper states it: `dimmaff(X) = dimaff(X)`. -/
-theorem paper_1_1_14 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι)
+theorem paper_1_3_14 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι)
     (hrosc : S.RectangularOpenSet)
     (hproj : ∀ c, BoxLike.upperBoxDim (BoxLike.System.coord c '' S.attractor) = 1) :
     S.dimmaff = S.dimaff :=
   S.fraserROSC_holds.dimmaff_eq_dimaff hrosc hproj
 
 -- PAPER_ENTRY thm:main1
-/-! 1.2 (`thm:main1`): formalized.
-For every `s`-equilibrium state; uniqueness and ergodicity are not needed. Jordan–Rapaport
-gives exact-dimensionality under separation directly, so Feng–Hu is not used.
+/-! A (`thm:main1`): formalized.
+For every `s`-equilibrium state; uniqueness and ergodicity are not needed. Below the threshold
+the marginal is the sum of two nonzero exact-dimensional Gibbs projections of distinct dimensions,
+so it is double-dimensional (`System.main1_isDoubleDim`, Lemma 4.1); Jordan–Rapaport gives
+exact-dimensionality under separation directly, so Feng–Hu is not used.
 -/
-noncomputable abbrev paper_1_2_1 := @Challenge.audit_main1
-noncomputable abbrev paper_1_2_2 := @BoxLike.System.main1_dimaff_all
-noncomputable abbrev paper_1_2_3 := @BoxLike.System.main1_all
-noncomputable abbrev paper_1_2_4 := @BoxLike.System.main1_of_two_le
-noncomputable abbrev paper_1_2_5 := @BoxLike.System.main1
-noncomputable abbrev paper_1_2_6 := @BoxLike.System.eq_state_proj_dim_all
+noncomputable abbrev paper_A_1 := @Challenge.audit_main1
+noncomputable abbrev paper_A_2 := @BoxLike.System.main1_dimaff_all
+noncomputable abbrev paper_A_3 := @BoxLike.System.main1_all
+noncomputable abbrev paper_A_4 := @BoxLike.System.main1_of_two_le
+noncomputable abbrev paper_A_5 := @BoxLike.System.main1
+noncomputable abbrev paper_A_6 := @BoxLike.System.eq_state_proj_dim_all
+noncomputable abbrev paper_A_7 := @BoxLike.System.main1_values_all
+noncomputable abbrev paper_A_8 := @BoxLike.System.main1_dichotomy_all
+noncomputable abbrev paper_A_9 := @BoxLike.System.main1_isDoubleDim
 
 -- PAPER_ENTRY thm:main2
-/-! 1.3 (`thm:main2`): formalized.
-For every value of `dimaff` and every equilibrium state, along the prose (`System.main2_prose`).
-Deviations: the returns to horizontal orientation come from ergodicity, not mixing; the scalar
-Ledrappier–Young formula for the diagonal subsystem comes from the planar `FengLedrappierYoung`
-applied to an auxiliary box-like system; Falconer's bound is proved.
+/-! B (`thm:main2`): formalized.
+For every value of `dimaff` and every equilibrium state. Cases (i) and (ii) along the prose
+(`System.main2_prose`); case (iii) with Rapaport's theorem `RapaportDiagonalDimension` as the
+explicit hypothesis (`System.main2_pesc`); the furthermore clause from `thm:main_extended`
+(`System.main2_furthermore`). Deviations: the returns to horizontal orientation come from
+ergodicity, not mixing; the scalar Ledrappier–Young formula for the diagonal subsystem comes from
+the planar `FengLedrappierYoung` applied to an auxiliary box-like system; Falconer's bound is
+proved. Case (iii) follows the prose: `dim_H X_n = min{2, dimaff(X_n)}` by Rapaport's theorem,
+`dimaff(X_n) → dim_L(𝖠, μ_t) ≥ t`, then `t = s` or `t → 2`.
 -/
-noncomputable abbrev paper_1_3_1 := @Challenge.audit_main2
-noncomputable abbrev paper_1_3_2 := @BoxLike.System.main2_prose
-noncomputable abbrev paper_1_3_3 := @BoxLike.System.main2_noExactOverlaps_prose
-noncomputable abbrev paper_1_3_4 := @BoxLike.System.main2_prose_all
-noncomputable abbrev paper_1_3_5 := @BoxLike.System.StrongOpenSet.dimaff_eq_two
-noncomputable abbrev paper_1_3_6 := @BoxLike.System.exists_typical_words_prose
-noncomputable abbrev paper_1_3_7 := @BoxLike.System.IsHomDiag.isExactDim_map_proj
-noncomputable abbrev paper_1_3_8 := @BoxLike.System.le_dimH_attractor_of_family
-noncomputable abbrev paper_1_3_9 := @BoxLike.System.subsystem_strongSeparation
-noncomputable abbrev paper_1_3_10 := @BoxLike.System.main2_noExactOverlaps_all
+noncomputable abbrev paper_B_1 := @Challenge.audit_main2
+noncomputable abbrev paper_B_2 := @BoxLike.System.main2_prose
+noncomputable abbrev paper_B_3 := @BoxLike.System.main2_noExactOverlaps_prose
+noncomputable abbrev paper_B_4 := @BoxLike.System.main2_prose_all
+noncomputable abbrev paper_B_5 := @BoxLike.System.StrongOpenSet.dimaff_eq_two
+noncomputable abbrev paper_B_6 := @BoxLike.System.exists_typical_words_prose
+noncomputable abbrev paper_B_7 := @BoxLike.System.IsHomDiag.isExactDim_map_proj
+noncomputable abbrev paper_B_8 := @BoxLike.System.le_dimH_attractor_of_family
+noncomputable abbrev paper_B_9 := @BoxLike.System.subsystem_strongSeparation
+noncomputable abbrev paper_B_10 := @BoxLike.System.main2_noExactOverlaps_all
+noncomputable abbrev paper_B_11 := @BoxLike.System.main2_full
+noncomputable abbrev paper_B_12 := @BoxLike.System.main2_full_of_library
+noncomputable abbrev paper_B_13 := @BoxLike.System.main2_pesc
+noncomputable abbrev paper_B_14 := @BoxLike.System.main2_pesc_of_library
+noncomputable abbrev paper_B_15 := @BoxLike.System.main2_furthermore
+noncomputable abbrev paper_B_16 := @BoxLike.System.main2_furthermore_of_library
+noncomputable abbrev paper_B_17 := @BoxLike.System.le_dimH_attractor_pesc
+noncomputable abbrev paper_B_18 := @BoxLike.System.subsystem_axisExpSeparation
+noncomputable abbrev paper_B_19 := @BoxLike.System.IsHomDiag.dimaff_eq
+noncomputable abbrev paper_B_20 := @BoxLike.System.IsHomDiag.pressure_eq
+noncomputable abbrev paper_B_21 := @BoxLike.System.ProjExpSeparation.noExactOverlaps
+noncomputable abbrev paper_B_22 := @BoxLike.System.dimH_subsystem_attractor_eq
+noncomputable abbrev paper_B_23 := @BoxLike.System.min_lyapDim_le_dimH_attractor_of_family
+noncomputable abbrev paper_B_24 := @BoxLike.tendsto_lyapDim
+noncomputable abbrev paper_B_25 := @BoxLike.System.IsEquilibriumState.le_lyapDim
 
 -- PAPER_ENTRY q:coincident-projection-dimensions
 /-! 1.4 (`q:coincident-projection-dimensions`): intentionally_unformalized.
@@ -240,7 +301,7 @@ abbrev paper_1_4_1 : Prop := BoxLike.CoincidentProjectionDimensionsQuestion
 
 -- PAPER_ENTRY thm:box_like_sa
 /-! 2.1 (`thm:box_like_sa`): formalized.
-"Rotating" is read as exchanging the coordinate axes, the convention of tex 389 to 392.
+"Rotating" is read as exchanging the coordinate axes, the convention of tex 373 to 376.
 -/
 noncomputable abbrev paper_2_1_1 := @BoxLike.box_like_sa_of_contracting
 noncomputable abbrev paper_2_1_2 := @BoxLike.PlanarSystem.box_like_sa
@@ -572,10 +633,16 @@ The manuscript omits the proof.
 -/
 noncomputable abbrev paper_4_1_1 := @BoxLike.IsExactDim.ae_hasLocalDim_add_left
 noncomputable abbrev paper_4_1_2 := @BoxLike.IsExactDim.ae_hasLocalDim_add_right
-noncomputable abbrev paper_4_1_3 := @BoxLike.IsExactDim.isDoubleDim_add
+noncomputable abbrev paper_4_1_3 := @BoxLike.IsExactDim.hasLocalDimPair_add
 noncomputable abbrev paper_4_1_4 := @BoxLike.IsExactDim.measure_hasLocalDim_add_left_pos
 noncomputable abbrev paper_4_1_5 := @BoxLike.IsExactDim.measure_hasLocalDim_add_right_pos
 noncomputable abbrev paper_4_1_6 := @BoxLike.isExactDim_add_iff
+noncomputable abbrev paper_4_1_7 := @BoxLike.IsExactDim.isDoubleDim_add
+noncomputable abbrev paper_4_1_8 := @BoxLike.IsExactDim.isExactDim_add
+noncomputable abbrev paper_4_1_9 := @BoxLike.isDoubleDim_add_iff
+noncomputable abbrev paper_4_1_10 := @BoxLike.IsExactDim.mixture
+noncomputable abbrev paper_4_1_11 := @BoxLike.IsDoubleDim.not_isExactDim
+noncomputable abbrev paper_4_1_12 := @BoxLike.isDoubleDim_iff_upperPackingDim_lowerHausdorffDim
 
 -- PAPER_ENTRY thm:feng1
 /-! 4.2 (`thm:feng1`): formalized.
@@ -739,9 +806,25 @@ noncomputable abbrev paper_4_16_2 := @BoxLike.System.main_extended
 noncomputable abbrev paper_4_16_3 := @BoxLike.System.main_extended_normalised
 noncomputable abbrev paper_4_16_4 := @BoxLike.System.main_extended_ge_two
 
+-- PAPER_ENTRY rem:threshold_bound
+/-! 4.17 (`rem:threshold_bound`): formalized.
+The bound `min{dimaff(X), 2 - λ₁/λ₂} ≤ dim_H X` for `dimaff(X) < 2` without the strong open set
+condition or projective exponential separation, for every invariant equilibrium state, along
+the remark: the families are reduced to `⌊|b_n|⁻¹⌋` words above the threshold,
+`dim((proj_x)_*ν_n) = 1` for all large `n`, and `1 + (H_n - χ_{1,n})/χ_{2,n} → 2 - λ₁/λ₂`. The
+closing commentary of the remark is not a claim.
+-/
+noncomputable abbrev paper_4_17_1 := @BoxLike.System.threshold_bound
+noncomputable abbrev paper_4_17_2 := @BoxLike.System.threshold_bound_prose
+noncomputable abbrev paper_4_17_3 := @BoxLike.System.le_dimH_attractor_of_entropy_gt
+noncomputable abbrev paper_4_17_4 := @BoxLike.System.le_dimH_attractor_of_entropy_gt_prose
+noncomputable abbrev paper_4_17_5 := @BoxLike.lyapDim_neg_eq_threshold
+noncomputable abbrev paper_4_17_6 := @BoxLike.eventually_subsystemDim_eq_of_tendsto
+noncomputable abbrev paper_4_17_7 := @BoxLike.tendsto_one_add_sub_div
+
 /-! ## Unnumbered claims
 
-Rossi's bound `eq:hausdorff_ergodic_lyapunov` (tex lines 2728 to 2731), proved by a covering
+Rossi's bound `eq:hausdorff_ergodic_lyapunov` (tex lines 2598 to 2601), proved by a covering
 argument; equality holds for the equilibrium state of `thm:main_extended`.
 -/
 /-- Rossi's bound `eq:hausdorff_ergodic_lyapunov` for every box-like system. -/
@@ -757,10 +840,10 @@ noncomputable abbrev prose_rossi_6 := @BoxLike.System.ae_tendsto_log_alpha₂_ma
 noncomputable abbrev prose_rossi_7 := @BoxLike.ae_lowerLocalDim_le_of_dimH_le
 noncomputable abbrev prose_rossi_8 := @BoxLike.System.upperHausdorffDim_map_proj_eq
 
-/-! The squeeze `dimmaff(X) = dimaff(X)` of tex lines 548 to 550, from the first part of
+/-! The squeeze `dimmaff(X) = dimaff(X)` of tex lines 515 to 515, from the first part of
 `thm:fraser`.
 -/
-/-- If `dim_H X = dimaff(X)`, then `dimmaff(X) = dimaff(X)` (tex lines 548 to 550). -/
+/-- If `dim_H X = dimaff(X)`, then `dimmaff(X) = dimaff(X)` (tex lines 515 to 515). -/
 theorem prose_squeeze_0 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι)
     (hH : dimH S.attractor = ENNReal.ofReal S.dimaff) : S.dimmaff = S.dimaff :=
   S.dimmaff_eq_dimaff S.fraserBound_holds hH

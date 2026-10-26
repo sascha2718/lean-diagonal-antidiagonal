@@ -1,9 +1,9 @@
 module
 
 /-
-The pressure `P_Z(f)` of `sec:gibbs_measures` (tex lines 2480 to 2487) for an arbitrary Hölder
+The pressure `P_Z(f)` of `sec:gibbs_measures` (tex lines 2361 to 2368) for an arbitrary Hölder
 continuous potential `f : Σ_Z → ℝ`, the existence of the limit that defines it, and the
-identification of the constant of a Gibbs measure with `P_Z(f)` (tex lines 2489 to 2493). The
+identification of the constant of a Gibbs measure with `P_Z(f)` (tex lines 2370 to 2374). The
 library's `pressureZ` of `BoxLike/PressureZ.lean` treats the potentials that depend on the
 symbol `j_0` only; it is the specialisation `pressureZPot_apply_zero`.
 
@@ -46,7 +46,7 @@ section Holder
 
 variable {ι : Type*} {o : ι → ZMod 2} {f : (ℤ → ι × ZMod 2) → ℝ}
 
-/-- A Hölder continuous potential on `Σ_Z` (tex line 2481), for the standard metric `symDist`:
+/-- A Hölder continuous potential on `Σ_Z` (tex line 2362), for the standard metric `symDist`:
 `|f(𝐢) - f(𝐣)| ≤ K d(𝐢, 𝐣)^α` for `𝐢, 𝐣 ∈ Σ_Z`, with `K ≥ 0` and `α > 0`. -/
 def IsHolderPotential (o : ι → ZMod 2) (f : (ℤ → ι × ZMod 2) → ℝ) : Prop :=
   ∃ K α : ℝ, 0 ≤ K ∧ 0 < α ∧ ∀ y ∈ subshift o, ∀ z ∈ subshift o,
@@ -149,7 +149,7 @@ section Sums
 variable {ι : Type*} [Fintype ι] {o : ι → ZMod 2} {f : (ℤ → ι × ZMod 2) → ℝ} {B D : ℝ}
 
 variable (o f) in
-/-- `sup_{𝐣 ∈ [w]} S_n f(𝐣)` over the points `𝐣 ∈ Σ_Z` of the cylinder `[w]` (tex line 2485). -/
+/-- `sup_{𝐣 ∈ [w]} S_n f(𝐣)` over the points `𝐣 ∈ Σ_Z` of the cylinder `[w]` (tex line 2366). -/
 noncomputable def cylSup (n : ℕ) (w : Fin n → ι × ZMod 2) : ℝ :=
   sSup ((birkhoffSum (shift 1) f n) '' (cylinder w ∩ subshift o))
 
@@ -203,7 +203,7 @@ noncomputable def admissibleSumPot (n : ℕ) : ℝ :=
 
 variable (o f) in
 open Classical in
-/-- The sum `∑_{𝐢 ∈ Σ_Z : σ^n(𝐢) = 𝐢} exp(sup_{𝐣 ∈ [𝐢|_n]} S_n f(𝐣))` of tex line 2485, as a sum
+/-- The sum `∑_{𝐢 ∈ Σ_Z : σ^n(𝐢) = 𝐢} exp(sup_{𝐣 ∈ [𝐢|_n]} S_n f(𝐣))` of tex line 2366, as a sum
 over the cyclically admissible words of length `n`; `periodicSumPot_eq_finsum` is the article's
 form. -/
 noncomputable def periodicSumPot (n : ℕ) : ℝ :=
@@ -211,7 +211,7 @@ noncomputable def periodicSumPot (n : ℕ) : ℝ :=
 
 variable (o f) in
 /-- The pressure `P_Z(f) = lim_n n⁻¹ log ∑_{𝐢 ∈ Σ_Z : σ^n(𝐢) = 𝐢} exp(sup_{𝐣 ∈ [𝐢|_n]} S_n f(𝐣))` of
-`sec:gibbs_measures`, tex lines 2484 to 2487. -/
+`sec:gibbs_measures`, tex lines 2365 to 2368. -/
 noncomputable def pressureZPot : ℝ :=
   limUnder atTop fun n : ℕ => Real.log (periodicSumPot o f n) / n
 

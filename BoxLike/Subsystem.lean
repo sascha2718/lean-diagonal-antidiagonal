@@ -2,7 +2,7 @@ module
 
 /-
 Finite subsystems of a box-like system: the combinatorial part of the proof of `thm:main2` in
-`sec:dimension_result_proof` (tex lines 3632 to 3695 and 3703 to 3707). A family of words
+`sec:dimension_result_proof` (tex lines 3454 to 3515 and 3703 to 3707). A family of words
 `w_k`, `k : κ`, of a box-like system `Φ` generates the subsystem `(φ_{w_k})_{k : κ}`, again a
 box-like system. When the words have a common length and are distinct, and their planar
 matrices are diagonal, the coordinate maps of the subsystem generate a free semigroup as soon
@@ -21,14 +21,14 @@ which all the words are coded gives unique coding for the subsystem.
 * `System.matWord_eq_boxMat_zero_iff`: `A_𝐢 = diag(a, b)` exactly when `A_𝐢` is diagonal with
   the derivatives of the two paths as entries.
 * `System.NoExactOverlaps.simWord_injective`: the coordinate maps of a subsystem of distinct
-  diagonal words of a common length generate a free semigroup (tex lines 3703 to 3707).
+  diagonal words of a common length generate a free semigroup (tex lines 3523 to 3527).
 * `System.subsystem_attractor_subset`, `System.subsystem_attractor_subset_image`: the attractor
   of the subsystem lies in `X`, and in `φ_v(X)` when every word starts with `v`.
 * `System.exists_phiWord_image_subset`: a word `v` with `φ_v(X) ⊆ U` for an open set `U`
-  meeting `X` (proof of `thm:SOSC_h2_zero`, used at tex lines 3688 to 3690).
+  meeting `X` (proof of `thm:SOSC_h2_zero`, used at tex lines 3508 to 3510).
 * `System.pairwise_disjoint_image_phiWord`, `System.subsystem_future_eq_of_proj_eq`: distinct
   words of equal length map a feasible open set to disjoint sets, so the subsystem of words
-  coded into `U` has unique coding (tex lines 3693 to 3695 and 3722 to 3725).
+  coded into `U` has unique coding (tex lines 3513 to 3515 and 3722 to 3725).
 -/
 public import BoxLike.Attractor
 public import BoxLike.SeparationConditions
@@ -307,14 +307,14 @@ theorem phiWord_image_attractor_subset [Finite ι] (u : List ι) :
     rw [phiWord_cons, image_comp]
     exact (image_mono ih).trans (S.image_attractor_subset i)
 
-/-- The attractor of a subsystem lies in `X` (tex lines 3735 to 3736). -/
+/-- The attractor of a subsystem lies in `X` (tex lines 3558 to 3559). -/
 theorem subsystem_attractor_subset [Finite ι] [Nonempty ι] [Finite κ] :
     (S.subsystem w hw).attractor ⊆ S.attractor :=
   (S.subsystem w hw).attractor_subset_of_invariant S.isCompact_attractor S.attractor_nonempty
     fun k => by rw [subsystem_phi]; exact S.phiWord_image_attractor_subset (w k)
 
 /-- When every word of the subsystem starts with `v`, the attractor of the subsystem lies in
-`φ_v(X)` (tex lines 3691 to 3693). -/
+`φ_v(X)` (tex lines 3511 to 3513). -/
 theorem subsystem_attractor_subset_image [Finite ι] [Nonempty ι] [Finite κ] {v : List ι}
     (hv : ∀ k, ∃ u, w k = v ++ u) :
     (S.subsystem w hw).attractor ⊆ S.phiWord v '' S.attractor := by
@@ -327,7 +327,7 @@ theorem subsystem_attractor_subset_image [Finite ι] [Nonempty ι] [Finite κ] {
     ⟨_, S.subsystem_attractor_subset ⟨shift 1 x, rfl⟩, rfl⟩, rfl⟩
 
 /-- A word `v` with `φ_v(X) ⊆ U`, for an open set `U` meeting `X` (proof of
-`thm:SOSC_h2_zero`, tex lines 3505 to 3506). -/
+`thm:SOSC_h2_zero`, tex lines 3335 to 3336). -/
 theorem exists_phiWord_image_subset [Finite ι] {U : Set (ℝ × ℝ)} (hU : IsOpen U)
     (hne : (U ∩ S.attractor).Nonempty) : ∃ v : List ι, S.phiWord v '' S.attractor ⊆ U := by
   obtain ⟨x, n, -, hcyl⟩ := S.exists_cylinder_proj_mem hU hne
@@ -379,7 +379,7 @@ theorem pairwise_disjoint_image_phiWord {U : Set (ℝ × ℝ)} (hsub : ∀ i, S.
           (image_mono (image_subset_iff.2 fun z hz => S.phiWord_mem hsub u' hz))
 
 /-- Unique coding for a subsystem of distinct words of equal length coded into a feasible open
-set `U` (tex lines 3693 to 3695 and 3722 to 3725): if `π(𝐣) = π(𝐢)` for the subsystem then
+set `U` (tex lines 3513 to 3515 and 3722 to 3725): if `π(𝐣) = π(𝐢)` for the subsystem then
 `𝐣^+ = 𝐢^+`. The proof is that of `thm:SOSC_h2_zero`, `future_eq_of_proj_eq`, for the
 subsystem and the open set `U`, whose images under distinct subsystem maps are disjoint. -/
 theorem subsystem_future_eq_of_proj_eq [Finite κ] {U : Set (ℝ × ℝ)} (hU : IsOpen U)

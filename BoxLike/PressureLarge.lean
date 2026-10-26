@@ -1,7 +1,7 @@
 module
 
 /-
-The range `s ≥ 2` of `sec:normalisation`, tex lines 2376 to 2395, used in the case `s ≥ 2` of
+The range `s ≥ 2` of `sec:normalisation`, tex lines 2257 to 2276, used in the case `s ≥ 2` of
 `thm:main_extended`. For `s ≥ 2` the singular value function is the multiplicative function
 `φ^s(A) = |det A|^{s/2}`, so the pressure is `log ∑_i |det A_i|^{s/2}`, and the sum of the two
 Lyapunov exponents is `∫ log |det A_{i_0}| dμ(𝐢)`.
@@ -33,7 +33,7 @@ open scoped Matrix.Norms.L2Operator
 
 /-! ### The singular value function and the energy for `s ≥ 2` -/
 
-/-- `φ^s(A) = |det A|^{s/2}` for `s ≥ 2`, tex line 2385. At `s = 2` the definition of `φ^s`
+/-- `φ^s(A) = |det A|^{s/2}` for `s ≥ 2`, tex line 2266. At `s = 2` the definition of `φ^s`
 reads `α_1(A)^0 |det A|^1`. -/
 theorem svf_of_two_le {s : ℝ} (hs : 2 ≤ s) (A : Matrix (Fin 2) (Fin 2) ℝ) :
     svf s A = |A.det| ^ (s / 2) := by
@@ -42,7 +42,7 @@ theorem svf_of_two_le {s : ℝ} (hs : 2 ≤ s) (A : Matrix (Fin 2) (Fin 2) ℝ) 
     norm_num
   · rw [svf, ite_eq_right (by linarith), ite_eq_right (not_le.2 h)]
 
-/-- For `s ≥ 2` the potential is multiplicative, tex line 2385:
+/-- For `s ≥ 2` the potential is multiplicative, tex line 2266:
 `φ^s(AB) = φ^s(A) φ^s(B)`. -/
 theorem svf_mul_of_two_le {s : ℝ} (hs : 2 ≤ s) (A B : Matrix (Fin 2) (Fin 2) ℝ) :
     svf s (A * B) = svf s A * svf s B := by
@@ -107,14 +107,14 @@ theorem svfSum_one_of_two_le (hs : 2 ≤ s) :
   simp
 
 /-- `∑_{|𝐢| = n} φ^s(A_𝐢) = (∑_i |det A_i|^{s/2})^n` for `s ≥ 2`: the potential is
-multiplicative, tex lines 2385 and 2386. -/
+multiplicative, tex lines 2266 and 2267. -/
 theorem svfSum_of_two_le (hs : 2 ≤ s) (n : ℕ) :
     S.svfSum s n = (∑ i, |(S.mat i).det| ^ (s / 2)) ^ n := by
   induction n with
   | zero => simp [svfSum, svf_of_two_le hs]
   | succ n ih => rw [svfSum_add_of_two_le S hs, ih, svfSum_one_of_two_le S hs, pow_succ]
 
-/-- For `s ≥ 2` the pressure is `log ∑_i |det A_i|^{s/2}`, tex line 2377. -/
+/-- For `s ≥ 2` the pressure is `log ∑_i |det A_i|^{s/2}`, tex line 2258. -/
 theorem pressure_of_two_le (hs : 2 ≤ s) :
     S.pressure s = Real.log (∑ i, |(S.mat i).det| ^ (s / 2)) := by
   have h : (fun n : ℕ => Real.log (S.svfSum s n) / n) '' Set.Ici 1 =
@@ -176,7 +176,7 @@ theorem integral_log_abs_det_matWord_futureWord (hinv : MeasurePreserving (shift
 /-- `λ_1(𝖠, μ) + λ_2(𝖠, μ) = ∫ log |det A_{i_0}| dμ(𝐢)`, the integral written as the sum
 `∑_i μ([i]) log |det A_i|`: since `α_1(A) α_2(A) = |det A|` and the determinant is
 multiplicative, `∫ log α_1(A_{𝐢|_n}) dμ + ∫ log α_2(A_{𝐢|_n}) dμ = n ∫ log |det A_{i_0}| dμ`
-for an invariant measure `μ`. It is used for `s ≥ 2`, tex lines 2385 to 2394. -/
+for an invariant measure `μ`. It is used for `s ≥ 2`, tex lines 2266 to 2275. -/
 theorem lyapunov₁_add_lyapunov₂ (hinv : MeasurePreserving (shift 1) μ μ) :
     S.lyapunov₁ μ + S.lyapunov₂ μ = ∑ i, μ.real (cylinder ![i]) * Real.log |(S.mat i).det| := by
   refine tendsto_nhds_unique ((S.tendsto_lyapunov₁ hinv).add (S.tendsto_lyapunov₂ hinv)) ?_
@@ -193,7 +193,7 @@ theorem lyapunov₁_add_lyapunov₂ (hinv : MeasurePreserving (shift 1) μ μ) :
     mul_div_cancel_left₀ _ (Nat.cast_ne_zero.2 hn)]
 
 variable {S} in
-/-- The equilibrium equation `eq:eq_state_def` for `s ≥ 2`, tex lines 2385 to 2394:
+/-- The equilibrium equation `eq:eq_state_def` for `s ≥ 2`, tex lines 2266 to 2275:
 `log ∑_i |det A_i|^{s/2} = h_0(μ) + (s/2) ∑_i μ([i]) log |det A_i|`. -/
 theorem IsEquilibriumState.log_sum_eq (heq : S.IsEquilibriumState s μ)
     (hinv : MeasurePreserving (shift 1) μ μ) (hs : 2 ≤ s) :

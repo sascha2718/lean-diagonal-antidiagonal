@@ -1,7 +1,7 @@
 module
 
 /-
-Grouping a Bernoulli measure in pairs, `sec:normalisation` (tex lines 2367 to 2368): the image
+Grouping a Bernoulli measure in pairs, `sec:normalisation` (tex lines 2248 to 2249): the image
 `β_*μ` of a Bernoulli measure `μ` with the weights `(p_i)` under the grouping map `β` of
 `thm:two-block-normalisation` is the Bernoulli measure on the paired alphabet with the weights
 `p_{(i,j)} = p_i p_j`. Hence, if `μ^(2) = β_*μ` is not Bernoulli, neither is `μ`.
@@ -86,7 +86,7 @@ end Flat
 variable {α : Type*} [Fintype α] [MeasurableSpace α] [MeasurableSingletonClass α]
   {μ : Measure (ℤ → α)}
 
-/-- Grouping a Bernoulli measure in pairs gives a Bernoulli measure (tex lines 2367 to 2368):
+/-- Grouping a Bernoulli measure in pairs gives a Bernoulli measure (tex lines 2248 to 2249):
 if `μ` is Bernoulli with the weights `(p_i)`, then `μ^(2) = β_*μ` is Bernoulli with the weights
 `p_{(i,j)} = p_i p_j` on the paired alphabet. -/
 theorem IsBernoulli.map_group (h : IsBernoulli μ) : IsBernoulli (μ.map group) := by
@@ -104,7 +104,7 @@ theorem IsBernoulli.map_group (h : IsBernoulli μ) : IsBernoulli (μ.map group) 
     rw [Fin.prod_univ_two, flatFin_pair, flatFin_pair]
     simp
 
-/-- The step of `sec:normalisation` (tex lines 2367 to 2368): if `μ^(2) = β_*μ` is not a
+/-- The step of `sec:normalisation` (tex lines 2248 to 2249): if `μ^(2) = β_*μ` is not a
 Bernoulli measure, then neither is `μ`. -/
 theorem not_isBernoulli_of_map_group (h : ¬ IsBernoulli (μ.map group)) : ¬ IsBernoulli μ :=
   fun hμ => h hμ.map_group

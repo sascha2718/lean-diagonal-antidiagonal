@@ -3,7 +3,7 @@ module
 /-
 The partition sums of the potential `𝐢 ↦ ‖A_𝐢‖^q` of a quasi-multiplicative tuple, the first
 step of the proof of the existence half of Feng–Käenmäki, Proposition 1.2 (`thm:irred_eq_state`,
-tex lines 2225 to 2239), after Feng–Käenmäki, *Equilibrium states of the pressure function for
+tex lines 2113 to 2127), after Feng–Käenmäki, *Equilibrium states of the pressure function for
 products of matrices*, Discrete Contin. Dyn. Syst. 30 (2011), and Bowen's construction.
 Write `ψ(𝐢) = ‖A_𝐢‖^q`, `Z_n = ∑_{|𝐢| = n} ψ(𝐢)` and `P = P(q)`. The potential is
 sub-multiplicative, so `e^{nP} ≤ Z_n` by Fekete's lemma. Quasi-multiplicativity with gaps of
@@ -52,7 +52,7 @@ section Words
 variable (ι : Type*) [Fintype ι]
 
 /-- The finite set of the words of length `n`, the index set of the sums `Z_n` in the proof of
-Feng–Käenmäki, Proposition 1.2 (`thm:irred_eq_state`, tex lines 2225 to 2234). -/
+Feng–Käenmäki, Proposition 1.2 (`thm:irred_eq_state`, tex lines 2113 to 2122). -/
 noncomputable def wordsOfLength (n : ℕ) : Finset (List ι) :=
   Finset.univ.map ⟨fun w : Fin n → ι => List.ofFn w, List.ofFn_injective⟩
 
@@ -76,7 +76,7 @@ theorem sum_wordsOfLength {M : Type*} [AddCommMonoid M] (n : ℕ) (G : List ι �
 
 end Words
 
-/-- The counting step of Feng–Käenmäki, Proposition 1.2 (`thm:irred_eq_state`, tex lines 2225 to
+/-- The counting step of Feng–Käenmäki, Proposition 1.2 (`thm:irred_eq_state`, tex lines 2113 to
 2234): if `φ` maps `a ∈ S` into `T (j a)` with `j a ≤ m`, and `φ` is injective on each class of
 `j`, then `∑_{a ∈ S} F(φ a) ≤ ∑_{t ≤ m} ∑_{b ∈ T t} F(b)` for `F ≥ 0`. -/
 theorem sum_comp_le_sum_range {α β : Type*} (S : Finset α) (φ : α → β) (j : α → ℕ) (m : ℕ)

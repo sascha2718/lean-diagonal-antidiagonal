@@ -3,9 +3,9 @@ module
 /-
 The one-sided canonical projection `π^+ : Σ^+ → ℝ²` of `sec:two_sided_shift_space` (tex lines
 814 to 822, `eq:canonical_projection`), the two-sided projection `π = π^+ ∘ η`, the identity
-`π(Σ) = π^+(Σ^+) = X`, and `(π^+)_*μ^+ = π_*μ` for `μ = (η_*)^{-1}μ^+` (tex lines 850 and 851),
+`π(Σ) = π^+(Σ^+) = X`, and `(π^+)_*μ^+ = π_*μ` for `μ = (η_*)^{-1}μ^+` (tex lines 769 and 770),
 for an arbitrary affine iterated function system on `ℝ²` in the sense of
-`sec:box_like_self_affine` (tex lines 626 to 638): maps `φ_i(x) = A_i x + v_i` with `‖A_i‖ < 1` in
+`sec:box_like_self_affine` (tex lines 555 to 567): maps `φ_i(x) = A_i x + v_i` with `‖A_i‖ < 1` in
 the operator norm. Invertibility of `A_i` is not used. The plane is the Euclidean plane
 `EuclideanSpace ℝ (Fin 2)`, on which `A_i` acts through `Matrix.toEuclideanCLM`, so that the
 operator norm of the action is the `ℓ²` operator norm `‖A_i‖` of the library.
@@ -233,14 +233,14 @@ noncomputable def projPlusTerm (y : ℕ → ι) (k : ℕ) : EuclideanSpace ℝ (
 noncomputable def canonicalProjPlus (y : ℕ → ι) : EuclideanSpace ℝ (Fin 2) :=
   ∑' k, projPlusTerm A v y k
 
-/-- The two-sided canonical projection `π = π^+ ∘ η : Σ → ℝ²` of tex lines 819 to 820. -/
+/-- The two-sided canonical projection `π = π^+ ∘ η : Σ → ℝ²` of tex lines 738 to 739. -/
 noncomputable def canonicalProj (x : ℤ → ι) : EuclideanSpace ℝ (Fin 2) :=
   canonicalProjPlus A v (eta x)
 
 /-- `π = π^+ ∘ η`. -/
 theorem canonicalProj_eq_comp : canonicalProj A v = canonicalProjPlus A v ∘ eta := rfl
 
-/-- `π(𝐢) = π^+(𝐢^+)` depends only on the future coordinates of `𝐢` (tex lines 820 and 821). -/
+/-- `π(𝐢) = π^+(𝐢^+)` depends only on the future coordinates of `𝐢` (tex lines 739 and 740). -/
 theorem canonicalProj_congr {x x' : ℤ → ι} (h : ∀ k : ℕ, x k = x' k) :
     canonicalProj A v x = canonicalProj A v x' := by
   unfold canonicalProj
@@ -248,7 +248,7 @@ theorem canonicalProj_congr {x x' : ℤ → ι} (h : ∀ k : ℕ, x k = x' k) :
   funext k
   exact h k
 
-/-- `π(Σ) = π^+(Σ^+)` (tex line 821). -/
+/-- `π(Σ) = π^+(Σ^+)` (tex line 740). -/
 theorem range_canonicalProj : range (canonicalProj A v) = range (canonicalProjPlus A v) := by
   rw [canonicalProj_eq_comp, range_comp, eta_surjective.range_eq, image_univ]
 
@@ -454,7 +454,7 @@ theorem ContractionBound.range_canonicalProjPlus_eq_iUnion (hA : ContractionBoun
     rw [hA.canonicalProjPlus_eq_affineMap v]
     rfl
 
-/-- Hutchinson's uniqueness (tex lines 633 to 638): `X = π^+(Σ^+)` is the only non-empty compact
+/-- Hutchinson's uniqueness (tex lines 562 to 567): `X = π^+(Σ^+)` is the only non-empty compact
 set `K ⊆ ℝ²` with `K = ⋃_i φ_i(K)`. A point of `K` has a backward orbit `x = φ_{𝐢|_n}(x_n)` with
 `x_n ∈ K`, which converges to `π^+(𝐢)`; conversely `φ_{𝐢|_n}(k) ∈ K` converges to `π^+(𝐢)`. -/
 theorem ContractionBound.eq_range_canonicalProjPlus (hA : ContractionBound A r)
@@ -600,7 +600,7 @@ theorem toPlane_projPlus (y : ℕ → ι) :
   ext j
   fin_cases j <;> rfl
 
-/-- `π = π^+ ∘ η` for a finite box-like system (tex lines 819 to 820). -/
+/-- `π = π^+ ∘ η` for a finite box-like system (tex lines 738 to 739). -/
 theorem proj_eq_projPlus_comp_eta [Finite ι] : S.proj = S.projPlus ∘ eta := by
   funext x
   apply toPlane_injective
@@ -620,7 +620,7 @@ theorem tendsto_phiWordPlus [Finite ι] (y : ℕ → ι) :
   refine h.congr fun n => ?_
   rw [futureWord_eq_futureWordPlus, hy]
 
-/-- `π(Σ) = π^+(Σ^+) = X` for a finite box-like system (tex line 821). -/
+/-- `π(Σ) = π^+(Σ^+) = X` for a finite box-like system (tex line 740). -/
 theorem range_projPlus [Finite ι] : range S.projPlus = S.attractor := by
   rw [attractor, proj_eq_projPlus_comp_eta, range_comp, eta_surjective.range_eq, image_univ]
 

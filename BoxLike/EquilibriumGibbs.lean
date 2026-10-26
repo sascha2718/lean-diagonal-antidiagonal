@@ -1,7 +1,7 @@
 module
 
 /-
-`thm:irred_eq_state` (tex lines 2225 to 2234) for box-like tuples with rotations: for every
+`thm:irred_eq_state` (tex lines 2113 to 2122) for box-like tuples with rotations: for every
 `s > 0` there is a unique invariant `s`-equilibrium state; it is ergodic and has the Gibbs bounds.
 The article quotes the proposition from Feng–Käenmäki for irreducible tuples; a tuple with
 rotations need not be irreducible, and no literature premise is used.
@@ -58,7 +58,7 @@ variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClas
 /-! ### The relative entropy of an equilibrium state -/
 
 /-- The relative entropy bound in the proof of `thm:irred_eq_state` for tuples with rotations
-(tex lines 2225 to 2234): an invariant `s`-equilibrium state `μ`, `s ≥ 0`, and a measure `ν`
+(tex lines 2113 to 2122): an invariant `s`-equilibrium state `μ`, `s ≥ 0`, and a measure `ν`
 with the Gibbs bounds with constant `K` satisfy
 `D_n(μ ‖ ν) = ∑_{|w| = n} μ([w]) log(μ([w]) / ν([w])) ≤ log K` for every `n ≥ 1`. By
 `eq:eq_state_def`, `n P(𝖠, s) ≤ H_μ(𝒫_0^{n-1}) + ∑_{|w| = n} μ([w]) log φ^s(A_w)`, and the lower
@@ -185,7 +185,7 @@ end System
 
 /-- `EquilibriumGibbsStatement` is a theorem: for a box-like tuple with rotations and
 `0 < s < 2` every invariant `s`-equilibrium state has the Gibbs bounds of `thm:irred_eq_state`
-(tex lines 2225 to 2234). No literature premise is used. -/
+(tex lines 2113 to 2122). No literature premise is used. -/
 theorem equilibriumGibbs : EquilibriumGibbsStatement.{u} :=
   fun _ hrot _ hs0 _ _ _ hinv heq => heq.hasGibbsBounds_of_withRotations hrot hs0 hinv
 
@@ -206,7 +206,7 @@ theorem existsUnique_isEquilibriumState_of_withRotations (hrot : S.WithRotations
   exact ⟨μ, ⟨hprob, hinv, heq⟩, fun ν ⟨hν, hνinv, hνeq⟩ =>
     S.unique_of_withRotations hrot hs0 ν μ hνinv hinv hνeq heq⟩
 
-/-- `thm:irred_eq_state` for box-like tuples with rotations (tex lines 2225 to 2234): for each
+/-- `thm:irred_eq_state` for box-like tuples with rotations (tex lines 2113 to 2122): for each
 `s > 0` there is an invariant `s`-equilibrium state `μ`, every invariant `s`-equilibrium state
 equals `μ`, `μ` is ergodic, and there is a constant `C ≥ 1` with
 `C⁻¹ exp(-|𝐢| P(𝖠, s)) φ^s(A_𝐢) ≤ μ([𝐢]) ≤ C exp(-|𝐢| P(𝖠, s)) φ^s(A_𝐢)` for all finite words

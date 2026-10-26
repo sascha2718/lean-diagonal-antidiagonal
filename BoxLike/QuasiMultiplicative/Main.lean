@@ -2,7 +2,7 @@ module
 
 /-
 Feng–Käenmäki, Proposition 1.2 (Discrete Contin. Dyn. Syst. 30 (2011)), which the article quotes
-as `thm:irred_eq_state` (tex lines 2225 to 2239), from the existence of an ergodic Gibbs measure
+as `thm:irred_eq_state` (tex lines 2113 to 2127), from the existence of an ergodic Gibbs measure
 for a quasi-multiplicative tuple: `NormGibbsExistenceStatement` implies the literature premise
 `FengKaenmakiNormEquilibrium` of `BoxLike/LiteratureFengKaenmaki.lean`.
 
@@ -38,7 +38,7 @@ open MeasureTheory
 universe u
 
 /-- Feng–Käenmäki, Proposition 1.2 (Discrete Contin. Dyn. Syst. 30 (2011)), quoted as
-`thm:irred_eq_state` (tex lines 2225 to 2239), on the two-sided shift `Σ`, from
+`thm:irred_eq_state` (tex lines 2113 to 2127), on the two-sided shift `Σ`, from
 `NormGibbsExistenceStatement`: for an irreducible tuple of invertible planar matrices and
 `q > 0` there is an ergodic probability measure with the Gibbs property of `‖·‖^q`, and every
 invariant `q`-equilibrium state of `‖·‖^q` equals it. The tuple is quasi-multiplicative
@@ -78,7 +78,7 @@ theorem fengKaenmakiNormEquilibrium_of_normGibbsExistence (h : NormGibbsExistenc
   exact hG
 
 /-- Feng–Käenmäki, Proposition 1.2 (Discrete Contin. Dyn. Syst. 30 (2011)), quoted as
-`thm:irred_eq_state` (tex lines 2225 to 2239): the statement `FengKaenmakiNormEquilibrium` holds.
+`thm:irred_eq_state` (tex lines 2113 to 2127): the statement `FengKaenmakiNormEquilibrium` holds.
 The Gibbs measure is `normGibbsExistence`; no literature premise is used. -/
 theorem fengKaenmakiNormEquilibrium_holds : FengKaenmakiNormEquilibrium.{u} :=
   fengKaenmakiNormEquilibrium_of_normGibbsExistence normGibbsExistence

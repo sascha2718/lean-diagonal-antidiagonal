@@ -1,7 +1,7 @@
 module
 
 /-
-Projective exponential separation in `ex:projection_double_dimensional`, tex lines 2967 to
+Projective exponential separation in `ex:projection_double_dimensional`, tex lines 2797 to
 3012, by the volume argument on the translation cube `B ⊆ ℝ^8` with Lebesgue measure.
 
 The maps of the projective system are `g_i^t(x) = a x + t_i` and `g_{i+4}^t(x) = b x + t_{i+4}`;
@@ -67,7 +67,7 @@ theorem abs_gDeriv_lt_one_of_ne_nil : ∀ {u : List (ι × ZMod 2)}, u ≠ [] �
           mul_le_mul_of_nonneg_left hu (abs_nonneg _)
       _ < 1 := by rw [mul_one]; exact S.abs_ratio_lt_one p
 
-/-- `ex:projection_double_dimensional`, "no exact overlaps" (tex line 3008): if
+/-- `ex:projection_double_dimensional`, "no exact overlaps" (tex line 2838): if
 `g_𝐢(0) ≠ g_𝐣(0)` for any two distinct words `𝐢`, `𝐣` of the same length, then the projective
 system has no exact overlaps. For words of different lengths, either one is a prefix of the
 other, and the remaining word would give `g = id`, or `𝐢𝐣` and `𝐣𝐢` are distinct words of the

@@ -2,7 +2,7 @@ module
 
 /-
 The shared vocabulary of the proof of Feng–Käenmäki, Proposition 1.2, in
-`BoxLike/QuasiMultiplicative/`: `thm:irred_eq_state` (tex lines 2225 to 2239) for every
+`BoxLike/QuasiMultiplicative/`: `thm:irred_eq_state` (tex lines 2113 to 2127) for every
 irreducible tuple of invertible planar matrices. The proof runs through the quasi-multiplicativity
 of the norm and the existence of an ergodic Gibbs measure for the potential `‖·‖^q`; this module
 fixes the two statements that connect the parts.
@@ -38,7 +38,7 @@ def NormQuasiMultiplicative (A : ι → Matrix (Fin 2) (Fin 2) ℝ) : Prop :=
 
 end MatrixTuple
 
-/-- The existence of the Gibbs measure in Feng–Käenmäki, Proposition 1.2 (tex lines 2225 to 2234):
+/-- The existence of the Gibbs measure in Feng–Käenmäki, Proposition 1.2 (tex lines 2113 to 2122):
 for a non-empty finite alphabet, a quasi-multiplicative tuple of invertible planar matrices and
 `q > 0`, some ergodic invariant probability measure on the two-sided shift `Σ = ℤ → ι` has the
 Gibbs property of the potential `‖·‖^q`. -/

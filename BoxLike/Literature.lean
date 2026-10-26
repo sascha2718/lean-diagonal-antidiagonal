@@ -92,7 +92,7 @@ def JordanRapaportDimension : Prop :=
 
 /-- Kittle–Kogler, *The exact overlaps conjecture for self-similar measures on the real line*,
 arXiv:2610.10511 (7 October 2026), Theorem 1.1, in the form the article uses in the proof of
-`thm:main2` (tex lines 3702 to 3712). The source: let `μ = ∑_j p_j δ_{g_j}` be a probability
+`thm:main2` (tex lines 3522 to 3532). The source: let `μ = ∑_j p_j δ_{g_j}` be a probability
 measure on finitely many distinct contracting similarities `g_j(x) = r_j x + t_j` of `ℝ`, with
 `0 < |r_j| < 1` of either sign and `p_j > 0`; then the self-similar measure `ν`, the unique
 probability measure with `∑_j p_j (g_j)_* ν = ν`, satisfies `dim ν = min{1, h_μ / |χ_μ|}`,

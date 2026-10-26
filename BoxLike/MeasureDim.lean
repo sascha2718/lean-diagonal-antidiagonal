@@ -4,8 +4,10 @@ module
 The pointwise dimension of a measure, exact-dimensional and double-dimensional measures, and
 `thm:exact-dimensional-mixture` of `sec:ledrappier_young_formula`.
 
-* `HasLocalDim`, `IsExactDim`, `IsDoubleDim`: `dimloc(μ, x) = d`, exact-dimensional measures
-  with `dim μ = d`, and double-dimensional measures with values `d₁`, `d₂`.
+* `HasLocalDim`, `IsExactDim`, `HasLocalDimPair`, `IsDoubleDim`: `dimloc(μ, x) = d`,
+  exact-dimensional measures with `dim μ = d`, measures whose pointwise dimension is `d₁` or
+  `d₂` almost everywhere, and double-dimensional measures: two distinct values, each on a set
+  of positive measure.
 * `HasLocalDim.unique`, `IsExactDim.unique`: the pointwise dimension at a point and the
   dimension of a nonzero exact-dimensional measure are unique.
 * `tendsto_log_div_log_sub`: if `ν'(B(x,r)) / ν(B(x,r))` has a limit in `(0, ∞)`, then
@@ -15,7 +17,7 @@ The pointwise dimension of a measure, exact-dimensional and double-dimensional m
 * `IsExactDim.of_le`: the step `eq:restricted-projection-dimensions` of
   `sec:dimension_of_projections`.
 * `IsExactDim.ae_hasLocalDim_add_left`, `IsExactDim.ae_hasLocalDim_add_right`,
-  `IsExactDim.isDoubleDim_add`, `IsExactDim.measure_hasLocalDim_add_left_pos`,
+  `IsExactDim.hasLocalDimPair_add`, `IsExactDim.measure_hasLocalDim_add_left_pos`,
   `IsExactDim.measure_hasLocalDim_add_right_pos`, `isExactDim_add_iff`:
   `thm:exact-dimensional-mixture`.
 -/
@@ -46,10 +48,19 @@ every `x`. -/
 def IsExactDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
     (μ : Measure X) (d : ℝ) : Prop := ∀ᵐ x ∂μ, HasLocalDim μ x d
 
-/-- The measure `μ` is double-dimensional with values `d₁`, `d₂`: for `μ`-almost every `x` the
-pointwise dimension `dimloc(μ, x)` exists and equals `d₁` or `d₂`. -/
-def IsDoubleDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
+/-- For `μ`-almost every `x` the pointwise dimension `dimloc(μ, x)` exists and equals `d₁` or
+`d₂`. The article has no name for this; its double-dimensional measures are those for which,
+in addition, the two values differ and each occurs on a set of positive measure
+(`IsDoubleDim`). -/
+def HasLocalDimPair {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
     (μ : Measure X) (d₁ d₂ : ℝ) : Prop := ∀ᵐ x ∂μ, HasLocalDim μ x d₁ ∨ HasLocalDim μ x d₂
+
+/-- The measure `μ` is double-dimensional (`sec:ledrappier_young_formula`): its pointwise
+dimension exists at `μ`-almost every point and takes exactly two values, each on a set of
+positive `μ`-measure. -/
+def IsDoubleDim {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X] (μ : Measure X) : Prop :=
+  ∃ d₁ d₂ : ℝ, d₁ ≠ d₂ ∧ (∀ᵐ x ∂μ, HasLocalDim μ x d₁ ∨ HasLocalDim μ x d₂) ∧
+    0 < μ {x | HasLocalDim μ x d₁} ∧ 0 < μ {x | HasLocalDim μ x d₂}
 
 variable {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
   {μ ν' ν : Measure X} {x : X} {d d' d₁ d₂ : ℝ}
@@ -65,17 +76,18 @@ theorem IsExactDim.unique (hne : μ ≠ 0) (h : IsExactDim μ d) (h' : IsExactDi
   obtain ⟨x, hx, hx'⟩ := (h.and h').exists
   exact hx.unique hx'
 
-/-- An exact-dimensional measure is double-dimensional, with both values equal to `dim μ`. -/
-theorem IsExactDim.isDoubleDim (h : IsExactDim μ d) : IsDoubleDim μ d d :=
+/-- The pointwise dimension of an exact-dimensional measure is `dim μ` or `dim μ` almost
+everywhere. -/
+theorem IsExactDim.hasLocalDimPair (h : IsExactDim μ d) : HasLocalDimPair μ d d :=
   h.mono fun _ hx => Or.inl hx
 
-/-- A double-dimensional measure whose two values agree is exact-dimensional, and
-conversely. -/
-theorem isDoubleDim_self_iff : IsDoubleDim μ d d ↔ IsExactDim μ d := by
-  simp only [IsDoubleDim, IsExactDim, or_self]
+/-- The pointwise dimension is `d` or `d` almost everywhere exactly when the measure is
+exact-dimensional with `dim μ = d`. -/
+theorem hasLocalDimPair_self_iff : HasLocalDimPair μ d d ↔ IsExactDim μ d := by
+  simp only [HasLocalDimPair, IsExactDim, or_self]
 
-/-- The two values of a double-dimensional measure may be listed in either order. -/
-theorem IsDoubleDim.symm (h : IsDoubleDim μ d₁ d₂) : IsDoubleDim μ d₂ d₁ :=
+/-- The two values of the pointwise dimension may be listed in either order. -/
+theorem HasLocalDimPair.symm (h : HasLocalDimPair μ d₁ d₂) : HasLocalDimPair μ d₂ d₁ :=
   h.mono fun _ hx => hx.symm
 
 /-- If the quotient `ν'(B(x, r)) / ν(B(x, r))` tends to a limit `c ∈ (0, ∞)` as `r ↓ 0`, then
@@ -152,10 +164,11 @@ theorem IsExactDim.ae_hasLocalDim_add_right [IsFiniteMeasure ν₁] [IsFiniteMea
     with x hx hd
   exact (hx d₂).1 hd
 
-/-- Second part of `thm:exact-dimensional-mixture`: the sum of two exact-dimensional measures
-is double-dimensional, with values `dim ν₁` and `dim ν₂`. -/
-theorem IsExactDim.isDoubleDim_add [IsFiniteMeasure ν₁] [IsFiniteMeasure ν₂]
-    (h₁ : IsExactDim ν₁ d₁) (h₂ : IsExactDim ν₂ d₂) : IsDoubleDim (ν₁ + ν₂) d₁ d₂ :=
+/-- Second part of `thm:exact-dimensional-mixture`: the pointwise dimension of the sum of two
+exact-dimensional measures is `dim ν₁` or `dim ν₂` almost everywhere. The sum is
+double-dimensional when the dimensions differ (`IsExactDim.isDoubleDim_add`). -/
+theorem IsExactDim.hasLocalDimPair_add [IsFiniteMeasure ν₁] [IsFiniteMeasure ν₂]
+    (h₁ : IsExactDim ν₁ d₁) (h₂ : IsExactDim ν₂ d₂) : HasLocalDimPair (ν₁ + ν₂) d₁ d₂ :=
   ae_add_measure_iff.2 ⟨h₁.ae_hasLocalDim_add_left.mono fun _ hx => Or.inl hx,
     h₂.ae_hasLocalDim_add_right.mono fun _ hx => Or.inr hx⟩
 
@@ -203,7 +216,7 @@ theorem isExactDim_add_iff [IsFiniteMeasure ν₁] [IsFiniteMeasure ν₂]
     obtain ⟨y, hy, hy'⟩ := (hd'.2.and (h₂.ae_hasLocalDim_add_right (ν₁ := ν₁))).exists
     rw [← hx.unique hx', ← hy.unique hy']
   · rintro rfl
-    exact ⟨d₁, isDoubleDim_self_iff.1 (h₁.isDoubleDim_add h₂)⟩
+    exact ⟨d₁, hasLocalDimPair_self_iff.1 (h₁.hasLocalDimPair_add h₂)⟩
 
 end Besicovitch
 
@@ -217,11 +230,11 @@ example {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensiona
     (h₁ : IsExactDim ν₁ d₁) (h₂ : IsExactDim ν₂ d₂) (hne₁ : ν₁ ≠ 0) (hne₂ : ν₂ ≠ 0) :
     (∀ᵐ x ∂ν', ∀ d : ℝ, HasLocalDim ν' x d ↔ HasLocalDim ν x d) ∧ IsExactDim ν' d ∧
       (∀ᵐ x ∂ν₁, HasLocalDim (ν₁ + ν₂) x d₁) ∧ (∀ᵐ x ∂ν₂, HasLocalDim (ν₁ + ν₂) x d₂) ∧
-      IsDoubleDim (ν₁ + ν₂) d₁ d₂ ∧ 0 < (ν₁ + ν₂) {x | HasLocalDim (ν₁ + ν₂) x d₁} ∧
+      HasLocalDimPair (ν₁ + ν₂) d₁ d₂ ∧ 0 < (ν₁ + ν₂) {x | HasLocalDim (ν₁ + ν₂) x d₁} ∧
       0 < (ν₁ + ν₂) {x | HasLocalDim (ν₁ + ν₂) x d₂} ∧
       ((∃ d, IsExactDim (ν₁ + ν₂) d) ↔ d₁ = d₂) :=
   ⟨ae_hasLocalDim_iff_of_le h, hν.of_le h, h₁.ae_hasLocalDim_add_left,
-    h₂.ae_hasLocalDim_add_right, h₁.isDoubleDim_add h₂,
+    h₂.ae_hasLocalDim_add_right, h₁.hasLocalDimPair_add h₂,
     h₁.measure_hasLocalDim_add_left_pos hne₁, h₂.measure_hasLocalDim_add_right_pos hne₂,
     isExactDim_add_iff h₁ h₂ hne₁ hne₂⟩
 
@@ -231,11 +244,11 @@ example {ν' ν ν₁ ν₂ : Measure ℝ} [IsFiniteMeasure ν] [IsFiniteMeasure
     (h₂ : IsExactDim ν₂ d₂) (hne₁ : ν₁ ≠ 0) (hne₂ : ν₂ ≠ 0) :
     (∀ᵐ x ∂ν', ∀ d : ℝ, HasLocalDim ν' x d ↔ HasLocalDim ν x d) ∧ IsExactDim ν' d ∧
       (∀ᵐ x ∂ν₁, HasLocalDim (ν₁ + ν₂) x d₁) ∧ (∀ᵐ x ∂ν₂, HasLocalDim (ν₁ + ν₂) x d₂) ∧
-      IsDoubleDim (ν₁ + ν₂) d₁ d₂ ∧ 0 < (ν₁ + ν₂) {x | HasLocalDim (ν₁ + ν₂) x d₁} ∧
+      HasLocalDimPair (ν₁ + ν₂) d₁ d₂ ∧ 0 < (ν₁ + ν₂) {x | HasLocalDim (ν₁ + ν₂) x d₁} ∧
       0 < (ν₁ + ν₂) {x | HasLocalDim (ν₁ + ν₂) x d₂} ∧
       ((∃ d, IsExactDim (ν₁ + ν₂) d) ↔ d₁ = d₂) :=
   ⟨ae_hasLocalDim_iff_of_le h, hν.of_le h, h₁.ae_hasLocalDim_add_left,
-    h₂.ae_hasLocalDim_add_right, h₁.isDoubleDim_add h₂,
+    h₂.ae_hasLocalDim_add_right, h₁.hasLocalDimPair_add h₂,
     h₁.measure_hasLocalDim_add_left_pos hne₁, h₂.measure_hasLocalDim_add_right_pos hne₂,
     isExactDim_add_iff h₁ h₂ hne₁ hne₂⟩
 

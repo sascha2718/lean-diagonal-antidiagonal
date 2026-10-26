@@ -2,8 +2,8 @@ module
 
 /-
 Conditional information and conditional entropy of a countable partition given an arbitrary
-sub-`σ`-algebra, at the generality of `sec:conditional` (tex lines 1718 to 1746), together with
-the remaining unnumbered claims of that span on conditional measures (tex lines 1748 to 1770).
+sub-`σ`-algebra, at the generality of `sec:conditional` (tex lines 1641 to 1669), together with
+the remaining unnumbered claims of that span on conditional measures (tex lines 1671 to 1692).
 The library's `condInfo` and `condEntropy` of `BoxLike/Conditional.lean` treat the canonical
 partition `𝒫 = {[i]}` given `\widehat{ξ}`; they are the specialisation of the objects here.
 
@@ -24,10 +24,10 @@ infinite entropy has the value `∞`.
   `I_μ(𝒬 | 𝒩) = -∑_{A ∈ 𝒬} 1_A log μ(A)` and `H_μ(𝒬 | 𝒩) = -∑_{A ∈ 𝒬} μ(A) log μ(A)`, the
   Shannon entropy `H_μ(𝒬)`.
 * `integral_condMeas_ae_eq_condExp`: `∫ f dμ_x^ξ = E_μ(f | \widehat{ξ})(x)` for `f ∈ L¹(μ)` and
-  `μ`-almost every `x` (tex lines 1758 to 1762).
+  `μ`-almost every `x` (tex lines 1681 to 1685).
 * `twoSetPartition`, `condMeas_twoSetPartition_eq_cond`: the normalised restriction `μ_Ξ` agrees
   with the conditional measure for the partition `{Ξ, Ξ^c}` at `μ`-almost every point of `Ξ`
-  (tex lines 1765 to 1770).
+  (tex lines 1688 to 1692).
 * `blockPartition`, `isCountablePartition_blockPartition`,
   `blockEntropy_eq_toReal_condEntropyPart`: the block entropy `H_μ(𝒫_0^{n-1})` of the library is
   the Shannon entropy of the countable partition into cylinders of length `n`.
@@ -60,7 +60,7 @@ section Partition
 
 variable [MeasurableSpace Ω]
 
-/-- A countable Borel partition `𝒬` of `Ω` (`sec:conditional`, tex line 1729): a countable family
+/-- A countable Borel partition `𝒬` of `Ω` (`sec:conditional`, tex line 1652): a countable family
 of pairwise disjoint Borel sets whose union is `Ω`. -/
 structure IsCountablePartition (Q : Set (Set Ω)) : Prop where
   countable : Q.Countable
@@ -102,11 +102,11 @@ noncomputable def condProbFn (μ : Measure Ω) (A : Set Ω) : Ω → ℝ :=
   μ[A.indicator (fun _ => (1 : ℝ)) | 𝒜]
 
 /-- The conditional information `I_μ(𝒬 | 𝒜) = -∑_{A ∈ 𝒬} 1_A log E_μ(1_A | 𝒜)` of a countable
-partition `𝒬` given a sub-`σ`-algebra `𝒜` (`sec:conditional`, tex lines 1729 to 1734). -/
+partition `𝒬` given a sub-`σ`-algebra `𝒜` (`sec:conditional`, tex lines 1652 to 1657). -/
 noncomputable def condInfoPart (μ : Measure Ω) (Q : Set (Set Ω)) (x : Ω) : ℝ :=
   -∑' A : Q, (A : Set Ω).indicator (fun y => Real.log (condProbFn 𝒜 μ A y)) x
 
-/-- The conditional entropy `H_μ(𝒬 | 𝒜) = ∫ I_μ(𝒬 | 𝒜) dμ` (`sec:conditional`, tex lines 1735 to
+/-- The conditional entropy `H_μ(𝒬 | 𝒜) = ∫ I_μ(𝒬 | 𝒜) dμ` (`sec:conditional`, tex lines 1658 to
 1739), with values in `[0, ∞]`. -/
 noncomputable def condEntropyPart (μ : Measure Ω) (Q : Set (Set Ω)) : ℝ≥0∞ :=
   ∫⁻ x, ENNReal.ofReal (condInfoPart 𝒜 μ Q x) ∂μ
@@ -123,7 +123,7 @@ end Information
 
 variable [mΩ : MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
 
-/-- The trivial `σ`-algebra `𝒩 = {A ∈ ℬ : μ(A) ∈ {0, 1}}` of tex line 1728. -/
+/-- The trivial `σ`-algebra `𝒩 = {A ∈ ℬ : μ(A) ∈ {0, 1}}` of tex line 1651. -/
 @[implicit_reducible]
 def trivialSigma : MeasurableSpace Ω where
   MeasurableSet' A := MeasurableSet A ∧ (μ A = 0 ∨ μ A = 1)
@@ -234,7 +234,7 @@ theorem condMeas_real_ae_eq_condExp (μ : Measure Ω) [IsFiniteMeasure μ] (ξ :
 
 omit [StandardBorelSpace Ω] in
 open Classical in
-/-- The partition `{Ξ, Ξ^c}` of tex line 1769, as an atom map. -/
+/-- The partition `{Ξ, Ξ^c}` of tex line 1692, as an atom map. -/
 noncomputable def twoSetPartition (Ξ : Set Ω) (x : Ω) : Set Ω := if x ∈ Ξ then Ξ else Ξᶜ
 
 omit [StandardBorelSpace Ω] in
@@ -381,7 +381,7 @@ theorem condEntropy_eq_toReal_condEntropyPart (μ : Measure (ℤ → α)) [IsPro
   exact lintegral_congr_ae ((condInfo_ae_eq_condInfoPart μ ξ).mono fun x hx =>
     congrArg ENNReal.ofReal hx)
 
-/-- The partition `𝒫_0^{n-1}` of `Σ` into the cylinders of length `n` (tex lines 1880 to
+/-- The partition `𝒫_0^{n-1}` of `Σ` into the cylinders of length `n` (tex lines 1801 to
 1884). -/
 def blockPartition (α : Type*) (n : ℕ) : Set (Set (ℤ → α)) :=
   range (BoxLike.cylinder (n := n) (α := α))
@@ -419,7 +419,7 @@ theorem isCountablePartition_blockPartition (n : ℕ) :
 
 /-- The library's block entropy is the Shannon entropy `H_μ(𝒫_0^{n-1}) = H_μ(𝒫_0^{n-1} | 𝒩)` of
 the partition into cylinders of length `n`, the conditional entropy given the trivial
-`σ`-algebra (tex lines 1740 to 1746 and 1880 to 1884). -/
+`σ`-algebra (tex lines 1663 to 1669 and 1880 to 1884). -/
 theorem blockEntropy_eq_toReal_condEntropyPart (μ : Measure (ℤ → α)) [IsProbabilityMeasure μ]
     (n : ℕ) :
     blockEntropy μ n = (condEntropyPart (trivialSigma μ) μ (blockPartition α n)).toReal := by

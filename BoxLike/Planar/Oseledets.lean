@@ -3,7 +3,7 @@ module
 /-
 The Oseledets filtration of `sec:lyapunov_exponents` for an arbitrary tuple of invertible planar
 matrices, in the form `eq:V_lyapunov` that the article uses to define the partitions of
-`sec:entropies` (tex lines 1585 to 1607). For `𝐢 ∈ Σ` and `n ∈ ℕ` let
+`sec:entropies` (tex lines 1508 to 1530). For `𝐢 ∈ Σ` and `n ∈ ℕ` let
 `M_n(𝐢) = A_{i_{-n}} ⋯ A_{i_{-1}}`. For two numbers `l_2 < l_1`, standing for
 `λ_2(𝖠, μ) < λ_1(𝖠, μ)`, a point `𝐢` is regular when there is a line `V_𝐢^1` such that
 `n⁻¹ log |M_n(𝐢) v| → l_2` for `v ∈ V_𝐢^1 ∖ {0}` and `→ l_1` for `v ∉ V_𝐢^1`: these are the
@@ -12,7 +12,7 @@ from the growth characterisation. The regular points form the largest set on whi
 (V3) hold; it is invariant, Borel and saturated with respect to the past. On it,
 `V_𝐢^1 = {0} ∪ {v ≠ 0 : lim_n n⁻¹ log |M_n(𝐢) v| ≤ l_2}` is `eq:V_lyapunov`. That this set has
 full measure for an ergodic `μ` with `λ_2 < λ_1` is Oseledets' theorem (Oseledec 1968,
-cited at tex line 1585), which Mathlib does not contain; the library proves it for every
+cited at tex line 1508), which Mathlib does not contain; the library proves it for every
 invertible planar tuple in `BoxLike/Planar/OseledetsTheorem.lean`
 (`MatrixTuple.measure_regularSet_compl_of_ergodic`), and the box-like case also in
 `BoxLike/SigmaMeasure.lean`. The statements here are about matrices only: no contraction is
@@ -364,7 +364,7 @@ def IsRegular (l₁ l₂ : ℝ) (x : ℤ → ι) : Prop := ∃ u, IsRegularWith 
 
 variable (A) in
 /-- The set of regular points: the largest set on which the Oseledets properties (V1) to (V3) of
-`sec:lyapunov_exponents` hold (tex lines 1585 to 1600), (V1) being `image_slowLine`. With
+`sec:lyapunov_exponents` hold (tex lines 1508 to 1523), (V1) being `image_slowLine`. With
 `l_i = λ_i(𝖠, μ)` this is the set `Σ'`. -/
 def regularSet (l₁ l₂ : ℝ) : Set (ℤ → ι) := {x | IsRegular (A := A) l₁ l₂ x}
 
@@ -421,7 +421,7 @@ theorem isRegular_congr {x y : ℤ → ι} (h : SamePast x y) {l₁ l₂ : ℝ} 
     IsRegular (A := A) l₁ l₂ x ↔ IsRegular (A := A) l₁ l₂ y := by
   simp only [IsRegular, isRegularWith_congr h]
 
-/-- `Σ'` is saturated with respect to the past (`sec:lyapunov_exponents`, tex lines 1617 to
+/-- `Σ'` is saturated with respect to the past (`sec:lyapunov_exponents`, tex lines 1540 to
 1618): it contains every sequence sharing the past of one of its elements. -/
 theorem mem_regularSet_of_samePast {x y : ℤ → ι} (h : SamePast x y) {l₁ l₂ : ℝ}
     (hx : x ∈ regularSet A l₁ l₂) : y ∈ regularSet A l₁ l₂ :=
@@ -573,7 +573,7 @@ theorem image_slowLine (hA : ∀ i, (A i).det ≠ 0) (l₂ : ℝ) (x : ℤ → �
     refine ⟨(A (x (-1)))⁻¹ *ᵥ w, (key _).2 ?_, mulVec_inv_mulVec (hA _) w⟩
     rwa [mulVec_inv_mulVec (hA _)]
 
-/-- `σ(Σ') = Σ'` (`sec:lyapunov_exponents`, tex line 1598): regularity is invariant under the
+/-- `σ(Σ') = Σ'` (`sec:lyapunov_exponents`, tex line 1521): regularity is invariant under the
 shift. This uses the invertibility of the matrices. -/
 theorem shift_mem_regularSet_iff (hA : ∀ i, (A i).det ≠ 0) (l₁ l₂ : ℝ) (x : ℤ → ι) :
     shift 1 x ∈ regularSet A l₁ l₂ ↔ x ∈ regularSet A l₁ l₂ := by
@@ -759,7 +759,7 @@ theorem mem_angleGraph_iff (hA : ∀ i, (A i).det ≠ 0) {l₁ l₂ : ℝ} (hlt 
     rw [← heq]
     exact ⟨(slowAngle_spec hreg).1, (slowAngle_spec hreg).2, he⟩
 
-/-- `Σ'` is Borel (`sec:lyapunov_exponents`, tex line 1598), by the Lusin–Souslin theorem: it is
+/-- `Σ'` is Borel (`sec:lyapunov_exponents`, tex line 1521), by the Lusin–Souslin theorem: it is
 the injective projection of the Borel set `angleGraph`. -/
 theorem measurableSet_regularSet (hA : ∀ i, (A i).det ≠ 0) {l₁ l₂ : ℝ} (hlt : l₂ < l₁) :
     MeasurableSet (regularSet A l₁ l₂) := by

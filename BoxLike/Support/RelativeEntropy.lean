@@ -2,7 +2,7 @@ module
 
 /-
 Relative entropy of invariant measures on the two-sided full shift, for the uniqueness and the
-Gibbs bounds of `thm:irred_eq_state` (tex lines 2225 to 2234) for box-like tuples with
+Gibbs bounds of `thm:irred_eq_state` (tex lines 2113 to 2122) for box-like tuples with
 rotations. The article quotes the proposition from Feng–Käenmäki; this module supplies the
 measure-theoretic step of the proof that the library gives for tuples with rotations.
 
@@ -43,7 +43,7 @@ variable {α : Type*} [Fintype α] [MeasurableSpace α] [MeasurableSingletonClas
 
 /-- The relative entropy `D_n(μ ‖ ν) = ∑_{|w| = n} μ([w]) log(μ([w]) / ν([w]))` of the
 partitions of `ℤ → α` into the cylinders of length `n`, the quantity bounded in the proof of
-`thm:irred_eq_state` for tuples with rotations (tex lines 2225 to 2234). -/
+`thm:irred_eq_state` for tuples with rotations (tex lines 2113 to 2122). -/
 noncomputable def blockRelEntropy (μ ν : Measure (ℤ → α)) (n : ℕ) : ℝ :=
   ∑ w : Fin n → α, μ.real (cylinder w) * Real.log (μ.real (cylinder w) / ν.real (cylinder w))
 
@@ -132,7 +132,7 @@ theorem mul_measureReal_window_le [IsProbabilityMeasure μ] [IsProbabilityMeasur
   nlinarith [Real.exp_pos t]
 
 /-- Bounded relative entropy implies absolute continuity, the measure-theoretic step of the proof
-of `thm:irred_eq_state` for tuples with rotations (tex lines 2225 to 2234): for invariant
+of `thm:irred_eq_state` for tuples with rotations (tex lines 2113 to 2122): for invariant
 probability measures `μ`, `ν` on `ℤ → α` with `ν([w]) > 0` for every word of positive length
 and `D_n(μ ‖ ν) ≤ B` for every `n ≥ 1`, `μ ≪ ν`. A Borel set `A` with `ν(A) = 0 < μ(A) = a` is
 approximated in `μ + ν` by a set `E` determined by finitely many coordinates, with

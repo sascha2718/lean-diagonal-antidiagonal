@@ -2,7 +2,7 @@ module
 
 /-
 `prop:ssc_no_overlap_not_pesc` of `sec:exponential_separation` and the paragraph after its
-proof (tex lines 1415 to 1537): a system `Φ = (φ_1, φ_2, φ_3, φ_4)` with three diagonal maps
+proof (tex lines 1340 to 1460): a system `Φ = (φ_1, φ_2, φ_3, φ_4)` with three diagonal maps
 and one anti-diagonal map that is proximal and irreducible but not strongly irreducible,
 satisfies the strong separation condition, whose projective system generates a free semigroup,
 and that fails the projective exponential separation condition. The algebraic part of the proof
@@ -16,7 +16,7 @@ General statements, in the namespace `BoxLike.System`:
 * `System.RatioLowerBound.le_dist_phi`, `System.RatioLowerBound.le_dist_phiWord`,
   `System.StrongSeparation.exists_le_dist`, `System.minSingular`,
   `System.StrongSeparation.exists_le_dist_phiWord`: under strong separation distinct words of
-  length `n` satisfy `dist(φ_𝐢(X), φ_𝐣(X)) ≥ δ r^{n-1}` (tex lines 1528 to 1534).
+  length `n` satisfy `dist(φ_𝐢(X), φ_𝐣(X)) ≥ δ r^{n-1}` (tex lines 1453 to 1459).
 
 The example, in the namespace `BoxLike.NoOverlap`:
 
@@ -35,7 +35,7 @@ The example, in the namespace `BoxLike.NoOverlap`:
 * `Params.gWord_firstAxis_conj`, `Params.diagGap_eq_homGap`, `Params.not_projExpSeparation`:
   `Δ_n^{diag} = Δ_n^{λ,t}`, and the failure of projective exponential separation.
 * `Params.sys_gDeriv`, `Params.sys_gWord_zero`, `Params.freeProjective`: freeness.
-* `exists_params`: parameters in the box of tex lines 1430 to 1438, algebraically independent
+* `exists_params`: parameters in the box of tex lines 1355 to 1363, algebraically independent
   over `ℚ(λ, t)`.
 * `exists_system_of_homFree`, `ssc_no_overlap_not_pesc`: the proposition, from the properties
   of `(λ, t)` that the proof uses and from `BaranyKaenmakiPair`.
@@ -65,7 +65,7 @@ variable {ι : Type*} (S : System ι)
 /-- The maps of the projective system `Ψ` generate a free semigroup, as in
 `prop:ssc_no_overlap_not_pesc`: distinct finite words over the alphabet `ι × ZMod 2` give
 distinct maps `g_𝐣`. All words are meant, not only the admissible words of `Σ_Z`: the proof
-takes `𝐢 ≠ 𝐣 ∈ {1, …, 8}^*` (tex line 1486). The empty word is included; this changes nothing,
+takes `𝐢 ≠ 𝐣 ∈ {1, …, 8}^*` (tex line 1411). The empty word is included; this changes nothing,
 since `g_𝐣` is a strict contraction for every non-empty word. -/
 def FreeProjective : Prop := Function.Injective S.gWord
 
@@ -112,7 +112,7 @@ theorem phiWord_mem_attractor [Finite ι] (w : List ι) {x : ℝ × ℝ} (hx : x
   | cons i w ih => exact S.image_attractor_subset i ⟨_, ih, rfl⟩
 
 variable {S} in
-/-- The common-prefix argument of tex lines 1528 to 1534. Let `δ` be a lower bound for the
+/-- The common-prefix argument of tex lines 1453 to 1459. Let `δ` be a lower bound for the
 distances between the first-level pieces `φ_i(X)` and let every `|a_i|`, `|b_i|` be at least
 `ρ`. Then distinct words `𝐢, 𝐣` of length `n` satisfy
 `dist(φ_𝐢(x), φ_𝐣(y)) ≥ δ ρ^{n-1}` for all `x, y ∈ X`: the common prefix has length at most
@@ -156,7 +156,7 @@ theorem RatioLowerBound.le_dist_phiWord [Finite ι] {δ ρ : ℝ} (hρ : S.Ratio
         exact mul_le_of_le_one_right hδ (pow_le_one₀ hρ.1.le hρ1)
 
 /-- Under the strong separation condition the first-level pieces are at positive mutual
-distance: `δ = min_{i ≠ j} dist(φ_i(X), φ_j(X)) > 0` (tex line 1529). -/
+distance: `δ = min_{i ≠ j} dist(φ_i(X), φ_j(X)) > 0` (tex line 1454). -/
 theorem StrongSeparation.exists_le_dist [Finite ι] (h : S.StrongSeparation) :
     ∃ δ : ℝ, 0 < δ ∧ ∀ i j, i ≠ j → ∀ x ∈ S.attractor, ∀ y ∈ S.attractor,
       δ ≤ dist (S.phi i x) (S.phi j y) := by
@@ -184,7 +184,7 @@ theorem StrongSeparation.exists_le_dist [Finite ι] (h : S.StrongSeparation) :
     self_subset_thickening (hδpos _) _ ⟨y, hy, rfl⟩
   exact Set.disjoint_left.1 (hδdisj (i, j) hij) h1 h2
 
-/-- The number `r = min_i α_2(A_i)` of tex line 1530; the smaller singular value of `A_i` is
+/-- The number `r = min_i α_2(A_i)` of tex line 1455; the smaller singular value of `A_i` is
 `α_2(A_i) = min{|a_i|, |b_i|}`. -/
 noncomputable def minSingular [Fintype ι] [Nonempty ι] : ℝ :=
   Finset.univ.inf' Finset.univ_nonempty fun i => min |S.a i| |S.b i|
@@ -202,7 +202,7 @@ theorem ratioLowerBound_minSingular [Fintype ι] [Nonempty ι] :
     · exact h.trans (min_le_left _ _)
     · exact h.trans (min_le_right _ _)
 
-/-- The exponential lower bound of tex lines 1528 to 1534: under the strong separation
+/-- The exponential lower bound of tex lines 1453 to 1459: under the strong separation
 condition there is `δ > 0` such that distinct words `𝐢, 𝐣` of length `n` satisfy
 `dist(φ_𝐢(X), φ_𝐣(X)) ≥ δ r^{n-1}` with `r = min_i α_2(A_i)`. The distance of the two sets is
 written through their points. -/
@@ -238,7 +238,7 @@ theorem homGap_zero (lam t : ℝ) : homGap lam t 0 = ⊤ := by
   exact absurd ((List.length_eq_zero_iff.1 hw).trans (List.length_eq_zero_iff.1 hw').symm) hne
 
 /-- A stronger form of the theorem of Bárány and Käenmäki, retained in the library; the proof of
-`prop:ssc_no_overlap_not_pesc` (tex lines 1424 to 1429) uses Theorem 2.1 as the source states it,
+`prop:ssc_no_overlap_not_pesc` (tex lines 1349 to 1354) uses Theorem 2.1 as the source states it,
 `BaranyKaenmakiTheorem`. The form: there are `0 < λ < 1/3` transcendental,
 `0 < t < λ/(1-λ)` and `C_0 > 0` such that the homogeneous system `(λx, λx + t, λx + 1)`
 generates a free semigroup and `Δ_n^{λ,t} ≤ C_0 exp(-n²)` for every `n ≥ 1`.
@@ -280,7 +280,7 @@ def BaranyKaenmakiTheorem : Prop :=
         ∀ n : ℕ, 1 ≤ n → homGap p.1 p.2 n < ENNReal.ofReal (η n)}.Countable
 
 /-- `C_0 exp(-n²)` lies eventually below every exponential `c^n`, so that
-`n⁻¹ log Δ_n^{diag} → -∞` (tex lines 1469 to 1472). -/
+`n⁻¹ log Δ_n^{diag} → -∞` (tex lines 1394 to 1397). -/
 theorem exists_forall_mul_exp_lt {C₀ c : ℝ} (hC : 0 < C₀) (hc : 0 < c) :
     ∃ n₀ : ℕ, ∀ n ≥ n₀, C₀ * Real.exp (-(n : ℝ) ^ 2) < c ^ n := by
   refine ⟨⌈|Real.log C₀| + |Real.log c| + 1⌉₊, fun n hn => ?_⟩
@@ -331,23 +331,23 @@ theorem tendsto_log_exp_neg_sq :
 
 /-! ### The system -/
 
-/-- The lower end points of the intervals of tex lines 1430 to 1438 for the parameters
+/-- The lower end points of the intervals of tex lines 1355 to 1363 for the parameters
 `(r_1, r_2, r_3, r_4, r_5, q, u, v, s_1, s_2, s_3)`. -/
 noncomputable def paramLo : Fin 11 → ℝ :=
   ![1 / 20, 1 / 20, 1 / 20, 1 / 10, 1 / 25, 1, 3 / 2, 3 / 4, 1 / 25, 1 / 4, 1 / 2]
 
-/-- The upper end points of the intervals of tex lines 1430 to 1438 for the parameters
+/-- The upper end points of the intervals of tex lines 1355 to 1363 for the parameters
 `(r_1, r_2, r_3, r_4, r_5, q, u, v, s_1, s_2, s_3)`. -/
 noncomputable def paramHi : Fin 11 → ℝ :=
   ![1 / 10, 1 / 10, 1 / 10, 1 / 5, 1 / 20, 4 / 3, 8 / 5, 19 / 25, 1 / 20, 3 / 10, 11 / 20]
 
-/-- The intervals of tex lines 1430 to 1438 are non-empty. -/
+/-- The intervals of tex lines 1355 to 1363 are non-empty. -/
 theorem paramLo_lt_paramHi (k : Fin 11) : paramLo k < paramHi k := by
   fin_cases k <;> norm_num [paramLo, paramHi]
 
 /-- The parameters of the system of `prop:ssc_no_overlap_not_pesc`: a pair `(λ, t)` with
 `0 < λ < 1/3` and `0 < t < λ/(1-λ)`, and a tuple
-`θ = (r_1, r_2, r_3, r_4, r_5, q, u, v, s_1, s_2, s_3)` in the open box of tex lines 1430 to
+`θ = (r_1, r_2, r_3, r_4, r_5, q, u, v, s_1, s_2, s_3)` in the open box of tex lines 1355 to
 1438. Algebraic independence is a separate hypothesis of the statements that use it. -/
 structure Params where
   /-- The common first-coordinate ratio `λ` of the three diagonal maps. -/
@@ -439,7 +439,7 @@ theorem t_lt_half : P.t < 1 / 2 := by
   rw [div_lt_iff₀ (by linarith [P.lam_lt])]
   linarith [P.lam_lt]
 
-/-- The system `Φ = (φ_1, φ_2, φ_3, φ_4)` of `prop:ssc_no_overlap_not_pesc` (tex lines 1443 to
+/-- The system `Φ = (φ_1, φ_2, φ_3, φ_4)` of `prop:ssc_no_overlap_not_pesc` (tex lines 1368 to
 1457), over the alphabet `Fin 4`: the indices `0, 1, 2` are the diagonal maps `φ_1, φ_2, φ_3`
 with `A_i = diag(λ, r_i)`, and the index `3` is the anti-diagonal map `φ_4`. -/
 noncomputable def sys : System (Fin 4) where
@@ -498,7 +498,7 @@ theorem sys_o : P.sys.o = ![0, 0, 0, 1] := rfl
 /-- The system is box-like with rotations: `φ_1` is diagonal and `φ_4` is anti-diagonal. -/
 theorem withRotations : P.sys.WithRotations := ⟨⟨0, rfl⟩, ⟨3, rfl⟩⟩
 
-/-- All `a_i, b_i` lie in `(0, 1)` (tex line 1457). -/
+/-- All `a_i, b_i` lie in `(0, 1)` (tex line 1382). -/
 theorem sys_ratio_mem (p : Fin 4 × ZMod 2) : P.sys.ratio p ∈ Set.Ioo (0 : ℝ) 1 := by
   have := P.lam_pos
   have := P.lam_lt
@@ -511,7 +511,7 @@ theorem sys_ratio_mem (p : Fin 4 × ZMod 2) : P.sys.ratio p ∈ Set.Ioo (0 : ℝ
   fin_cases i <;> rcases zmod_two_cases c with rfl | rfl <;>
     simp [System.ratio, sys] <;> constructor <;> linarith
 
-/-- `|a_1| = λ ≠ r_1 = |b_1|` with `i_0 = 1 ≤ ℓ` (tex lines 1459 to 1460). The inequality
+/-- `|a_1| = λ ≠ r_1 = |b_1|` with `i_0 = 1 ≤ ℓ` (tex lines 1384 to 1385). The inequality
 `λ ≠ r_1` follows from the algebraic independence, see `lam_ne_r₁`. -/
 theorem hasProximalDiagonal (h : P.lam ≠ P.r₁) : P.sys.HasProximalDiagonal := by
   refine ⟨0, rfl, ?_⟩
@@ -519,17 +519,17 @@ theorem hasProximalDiagonal (h : P.lam ≠ P.r₁) : P.sys.HasProximalDiagonal :
   rwa [abs_of_pos P.lam_pos, abs_of_pos (by linarith [P.r₁_mem.1])]
 
 /-- `A_1` has the two real eigenvalues `λ, r_1` of distinct modulus, so the tuple is proximal
-(tex lines 1460 to 1461). -/
+(tex lines 1385 to 1386). -/
 theorem proximal (h : P.lam ≠ P.r₁) : P.sys.Proximal := (P.hasProximalDiagonal h).proximal
 
 /-- The only lines invariant under `A_1` are the coordinate axes, which `A_4` interchanges, so
-the tuple is irreducible (tex lines 1462 to 1463). -/
+the tuple is irreducible (tex lines 1387 to 1388). -/
 theorem irreducible (h : P.lam ≠ P.r₁) : P.sys.Irreducible :=
   irreducible_of_hasProximalDiagonal P.withRotations (P.hasProximalDiagonal h)
 
 /-! ### Strong separation -/
 
-/-- The rectangle `R = [0,4] × [0,1]` of tex line 1444. -/
+/-- The rectangle `R = [0,4] × [0,1]` of tex line 1369. -/
 def rect : Set (ℝ × ℝ) := Set.Icc 0 4 ×ˢ Set.Icc 0 1
 
 /-- The lower ends of four pairwise disjoint open intervals that contain the `y`-bands
@@ -548,7 +548,7 @@ theorem bandHi_lt_bandLo {i j : Fin 4} (h : i < j) : bandHi i < bandLo j := by
     | exact absurd h (by decide)
     | norm_num [bandLo, bandHi]
 
-/-- The images `φ_i(R)` are contained in `R` (tex line 1473). -/
+/-- The images `φ_i(R)` are contained in `R` (tex line 1398). -/
 theorem phi_mem_rect (i : Fin 4) {z : ℝ × ℝ} (hz : z ∈ rect) : P.sys.phi i z ∈ rect := by
   obtain ⟨⟨hx0, hx4⟩, ⟨hy0, hy1⟩⟩ := hz
   have hlam := P.lam_pos
@@ -591,7 +591,7 @@ theorem phi_mem_rect (i : Fin 4) {z : ℝ × ℝ} (hz : z ∈ rect) : P.sys.phi 
     refine ⟨⟨?_, ?_⟩, ?_, ?_⟩ <;> linarith
 
 /-- The second coordinates of `φ_i(R)` lie in the `i`-th of four pairwise disjoint intervals
-(tex lines 1473 to 1476). -/
+(tex lines 1398 to 1401). -/
 theorem snd_phi_mem_band (i : Fin 4) {z : ℝ × ℝ} (hz : z ∈ rect) :
     (P.sys.phi i z).2 ∈ Set.Ioo (bandLo i) (bandHi i) := by
   obtain ⟨⟨hx0, hx4⟩, ⟨hy0, hy1⟩⟩ := hz
@@ -634,7 +634,7 @@ theorem phi_ne_of_lt {i j : Fin 4} (h : i < j) {z z' : ℝ × ℝ} (hz : z ∈ r
   rw [he] at h1
   linarith [bandHi_lt_bandLo h]
 
-/-- The strong separation condition holds (tex lines 1473 to 1480). -/
+/-- The strong separation condition holds (tex lines 1398 to 1405). -/
 theorem strongSeparation : P.sys.StrongSeparation := by
   refine P.sys.strongSeparation_of_invariant (L := rect)
     (isCompact_Icc.prod isCompact_Icc) ⟨(0, 0), by simp [rect]⟩ ?_ ?_
@@ -648,7 +648,7 @@ theorem strongSeparation : P.sys.StrongSeparation := by
     · exact P.phi_ne_of_lt h hz' hz he
 
 /-- The `x`-images `[q, q + 4λ]` and `[q + t, q + t + 4λ]` of `φ_1` and `φ_2` overlap, since
-`t < λ/(1-λ) < 4λ` (tex lines 1477 to 1478): the point `q + t` lies in both. -/
+`t < λ/(1-λ) < 4λ` (tex lines 1402 to 1403): the point `q + t` lies in both. -/
 theorem fst_phi_overlap :
     ∃ z ∈ rect, ∃ z' ∈ rect, (P.sys.phi 0 z).1 = (P.sys.phi 1 z').1 := by
   have hlam := P.lam_pos
@@ -676,13 +676,13 @@ theorem sys_a_of_mem : ∀ i ∈ lamSet, P.sys.a i = P.lam := by
   fin_cases i <;> simp [sys]
 
 /-- The induced first-coordinate maps `g_1(x) = λx + q`, `g_2(x) = λx + q + t` and
-`g_3(x) = λx + q + 1` (tex lines 1466 to 1467). -/
+`g_3(x) = λx + q + 1` (tex lines 1391 to 1392). -/
 theorem sys_g_castSucc (i : Fin 3) (y : ℝ) :
     P.sys.g (i.castSucc, 0) y = P.lam * y + (P.q + homTrans P.t i) := by
   fin_cases i <;> simp [System.g, System.trans, sys, homTrans]
 
 /-- The maps `g_1, g_2, g_3` are conjugate to the homogeneous system by the translation by
-`q/(1-λ)` (tex lines 1466 to 1468). -/
+`q/(1-λ)` (tex lines 1391 to 1393). -/
 theorem gWord_firstAxis_conj (w : List (Fin 3)) (x : ℝ) :
     P.sys.gWord (firstAxis (w.map Fin.castSucc)) (x + P.q / (1 - P.lam)) =
       homWord P.lam P.t w x + P.q / (1 - P.lam) := by
@@ -717,7 +717,7 @@ theorem exists_map_castSucc {w : List (Fin 4)} (hw : ∀ i ∈ w, i ∈ lamSet) 
     obtain ⟨w₃, rfl⟩ := ih fun k hk => hw k (by simp [hk])
     exact ⟨j :: w₃, rfl⟩
 
-/-- The minimal gap `Δ_n^{diag}` over `{1, 2, 3}^n` equals `Δ_n^{λ,t}` (tex lines 1468 to
+/-- The minimal gap `Δ_n^{diag}` over `{1, 2, 3}^n` equals `Δ_n^{λ,t}` (tex lines 1393 to
 1469). -/
 theorem diagGap_eq_homGap (n : ℕ) : P.sys.diagGap lamSet n = homGap P.lam P.t n := by
   have hinj : Function.Injective (List.map (Fin.castSucc : Fin 3 → Fin 4)) :=
@@ -739,7 +739,7 @@ theorem diagGap_eq_homGap (n : ℕ) : P.sys.diagGap lamSet n = homGap P.lam P.t 
     exact iInf_le_of_le w₃ <| iInf_le_of_le w₃' <| iInf_le_of_le hw <| iInf_le_of_le hw' <|
       iInf_le _ fun h => hne (by rw [h])
 
-/-- The projective exponential separation condition fails (tex lines 1513 to 1519), by
+/-- The projective exponential separation condition fails (tex lines 1438 to 1444), by
 `lem:proj_gap_dominated` with `m = 3`, when the gap of the homogeneous system lies eventually
 below every exponential. -/
 theorem not_projExpSeparation
@@ -758,7 +758,7 @@ theorem sys_ratio (p : Fin 4 × ZMod 2) : P.sys.ratio p = genRatio P.lam P.θ p 
   fin_cases i <;> rcases zmod_two_cases c with rfl | rfl <;> simp [System.ratio, sys, genRatio]
 
 /-- The translations of the projective system are the functions `genTrans` of the parameters
-(tex lines 1484 to 1485). -/
+(tex lines 1409 to 1410). -/
 theorem sys_trans (p : Fin 4 × ZMod 2) : P.sys.trans p = genTrans P.t P.θ p := by
   obtain ⟨i, c⟩ := p
   fin_cases i <;> rcases zmod_two_cases c with rfl | rfl <;> simp [System.trans, sys, genTrans]
@@ -777,7 +777,7 @@ theorem sys_gWord_zero (u : List (Fin 4 × ZMod 2)) :
   | cons p u ih =>
     rw [gWord_cons, Function.comp_apply, System.g, ih, sys_ratio, sys_trans, genVal_cons]
 
-/-- The maps of the projective system `Ψ` generate a free semigroup (tex lines 1482 to 1511),
+/-- The maps of the projective system `Ψ` generate a free semigroup (tex lines 1407 to 1436),
 when the homogeneous system does and the parameters are algebraically independent over a
 subfield `K ∋ λ, t` of `ℝ`. -/
 theorem freeProjective {K : Subfield ℝ} (hlamK : P.lam ∈ K) (htK : P.t ∈ K)
@@ -789,7 +789,7 @@ theorem freeProjective {K : Subfield ℝ} (hlamK : P.lam ∈ K) (htK : P.t ∈ K
   exact eq_of_genDeriv_eq_of_genVal_eq P.lam_pos (by linarith [P.lam_lt]) hfree hlamK htK hx
     hD hV
 
-/-- `r_1` is transcendental over `K ∋ λ`, so `λ ≠ r_1` (tex lines 1459 to 1460). -/
+/-- `r_1` is transcendental over `K ∋ λ`, so `λ ≠ r_1` (tex lines 1384 to 1385). -/
 theorem lam_ne_r₁ {K : Subfield ℝ} (hlamK : P.lam ∈ K) (hx : AlgebraicIndependent K P.θ) :
     P.lam ≠ P.r₁ := by
   intro h
@@ -800,9 +800,9 @@ theorem lam_ne_r₁ {K : Subfield ℝ} (hlamK : P.lam ∈ K) (hx : AlgebraicInde
 
 end Params
 
-/-- The choice of the parameters in the proof of `prop:ssc_no_overlap_not_pesc` (tex lines 1429
+/-- The choice of the parameters in the proof of `prop:ssc_no_overlap_not_pesc` (tex lines 1354
 to 1443): for `0 < λ < 1/3` and `0 < t < λ/(1-λ)` there are `r_1, …, r_5, q, u, v, s_1, s_2, s_3`
-in the open intervals of tex lines 1430 to 1438, algebraically independent over `ℚ(λ, t)`, the
+in the open intervals of tex lines 1355 to 1363, algebraically independent over `ℚ(λ, t)`, the
 subfield of `ℝ` generated by `λ` and `t`. -/
 theorem exists_params {lam t : ℝ} (hlam0 : 0 < lam) (hlam1 : lam < 1 / 3) (ht0 : 0 < t)
     (ht1 : t < lam / (1 - lam)) :
@@ -814,7 +814,7 @@ theorem exists_params {lam t : ℝ} (hlam0 : 0 < lam) (hlam1 : lam < 1 / 3) (ht0
     (Subfield.closure ({lam, t} : Set ℝ)) 11 paramLo paramHi paramLo_lt_paramHi
   exact ⟨⟨lam, t, x, hlam0, hlam1, ht0, ht1, hmem⟩, rfl, rfl, hx⟩
 
-/-- The paragraph after `prop:ssc_no_overlap_not_pesc` (tex lines 1522 to 1525): the chosen
+/-- The paragraph after `prop:ssc_no_overlap_not_pesc` (tex lines 1447 to 1450): the chosen
 contraction ratios give `∑_i |det A_i| = λ(r_1 + r_2 + r_3) + r_4 r_5 < 11/100 < 1`. -/
 theorem Params.sum_abs_det_lt_one (P : Params) : ∑ i, |(P.sys.mat i).det| < 1 := by
   have h1 := P.r₁_mem
@@ -842,7 +842,7 @@ theorem Params.sum_abs_det_lt_one (P : Params) : ∑ i, |(P.sys.mat i).det| < 1 
 uses: `0 < λ < 1/3`, `0 < t < λ/(1-λ)`, the homogeneous system `(λx, λx + t, λx + 1)` generates
 a free semigroup, and its gap `Δ_n^{λ,t}` lies eventually below every exponential `c^n`. The
 transcendence of `λ` is not used. The parameters are chosen algebraically independent over
-`ℚ(λ, t)`, the subfield of `ℝ` generated by `λ` and `t`, in the box of tex lines 1430 to 1438.
+`ℚ(λ, t)`, the subfield of `ℝ` generated by `λ` and `t`, in the box of tex lines 1355 to 1363.
 
 The conclusions are: `N = 4` and `ℓ = 3`; the tuple is proximal and irreducible; it is not
 strongly irreducible, since the union of the coordinate axes is invariant under every `A_i`;
@@ -885,7 +885,7 @@ theorem ssc_no_overlap_not_pesc (h : BaranyKaenmakiPair) :
   exact exists_system_of_homFree hlam0 hlam1 ht0 ht1 hfree fun c hc =>
     homGap_lt_of_le_mul_exp hC hgap hc
 
-/-- The paragraph after `prop:ssc_no_overlap_not_pesc` (tex lines 1527 to 1537): exponential
+/-- The paragraph after `prop:ssc_no_overlap_not_pesc` (tex lines 1452 to 1460): exponential
 separation of the planar affine maps does not imply projective exponential separation. The
 system of the proposition satisfies the strong separation condition, hence
 `dist(φ_𝐢(X), φ_𝐣(X)) ≥ δ r^{n-1}` for distinct words of length `n`, with `δ > 0` and

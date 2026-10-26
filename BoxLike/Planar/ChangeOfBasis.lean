@@ -2,7 +2,7 @@ module
 
 /-
 Changes of basis for planar self-affine sets: the reduction of `sec:irreducibility` (tex lines
-777 to 789) and the remark after `thm:two-block-normalisation` (tex lines 2352 to 2353) that
+777 to 789) and the remark after `thm:two-block-normalisation` (tex lines 2233 to 2234) that
 invertible linear changes of coordinates `T` preserve the pressure, the Lyapunov exponents and
 the dimensions of planar sets and measures.
 
@@ -22,7 +22,7 @@ unit vectors; the unit length of the basis vectors makes the conjugated matrices
 * `LogComparable`, `LogComparable.tendsto`, `LogComparable.limsup_eq`, `LogComparable.liminf_eq`:
   comparable ball measures have the same pointwise dimensions.
 * `hasLocalDim_map_linMap_iff`, `upperLocalDim_map_linMap`, `lowerLocalDim_map_linMap`,
-  `isExactDim_map_linMap_iff`, `isDoubleDim_map_linMap_iff`, `upperPackingDim_map_linMap`,
+  `isExactDim_map_linMap_iff`, `hasLocalDimPair_map_linMap_iff`, `upperPackingDim_map_linMap`,
   `lowerHausdorffDim_map_linMap`, `upperHausdorffDim_map_linMap`: invariance of the dimensions
   of measures.
 * `condNum`, `norm_conj_le`, `norm_le_conj`, `svf_le_mul_of_norm_le`: `α_1(T⁻¹ B T)` and
@@ -48,7 +48,7 @@ unit vectors; the unit length of the basis vectors makes the conjugated matrices
 * `PlanarSystem.ConjBy.strongSeparation_iff`, `PlanarSystem.ConjBy.strongOpenSet_iff`: the
   separation conditions are preserved.
 * `PlanarSystem.ConjBy.map_proj`, `PlanarSystem.ConjBy.hasLocalDim_iff`,
-  `PlanarSystem.ConjBy.isExactDim_iff`, `PlanarSystem.ConjBy.isDoubleDim_iff`,
+  `PlanarSystem.ConjBy.isExactDim_iff`, `PlanarSystem.ConjBy.hasLocalDimPair_iff`,
   `PlanarSystem.ConjBy.upperPackingDim_eq`, `PlanarSystem.ConjBy.lowerHausdorffDim_eq`,
   `PlanarSystem.ConjBy.upperHausdorffDim_eq`: the projected measure is `T⁻¹_*(π_*μ)`, with the
   same pointwise dimensions.
@@ -64,8 +64,8 @@ unit vectors; the unit length of the basis vectors makes the conjugated matrices
   `norm_conj_le_of_isUnitBasis`, `exists_isUnitBasis`: bases of unit vectors.
 * `exists_eq_boxMat_of_conj_diag`, `boxType_eq_of_conj`: for a proximal tuple the type,
   diagonal or anti-diagonal, of each matrix does not depend on the basis.
-* `irreducible_not_stronglyIrreducible_iff_unitBasis`: tex lines 777 to 779.
-* `PlanarSystem.exists_system_of_irreducible`: tex lines 777 to 789 for a planar system.
+* `irreducible_not_stronglyIrreducible_iff_unitBasis`: tex lines 696 to 698.
+* `PlanarSystem.exists_system_of_irreducible`: tex lines 696 to 708 for a planar system.
 -/
 public import BoxLike.Aligned.BoxLikeSA
 public import BoxLike.Classification
@@ -225,7 +225,7 @@ theorem image_linMap_inv_image (hT : T.det ≠ 0) (E : Set (ℝ × ℝ)) :
   rw [image_image]
   simp [linMap_inv_linMap hT]
 
-/-- An invertible linear map preserves the Hausdorff dimension (tex lines 2352 to 2353). -/
+/-- An invertible linear map preserves the Hausdorff dimension (tex lines 2233 to 2234). -/
 theorem dimH_image_linMap (hT : T.det ≠ 0) (E : Set (ℝ × ℝ)) :
     dimH (linMap T '' E) = dimH E := by
   refine le_antisymm (lipschitzWith_linMap T).lipschitzOnWith.dimH_image_le ?_
@@ -478,7 +478,7 @@ theorem logComparable_map_linMap (hT : T.det ≠ 0) (z : ℝ × ℝ) :
     exact measureReal_mono (preimage_linMap_subset_closedBall hT z r)
 
 /-- The pointwise dimension is invariant under an invertible linear change of coordinates:
-`dimloc(T_*ν, T z) = dimloc(ν, z)` (tex lines 2352 to 2353). -/
+`dimloc(T_*ν, T z) = dimloc(ν, z)` (tex lines 2233 to 2234). -/
 theorem hasLocalDim_map_linMap_iff (hT : T.det ≠ 0) (z : ℝ × ℝ) (d : ℝ) :
     HasLocalDim (ν.map (linMap T)) (linMap T z) d ↔ HasLocalDim ν z d :=
   ⟨(logComparable_map_linMap hT z).symm.tendsto, (logComparable_map_linMap hT z).tendsto⟩
@@ -505,10 +505,11 @@ theorem isExactDim_map_linMap_iff (hT : T.det ≠ 0) (d : ℝ) :
   rw [IsExactDim, IsExactDim, ae_map_linMap hT, Filter.eventually_map]
   simp only [hasLocalDim_map_linMap_iff hT]
 
-/-- `T_*ν` is double-dimensional with values `d₁`, `d₂` exactly when `ν` is. -/
-theorem isDoubleDim_map_linMap_iff (hT : T.det ≠ 0) (d₁ d₂ : ℝ) :
-    IsDoubleDim (ν.map (linMap T)) d₁ d₂ ↔ IsDoubleDim ν d₁ d₂ := by
-  rw [IsDoubleDim, IsDoubleDim, ae_map_linMap hT, Filter.eventually_map]
+/-- The pointwise dimension of `T_*ν` is `d₁` or `d₂` almost everywhere exactly when that of
+`ν` is. -/
+theorem hasLocalDimPair_map_linMap_iff (hT : T.det ≠ 0) (d₁ d₂ : ℝ) :
+    HasLocalDimPair (ν.map (linMap T)) d₁ d₂ ↔ HasLocalDimPair ν d₁ d₂ := by
+  rw [HasLocalDimPair, HasLocalDimPair, ae_map_linMap hT, Filter.eventually_map]
   simp only [hasLocalDim_map_linMap_iff hT]
 
 /-- `\overline{dim}_p(T_*ν) = \overline{dim}_p(ν)`. -/
@@ -615,7 +616,7 @@ namespace MatrixTuple
 variable {ι : Type*}
 
 /-- The tuple `𝖠` in the basis given by the columns of `T`, `(T⁻¹ A_i T)_i`: the linear parts of
-the system `T⁻¹ ∘ φ_i ∘ T` (tex lines 777 to 789 and 2352 to 2353). -/
+the system `T⁻¹ ∘ φ_i ∘ T` (tex lines 696 to 708 and 2352 to 2353). -/
 noncomputable def conj (T : Matrix (Fin 2) (Fin 2) ℝ) (A : ι → Matrix (Fin 2) (Fin 2) ℝ) :
     ι → Matrix (Fin 2) (Fin 2) ℝ := fun i => T⁻¹ * A i * T
 
@@ -642,7 +643,7 @@ theorem conj_inv_conj (hT : T.det ≠ 0) (A : ι → Matrix (Fin 2) (Fin 2) ℝ)
 /-- The tuples `𝖠` and `𝖠'` have comparable singular values with constant `κ ≥ 1`: for every
 word, `|det A'_𝐢| = |det A_𝐢|` and `κ⁻¹ α_1(A_𝐢) ≤ α_1(A'_𝐢) ≤ κ α_1(A_𝐢)`. Then also
 `α_2 = |det| / α_1` are comparable. This is the relation between `𝖠` and `T⁻¹ 𝖠 T`
-(tex line 2352). -/
+(tex line 2233). -/
 def Comparable (A A' : ι → Matrix (Fin 2) (Fin 2) ℝ) (κ : ℝ) : Prop :=
   1 ≤ κ ∧ ∀ w : List ι, |(word A' w).det| = |(word A w).det| ∧ ‖word A' w‖ ≤ κ * ‖word A w‖ ∧
     ‖word A w‖ ≤ κ * ‖word A' w‖
@@ -793,7 +794,8 @@ end Measures
 /-- The Gibbs bounds of `thm:irred_eq_state` pass to a comparable tuple, with the constant
 multiplied by `κ`. -/
 theorem Comparable.hasGibbsBounds [Fintype ι] [MeasurableSpace ι] (h : Comparable A A' κ)
-    (hA : ∀ i, (A i).det ≠ 0) {s : ℝ} (hs : 0 ≤ s) {μ : Measure (ℤ → ι)} (hμ : HasGibbsBounds A s μ) :
+    (hA : ∀ i, (A i).det ≠ 0) {s : ℝ} (hs : 0 ≤ s) {μ : Measure (ℤ → ι)}
+    (hμ : HasGibbsBounds A s μ) :
     HasGibbsBounds A' s μ := by
   obtain ⟨C, hC, hb⟩ := hμ
   have hκ : 1 ≤ κ := h.1
@@ -895,7 +897,7 @@ def StrongOpenSet (P : PlanarSystem ι) : Prop :=
 
 /-- `Q` is the system `P` in the coordinates of the basis formed by the columns of the
 invertible matrix `T`: `φ^Q_i = T⁻¹ ∘ φ^P_i ∘ T`, that is `B_i = T⁻¹ A_i T` and `w_i = T⁻¹ v_i`
-(tex lines 777 to 789 and 2352 to 2353). -/
+(tex lines 696 to 708 and 2352 to 2353). -/
 structure ConjBy (T : Matrix (Fin 2) (Fin 2) ℝ) (P Q : PlanarSystem ι) : Prop where
   /-- The columns of `T` form a basis. -/
   det_ne_zero : T.det ≠ 0
@@ -1034,13 +1036,13 @@ theorem ConjBy.classification_iff (h : ConjBy T P Q) :
     MatrixTuple.tupleProximal_conj_iff h.det_ne_zero⟩
 
 /-- The linear parts in another basis have singular values comparable to those of `𝖠`, with the
-constant `‖T⁻¹‖ ‖T‖` (tex line 2352). -/
+constant `‖T⁻¹‖ ‖T‖` (tex line 2233). -/
 theorem ConjBy.comparable (h : ConjBy T P Q) :
     MatrixTuple.Comparable P.mat Q.mat (condNum T) := by
   rw [h.mat_eq]
   exact MatrixTuple.comparable_conj h.det_ne_zero P.mat
 
-/-- A change of basis preserves the pressure `P(𝖠, s)`, `s ≥ 0` (tex lines 2352 to 2353). -/
+/-- A change of basis preserves the pressure `P(𝖠, s)`, `s ≥ 0` (tex lines 2233 to 2234). -/
 theorem ConjBy.pressure_eq [Fintype ι] (h : ConjBy T P Q) {s : ℝ} (hs : 0 ≤ s) :
     MatrixTuple.pressure Q.mat s = MatrixTuple.pressure P.mat s :=
   h.comparable.pressure_eq P.det_ne_zero hs
@@ -1117,12 +1119,12 @@ theorem ConjBy.isExactDim_iff (h : ConjBy T P Q) (d : ℝ) :
   rw [h.map_proj]
   exact isExactDim_map_linMap_iff (det_inv_ne_zero h.det_ne_zero) d
 
-/-- A change of basis preserves double-dimensionality of the projected measure and its two
-values. -/
-theorem ConjBy.isDoubleDim_iff (h : ConjBy T P Q) (d₁ d₂ : ℝ) :
-    IsDoubleDim (μ.map Q.proj) d₁ d₂ ↔ IsDoubleDim (μ.map P.proj) d₁ d₂ := by
+/-- A change of basis preserves the two values `d₁`, `d₂` of the pointwise dimension of the
+projected measure. -/
+theorem ConjBy.hasLocalDimPair_iff (h : ConjBy T P Q) (d₁ d₂ : ℝ) :
+    HasLocalDimPair (μ.map Q.proj) d₁ d₂ ↔ HasLocalDimPair (μ.map P.proj) d₁ d₂ := by
   rw [h.map_proj]
-  exact isDoubleDim_map_linMap_iff (det_inv_ne_zero h.det_ne_zero) d₁ d₂
+  exact hasLocalDimPair_map_linMap_iff (det_inv_ne_zero h.det_ne_zero) d₁ d₂
 
 /-- A change of basis preserves the upper packing dimension of the projected measure. -/
 theorem ConjBy.upperPackingDim_eq (h : ConjBy T P Q) :
@@ -1169,7 +1171,7 @@ variable {S} {T : Matrix (Fin 2) (Fin 2) ℝ} {P : PlanarSystem ι}
 
 /-- A planar system that is a box-like system `S` in the basis `T`: the affinity dimension of
 `S` is the unique zero `s ≥ 0` of the pressure `P(𝖠, s)` of the original linear parts, so the
-affinity dimension does not depend on the basis (tex lines 777 to 789 and 2352 to 2353). -/
+affinity dimension does not depend on the basis (tex lines 696 to 708 and 2352 to 2353). -/
 theorem pressure_dimaff_of_conjBy [Fintype ι] [Nonempty ι] (h : P.ConjBy T S.toPlanar) :
     MatrixTuple.pressure P.mat S.dimaff = 0 ∧
       ∀ s, 0 ≤ s → MatrixTuple.pressure P.mat s = 0 → s = S.dimaff := by
@@ -1189,7 +1191,7 @@ theorem dimaff_eq_of_conjBy [Fintype ι] [Nonempty ι] {S' : System ι}
 
 end System
 
-/-! ### Box-like coordinates in a basis of unit vectors: tex lines 777 to 779 -/
+/-! ### Box-like coordinates in a basis of unit vectors: tex lines 696 to 698 -/
 
 section UnitBasis
 
@@ -1200,7 +1202,7 @@ def IsUnitBasis (T : Matrix (Fin 2) (Fin 2) ℝ) : Prop :=
   T.det ≠ 0 ∧ ∀ j, T 0 j ^ 2 + T 1 j ^ 2 = 1
 
 /-- The matrices of `𝖠` are simultaneously anti-diagonal in some basis: the all-anti-diagonal
-case of `sec:irreducibility` (tex lines 745 to 746), which tex line 777 sets apart. -/
+case of `sec:irreducibility` (tex lines 664 to 665), which tex line 696 sets apart. -/
 def SimultaneouslyAntiDiagonal (A : ι → Matrix (Fin 2) (Fin 2) ℝ) : Prop :=
   ∃ P : Matrix (Fin 2) (Fin 2) ℝ, P.det ≠ 0 ∧ ∀ i, ∃ a b : ℝ, P⁻¹ * A i * P = boxMat 1 a b
 
@@ -1224,7 +1226,7 @@ theorem sq_mulVec_le_norm_sq (A : Matrix (Fin 2) (Fin 2) ℝ) {u : Fin 2 → ℝ
 /-- In a basis `T` of unit vectors, the non-zero entries of a diagonal or anti-diagonal matrix
 `T⁻¹ A T` are at most `α_1(A) = ‖A‖` in modulus: they are the lengths of the images `A u` of the
 basis vectors `u`. This is why the matrices of a contracting tuple are contracting in such a
-basis (tex line 779). -/
+basis (tex line 698). -/
 theorem abs_le_norm_of_isUnitBasis {T A : Matrix (Fin 2) (Fin 2) ℝ} (hT : IsUnitBasis T)
     {c : ZMod 2} {a b : ℝ} (h : T⁻¹ * A * T = boxMat c a b) : |a| ≤ ‖A‖ ∧ |b| ≤ ‖A‖ := by
   have hu := isUnit_iff_ne_zero.2 hT.1
@@ -1421,7 +1423,7 @@ theorem boxType_eq_of_conj {A : ι → Matrix (Fin 2) (Fin 2) ℝ} (hdet : ∀ i
     _ = cR + c' - cR := by rw [htype]
     _ = c' := by ring
 
-/-- The direction `⇐` of tex lines 777 to 779: a proximal tuple of invertible matrices that is
+/-- The direction `⇐` of tex lines 696 to 698: a proximal tuple of invertible matrices that is
 box-like with rotations in some basis is irreducible, not strongly irreducible, and not
 simultaneously anti-diagonal in any basis. -/
 theorem irreducible_of_conj_isBoxLikeWithRotations {A : ι → Matrix (Fin 2) (Fin 2) ℝ}
@@ -1441,7 +1443,7 @@ theorem irreducible_of_conj_isBoxLikeWithRotations {A : ι → Matrix (Fin 2) (F
     (fun i => by obtain ⟨a, b, he⟩ := hQanti i; exact ⟨1, a, b, he⟩) hj hQj
   exact absurd this (by decide)
 
-/-- The direction `⇒` of tex lines 777 to 779: a proximal tuple of invertible contracting
+/-- The direction `⇒` of tex lines 696 to 698: a proximal tuple of invertible contracting
 matrices that is irreducible, not strongly irreducible, and not simultaneously anti-diagonal in
 any basis, is box-like with rotations in a basis of unit vectors. By `thm:A_classification` it
 is simultaneously diagonal or anti-diagonal in some basis with an anti-diagonal matrix; a

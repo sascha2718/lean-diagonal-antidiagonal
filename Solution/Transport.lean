@@ -53,8 +53,8 @@ theorem entropy_eq {α : Type*} [Fintype α] [MeasurableSpace α] (μ : Measure 
 theorem isExactDim_iff {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X] (μ : Measure X)
     (d : ℝ) : Challenge.IsExactDim μ d ↔ BoxLike.IsExactDim μ d := Iff.rfl
 
-theorem isDoubleDim_iff {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X] (μ : Measure X)
-    (d₁ d₂ : ℝ) : Challenge.IsDoubleDim μ d₁ d₂ ↔ BoxLike.IsDoubleDim μ d₁ d₂ := Iff.rfl
+theorem isDoubleDim_iff {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X] (μ : Measure X) :
+    Challenge.IsDoubleDim μ ↔ BoxLike.IsDoubleDim μ := Iff.rfl
 
 theorem upperPackingDim_eq {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X]
     (μ : Measure X) : Challenge.upperPackingDim μ = BoxLike.upperPackingDim μ := rfl
@@ -93,6 +93,15 @@ theorem noExactOverlaps_iff : S.NoExactOverlaps ↔ (toLib S).NoExactOverlaps :=
   · intro h u u' hne heq
     exact h u u' hne (by funext t; rw [← gWord_eq, ← gWord_eq, heq])
 
+theorem axisGap_eq (c : ZMod 2) (n : ℕ) : S.axisGap c n = (toLib S).axisGap c n := by
+  simp only [Challenge.System.axisGap, gWord_eq]
+  rfl
+
+theorem axisExpSeparation_iff (c : ZMod 2) :
+    S.AxisExpSeparation c ↔ (toLib S).AxisExpSeparation c := by
+  simp only [Challenge.System.AxisExpSeparation, axisGap_eq]
+  rfl
+
 theorem strongOpenSet_iff : S.StrongOpenSet ↔ (toLib S).StrongOpenSet := Iff.rfl
 
 theorem proj_eq : S.proj = (toLib S).proj := rfl
@@ -119,6 +128,19 @@ theorem dimaff_eq [Fintype ι] [Nonempty ι] : S.dimaff = (toLib S).dimaff := by
   have h : ∃! s, 0 ≤ s ∧ S.pressure s = 0 := (toLib S).existsUnique_pressure_eq_zero
   rw [Challenge.System.dimaff, dite_eq_left h]
   rfl
+
+/-- Rapaport's theorem in the challenge vocabulary is the library's statement. -/
+theorem rapaportDiagonalDimension_iff :
+    Challenge.RapaportDiagonalDimension.{u} ↔ BoxLike.RapaportDiagonalDimension.{u} := by
+  constructor
+  · intro h ι _ _ S hdiag hprox h0 h1
+    have := h (ofLib S) hdiag hprox ((axisExpSeparation_iff (ofLib S) 0).2 h0)
+      ((axisExpSeparation_iff (ofLib S) 1).2 h1)
+    rwa [attractor_eq, dimaff_eq] at this
+  · intro h ι _ _ S hdiag hprox h0 h1
+    rw [attractor_eq, dimaff_eq]
+    exact h (toLib S) hdiag hprox ((axisExpSeparation_iff S 0).1 h0)
+      ((axisExpSeparation_iff S 1).1 h1)
 
 end Notions
 

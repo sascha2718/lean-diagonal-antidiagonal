@@ -2,7 +2,7 @@ module
 
 /-
 Other representations of the partitions `ξ_i` of `sec:entropies` for a planar self-affine system,
-compared with `PlanarSystem.xi` modulo null sets (tex lines 1854 to 1871). The library's `Σ'` is
+compared with `PlanarSystem.xi` modulo null sets (tex lines 1775 to 1792). The library's `Σ'` is
 the set of all regular points (`BoxLike/Planar/Oseledets.lean`). Feng's partitions (Duke Math. J.
 172 (2023), Section 4, before Lemma 4.2) live on an invariant Borel set of full measure, his
 `Σ'`, which need not be saturated with respect to the past, with the subspaces given by his
@@ -154,7 +154,7 @@ theorem infoSum_fengXi_iff (μ : Measure (ℤ → ι)) [IsFiniteMeasure μ]
 /-! ### The article's partitions for a choice of `Σ'` -/
 
 /-- The article's partitions `ξ_i(𝐢) = {𝐣 ∈ Σ' : 𝐣^- = 𝐢^-, π(𝐣) - π(𝐢) ∈ V_𝐢^i}` (`sec:entropies`,
-tex lines 1858 to 1863) for a choice of `Σ'` and of the Oseledets filtration, extended to `Σ` by
+tex lines 1779 to 1784) for a choice of `Σ'` and of the Oseledets filtration, extended to `Σ` by
 the atom `Σ ∖ Σ'`. -/
 noncomputable def oseledetsXi {μ : Measure (ℤ → ι)} (O : MatrixTuple.OseledetsSet P.mat μ)
     (i : ℕ) : (ℤ → ι) → Set (ℤ → ι) :=

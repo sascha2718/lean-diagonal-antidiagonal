@@ -3,7 +3,7 @@ module
 /-
 The dimension of the Bernoulli measure of a finite homogeneous diagonal subsystem: the second
 part of the measure-theoretic argument in the proof of `thm:main2` in
-`sec:dimension_result_proof` (tex lines 3702 to 3737). For the subsystem `T` of
+`sec:dimension_result_proof` (tex lines 3522 to 3560). For the subsystem `T` of
 `BoxLike/HomogeneousSubsystem.lean`, with the alphabet `Option κ`, the common diagonal linear
 part `diag(a, b)`, `|b| < |a|`, and the Bernoulli measure `ν_n` with equal weights on the
 symbols `some k`, write `H = log #κ`, `χ_1 = -log |a|` and `χ_2 = -log |b|`.
@@ -19,7 +19,7 @@ Ledrappier–Young formula then gives the dimension `subsystemDim H χ_1 χ_2` o
 
 * `subsystemDim`, `subsystemDim_eq_lyapDim`, `subsystemDim_div`, `tendsto_subsystemDim`,
   `subsystemDim_eq_ledrappierYoung`: the dimension formula `d + (H - χ_1 d) / χ_2` with
-  `d = min{1, H / χ_1}` of tex lines 3730 to 3732, its agreement with `eq:diml_min2`, its
+  `d = min{1, H / χ_1}` of tex lines 3553 to 3555, its agreement with `eq:diml_min2`, its
   homogeneity, its continuity and its evaluation through `eq:feng1_1`.
 * `measurableEmbedding_tau`, `measurableEmbedding_omega`, `restrict_map_image_eq`,
   `tau_preimage_cylinder_zero`: the codings are measurable embeddings, and the restriction
@@ -33,7 +33,7 @@ Ledrappier–Young formula then gives the dimension `subsystemDim H χ_1 χ_2` o
   the dimension of a coordinate marginal, from `KittleKoglerDimension`.
 * `System.IsHomogeneousOption.dimEntropyBar_map_tau`,
   `System.IsHomogeneousOption.dimEntropyBar_map_omega_eq_zero`: the conditional entropies
-  `q_{x,n}` and `q_{y,n}` of tex lines 3714 to 3724.
+  `q_{x,n}` and `q_{y,n}` of tex lines 3536 to 3547.
 * `System.IsHomogeneousOption.dimEntropy_one_eq`,
   `System.IsHomogeneousOption.condMeas_xiPerp_eq_dirac`: the transport of the conditional
   entropy and of the Dirac conditional measures along the codings.
@@ -64,7 +64,7 @@ universe u
 
 /-! ### The dimension formula of the subsystem -/
 
-/-- The dimension of the subsystem measure `ν_n` of tex lines 3730 to 3732:
+/-- The dimension of the subsystem measure `ν_n` of tex lines 3553 to 3555:
 `d + (H - χ_1 d) / χ_2` with `d = min{1, H / χ_1}`, for `H = H_n`, `χ_1 = χ_{1,n}` and
 `χ_2 = χ_{2,n}`. -/
 noncomputable def subsystemDim (H χ₁ χ₂ : ℝ) : ℝ :=
@@ -88,7 +88,7 @@ theorem subsystemDim_eq_lyapDim {h l₁ l₂ : ℝ} (hl : l₂ < l₁) (hl₁ : 
     ring
 
 /-- The dimension formula is invariant under dividing all three parameters by the same nonzero
-number, as happens with `H_n / n`, `χ_{1,n} / n` and `χ_{2,n} / n` (tex line 3734). -/
+number, as happens with `H_n / n`, `χ_{1,n} / n` and `χ_{2,n} / n` (tex line 3557). -/
 theorem subsystemDim_div (H χ₁ χ₂ : ℝ) {n : ℝ} (hn : n ≠ 0) :
     subsystemDim (H / n) (χ₁ / n) (χ₂ / n) = subsystemDim H χ₁ χ₂ := by
   unfold subsystemDim
@@ -110,7 +110,7 @@ theorem tendsto_subsystemDim {H χ₁ χ₂ : ℕ → ℝ} {h c₁ c₂ : ℝ} (
 
 /-- The planar Ledrappier–Young formula `eq:feng1_1` with `h_0 = H`, `h_1 = H - χ_1 d`,
 `h_2 = 0`, `λ_1 = -χ_1` and `λ_2 = -χ_2`, where `d = min{1, H / χ_1}`, evaluates to
-`subsystemDim H χ_1 χ_2` (tex lines 3728 to 3733). -/
+`subsystemDim H χ_1 χ_2` (tex lines 3551 to 3556). -/
 theorem subsystemDim_eq_ledrappierYoung {H l₁ l₂ : ℝ} (h₁ : l₁ ≠ 0) (h₂ : l₂ ≠ 0) :
     subsystemDim H (-l₁) (-l₂) =
       (H - -l₁ * min 1 (H / -l₁) - H) / l₁ + (0 - (H - -l₁ * min 1 (H / -l₁))) / l₂ := by
@@ -176,7 +176,7 @@ namespace System
 
 variable {ι : Type u} [MeasurableSpace ι] (S : System ι)
 
-/-- The atom of `ξ_2` on `Σ'` (`sec:entropies`, tex lines 1858 to 1862): `𝐣 ∈ ξ_2(𝐢)` fixes
+/-- The atom of `ξ_2` on `Σ'` (`sec:entropies`, tex lines 1779 to 1783): `𝐣 ∈ ξ_2(𝐢)` fixes
 the past and the planar point, since `V_𝐢^2 = {0}`. -/
 theorem samePast_and_proj_eq_of_mem_xi_two (μ : Measure (ℤ → ι)) {x y : ℤ → ι}
     (hx : x ∈ S.SigmaPrime μ) (hy : y ∈ S.xi μ 2 x) : SamePast y x ∧ S.proj y = S.proj x := by
@@ -238,12 +238,12 @@ include hT
 /-! ### The exponents -/
 
 omit [Fintype κ] in
-/-- `log |a| < 0`, so that `χ_{1,n} = -log |a_n| > 0` (tex line 3698). -/
+/-- `log |a| < 0`, so that `χ_{1,n} = -log |a_n| > 0` (tex line 3518). -/
 theorem log_abs_a_neg : Real.log |a| < 0 :=
   Real.log_neg (abs_pos.2 hT.a_ne_zero) hT.abs_a_lt_one
 
 omit [Fintype κ] in
-/-- `log |b| < 0`, so that `χ_{2,n} = -log |b_n| > 0` (tex line 3698). -/
+/-- `log |b| < 0`, so that `χ_{2,n} = -log |b_n| > 0` (tex line 3518). -/
 theorem log_abs_b_neg : Real.log |b| < 0 :=
   Real.log_neg (abs_pos.2 hT.b_ne_zero) hT.abs_b_lt_one
 

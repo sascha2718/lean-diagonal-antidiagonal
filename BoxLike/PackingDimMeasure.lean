@@ -29,7 +29,7 @@ dimension, and the proofs use no packing measures.
   `eq:dimension_measure_def` for every finite Borel measure on a finite-dimensional real
   normed space.
 * `upperPackingDim_le_of_absolutelyContinuous`: `μ ≪ ν` gives
-  `\overline{dim}_p(μ) ≤ \overline{dim}_p(ν)`, the argument of tex lines 2674 to 2677.
+  `\overline{dim}_p(μ) ≤ \overline{dim}_p(ν)`, the argument of tex lines 2550 to 2553.
 -/
 public import BoxLike.LocalDimBounds
 public import BoxLike.SetDimensions
@@ -443,7 +443,7 @@ theorem upperPackingDim_eq_toReal_iInf_packingDim [IsFiniteMeasure μ] :
 
 /-- For a finite Borel measure on a finite-dimensional real normed space and every `ε > 0`
 there is a Borel set of full measure with packing dimension at most
-`\overline{dim}_p(μ) + ε`; this is the choice of sets in tex lines 2677 to 2679. -/
+`\overline{dim}_p(μ) + ε`; this is the choice of sets in tex lines 2553 to 2555. -/
 theorem exists_packingDim_le [IsFiniteMeasure μ] {ε : ℝ} (hε : 0 < ε) :
     ∃ A : Set E, MeasurableSet A ∧ μ Aᶜ = 0 ∧
       packingDim A ≤ ENNReal.ofReal (upperPackingDim μ + ε) :=
@@ -452,7 +452,7 @@ theorem exists_packingDim_le [IsFiniteMeasure μ] {ε : ℝ} (hε : 0 < ε) :
 
 /-- If `μ ≪ ν` for finite Borel measures on a finite-dimensional real normed space, then
 `\overline{dim}_p(μ) ≤ \overline{dim}_p(ν)`: every set of full `ν`-measure has full
-`μ`-measure. This is the argument of tex lines 2674 to 2677 for
+`μ`-measure. This is the argument of tex lines 2550 to 2553 for
 `\overline{dim}_p(μ + ν) ≥ \overline{dim}_p(μ)`. -/
 theorem upperPackingDim_le_of_absolutelyContinuous [IsFiniteMeasure μ] [IsFiniteMeasure ν]
     (h : μ ≪ ν) : upperPackingDim μ ≤ upperPackingDim ν := by

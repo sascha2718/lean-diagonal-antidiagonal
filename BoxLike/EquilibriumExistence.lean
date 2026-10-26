@@ -2,7 +2,7 @@ module
 
 /-
 The existence of an `s`-equilibrium state, the half of the sub-additive variational principle
-that `thm:irred_eq_state` needs (tex lines 2209 to 2218; Käenmäki, Ann. Acad. Sci. Fenn. Math.
+that `thm:irred_eq_state` needs (tex lines 2097 to 2106; Käenmäki, Ann. Acad. Sci. Fenn. Math.
 29 (2004), Theorem 2.6, and, for sub-additive potentials, Cao–Feng–Huang, Discrete Contin. Dyn.
 Syst. 20 (2008), Theorem 1.1). The construction is the one of Misiurewicz: the weights
 `φ^s(A_𝐢)/∑_{|𝐣| = n} φ^s(A_𝐣)` on the words of length `n` give a Bernoulli measure on the

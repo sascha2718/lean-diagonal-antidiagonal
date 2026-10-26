@@ -47,7 +47,7 @@ section Normalise
 variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
 
 /-- A restriction `ν|_F = c m` with `0 < c < ∞` and `m` finite normalises to `ν_F = m(univ)⁻¹ m`:
-the normalised restriction of `sec:conditional` (tex lines 1765 to 1768) removes the factor `c`. -/
+the normalised restriction of `sec:conditional` (tex lines 1688 to 1691) removes the factor `c`. -/
 theorem cond_eq_inv_smul_of_restrict_eq_smul {ν m : Measure X} [IsFiniteMeasure m] {F : Set X}
     {c : ℝ≥0∞} (hc0 : c ≠ 0) (hct : c ≠ ∞) (h : ν.restrict F = c • m) :
     ν[|F] = (m univ)⁻¹ • m := by

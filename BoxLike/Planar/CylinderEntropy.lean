@@ -19,7 +19,7 @@ ergodic `μ` with `λ_2 < λ_1` it is Oseledets' theorem, which the library prov
 * `PlanarSystem.feng_entropy_kolmogorov_sinai_of_oseledetsSet`: `thm:feng_entropy_kolmogorov_sinai`
   for a planar system, given a choice of `Σ'`.
 * `PlanarSystem.dimEntropy_zero_eq_ksEntropy`: `h_0(μ) = h(μ)` with the Kolmogorov–Sinai entropy
-  of tex lines 1965 to 1972, when `μ(Σ') = 1`.
+  of tex lines 1877 to 1884, when `μ(Σ') = 1`.
 * `System.feng_entropy_kolmogorov_sinai_toPlanar`: `thm:feng_entropy_kolmogorov_sinai` for a
   box-like system through the planar objects, with no hypothesis beyond the article's.
 -/
@@ -40,7 +40,7 @@ variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonCla
   (P : PlanarSystem ι)
 
 omit [Fintype ι] [MeasurableSingletonClass ι] in
-/-- `ξ_0` is the partition of `Σ'` by the past (`sec:entropies`, tex lines 1858 to 1863), since
+/-- `ξ_0` is the partition of `Σ'` by the past (`sec:entropies`, tex lines 1779 to 1784), since
 `V_𝐢^0 = ℝ²`. -/
 theorem xi_zero_eq (μ : Measure (ℤ → ι)) :
     P.xi μ 0 = atomsOn (P.SigmaPrime μ) fun x => {y | SamePast y x} := by
@@ -75,8 +75,8 @@ theorem feng_entropy_kolmogorov_sinai_of_oseledetsSet (μ : Measure (ℤ → ι)
   (P.tendsto_neg_log_cylinder_dimEntropyAt μ herg.toMeasurePreserving hlt
     (O.measure_regularSet_compl P.det_ne_zero hlt)).mono fun _ hx _ => hx
 
-/-- `sec:entropies`, tex lines 1989 to 1991: `h_0(μ) = h(μ)` with the Kolmogorov–Sinai entropy
-`h(μ)` of tex lines 1965 to 1972 (the supremum over finite Borel partitions), for every invariant
+/-- `sec:entropies`, tex lines 1901 to 1901: `h_0(μ) = h(μ)` with the Kolmogorov–Sinai entropy
+`h(μ)` of tex lines 1877 to 1884 (the supremum over finite Borel partitions), for every invariant
 probability measure with `λ_2(𝖠, μ) < λ_1(𝖠, μ)` and `μ(Σ') = 1`, for a planar self-affine
 system. -/
 theorem dimEntropy_zero_eq_ksEntropy (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]

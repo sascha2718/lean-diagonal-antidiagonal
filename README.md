@@ -2,7 +2,7 @@
 
 Lean 4 formalisation of the paper
 
-> Demi Allen, Antti Käenmäki, R. Dániel Prokaj, Károly Simon and Sascha Troscheit,
+> Antti Käenmäki, R. Dániel Prokaj, Károly Simon and Sascha Troscheit,
 > *Hausdorff dimension of planar box-like self-affine sets with rotations*, arXiv:XXXX.XXXXX
 > (placeholder identifier until the paper is posted).
 
@@ -10,35 +10,51 @@ Lean 4 formalisation of the paper
 
 A planar box-like self-affine set with rotations is the attractor of finitely many contracting
 affine maps of the plane whose linear parts are diagonal or anti-diagonal, with both types
-present. Up to a linear change of coordinates these are the planar systems that are irreducible
-but not strongly irreducible, the last open regime between the strongly irreducible systems and
-the self-affine carpets. Under a projective exponential separation condition, the paper shows
-that the coordinate projections of the unique equilibrium state at the affinity dimension are
-double-dimensional: their pointwise dimension exists almost everywhere and takes at most two
-values, identified explicitly (Theorem 1.2), and that the projected equilibrium state is
-exact-dimensional of dimension `min{2, dimaff(X)}` (Theorem 4.16). Assuming only that the
-projected maps have no exact overlaps, the Hausdorff dimension of the set equals its affinity
-dimension whenever the affinity dimension is at most `2 - λ₁/λ₂`, where `λ₂ ≤ λ₁ < 0` are the
-Lyapunov exponents of the equilibrium state, or whenever the strong open set condition holds
-(Theorem 1.3). The paper also shows that the projective exponential separation condition is not
+present. Up to a linear change of coordinates these are the proximal planar systems that are
+irreducible but not strongly irreducible, the case between the strongly irreducible systems of
+Hochman–Rapaport (Theorem 1.1) and the diagonal systems of Rapaport (Theorem 1.2). Let `μ` be
+the unique equilibrium state at the affinity dimension `s = dimaff(X)`, with Lyapunov exponents
+`λ₂ ≤ λ₁ < 0`. Under a projective exponential separation condition, the paper shows that the
+coordinate projections of `π_*μ` are double-dimensional if `s < 2 - λ₁/λ₂`, their pointwise
+dimension existing almost everywhere and taking exactly two values, each on a set of positive
+measure, and exact-dimensional of dimension one otherwise (Theorem A); the two values are
+identified in Theorem 4.4. Assuming only that the projected maps have no exact overlaps, the
+Hausdorff dimension of `X` equals `min{2, dimaff(X)}` whenever (i) `dimaff(X) ≤ 2 - λ₁/λ₂`,
+or (ii) the strong open set condition holds, or (iii) the projective exponential separation
+condition holds; if (iii) holds together with (i) or (ii), then `π_*μ` is exact-dimensional of
+dimension `dimaff(X) ≤ 2` (Theorem B, whose last clause is Theorem 4.16). For `dimaff(X) < 2`
+and without (ii) and (iii), the proof still gives `dim_H X ≥ min{dimaff(X), 2 - λ₁/λ₂}`
+(Remark 4.17). The paper also shows that the projective exponential separation condition is not
 implied by the strong separation condition, even when the projected maps generate a free
 semigroup (Proposition 2.7), and poses Question 1.4: can the coordinate projections of the
-equilibrium state be exact-dimensional, with their two Gibbs components of equal positive
-dimension, below the threshold `2 - λ₁/λ₂` when the projective system has no exact overlaps?
+equilibrium state be exact-dimensional, with their two Gibbs components of equal dimension,
+below the threshold `2 - λ₁/λ₂` when the projective system has no exact overlaps?
 
 ## The formalisation
 
-[Challenge.lean](Challenge.lean) states Theorems 1.2, 1.3 and 4.16 over Mathlib alone, with the
-42 definitions their statements need, and [Solution.lean](Solution.lean) proves them for the full
+[Challenge.lean](Challenge.lean) states Theorems A, B and 4.16 over Mathlib alone, with the
+46 definitions their statements need, and [Solution.lean](Solution.lean) proves them for the full
 parameter range of the paper and for every invariant equilibrium state. The library `BoxLike/`
-formalises all 41 numbered statements of the paper, with one entry per statement in
-`Solution.lean`; Question 1.4 is recorded as the proposition
-`CoincidentProjectionDimensionsQuestion`, with no answer claimed. The library has no `sorry` and
-no axiom beyond `propext`, `Classical.choice` and `Quot.sound`. The headline theorems take no
-literature hypothesis: the results the paper cites are proved in the library.
+covers all 44 numbered statements of the paper, with one entry per statement in
+`Solution.lean`: 41 are formalised; Theorems 1.1 and 1.2, the theorems of Hochman–Rapaport and
+Rapaport that the paper cites, are recorded as the `Prop`-valued statements
+`HochmanRapaportDimension` and `RapaportDiagonalDimension` and are not proved; Question 1.4 is
+recorded as the proposition `CoincidentProjectionDimensionsQuestion`, with no answer claimed.
+The library has no `sorry` and no axiom beyond `propext`, `Classical.choice` and `Quot.sound`.
+Theorems A and 4.16 take no literature hypothesis. Theorem B takes one, Rapaport's theorem,
+which case (iii) of its proof applies to finite diagonal subsystems; cases (i) and (ii) and the
+furthermore clause use none. Every other result the paper cites is proved in the library.
 
+- M. Hochman and A. Rapaport, *Hausdorff dimension of planar self-affine sets and measures with
+  overlaps*, J. Eur. Math. Soc. 24 (2022): Theorem 1.1 (Theorem 1.1 of the paper), stated as
+  `HochmanRapaportDimension`, not proved; nothing uses it,
+  `BoxLike/LiteratureHochmanRapaport.lean`.
+- A. Rapaport, *Dimension of diagonal self-affine sets and measures via non-conformal
+  partitions*, arXiv:2309.03985: Theorem 1.3 (Theorem 1.2 of the paper), stated as
+  `RapaportDiagonalDimension`, not proved; the hypothesis of case (iii) of Theorem B,
+  `BoxLike/LiteratureRapaport.lean`.
 - J. M. Fraser, *On the packing dimension of box-like self-affine sets in the plane*,
-  Nonlinearity 25 (2012): Theorem 2.3 and Corollary 2.5 (Theorem 1.1 of the paper),
+  Nonlinearity 25 (2012): Theorem 2.3 and Corollary 2.5 (Theorem 1.3 of the paper),
   `BoxLike/Fraser/`.
 - D.-J. Feng and A. Käenmäki, *Equilibrium states of the pressure function for products of
   matrices*, Discrete Contin. Dyn. Syst. 30 (2011): Proposition 1.2 (Proposition 3.10),

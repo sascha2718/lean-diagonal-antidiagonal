@@ -9,10 +9,10 @@ dimension of a measure, and `eq:haus_dim_sum`, from `sec:ledrappier_young_formul
   the essential supremum and the essential infimum of the pointwise dimensions.
 * `HasLocalDim.upperLocalDim_eq`, `HasLocalDim.lowerLocalDim_eq`: where `dimloc(μ, x)` exists,
   both pointwise dimensions equal it.
-* `IsDoubleDim.upperPackingDim_eq`, `IsDoubleDim.lowerHausdorffDim_eq`: for a
-  double-dimensional measure, `\overline{dim}_p(μ)` is the larger value and
-  `\underline{dim}_H(μ)` is the smaller value, when that value occurs on a set of positive
-  measure.
+* `HasLocalDimPair.upperPackingDim_eq`, `HasLocalDimPair.lowerHausdorffDim_eq`: for a
+  measure whose pointwise dimension is `d₁` or `d₂` almost everywhere, `\overline{dim}_p(μ)` is
+  the larger value and `\underline{dim}_H(μ)` is the smaller value, when that value occurs on a
+  set of positive measure.
 * `IsExactDim.upperPackingDim_eq`, `IsExactDim.lowerHausdorffDim_eq`: for a nonzero
   exact-dimensional measure, `\overline{dim}_p(μ) = \underline{dim}_H(μ) = dim μ`.
 * `upperLocalDim_nonneg`, `lowerLocalDim_nonneg`, `upperPackingDim_nonneg`,
@@ -210,10 +210,10 @@ pointwise dimension with respect to `μ`. The value is real. For a finite Borel 
 carries its usual meaning. -/
 noncomputable def lowerHausdorffDim (μ : Measure X) : ℝ := essInf (lowerLocalDim μ) μ
 
-/-- For a double-dimensional measure with values `d₂ ≤ d₁`, where `d₁` occurs on a set of
-positive measure, `\overline{dim}_p(μ) = d₁`. This is the first half of the characterisation
-of double-dimensional measures in `sec:ledrappier_young_formula`. -/
-theorem IsDoubleDim.upperPackingDim_eq (h : IsDoubleDim μ d₁ d₂) (hle : d₂ ≤ d₁)
+/-- If the pointwise dimension of `μ` is `d₁` or `d₂` almost everywhere, with `d₂ ≤ d₁` and `d₁`
+occurring on a set of positive measure, then `\overline{dim}_p(μ) = d₁`. This is the first half
+of the characterisation of double-dimensional measures in `sec:ledrappier_young_formula`. -/
+theorem HasLocalDimPair.upperPackingDim_eq (h : HasLocalDimPair μ d₁ d₂) (hle : d₂ ≤ d₁)
     (hpos : 0 < μ {x | HasLocalDim μ x d₁}) : upperPackingDim μ = d₁ := by
   have hub : ∀ᵐ x ∂μ, upperLocalDim μ x ≤ d₁ := by
     filter_upwards [h] with x hx
@@ -225,10 +225,11 @@ theorem IsDoubleDim.upperPackingDim_eq (h : IsDoubleDim μ d₁ d₂) (hle : d�
   exact le_antisymm (limsup_le_of_le (IsCoboundedUnder.of_frequently_ge hfreq) hub)
     (le_limsup_of_frequently_le hfreq (isBoundedUnder_of_eventually_le hub))
 
-/-- For a double-dimensional measure with values `d₂ ≤ d₁`, where `d₂` occurs on a set of
-positive measure, `\underline{dim}_H(μ) = d₂`. This is the second half of the
-characterisation of double-dimensional measures in `sec:ledrappier_young_formula`. -/
-theorem IsDoubleDim.lowerHausdorffDim_eq (h : IsDoubleDim μ d₁ d₂) (hle : d₂ ≤ d₁)
+/-- If the pointwise dimension of `μ` is `d₁` or `d₂` almost everywhere, with `d₂ ≤ d₁` and `d₂`
+occurring on a set of positive measure, then `\underline{dim}_H(μ) = d₂`. This is the second
+half of the characterisation of double-dimensional measures in
+`sec:ledrappier_young_formula`. -/
+theorem HasLocalDimPair.lowerHausdorffDim_eq (h : HasLocalDimPair μ d₁ d₂) (hle : d₂ ≤ d₁)
     (hpos : 0 < μ {x | HasLocalDim μ x d₂}) : lowerHausdorffDim μ = d₂ := by
   have hlb : ∀ᵐ x ∂μ, d₂ ≤ lowerLocalDim μ x := by
     filter_upwards [h] with x hx
@@ -250,12 +251,12 @@ theorem IsExactDim.measure_hasLocalDim_pos (h : IsExactDim μ d) (hne : μ ≠ 0
 /-- For a nonzero exact-dimensional measure, `\overline{dim}_p(μ) = dim μ`. -/
 theorem IsExactDim.upperPackingDim_eq (h : IsExactDim μ d) (hne : μ ≠ 0) :
     upperPackingDim μ = d :=
-  h.isDoubleDim.upperPackingDim_eq le_rfl (h.measure_hasLocalDim_pos hne)
+  h.hasLocalDimPair.upperPackingDim_eq le_rfl (h.measure_hasLocalDim_pos hne)
 
 /-- For a nonzero exact-dimensional measure, `\underline{dim}_H(μ) = dim μ`. -/
 theorem IsExactDim.lowerHausdorffDim_eq (h : IsExactDim μ d) (hne : μ ≠ 0) :
     lowerHausdorffDim μ = d :=
-  h.isDoubleDim.lowerHausdorffDim_eq le_rfl (h.measure_hasLocalDim_pos hne)
+  h.hasLocalDimPair.lowerHausdorffDim_eq le_rfl (h.measure_hasLocalDim_pos hne)
 
 /-- For a finite measure and every `ε > 0`, the quotient `log μ(B(x, r)) / log r` is at least
 `-ε` for all small `r`. -/
@@ -377,10 +378,10 @@ theorem IsExactDim.upperPackingDim_add [IsFiniteMeasure ν₁] [IsFiniteMeasure 
     upperPackingDim (ν₁ + ν₂) = max d₁ d₂ := by
   rcases le_total d₂ d₁ with hle | hle
   · rw [max_eq_left hle]
-    exact (h₁.isDoubleDim_add h₂).upperPackingDim_eq hle
+    exact (h₁.hasLocalDimPair_add h₂).upperPackingDim_eq hle
       (h₁.measure_hasLocalDim_add_left_pos hne₁)
   · rw [max_eq_right hle]
-    exact (h₁.isDoubleDim_add h₂).symm.upperPackingDim_eq hle
+    exact (h₁.hasLocalDimPair_add h₂).symm.upperPackingDim_eq hle
       (h₂.measure_hasLocalDim_add_right_pos hne₂)
 
 /-- Second line of `eq:haus_dim_sum` for two nonzero exact-dimensional measures:
@@ -391,10 +392,10 @@ theorem IsExactDim.lowerHausdorffDim_add [IsFiniteMeasure ν₁] [IsFiniteMeasur
     lowerHausdorffDim (ν₁ + ν₂) = min d₁ d₂ := by
   rcases le_total d₂ d₁ with hle | hle
   · rw [min_eq_right hle]
-    exact (h₁.isDoubleDim_add h₂).lowerHausdorffDim_eq hle
+    exact (h₁.hasLocalDimPair_add h₂).lowerHausdorffDim_eq hle
       (h₂.measure_hasLocalDim_add_right_pos hne₂)
   · rw [min_eq_left hle]
-    exact (h₁.isDoubleDim_add h₂).symm.lowerHausdorffDim_eq hle
+    exact (h₁.hasLocalDimPair_add h₂).symm.lowerHausdorffDim_eq hle
       (h₁.measure_hasLocalDim_add_left_pos hne₁)
 
 end Besicovitch

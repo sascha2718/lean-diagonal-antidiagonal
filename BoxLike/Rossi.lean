@@ -1,7 +1,7 @@
 module
 
 /-
-Rossi's bound `eq:hausdorff_ergodic_lyapunov` of `sec:ledrappier_young_formula` (tex lines 2728
+Rossi's bound `eq:hausdorff_ergodic_lyapunov` of `sec:ledrappier_young_formula` (tex lines 2598
 to 2731), after Rossi, J. Math. Anal. Appl. 413 (2014), Theorem 2.2, which the article cites:
 for every ergodic `μ ∈ M_σ(Σ)` the lower pointwise dimension of `π_*μ` is at most
 `min{2, dimL(𝖠, μ)}` almost everywhere, so `\overline{dim}_H(π_*μ) ≤ min{2, dimL(𝖠, μ)}`.
@@ -123,7 +123,7 @@ section Typical
 variable {α : Type*} [Fintype α] [MeasurableSpace α] [MeasurableSingletonClass α]
   {μ : Measure (ℤ → α)} [IsProbabilityMeasure μ]
 
-/-- The Shannon–McMillan–Breiman theorem of `sec:entropies` (tex lines 1973 to 1977) in
+/-- The Shannon–McMillan–Breiman theorem of `sec:entropies` (tex lines 1885 to 1889) in
 pointwise form, for the proof of `eq:hausdorff_ergodic_lyapunov`: for an ergodic `μ` and every
 `ε > 0`, the block `x_0 ⋯ x_{n-1}` of `μ`-almost every `x` is a typical word,
 `e^{-n(h+ε)} ≤ μ([x_0 ⋯ x_{n-1}]) ≤ e^{-n(h-ε)}`, for all large `n`. -/
@@ -189,7 +189,7 @@ section FurstenbergKesten
 variable {ι : Type*} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
   (S : System ι) {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ]
 
-/-- The theorem of Furstenberg and Kesten of `sec:lyapunov_exponents` (tex line 1585) for `α_1`
+/-- The theorem of Furstenberg and Kesten of `sec:lyapunov_exponents` (tex line 1508) for `α_1`
 along the forward products, for the proof of `eq:hausdorff_ergodic_lyapunov`: for an ergodic
 `μ`, `n⁻¹ log ‖A_{i_0} ⋯ A_{i_{n-1}}‖ → λ_1(𝖠, μ)` for `μ`-almost every `𝐢`. This is Kingman's
 theorem for the sub-additive cocycle `log α_1(A_{𝐢|_n})` over `σ`. -/
@@ -204,7 +204,7 @@ theorem ae_tendsto_log_norm_matWord (herg : Ergodic (shift 1) μ) :
     (fun n => integrable_comp_futureWord (fun w => Real.log ‖S.matWord w‖) n)
     (S.tendsto_lyapunov₁ herg.toMeasurePreserving)
 
-/-- The theorem of Furstenberg and Kesten of `sec:lyapunov_exponents` (tex line 1585) for
+/-- The theorem of Furstenberg and Kesten of `sec:lyapunov_exponents` (tex line 1508) for
 `α_2 = |det| / α_1` along the forward products, for the proof of
 `eq:hausdorff_ergodic_lyapunov`: for an ergodic `μ`,
 `n⁻¹ log α_2(A_{i_0} ⋯ A_{i_{n-1}}) → λ_2(𝖠, μ)` for `μ`-almost every `𝐢`. The function
@@ -604,7 +604,7 @@ theorem exists_dimH_le_of_add_energy_neg (herg : Ergodic (shift 1) μ) {t : ℝ}
     exact iSup_le hdimN
 
 /-- Rossi's bound `eq:hausdorff_ergodic_lyapunov` almost everywhere (Rossi, J. Math. Anal.
-Appl. 413 (2014), Theorem 2.2; tex lines 2728 to 2731): for an ergodic `μ ∈ M_σ(Σ)`,
+Appl. 413 (2014), Theorem 2.2; tex lines 2598 to 2601): for an ergodic `μ ∈ M_σ(Σ)`,
 `\underline{dim}_loc(π_*μ, x) ≤ min{2, dimL(𝖠, μ)}` for `π_*μ`-almost every `x`. For every
 `t ∈ (dimL(𝖠, μ), 2)` the energy condition `h_0(μ) + Λ(𝖠, μ, t) < 0` holds, and
 `exists_dimH_le_of_add_energy_neg` with `ae_lowerLocalDim_le_of_dimH_le` gives the bound `t`;
@@ -643,7 +643,7 @@ theorem ae_lowerLocalDim_map_proj_le (herg : Ergodic (shift 1) μ) :
   exact ge_of_tendsto' hlim hy
 
 /-- Rossi's bound `eq:hausdorff_ergodic_lyapunov` (Rossi, J. Math. Anal. Appl. 413 (2014),
-Theorem 2.2; tex lines 2728 to 2731) for the essential supremum of the lower pointwise
+Theorem 2.2; tex lines 2598 to 2601) for the essential supremum of the lower pointwise
 dimension, which is `\overline{dim}_H(π_*μ)`: for every ergodic `μ ∈ M_σ(Σ)`,
 `\overline{dim}_H(π_*μ) ≤ min{2, dimL(𝖠, μ)}`. -/
 theorem essSup_lowerLocalDim_map_proj_le (herg : Ergodic (shift 1) μ) :

@@ -2,7 +2,7 @@ module
 
 /-
 Uniqueness of the ergodic Gibbs measure of a potential of bounded distortion, in particular of a
-Hölder potential, on `Σ_Z` (`sec:gibbs_measures`, tex lines 2501 to 2503: "for each Hölder
+Hölder potential, on `Σ_Z` (`sec:gibbs_measures`, tex lines 2382 to 2384: "for each Hölder
 continuous potential `f` there exists a unique ergodic Gibbs measure"). Uniqueness is proved
 here; existence is Bowen's theorem, which the article cites and which the library proves in
 `BoxLike/Bowen/Main.lean` (`bowenGibbsExistence`).
@@ -259,7 +259,7 @@ theorem IsGibbsPotential.measure_cylinder_le [IsProbabilityMeasure ν] [IsProbab
     rw [measure_mono_null hsub hν']
     exact zero_le
 
-/-- Uniqueness of the ergodic Gibbs measure (tex lines 2501 to 2503), for a potential of bounded
+/-- Uniqueness of the ergodic Gibbs measure (tex lines 2382 to 2384), for a potential of bounded
 distortion: an invariant Gibbs probability measure carried by `Σ_Z` equals every ergodic Gibbs
 probability measure carried by `Σ_Z` for the same potential. -/
 theorem IsGibbsPotential.eq_of_ergodic [IsProbabilityMeasure ν] [IsProbabilityMeasure ν']
@@ -275,7 +275,7 @@ theorem IsGibbsPotential.eq_of_ergodic [IsProbabilityMeasure ν] [IsProbabilityM
   exact measure_mono_null hAA' (le_antisymm ((hle hA'm).trans (by rw [hA'0, mul_zero]))
     zero_le)
 
-/-- Uniqueness of the ergodic Gibbs measure of a Hölder potential (tex lines 2501 to 2503): an
+/-- Uniqueness of the ergodic Gibbs measure of a Hölder potential (tex lines 2382 to 2384): an
 invariant Gibbs probability measure carried by `Σ_Z` equals every ergodic Gibbs probability
 measure carried by `Σ_Z` for the same Hölder potential. In particular two ergodic Gibbs measures
 for the same Hölder potential coincide. -/

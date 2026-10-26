@@ -21,7 +21,8 @@ General lemmas, in the namespace `BoxLike.System`:
   `P(𝖠, s) = log ρ` for a positive eigenvector with eigenvalue `ρ`.
 * `System.main1_of_le_one`, `System.main2_of_le_one`: `thm:main1` and `thm:main2` for
   `0 < s ≤ 1`. The two pointwise dimensions are `s` and `s λ_1/λ_2`, they are distinct, both
-  occur on sets of positive measure, and `s < 2 - λ_1/λ_2` holds.
+  occur on sets of positive measure, the marginals are double-dimensional, and
+  `s < 2 - λ_1/λ_2` holds.
 * `System.marginal_eq_zero_of_disjoint`: the marginal `(proj_c)_*(π_*μ)` is carried by
   `proj_c(X)`.
 
@@ -42,7 +43,8 @@ The example, in the namespace `BoxLike.Example`:
   `proj_x(X) ⊆ [0, 1/3]`, `proj_y(X) ⊆ [3/5, 37/40]`, and the two marginals are mutually
   singular.
 * `M`, `svfSum_le_mulVec`, `spectralRadius_M`, `pressure_eq_log_spectralRadius`,
-  `spectralRadius_M_zero`, `spectralRadius_M_one_le`: the matrix `M(t)`, the comparison with the singular-value sums, `P(𝖠, t) = log ρ(M(t))` for `0 ≤ t ≤ 1`, `ρ(M(0)) = 2` and
+  `spectralRadius_M_zero`, `spectralRadius_M_one_le`: the matrix `M(t)`, the comparison with
+  the singular-value sums, `P(𝖠, t) = log ρ(M(t))` for `0 ≤ t ≤ 1`, `ρ(M(0)) = 2` and
   `ρ(M(1)) ≤ 2/15`.
 * `dimaff_charEq`, `eq_dimaff_of_charEq`: the affinity dimension is the only solution of
   `(1 - 10^{-s})(1 - 20^{-s}) = 1200^{-s}` in `(0, 1]`.
@@ -52,6 +54,7 @@ approximations are out of scope.
 -/
 public import BoxLike.EquilibriumGibbsStatement
 public import BoxLike.MainTwo
+public import BoxLike.MeasureDimDouble
 public import Mathlib.Analysis.Normed.Algebra.Spectrum
 public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
@@ -205,7 +208,7 @@ theorem iterate_transfer_of_eigenvector (hv : S.transfer s v = ρ • v) (n : �
   | succ n ih => rw [Function.iterate_succ_apply', ih, transfer_smul, hv, smul_smul, pow_succ]
 
 /-- "Multiplication of these matrices records the two possible coordinate contractions of each
-word", tex lines 3014 to 3015: `(M(s)^n v)(c) = ∑_{|𝐢| = n} |g'_𝐣|^s v(c + o(𝐢))`, where `𝐣` is
+word", tex lines 2844 to 2845: `(M(s)^n v)(c) = ∑_{|𝐢| = n} |g'_𝐣|^s v(c + o(𝐢))`, where `𝐣` is
 the path of `Σ_Z` over `𝐢` starting on the axis `c`. -/
 theorem sum_abs_gDeriv_rpow_mul (s : ℝ) (n : ℕ) (v : ZMod 2 → ℝ) (c : ZMod 2) :
     ∑ w : Fin n → ι, |S.gDeriv (S.codeWord c (List.ofFn w))| ^ s *
@@ -221,7 +224,7 @@ theorem sum_abs_gDeriv_rpow_mul (s : ℝ) (n : ℕ) (v : ZMod 2 → ℝ) (c : ZM
     simp [codeWord_append, gDeriv_append, oWord_append, abs_mul,
       Real.mul_rpow (abs_nonneg _) (abs_nonneg _), add_assoc, mul_assoc]
 
-/-- The two-sided comparison of `Example.sys`, tex lines 3019 to 3025, for
+/-- The two-sided comparison of `Example.sys`, tex lines 2849 to 2855, for
 a positive vector `v` in place of `(1, 1)`: for `0 ≤ s ≤ 1`,
 `min(v) ∑_{|𝐢| = n} φ^s(A_𝐢) ≤ (1, 1) M(s)^n v ≤ 2 max(v) ∑_{|𝐢| = n} φ^s(A_𝐢)`. The factor two
 compares the maximum of two terms with their sum. -/
@@ -338,7 +341,8 @@ variable [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] {s : �
 case of the proof of `thm:main1`. The equilibrium identity reads `h_0(μ) = -s λ_1(𝖠, μ)`, so
 the two pointwise dimensions of the coordinate marginals are `s` and
 `s λ_1(𝖠, μ)/λ_2(𝖠, μ)`. They are distinct because `λ_2(𝖠, μ) < λ_1(𝖠, μ) < 0`, both occur on
-sets of positive measure, and the marginal is not exact-dimensional. The threshold
+sets of positive measure, so the marginal is double-dimensional and not exact-dimensional. The
+threshold
 `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)` of `thm:main1` holds for every `s ≤ 1`, as the proof of
 `thm:main1` notes. -/
 theorem main1_of_le_one (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
@@ -347,12 +351,13 @@ theorem main1_of_le_one (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGib
     (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (hs1 : s ≤ 1) (hP : S.pressure s = 0)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ) (c : ZMod 2) :
-    IsDoubleDim (S.marginal c μ) s (s * (S.lyapunov₁ μ / S.lyapunov₂ μ)) ∧
+    HasLocalDimPair (S.marginal c μ) s (s * (S.lyapunov₁ μ / S.lyapunov₂ μ)) ∧
       s * (S.lyapunov₁ μ / S.lyapunov₂ μ) < s ∧
       s < 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∧
       0 < S.marginal c μ {x | HasLocalDim (S.marginal c μ) x s} ∧
       0 < S.marginal c μ
         {x | HasLocalDim (S.marginal c μ) x (s * (S.lyapunov₁ μ / S.lyapunov₂ μ))} ∧
+      IsDoubleDim (S.marginal c μ) ∧
       ¬ ∃ d, IsExactDim (S.marginal c μ) d := by
   have hs2 : s < 2 := by linarith
   obtain ⟨ν₁, ν₂, hf₁, hf₂, hne₁, hne₂, hsum, hd₁, hd₂⟩ :=
@@ -378,8 +383,9 @@ theorem main1_of_le_one (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGib
   rw [e₁] at hd₁
   rw [e₂] at hd₂
   rw [hsum]
-  refine ⟨hd₁.isDoubleDim_add hd₂, hlt, by linarith,
-    hd₁.measure_hasLocalDim_add_left_pos hne₁, hd₂.measure_hasLocalDim_add_right_pos hne₂, ?_⟩
+  refine ⟨hd₁.hasLocalDimPair_add hd₂, hlt, by linarith,
+    hd₁.measure_hasLocalDim_add_left_pos hne₁, hd₂.measure_hasLocalDim_add_right_pos hne₂,
+    hd₁.isDoubleDim_add hd₂ hne₁ hne₂ hlt.ne', ?_⟩
   rw [isExactDim_add_iff hd₁ hd₂ hne₁ hne₂]
   exact hlt.ne'
 
@@ -685,22 +691,23 @@ theorem dimaff_pos_lt_one : 0 < sys.dimaff ∧ sys.dimaff < 1 := by
 /-! ### The conclusion of the example -/
 
 /-- The projection-dimension conclusion for `Example.sys`. Let `μ` be an invariant
-`s`-equilibrium state for `s = dimaff(X)`. Each coordinate marginal of `μ` is double-dimensional
-with the two pointwise dimensions `s` and `s λ_1(𝖠, μ)/λ_2(𝖠, μ)`. These are distinct, the
+`s`-equilibrium state for `s = dimaff(X)`. The pointwise dimension of each coordinate marginal
+of `μ` is `s` or `s λ_1(𝖠, μ)/λ_2(𝖠, μ)` almost everywhere. These values are distinct, the
 threshold `s < 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)` of `thm:main1` holds, both values occur on sets of
-positive marginal measure, and the marginal is not exact-dimensional. -/
+positive marginal measure, so the marginal is double-dimensional and not exact-dimensional. -/
 theorem marginal_doubleDim (hms : MorrisShmerkinLyapunov.{0}) (hfk : EquilibriumGibbsStatement.{0})
     (hfjj : FraserJordanJurgaDecomposition.{0}) (hjr : JordanRapaportDimension.{0})
     (μ : Measure (ℤ → Fin 2)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : sys.IsEquilibriumState sys.dimaff μ)
     (c : ZMod 2) :
-    IsDoubleDim (sys.marginal c μ) sys.dimaff
+    HasLocalDimPair (sys.marginal c μ) sys.dimaff
         (sys.dimaff * (sys.lyapunov₁ μ / sys.lyapunov₂ μ)) ∧
       sys.dimaff * (sys.lyapunov₁ μ / sys.lyapunov₂ μ) < sys.dimaff ∧
       sys.dimaff < 2 - sys.lyapunov₁ μ / sys.lyapunov₂ μ ∧
       0 < sys.marginal c μ {x | HasLocalDim (sys.marginal c μ) x sys.dimaff} ∧
       0 < sys.marginal c μ {x | HasLocalDim (sys.marginal c μ) x
         (sys.dimaff * (sys.lyapunov₁ μ / sys.lyapunov₂ μ))} ∧
+      IsDoubleDim (sys.marginal c μ) ∧
       ¬ ∃ d, IsExactDim (sys.marginal c μ) d :=
   sys.main1_of_le_one hms hfk hfjj hjr withRotations proximal projExpSeparation
     dimaff_pos_lt_one.1 dimaff_pos_lt_one.2.le sys.pressure_dimaff μ hinv heq c

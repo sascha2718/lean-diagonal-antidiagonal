@@ -2,7 +2,7 @@ module
 
 /-
 The singular value pressure `P(𝖠, s)` of an arbitrary tuple `𝖠 ∈ GL_2(ℝ)^N` (`sec:affinity_dim`,
-tex lines 2145 to 2157): the limit defining it exists by Fekete's lemma, the function
+tex lines 2048 to 2060): the limit defining it exists by Fekete's lemma, the function
 `s ↦ P(𝖠, s)` is continuous on `[0, ∞)` and convex between consecutive integers, and, when
 `max_i ‖A_i‖ < 1`, it is strictly decreasing with `P(𝖠, 0) = log N ≥ 0` and
 `P(𝖠, s) → -∞`, so that `dimaff(𝖠)` is well defined. Invertibility of the matrices is the
@@ -16,7 +16,7 @@ limit of these convex functions divided by `n`.
 
 * `MatrixTuple.abs_det_le_norm_sq`: `|det A| = α_1(A) α_2(A) ≤ α_1(A)²` with `α_1(A) = ‖A‖`.
 * `MatrixTuple.norm_adjugate`, `MatrixTuple.inv_norm_inv_eq_abs_det_div_norm`: `‖adj A‖ = ‖A‖`
-  and `α_2(A) = ‖A⁻¹‖⁻¹ = |det A| / ‖A‖` (tex lines 1544 to 1548).
+  and `α_2(A) = ‖A⁻¹‖⁻¹ = |det A| / ‖A‖` (tex lines 1467 to 1471).
 * `MatrixTuple.svf_eq_rpow_mul_rpow`: `φ^s(A) = α_1(A)^{p(s)} α_2(A)^{s - p(s)}`, with
   `α_2(A) = |det A| / ‖A‖` and `p(s)` the exponent `svfExp s` of `BoxLike/AffinityDim.lean`.
 * `MatrixTuple.Convexity.svf_add_le`, `MatrixTuple.Convexity.le_svf_add`:
@@ -31,7 +31,7 @@ limit of these convex functions divided by `n`.
   `ρ ≤ α_2(A_i)` and `α_1(A_i) ≤ R`; hence `P(𝖠, ·)` is continuous on `[0, ∞)`.
 * `MatrixTuple.pressure_at_zero`, `MatrixTuple.pressure_strictAntiOn_Ici`,
   `MatrixTuple.pressure_tendsto_atBot`, `MatrixTuple.pressure_existsUnique_eq_zero`: the
-  remaining assertions of tex lines 2154 to 2157 under `max_i ‖A_i‖ < 1`.
+  remaining assertions of tex lines 2057 to 2060 under `max_i ‖A_i‖ < 1`.
 * `System.pressure_convexOn_Icc_nat`, `System.pressure_convexOn_Ici_two`: the box-like
   specialisation.
 -/
@@ -495,14 +495,14 @@ theorem svf_eq_exp_of_mem_Ici_two {B : Matrix (Fin 2) (Fin 2) ℝ} (hB : B.det �
   congr 1
   ring
 
-/-- The pressure of an invertible tuple is convex on `[0, 1]` (tex line 2153). -/
+/-- The pressure of an invertible tuple is convex on `[0, 1]` (tex line 2056). -/
 theorem pressure_convexOn_Icc_zero_one (hA : ∀ i, (A i).det ≠ 0) :
     ConvexOn ℝ (Icc 0 1) (pressure A) :=
   pressure_convexOn_of_svf_eq_exp hA (convex_Icc 0 1) (fun _ hs => hs.1) (fun _ => 0)
     (fun B => Real.log ‖B‖)
     (fun _ hs w => svf_eq_exp_of_mem_Icc_zero_one (Convexity.det_word_ne_zero hA w) hs)
 
-/-- The pressure of an invertible tuple is convex on `[1, 2]` (tex line 2153). -/
+/-- The pressure of an invertible tuple is convex on `[1, 2]` (tex line 2056). -/
 theorem pressure_convexOn_Icc_one_two (hA : ∀ i, (A i).det ≠ 0) :
     ConvexOn ℝ (Icc 1 2) (pressure A) :=
   pressure_convexOn_of_svf_eq_exp hA (convex_Icc 1 2)
@@ -653,7 +653,7 @@ theorem pressure_continuousOn_Ici (hA : ∀ i, (A i).det ≠ 0) :
   · rw [abs_sub_comm, abs_sub_comm x y]
     exact habs y x hy hxy
 
-/-- `P(𝖠, 0) = log N`, so `P(𝖠, 0) ≥ 0` for a non-empty alphabet (tex line 2155); no hypothesis on
+/-- `P(𝖠, 0) = log N`, so `P(𝖠, 0) ≥ 0` for a non-empty alphabet (tex line 2058); no hypothesis on
 the matrices is needed, since `φ^0 = 1`. -/
 theorem pressure_at_zero : pressure A 0 = Real.log (Fintype.card ι) := by
   have hsum : ∀ n : ℕ, svfSum A 0 n = (Fintype.card ι : ℝ) ^ n := fun n => by

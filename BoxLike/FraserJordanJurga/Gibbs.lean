@@ -11,7 +11,7 @@ exchange of the axes carries it to the ergodic Gibbs measure `μ_2 = flip_*μ_1`
 factor map `q = unCode : Σ_Z → Σ` that forgets the axis carries `μ_1` to an ergodic invariant
 probability measure on `Σ`. Every word `𝐢|_n` of `Σ` has the two lifts `τ(𝐢)|_n` and `ω(𝐢)|_n`,
 so that, by the Gibbs bounds of `μ_1`, `P(𝖠, s) = P_Z(f_{1,s})` and
-`thm:matrix_products_g_derivatives` in the form of tex lines 2565 to 2570,
+`thm:matrix_products_g_derivatives` in the form of tex lines 2446 to 2451,
 `q_*μ_1([𝐢|_n]) = μ_1([τ(𝐢)|_n]) + μ_1([ω(𝐢)|_n])
   ≍ e^{-nP(𝖠, s)} (e^{S_n f_{1,s}(τ(𝐢))} + e^{S_n f_{1,s}(ω(𝐢))}) ≍ e^{-nP(𝖠, s)} φ^s(A_{𝐢|_n})`:
 the measure `q_*μ_1` has the Gibbs bounds of `thm:irred_eq_state`.
@@ -38,7 +38,7 @@ open MeasureTheory
 
 /-! ### The first Gibbs measure -/
 
-/-- `thm:eq_state_is_sum`, the Gibbs measure `μ_1` (tex lines 2501 to 2503 and 2572 to 2574): for
+/-- `thm:eq_state_is_sum`, the Gibbs measure `μ_1` (tex lines 2382 to 2384 and 2572 to 2574): for
 a box-like tuple with rotations and every `s`, there is an ergodic probability measure carried by
 `Σ_Z` with the Gibbs property for the potential `f_{1,s}`. This is Bowen's theorem for the
 locally constant, hence Hölder, potential `f_{1,s}`. -/
@@ -90,7 +90,7 @@ theorem ergodic_map_flipAxis (h : Ergodic (shift 1) ν) : Ergodic (shift 1) (ν.
   (⟨measurable_flipAxis, rfl⟩ : MeasurePreserving flipAxis ν (ν.map flipAxis))
     |>.ergodic_of_ergodic_semiconj h (measurable_shift 1) fun _ => rfl
 
-/-- `thm:eq_state_is_sum`, the Gibbs measure `μ_2` (tex lines 2572 to 2574 and 2606 to 2607):
+/-- `thm:eq_state_is_sum`, the Gibbs measure `μ_2` (tex lines 2453 to 2455 and 2606 to 2607):
 the image `flip_*ν` of a Gibbs measure for `f_{1,s}` is a Gibbs measure for `f_{2,s}`, with the
 same constants, since `f_{2,s} = f_{1,s} ∘ flip`. -/
 theorem System.isGibbs_potential₂_map_flipAxis [Fintype ι] [MeasurableSingletonClass ι]
@@ -165,7 +165,7 @@ theorem System.measureReal_cylinder_liftBlock_bounds {P C : ℝ}
 bounds of `thm:irred_eq_state`. For a word `w` of length `n ≥ 1`,
 `q_*ν([w]) = ν([w, 0]) + ν([w, 1])` is the sum over the two lifts of `w`, each comparable to
 `e^{-nP(𝖠, s)} e^{S_n f_{1,s}}` along the lift, and `φ^s(A_w)` is the larger of the two
-exponentials (tex lines 2565 to 2570). With the Gibbs constant `C` of `ν` the constant of the
+exponentials (tex lines 2446 to 2451). With the Gibbs constant `C` of `ν` the constant of the
 bounds is `2C`. -/
 theorem System.hasGibbsBounds_map_unCode (hs0 : 0 < s) (hs2 : s < 2) [IsProbabilityMeasure ν]
     (hν : ν (subshift S.o)ᶜ = 0) (hg : IsGibbs S.o (S.potential₁ s) ν) :

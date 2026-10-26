@@ -1,7 +1,7 @@
 module
 
 /-
-The choice of the parameter `p` in `ex:projection_double_dimensional`, tex lines 2938 to 2953:
+The choice of the parameter `p` in `ex:projection_double_dimensional`, tex lines 2769 to 2784:
 `H` decreases and `J` increases on `(1/2, 1)`, the ratio `(log 2 + H(p)) / (log 2 + J(p))`
 decreases continuously from one to zero, and so a unique `p ∈ (1/2, 1)` has ratio `s_2/s_1`
 for every `0 < s_2 < s_1`. The parameters `a = (p/2)^{1/s_1}` and `b = ((1-p)/2)^{1/s_1}`

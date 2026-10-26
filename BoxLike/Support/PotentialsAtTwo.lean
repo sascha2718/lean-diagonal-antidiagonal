@@ -32,7 +32,7 @@ namespace System
 variable {ι : Type*} (S : System ι)
 
 /-- `f_{1,2}(j_0) = log |g'_{j_0}| + log |g'_{j_0 ± N}| = log |a_i| + log |b_i| = log |det A_i|`
-for `j_0 = (i, c)` (tex lines 2524 to 2551 at `s = 2`). -/
+for `j_0 = (i, c)` (tex lines 2405 to 2432 at `s = 2`). -/
 theorem potential₁_two (p : ι × ZMod 2) :
     S.potential₁ 2 p = Real.log |(S.mat p.1).det| := by
   have hab : Real.log |S.ratio p| + Real.log |S.ratio (p.1, p.2 + 1)| =
@@ -74,7 +74,7 @@ theorem eq_of_isGibbs_potential_two {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2
 variable {S}
 
 /-- The `2`-Gibbs measures `μ_1`, `μ_2` of a decomposition of `thm:eq_state_is_sum` at `s = 2`
-coincide (tex line 2637). -/
+coincide (tex line 2519). -/
 theorem GibbsDecomposition.mu₁_eq_mu₂_of_two {μ : Measure (ℤ → ι)}
     {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)} (h : S.GibbsDecomposition 2 μ μ₁ μ₂) : μ₁ = μ₂ := by
   have := h.prob₁

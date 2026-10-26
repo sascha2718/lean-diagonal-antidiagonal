@@ -1,7 +1,7 @@
 module
 
 /-
-The second part of `thm:feng1` (tex lines 2711 to 2724) from its first part. Both parts are
+The second part of `thm:feng1` (tex lines 2581 to 2594) from its first part. Both parts are
 cases of Feng's Theorems 1.2 and 1.3 (Duke Math. J. 172 (2023), arXiv:1901.01691v2): the first
 for planar systems, the second for the projective system `Ψ` on `ℝ` of a box-like system. The
 second follows from the first applied to the degenerate planar system

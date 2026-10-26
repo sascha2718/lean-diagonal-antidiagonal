@@ -2,7 +2,7 @@ module
 
 /-
 The Minkowski (box-counting) and packing dimensions of subsets of a metric space, to which
-`sec:affinity_dim` (tex lines 2174 to 2175) refers through Falconer, Techniques in Fractal
+`sec:affinity_dim` (tex lines 2077 to 2077) refers through Falconer, Techniques in Fractal
 Geometry, §2. The values lie in `ℝ≥0∞`, as for Mathlib's `dimH`.
 
 The definitions and most lemmas are taken from the library `GeometricMeasureTheory`
@@ -69,12 +69,12 @@ def LowerBoxDimLE (E : Set X) (s : ℝ) : Prop :=
   ∃ᶠ r : ℝ in 𝓝[>] (0 : ℝ),
     (Metric.externalCoveringNumber r.toNNReal E : ℝ≥0∞) ≤ ENNReal.ofReal (r ^ (-s))
 
-/-- The upper Minkowski (box-counting) dimension `\overline{\dim}_M E` of tex lines 2174 to
+/-- The upper Minkowski (box-counting) dimension `\overline{\dim}_M E` of tex lines 2077 to
 2175: the least `s` with `N_r(E) ≤ r^{-s}` for all small `r`. -/
 def upperBoxDim (E : Set X) : ℝ≥0∞ :=
   ⨅ (s : ℝ≥0) (_ : UpperBoxDimLE E (s : ℝ)), (s : ℝ≥0∞)
 
-/-- The lower Minkowski (box-counting) dimension `\underline{\dim}_M E` of tex lines 2174 to
+/-- The lower Minkowski (box-counting) dimension `\underline{\dim}_M E` of tex lines 2077 to
 2175: the least `s` with `N_r(E) ≤ r^{-s}` for arbitrarily small `r`. The Minkowski dimension
 `\dim_M E` exists when `lowerBoxDim E = upperBoxDim E`. -/
 def lowerBoxDim (E : Set X) : ℝ≥0∞ :=
@@ -901,7 +901,7 @@ theorem dimH_le_lowerBoxDim {Y : Type*} [MetricSpace Y] (E : Set Y) :
 
 /-! ### The packing dimension -/
 
-/-- The packing dimension `\dim_P E` of tex lines 2174 to 2175, defined as the modified upper
+/-- The packing dimension `\dim_P E` of tex lines 2077 to 2077, defined as the modified upper
 box dimension: the infimum over countable covers of `E` by bounded sets of the supremum of the
 upper Minkowski dimensions of the pieces. On a metric space this equals the packing dimension
 defined through packing measures, by `packing_modified_box` of the library

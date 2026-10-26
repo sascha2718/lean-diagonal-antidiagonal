@@ -2,7 +2,7 @@ module
 
 /-
 The uniqueness part of Feng–Käenmäki, Proposition 1.2 (Discrete Contin. Dyn. Syst. 30 (2011)),
-which the article quotes as `thm:irred_eq_state` (tex lines 2225 to 2239), on the two-sided
+which the article quotes as `thm:irred_eq_state` (tex lines 2113 to 2127), on the two-sided
 shift `Σ = ℤ → ι` with the potential `‖·‖^q`, `q ≥ 0`: every invariant `q`-equilibrium state
 equals every ergodic probability measure with the Gibbs property.
 
@@ -156,7 +156,7 @@ theorem IsNormEquilibrium.absolutelyContinuous_of_hasNormGibbs (hA : ∀ i, (A i
   exact lt_of_lt_of_le (by positivity) (hlow n hn w)
 
 /-- The uniqueness in Feng–Käenmäki, Proposition 1.2 (Discrete Contin. Dyn. Syst. 30 (2011)),
-quoted as `thm:irred_eq_state` (tex lines 2225 to 2239), on the two-sided shift: for a tuple of
+quoted as `thm:irred_eq_state` (tex lines 2113 to 2127), on the two-sided shift: for a tuple of
 invertible planar matrices and `q ≥ 0`, an invariant `q`-equilibrium state of `‖·‖^q` equals
 every ergodic probability measure with the Gibbs property of `‖·‖^q`. It is absolutely
 continuous with respect to it (`IsNormEquilibrium.absolutelyContinuous_of_hasNormGibbs`). -/

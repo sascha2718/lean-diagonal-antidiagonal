@@ -2,52 +2,76 @@ version: 3
 scope: "All 41 numbered statements of the manuscript, and 45 prose spans with the unnumbered definitions and claims the library certifies or takes from the literature."
 source_version: "diagonal-antidiagonal.tex, working manuscript (no arXiv version yet)"
 manuscript_files: ["diagonal-antidiagonal.tex"]
-manuscript_revision: "2e45bb0a3f01a2047809a0bf74cb76dcdc93ac3b"
-manuscript_sha256: {"diagonal-antidiagonal.tex": "c9ff4f19c2731296ca77fd59ccf4fab3c056b545131ec74e325ddcd5c9cf158c"}
+manuscript_revision: "58f9f40a26814aeee36a318da54d576e363bb821"
+manuscript_sha256: {"diagonal-antidiagonal.tex": "afe219e43e2f382309351253a454c8bf61e19137fe059ac9c80f4202b7a9ef39"}
 entries:
-  - source: "Fraser's packing and Minkowski dimension formula"
-    label: "thm:fraser"
+  - source: "Hochman–Rapaport's dimension formula for strongly irreducible planar systems"
+    label: "thm:hochman_rapaport"
     number: "1.1"
     kind: "theorem"
-    sha256: "44d7ffc618efed9efb29998f5d790f695f680c0b71d8d25e6c400507f1ccb5ee"
+    sha256: "d16b300290b2074df6f261d1a2fe75adc37ab77f673d4dd4d152dbdd2e350554"
+    status: "cited"
+    hypotheses: ["BoxLike.HochmanRapaportDimension"]
+    lean: []
+    relation: "representation"
+    headline: false
+    note: "Hochman–Rapaport, Theorem 1.1 (J. Eur. Math. Soc. 24 (2022)), recorded as the Prop-valued statement HochmanRapaportDimension (BoxLike/LiteratureHochmanRapaport.lean): proximal, strongly irreducible, no common fixed point, exponentially separated in the distance of the affine coefficients in place of a left-invariant Riemannian metric (the two differ along words of length n by factors exponential in n, so the condition is the same with another constant). No result of the library uses it; the paper cites it in the introduction only."
+    solution_entry: "paper_1_1"
+  - source: "Rapaport's dimension formula for diagonal systems"
+    label: "thm:rapaport"
+    number: "1.2"
+    kind: "theorem"
+    sha256: "698074c8ee1bb7fcaddaafab6bd1709fd5b6c46272738d04e94323a23d5a05ab"
+    status: "cited"
+    hypotheses: ["BoxLike.RapaportDiagonalDimension"]
+    lean: []
+    relation: "representation"
+    headline: false
+    note: "Rapaport, Theorem 1.3 (arXiv:2309.03985), recorded as the Prop-valued statement RapaportDiagonalDimension (BoxLike/LiteratureRapaport.lean) for box-like systems with diagonal linear parts: proximal, both induced systems on the coordinate axes exponentially separated (System.AxisExpSeparation, the definition before thm:rapaport), conclusion dim_H X = min{2, dimaff X}. Taken as the explicit hypothesis of case (iii) of thm:main2 and restated in Challenge.lean."
+    solution_entry: "paper_1_2"
+  - source: "Fraser's packing and Minkowski dimension formula"
+    label: "thm:fraser"
+    number: "1.3"
+    kind: "theorem"
+    sha256: "1fe24eb4934be960b901625f0d41d544f4849b172d381788e3e07003fac8135d"
     status: "formalized"
     hypotheses: []
     lean: ["BoxLike.System.FraserBound", "BoxLike.System.FraserROSC", "BoxLike.System.fraserBound_holds", "BoxLike.System.fraserROSC_holds", "BoxLike.System.packingDim_attractor", "BoxLike.System.fraserBound_iff", "BoxLike.System.fraserROSC_of_le", "BoxLike.System.upperBoxDim_attractor_le_dimmaff", "BoxLike.System.upperBoxDim_attractor_le_of_modPressure_neg", "BoxLike.FraserUpper.exists_sum_modSvfSum_le", "BoxLike.System.dimmaff_le_lowerBoxDim", "BoxLike.System.fraserStopSum_meets_le", "BoxLike.System.exists_le_fraserStopSum", "BoxLike.System.exists_le_fraserStopSum_of_ge", "BoxLike.System.fraserROSC_of_fraserBound", "BoxLike.System.FraserROSC.dimmaff_eq_dimaff", "BoxLike.System.FraserROSC.dim_eq_dimaff", "BoxLike.System.lowerBoxDim_coord_eq"]
     relation: "split"
     headline: false
     note: "Both parts of Fraser's Theorem 2.3 and Corollary 2.5, proved along Fraser's Section 5; a block sum replaces the k-block stopping set in the super-multiplicative case of his Lemma 5.1 (2)."
-    solution_entry: "paper_1_1"
+    solution_entry: "paper_1_3"
   - source: "Projections of the equilibrium state at the affinity dimension"
     label: "thm:main1"
-    number: "1.2"
-    kind: "theorem"
-    sha256: "2957d1ea944eb0c9f06578276d956ceb68b138e843ebd064e6a9f579a3cc43aa"
+    number: "A"
+    kind: "maintheorem"
+    sha256: "dc89d8412a780ca29883199bc45aec74269c459455222744bdd03aefbc2eb654"
     status: "formalized"
     lean: ["Challenge.audit_main1"]
     hypotheses: []
-    relation: "split"
+    relation: "exact"
     headline: true
-    note: "Full statement proved for every value of dimaff and every equilibrium state; uniqueness and ergodicity are not needed as premises. For s >= 2 the exponents coincide, the threshold is one and both values are one (main1_of_two_le), through the Bernoulli orientation lift of Theorem 4.4. For s < 2 Lean calls Jordan-Rapaport directly, so Feng-Hu is a redundant citation. The inputs the manuscript takes from Morris-Shmerkin (eq:simple_lyapunov) and Feng-Kaenmaki (the Gibbs bounds of the equilibrium state) are theorems of the library (morrisShmerkinLyapunov_holds, equilibriumGibbs)."
-    solution_entry: "paper_1_2"
-    library: ["BoxLike.System.main1_dimaff_all", "BoxLike.System.main1_all", "BoxLike.System.main1_of_two_le", "BoxLike.System.main1", "BoxLike.System.eq_state_proj_dim_all"]
+    note: "Theorem A as printed: below the threshold 2 - lambda_1/lambda_2 each coordinate projection of pi_*mu is double-dimensional in the sense of sec:ledrappier_young_formula (two distinct values, each on a set of positive measure: IsDoubleDim), and from the threshold on it is exact-dimensional of dimension one. Proved for every invariant s-equilibrium state at s = dimaff(X), for every value of dimaff; uniqueness and ergodicity are not needed as premises. For s >= 2 the exponents coincide, the threshold is one and both values are one (main1_of_two_le), through the Bernoulli orientation lift of Theorem 4.4. For 0 < s < 2 the marginal is the sum of two nonzero exact-dimensional Gibbs projections (eq:proj_eq_is_sum) whose dimensions differ exactly below the threshold, and Lemma 4.1 gives double-dimensionality (main1_isDoubleDim); Jordan-Rapaport is called directly, so Feng-Hu is a redundant citation. The two values are identified in Theorem 4.4 (main1_values_all). The inputs the manuscript takes from Morris-Shmerkin (eq:simple_lyapunov) and Feng-Kaenmaki (the Gibbs bounds) are theorems of the library (morrisShmerkinLyapunov_holds, equilibriumGibbs)."
+    solution_entry: "paper_A"
+    library: ["BoxLike.System.main1_dimaff_all", "BoxLike.System.main1_dichotomy_all", "BoxLike.System.main1_isDoubleDim", "BoxLike.System.main1_values_all", "BoxLike.System.main1_all", "BoxLike.System.main1_of_two_le", "BoxLike.System.main1", "BoxLike.System.eq_state_proj_dim_all"]
   - source: "Hausdorff dimension equals affinity dimension"
     label: "thm:main2"
-    number: "1.3"
-    kind: "theorem"
-    sha256: "2c069734098ee27ab75acd18b24c73db8f8e9829e8b526f4d1dc6a38bd525691"
+    number: "B"
+    kind: "maintheorem"
+    sha256: "fefd2e1efaebc9ab8722eb874dd445e9d7a57f0f2613596d03f34fed57153275"
     status: "formalized"
     lean: ["Challenge.audit_main2"]
-    hypotheses: []
-    relation: "split"
+    hypotheses: ["BoxLike.RapaportDiagonalDimension"]
+    relation: "exact"
     headline: true
-    note: "Proved along the prose for every value of dimaff and every equilibrium state (main2_prose). Deviations: returns to horizontal orientation from ergodicity, not mixing; the scalar Feng formula for the diagonal subsystem from the planar FengLedrappierYoung on an auxiliary system. main2_noExactOverlaps_all is an alternative proof."
-    solution_entry: "paper_1_3"
-    library: ["BoxLike.kittleKoglerDimension_holds", "BoxLike.System.main2_noExactOverlaps_prose", "BoxLike.System.main2_prose", "BoxLike.System.main2_prose_all", "BoxLike.System.exists_typical_words_prose", "BoxLike.System.IsHomDiag.isExactDim_map_proj", "BoxLike.System.le_dimH_attractor_of_family", "BoxLike.System.subsystem_strongSeparation", "BoxLike.System.StrongOpenSet.dimaff_eq_two", "BoxLike.System.dimH_attractor_of_two_le", "BoxLike.System.main2_noExactOverlaps_all"]
+    note: "Theorem B as printed, for every value of dimaff and every invariant equilibrium state (main2_full; Challenge.audit_main2 states the dimension formula under (i) or (ii) or (iii) together with the furthermore clause). Cases (i) and (ii) along the prose (main2_prose): returns to horizontal orientation from ergodicity, not mixing; the scalar Feng formula for the diagonal subsystem from the planar FengLedrappierYoung on an auxiliary system; under (i) or (ii) dimaff <= 2, so min{2, dimaff} = dimaff. Case (iii) along the prose with Rapaport's theorem as the explicit literature hypothesis hrap (main2_pesc): the typical families of the t-equilibrium state give homogeneous diagonal subsystems X_n of X whose induced axis systems are exponentially separated, dim_H X_n = min{2, dimaff(X_n)} by Rapaport, dimaff(X_n) is the right-hand side of eq:diml_min2 and tends to dim_L(A, mu_t) >= t, then t = s or t -> 2. Furthermore clause from thm:main_extended (main2_furthermore). main2_noExactOverlaps_all is an alternative proof of cases (i) and (ii)."
+    solution_entry: "paper_B"
+    library: ["BoxLike.kittleKoglerDimension_holds", "BoxLike.System.main2_noExactOverlaps_prose", "BoxLike.System.main2_prose", "BoxLike.System.main2_prose_all", "BoxLike.System.exists_typical_words_prose", "BoxLike.System.IsHomDiag.isExactDim_map_proj", "BoxLike.System.le_dimH_attractor_of_family", "BoxLike.System.subsystem_strongSeparation", "BoxLike.System.StrongOpenSet.dimaff_eq_two", "BoxLike.System.dimH_attractor_of_two_le", "BoxLike.System.main2_noExactOverlaps_all", "BoxLike.System.main2_full", "BoxLike.System.main2_full_of_library", "BoxLike.System.main2_pesc", "BoxLike.System.main2_pesc_of_library", "BoxLike.System.main2_pesc_normalised", "BoxLike.System.le_dimH_attractor_pesc", "BoxLike.System.main2_furthermore", "BoxLike.System.main2_furthermore_of_library", "BoxLike.System.dimH_subsystem_attractor_eq", "BoxLike.System.min_lyapDim_le_dimH_attractor_of_family", "BoxLike.System.subsystem_axisExpSeparation", "BoxLike.System.IsHomDiag.dimaff_eq", "BoxLike.System.IsHomDiag.pressure_eq", "BoxLike.tendsto_lyapDim", "BoxLike.lyapDim_div", "BoxLike.System.IsEquilibriumState.le_lyapDim", "BoxLike.System.ProjExpSeparation.noExactOverlaps"]
   - source: "Question on coincident projection dimensions without exact overlaps"
     label: "q:coincident-projection-dimensions"
     number: "1.4"
     kind: "question"
-    sha256: "60b2fae80a069a453c661e7abe47df437d1899292816a531003b6df5e7379b53"
+    sha256: "186a3c2b880f3e9b5d81e6ff91e1f032fb5bd4d9fcd23c0177d7ba68b9330a0b"
     status: "intentionally_unformalized"
     headline: false
     reason: "Open question; no theorem or answer is asserted."
@@ -263,7 +287,7 @@ entries:
     label: "thm:two-block-normalisation"
     number: "3.11"
     kind: "lemma"
-    sha256: "85fcf4ebfb9577aa2f528afa42cacd4bc3cbeaed4098c80a23665d0fe31259c2"
+    sha256: "e0120a6842412a474047dc02d566d951ee21f4e2c638d4366d49b3c412fe8245"
     status: "formalized"
     lean: ["BoxLike.System.two_block_normalisation", "BoxLike.System.two_block_normalisation_consequences", "BoxLike.System.Proximal.sq_hasProximalDiagonal", "BoxLike.System.sq_irreducible", "BoxLike.IsBernoulli.map_group", "BoxLike.System.IsEquilibriumState.map_group"]
     hypotheses: []
@@ -311,19 +335,19 @@ entries:
     label: "thm:exact-dimensional-mixture"
     number: "4.1"
     kind: "lemma"
-    sha256: "7d3c9265c4662a534f1a7bfd60e4f6b6ab1ae8d2421ccf8603ee62815af1d832"
+    sha256: "42a825e0096272e49ffb39642192b5d069cec6b49de2976229b732f39e9f395b"
     status: "formalized"
-    lean: ["BoxLike.IsExactDim.ae_hasLocalDim_add_left", "BoxLike.IsExactDim.ae_hasLocalDim_add_right", "BoxLike.IsExactDim.isDoubleDim_add", "BoxLike.IsExactDim.measure_hasLocalDim_add_left_pos", "BoxLike.IsExactDim.measure_hasLocalDim_add_right_pos", "BoxLike.isExactDim_add_iff"]
+    lean: ["BoxLike.IsExactDim.mixture", "BoxLike.IsExactDim.isDoubleDim_add", "BoxLike.IsExactDim.isExactDim_add", "BoxLike.isDoubleDim_add_iff", "BoxLike.IsExactDim.ae_hasLocalDim_add_left", "BoxLike.IsExactDim.ae_hasLocalDim_add_right", "BoxLike.IsExactDim.hasLocalDimPair_add", "BoxLike.IsExactDim.measure_hasLocalDim_add_left_pos", "BoxLike.IsExactDim.measure_hasLocalDim_add_right_pos", "BoxLike.isExactDim_add_iff"]
     relation: "split"
     headline: false
-    note: "All four conclusions, including positive occurrence of each distinct value, are represented. The real-space specialization of the generic lemmas matches the manuscript."
+    note: "The lemma as printed (IsExactDim.mixture): dimloc(nu, x) = dim nu_k for nu_k-almost every x, each value on a set of positive nu-measure, double-dimensional in the sense of sec:ledrappier_young_formula when the dimensions differ (IsExactDim.isDoubleDim_add) and exact-dimensional otherwise (IsExactDim.isExactDim_add); proved on a Besicovitch space, which covers R^d. The manuscript omits the proof."
     hypotheses: []
     solution_entry: "paper_4_1"
   - source: "Feng's Ledrappier–Young formula"
     label: "thm:feng1"
     number: "4.2"
     kind: "theorem"
-    sha256: "93cba8e1fa629363e3b0f0ad65b39c9c41a9fff41bfd9534905f5c0db3aac5ef"
+    sha256: "db2be3e7f987eaeb4c2d7d03634422648b58a2c5571da8785caf4a7f61c468f4"
     status: "formalized"
     hypotheses: []
     lean: ["BoxLike.planarFengLedrappierYoung_holds", "BoxLike.fengLedrappierYoung_holds", "BoxLike.fengLedrappierYoungBar_holds", "BoxLike.planar_feng1", "BoxLike.PlanarSystem.feng1", "BoxLike.PlanarFengLedrappierYoung", "BoxLike.PlanarFengLedrappierYoung.fengLedrappierYoung", "BoxLike.planarFengLedrappierYoung_of_fengXi", "BoxLike.FengLedrappierYoung", "BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung", "BoxLike.System.isExactDim_map_projBar_of_fengLedrappierYoung"]
@@ -347,24 +371,24 @@ entries:
     label: "thm:eq_state_proj_dim"
     number: "4.4"
     kind: "theorem"
-    sha256: "9e1467da94da619202c799251f6542d4fcfe755541f3f3ea0acba46733eae2b9"
+    sha256: "fd3cb75c72ddaadfa6912309991fbfc7512e2c8152f728fd5c5c85ba2b1a3df4"
     status: "formalized"
-    lean: ["BoxLike.System.eq_state_proj_dim_all", "BoxLike.System.eq_state_proj_dim_of_two_le", "BoxLike.System.isExactDim_marginal_of_two_le", "BoxLike.System.IsEquilibriumState.lyapunov_eq_of_two_le", "BoxLike.ergodic_orientationLift_bernoulli", "BoxLike.entropy_orientationLift", "BoxLike.System.map_projBar_orientationLift", "BoxLike.System.eq_state_proj_dim", "BoxLike.System.marginal_decomposition"]
+    lean: ["BoxLike.System.eq_state_proj_dim_all", "BoxLike.System.eq_state_proj_dim_of_two_le", "BoxLike.System.isExactDim_marginal_of_two_le", "BoxLike.System.IsEquilibriumState.lyapunov_eq_of_two_le", "BoxLike.ergodic_orientationLift_bernoulli", "BoxLike.entropy_orientationLift", "BoxLike.System.map_projBar_orientationLift", "BoxLike.System.eq_state_proj_dim", "BoxLike.System.marginal_decomposition", "BoxLike.System.main1_values_all"]
     hypotheses: []
     relation: "split"
     headline: false
-    note: "Proved for every s > 0 and every equilibrium state. For s >= 2 as in the prose: the Bernoulli equilibrium state, its orientation lift as a stationary mixing Markov measure, equal entropy, equal Lyapunov exponents, Jordan-Rapaport on the lift and the differentiation step; this branch uses only rotations, projective exponential separation and Jordan-Rapaport."
+    note: "Proved for every s > 0 and every equilibrium state, with the five conclusions of the printed statement: the pointwise dimension takes only the two values (HasLocalDimPair), they are the upper packing and the lower Hausdorff dimension, and each occurs on a set of positive measure (for s >= 2 the two values coincide and the set is of full measure). For s >= 2 as in the prose: the Bernoulli equilibrium state, its orientation lift as a stationary mixing Markov measure, equal entropy, equal Lyapunov exponents, Jordan-Rapaport on the lift and the differentiation step; this branch uses only rotations, projective exponential separation and Jordan-Rapaport."
     solution_entry: "paper_4_4"
   - source: "Example with double-dimensional projections"
     label: "ex:projection_double_dimensional"
     number: "4.5"
     kind: "example"
-    sha256: "454870d696432826be0026319e64578fe72596c3996826868ad837cc8853a888"
+    sha256: "547cc6a18bc1608d83cdbf87cee1ab80d0caeb5f5daa1c2769c35a6ff2894436"
     status: "formalized"
     lean: ["BoxLike.PrescribedExample.projection_double_dimensional", "BoxLike.PrescribedExample.exists_geometry", "BoxLike.PrescribedExample.existsUnique_p", "BoxLike.PrescribedExample.pressure_eq", "BoxLike.PrescribedExample.exists_translation", "BoxLike.PrescribedExample.volume_badSet_le", "BoxLike.PrescribedExample.Gibbs.isEquilibriumState_spec", "BoxLike.PrescribedExample.Gibbs.marginal_spec"]
     hypotheses: []
     headline: false
-    note: "Full statement for every 0 < s2 < s1 <= 1 along the prose: parameters, pressure and dimaff, the translation cube and the volume argument for projective exponential separation, the Markov measure, entropy and exponents, and Theorem 4.4. The identification of the Gibbs measure with the Markov measure is proved by a Gibbs-uniqueness argument the prose leaves implicit."
+    note: "Full statement for every 0 < s2 < s1 <= 1 along the prose: parameters, pressure and dimaff, the translation cube and the volume argument for projective exponential separation, the Markov measure, entropy and exponents, and Theorem 4.4; both coordinate projections are double-dimensional (IsDoubleDim) with the values s1 and s2, each on a set of positive measure. The identification of the Gibbs measure with the Markov measure is proved by a Gibbs-uniqueness argument the prose leaves implicit."
     relation: "exact"
     solution_entry: "paper_4_5"
   - source: "Positivity of the Gibbs measures on the orientation sets"
@@ -500,30 +524,65 @@ entries:
     note: "The full all-s exact-dimensionality statement is represented. Positivity of s follows from rotations. For s≥2 the entropy alternative is impossible and the SOSC volume argument yields exact dimension 2. The ge-two helper needs no external literature hypotheses, rotations, proximality or projective separation. FengLedrappierYoungBar, which the library statements take, follows from FengLedrappierYoung (fengLedrappierYoungBar_of_fengLedrappierYoung), and Solution passes the proof."
     solution_entry: "paper_4_16"
     library: ["BoxLike.System.main_extended_min", "BoxLike.System.main_extended", "BoxLike.System.main_extended_normalised", "BoxLike.System.main_extended_ge_two", "BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung"]
+  - source: "Lower bound min{dimaff(X), 2 - λ₁/λ₂} without the strong open set condition or projective exponential separation"
+    label: "rem:threshold_bound"
+    number: "4.17"
+    kind: "remark"
+    sha256: "a82551ce76146e27d20761d3a6b83f5846d217c558d2ef9b6c365aa2455616e4"
+    status: "formalized"
+    hypotheses: []
+    lean: ["BoxLike.System.threshold_bound", "BoxLike.System.threshold_bound_prose", "BoxLike.System.le_dimH_attractor_of_entropy_gt", "BoxLike.System.le_dimH_attractor_of_entropy_gt_prose", "BoxLike.System.le_dimH_attractor_of_entropy_gt_normalised", "BoxLike.eventually_subsystemDim_eq_of_tendsto", "BoxLike.tendsto_one_add_sub_div", "BoxLike.lyapDim_neg_eq_threshold"]
+    relation: "exact"
+    headline: false
+    note: "The bound of the remark, for every invariant s-equilibrium state at s = dimaff(X) < 2 (threshold_bound; threshold_bound_prose takes no literature hypothesis). Above the threshold the families W_n are reduced to floor(|b_n|^{-1}) words as in the remark, which gives H_n <= chi_{2,n} and q_n = 0; dim((proj_x)_* nu_n) = 1 for all large n and dim nu_n = 1 + (H_n - chi_{1,n})/chi_{2,n} tends to 2 - lambda_1/lambda_2 (eventually_subsystemDim_eq_of_tendsto, tendsto_one_add_sub_div); below the threshold the bound is thm:main2. The closing commentary on Barany-Rams-Simon and on a strengthening of Rapaport's theorem is not a claim and is not formalised."
+    solution_entry: "paper_4_17"
   - source: "Dimension chain dim_H X = dim_P X = dim_M X = dimaff(X) and the squeeze of the modified affinity dimension"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
     start: "At the level of dimension, \\cref{thm:main2} is the Hausdorff-dimension counterpart"
-    end: "rather than any fullness of the projections, that forces the coincidence."
-    sha256: "a030675ea27a2247b37cceb9cc919d8ba11150a0372559bd3d462333373cb596"
+    end: "this is the projection hypothesis in the last part of \\cref{thm:fraser}."
+    sha256: "c0bbd02753025fd0a5b917d0559cf07219fb1caf7ac93996879559a0fd5f0d61"
     status: "formalized"
-    lean: ["BoxLike.System.dim_chain", "BoxLike.System.dim_chain_noExactOverlaps", "BoxLike.System.dim_chain_main2", "BoxLike.System.dimmaff_le_dimaff", "BoxLike.System.dimmaff_eq_dimaff", "BoxLike.System.fraserBound_holds", "BoxLike.System.dimmaff_eq_dimaff_noExactOverlaps", "BoxLike.System.dimmaff_eq_dimaff_main2", "BoxLike.System.main2_noExactOverlaps_all"]
+    lean: ["BoxLike.System.dim_chain", "BoxLike.System.dim_chain_noExactOverlaps", "BoxLike.System.dim_chain_main2", "BoxLike.System.dimmaff_le_dimaff", "BoxLike.System.dimmaff_eq_dimaff", "BoxLike.System.fraserBound_holds", "BoxLike.System.dimmaff_eq_dimaff_noExactOverlaps", "BoxLike.System.dimmaff_eq_dimaff_of_noExactOverlaps", "BoxLike.System.dimmaff_eq_dimaff_of_noExactOverlaps_proved", "BoxLike.System.dimmaff_eq_dimaff_of_projDim_eq_min", "BoxLike.System.modPressure_eq_pressure_of_projDim_eq_min", "BoxLike.System.projDim_eq_min_proved", "BoxLike.System.dimH_coord_image_eq_proved", "BoxLike.System.dimmaff_eq_dimaff_main2", "BoxLike.System.main2_noExactOverlaps_all"]
     hypotheses: []
     relation: "split"
     headline: false
-    note: "The chain dim_H X = dim_P X = dim_M X = dimaff(X) holds for every box-like set with dim_H X = dimaff(X) (System.dim_chain); the squeeze dimmaff(X) = dimaff(X) follows from the first part of thm:fraser (prose_squeeze_0)."
+    note: "The chain dimaff(X) = dim_H X <= lower Minkowski <= upper Minkowski = dim_P X <= dimmaff(X) <= dimaff(X) holds for every box-like set with dim_H X = dimaff(X) (System.dim_chain), so under thm:main2 with dimaff(X) <= 2 all five dimensions agree. For dimaff(X) < 2 without projective exact overlaps, both coordinate projections of X have Hausdorff and Minkowski dimension min{1, dimaff(X)} (projDim_eq_min_proved, dimH_coord_image_eq_proved), so the modified and the ordinary singular value functions agree at s = dimaff(X) and dimmaff(X) = dimaff(X) without the threshold or the strong open set condition (dimmaff_eq_dimaff_of_noExactOverlaps_proved); the squeeze from the first part of thm:fraser is prose_squeeze_0."
   - source: "Falconer's upper bound eq:hausdorff_affinity_upper_bound"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
-    start: "This motivates us to study the limiting behavior of the sums"
+    start: "This motivates us to study the limiting behaviour of the sums"
     end: "see Falconer \\cite[Theorem 5.4]{Falconer1988}."
-    sha256: "ae6c1272ff942ceafdeb2778d2c28df2df8cc47a5ea6a336b77ccc873fa73a30"
+    sha256: "4930e7ba079422970526f4b5313ac642f31f48bd332837952195eb8491537eb2"
     status: "formalized"
     lean: ["BoxLike.PlanarSystem.dimH_attractor_le", "BoxLike.PlanarSystem.upperBoxDim_attractor_le", "BoxLike.PlanarSystem.upperBoxDim_attractor_le_dimaff", "BoxLike.PlanarSystem.packingDim_attractor_le", "BoxLike.PlanarSystem.dimH_toPlane_attractor_le", "BoxLike.PlanarSystem.dimaff", "BoxLike.PlanarSystem.dimaff_congr", "BoxLike.PlanarSystem.eq_attractor", "BoxLike.MatrixTuple.image_closedBall_subset_closedBall", "BoxLike.MatrixTuple.exists_finset_image_closedBall_subset", "BoxLike.MatrixTuple.ContractionBound.upperBoxDim_le_of_pressure_neg", "BoxLike.System.toPlanar_dimaff", "BoxLike.System.dimH_attractor_le_planar", "BoxLike.System.dimH_attractor_le"]
     relation: "exact"
     headline: false
-    note: "Proved without literature input for every planar self-affine set (invertible linear parts of operator norm < 1): dim_H X <= dim_P X <= upper Minkowski <= min{2, dimaff(X)}, in the sup metric and in the Euclidean plane. The covers of tex 2162-2165 are proved as stated with Euclidean balls; the Hausdorff bound follows from the upper Minkowski bound by the stopping-time cover. The box-like bound is the specialisation System.dimH_attractor_le_planar."
+    note: "Proved without literature input for every planar self-affine set (invertible linear parts of operator norm < 1): dim_H X <= dim_P X <= upper Minkowski <= min{2, dimaff(X)}, in the sup metric and in the Euclidean plane. The covers of tex 2065-2068 are proved as stated with Euclidean balls; the Hausdorff bound follows from the upper Minkowski bound by the stopping-time cover. The box-like bound is the specialisation System.dimH_attractor_le_planar."
 
+  - source: "Dimension drop under projective exact overlaps and Fraser's example"
+    kind: "prose"
+    file: "diagonal-antidiagonal.tex"
+    start: "Conversely, projective exact overlaps can push the dimension of the coordinate projections below"
+    end: "The example plays the role that the Bedford--McMullen carpets play for \\cref{thm:rapaport}."
+    sha256: "4e7f30109a8a950c235f4e30d5c86a8cf2aeeeb55e20aaf6b84e6cc5251a7728"
+    status: "intentionally_unformalized"
+    headline: false
+    reason: "Introductory discussion: the large-deviation argument that projective exact overlaps with projection dimension t < min{1, s} force dimmaff(X) < dimaff(X), and the numerical value 0.891 of Fraser's example, are not formalised; the paper does not use them."
+    hypotheses: []
+    lean: []
+  - source: "Coordinate projections have dimension min{1, dimaff(X)} without projective exact overlaps"
+    kind: "prose"
+    file: "diagonal-antidiagonal.tex"
+    start: "The formula for $\\dim((\\proj_x)_*\\nu_n)$ uses only the absence of projective exact overlaps"
+    end: "Hence both coordinate projections of $X$ have Hausdorff and Minkowski dimension $\\min\\{1,s\\}$."
+    sha256: "8dff6cc2e3409f13d8eeaa6522f70d3e594a9cdfe6643e2f0fefa0b9e11dda79"
+    status: "formalized"
+    headline: false
+    hypotheses: []
+    lean: ["BoxLike.System.dimH_coord_image_eq", "BoxLike.System.lowerBoxDim_coord_image_eq", "BoxLike.System.upperBoxDim_coord_image_eq", "BoxLike.System.projDim_eq_min", "BoxLike.System.dimH_coord_image_eq_proved", "BoxLike.System.projDim_eq_min_proved", "BoxLike.System.le_dimH_coord_zero_normalised", "BoxLike.System.le_dimH_coord_zero_of_pressure", "BoxLike.System.le_dimH_coord_of_family", "BoxLike.IsExactDim.le_dimH_coord_image", "BoxLike.System.dimH_coord_eq", "BoxLike.System.dimH_coord_add_le", "BoxLike.dimH_image_affine", "BoxLike.min_one_div_neg_eq", "BoxLike.System.upperBoxDim_coord_le_min", "BoxLike.System.upperBoxDim_coord_le_upperBoxDim_attractor"]
+    relation: "exact"
+    note: "For dimaff(X) < 2: the lower bound min{1, s} comes from Kittle-Kogler for the x-marginal of the Bernoulli measure of one typical family and the mass distribution principle on coord 0 '' X, with min{1, H_n/chi_{1,n}} -> min{1, h/(-lambda_1)} = min{1, s} (min_one_div_neg_eq, eq:diml_min2); the y-projection contains an affine copy of the x-projection through an anti-diagonal generator (dimH_coord_eq); the upper bound is the Lipschitz image of X and Falconer's bound. The _proved variants take no literature hypothesis."
   - source: "Rossi's bound eq:hausdorff_ergodic_lyapunov"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -553,25 +612,25 @@ entries:
     file: "diagonal-antidiagonal.tex"
     start: "\\nu_x = (\\proj_x)_*(\\pi_*\\mu) \\quad\\text{and}\\quad \\nu_y = (\\proj_y)_*(\\pi_*\\mu)"
     end: "Moreover, $\\nu_{x,k}\\le\\nu_k$ and $\\nu_{y,k}\\le\\nu_k$."
-    sha256: "a9b07918f7cbafb91a37b7609a231ea29bbaec0c53774ad0368843e4e08ac9f3"
+    sha256: "9ee547abca38ed95c64de11765100775b22e10a6316248ddbbfbae431517dca2"
     status: "formalized"
     lean: ["BoxLike.map_comp_coding", "BoxLike.System.exists_decomposition_of_coding", "BoxLike.System.marginal_decomposition_normalised", "BoxLike.System.marginal_decomposition", "BoxLike.System.marginal_eq_map", "BoxLike.IsGibbs.measure_range_tau_pos", "BoxLike.IsGibbs.measure_range_omega_pos"]
     hypotheses: []
     relation: "split"
     headline: false
     note: "Unconditional algebraic decomposition uses map_comp_coding, marginal_eq_map and GibbsDecomposition.eq_tau/eq_omega. Positivity uses IsGibbs.measure_range_tau_pos/omega_pos; domination uses restrict_le_self and map_mono. Dimension-computing marginal_decomposition helpers additionally assume hsep/hjr; they alone do not certify this unconditional algebra. The decomposition of the equilibrium state comes from the theorems equilibriumGibbs and fraserJordanJurgaDecomposition_holds."
-  - source: "Both coordinate marginals are double-dimensional without separation"
+  - source: "Both coordinate marginals take two pointwise dimension values, each with positive measure, without separation"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
     start: "Applying Feng--Hu~\\cite[Theorem~2.8]{FengHu2009} to the one-sided versions of the ergodic measures"
-    end: "double-dimensional without any separation assumption."
-    sha256: "5e351ac02864c67ee6559d879edd9d90b1dadef007e778467f950d94c92f5a35"
+    end: "each on a set of positive measure, without any separation assumption."
+    sha256: "33f72515ce84fe2968a9b0b073b0cd4134722e649e03536f1fc026561959d233"
     status: "formalized"
-    lean: ["BoxLike.System.marginal_isDoubleDim_normalised", "BoxLike.System.marginal_isDoubleDim", "BoxLike.ae_hasLocalDim_iff_of_le", "BoxLike.IsExactDim.of_le", "BoxLike.fengHuExactDim_holds"]
+    lean: ["BoxLike.System.marginal_hasLocalDimPair_normalised", "BoxLike.System.marginal_hasLocalDimPair", "BoxLike.ae_hasLocalDim_iff_of_le", "BoxLike.IsExactDim.of_le", "BoxLike.fengHuExactDim_holds"]
     hypotheses: []
     relation: "exact"
     headline: false
-    note: "For 0 < s < 2 both coordinate marginals of the s-equilibrium state are double-dimensional without any separation condition. The exact-dimensionality of the projected Gibbs measures is FengHuExactDim, from Feng–Hu, Theorem 2.8 (Comm. Pure Appl. Math. 62 (2009)), which the library proves (fengHuExactDim_holds, BoxLike/FengHu.lean); eq:restricted-projection-dimensions is ae_hasLocalDim_iff_of_le and IsExactDim.of_le."
+    note: "For 0 < s < 2 the pointwise dimension of each coordinate marginal of the s-equilibrium state exists almost everywhere and takes only the values dim nu_1 and dim nu_2, each on a set of positive measure, without any separation condition (marginal_hasLocalDimPair). The exact-dimensionality of the projected Gibbs measures is FengHuExactDim, from Feng–Hu, Theorem 2.8 (Comm. Pure Appl. Math. 62 (2009)), which the library proves (fengHuExactDim_holds, BoxLike/FengHu.lean); eq:restricted-projection-dimensions is ae_hasLocalDim_iff_of_le and IsExactDim.of_le."
   - source: "Dimensions of the projected Gibbs measures eq:gibbs_proj_dim"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -602,7 +661,7 @@ entries:
     file: "diagonal-antidiagonal.tex"
     start: "We say that a Borel probability measure $\\mu$ on $\\Sigma$ is \\emph{Bernoulli} if there is a"
     end: "see e.g.\\ Walters~\\cite{Walters1982}."
-    sha256: "74a29963af204e4b0153cd4c65fe330cce4927f10ccf2d62224cf4e737afe2f7"
+    sha256: "7428b5db96fc99edce1c775576336d8b7c3f07812d0519203c4c2b6d80df21c3"
     status: "formalized"
     lean: ["BoxLike.bernoulli", "BoxLike.IsBernoulli", "BoxLike.measurePreserving_shift_bernoulli", "BoxLike.ergodic_shift_bernoulli", "BoxLike.eq_bernoulli_of_cylinder", "BoxLike.entropy_bernoulli"]
     relation: "representation"
@@ -613,7 +672,7 @@ entries:
     file: "diagonal-antidiagonal.tex"
     start: "The $s$-equilibrium state of a proximal box-like tuple with rotations is, however, not even quasi-Bernoulli for $0 < s < 2$"
     end: "\\cite{BaranyKaenmaki2017} does not apply."
-    sha256: "af1ac79bb3913055b1232b5c30a9e0b4640ddf8a54759bcd047549561b4567ad"
+    sha256: "bc21150731fb986a2f83c17f84d41690520c9230d5a26e8f42e84263fa59ea22"
     status: "formalized"
     lean: ["BoxLike.IsQuasiBernoulli", "BoxLike.System.exists_mul_svf_le", "BoxLike.System.not_quasiBernoulli", "BoxLike.System.IsEquilibriumState.not_quasiBernoulli", "BoxLike.System.IsEquilibriumState.not_isBernoulli"]
     hypotheses: []
@@ -670,9 +729,9 @@ entries:
   - source: "Set dimensions used in the introduction"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
-    start: "We denote by $\\dimh, \\dimp, \\dimm, \\dimmaff, \\dimaff$ the Hausdorff dimension"
-    end: "and the affinity dimension, respectively; see \\cref{sec:affinity_dim}."
-    sha256: "18b6d43361a37126436dc842348925a6362df86588d5e65c30db561785efb495"
+    start: "We denote by $\\dimh, \\dimp, \\dimm, \\udimm, \\dimmaff, \\dimaff$ the Hausdorff dimension"
+    end: "The modified affinity dimension is bounded above by the affinity dimension, $\\dimmaff(X) \\le \\dimaff(X)$."
+    sha256: "55b959bb2f38cf03528efd06cc2fbe79569c88f4635baa4c3d521791bd5b2457"
     status: "formalized"
     lean: ["BoxLike.upperBoxDim", "BoxLike.lowerBoxDim", "BoxLike.packingDim", "BoxLike.packingDim_eq_upperBoxDim", "BoxLike.dimH_le_packingDim"]
     relation: "representation"
@@ -694,7 +753,7 @@ entries:
     file: "diagonal-antidiagonal.tex"
     start: "We also recall the standard separation conditions."
     end: "are pairwise disjoint subsets of $R$."
-    sha256: "e1a5b2d399f25fb5081dedfe8e79ff01765791ca5bb54a801d20cc93907d0e46"
+    sha256: "ea77719ad1db39b45b1173547083043f4dd58bc2d224585aefa3a3fe3531b555"
     status: "formalized"
     lean: ["BoxLike.System.StrongSeparation", "BoxLike.System.StrongOpenSet", "BoxLike.System.RectangularOpenSet", "BoxLike.System.StrongSeparation.strongOpenSet", "BoxLike.PlanarSystem.StrongSeparation", "BoxLike.PlanarSystem.StrongOpenSet", "BoxLike.System.toPlanar_strongSeparation_iff", "BoxLike.System.toPlanar_strongOpenSet_iff"]
     relation: "representation"
@@ -705,7 +764,7 @@ entries:
     file: "diagonal-antidiagonal.tex"
     start: "We say that $\\A = (A_1,\\ldots,A_N) \\in \\GL^N$ is \\emph{irreducible} if there does not exist $V \\in"
     end: "contains a proximal matrix."
-    sha256: "3f58ced03911989386cb9c7fb833ab902277ad558e30559fb72a547010f37754"
+    sha256: "fb50db3e31ca9d86f62b74796e99fd2c1805cf62304aaa187112b292db2a9737"
     status: "formalized"
     lean: ["BoxLike.IsProximalMatrix", "BoxLike.System.Proximal", "BoxLike.System.Irreducible", "BoxLike.TupleIrreducible", "BoxLike.TupleStronglyIrreducible", "BoxLike.TupleProximal"]
     relation: "representation"
@@ -739,7 +798,7 @@ entries:
     file: "diagonal-antidiagonal.tex"
     start: "\\subsection{Sub-shift of finite type} \\label{sec:subshift}"
     end: "Let $\\overline{\\tau} = \\tau^{-1}$ be the inverse of $\\tau$ defined on $\\tau(\\Sigma)$"
-    sha256: "7881c139ee80ef34a8f92c218d10478062d06e7c50006867048de4a0021e25f0"
+    sha256: "6a05713421dda52df2a59f9545e8e02b3545d8d60959094ed4b3ca690145790c"
     status: "formalized"
     lean: ["BoxLike.Trans", "BoxLike.trans_iff", "BoxLike.exists_trans_trans", "BoxLike.subshift", "BoxLike.eps", "BoxLike.eq_eps_of_succ", "BoxLike.tau", "BoxLike.omega", "BoxLike.unCode", "BoxLike.range_tau_union_range_omega", "BoxLike.disjoint_range_tau_range_omega", "BoxLike.isTopologicallyMixing_subshiftShift", "BoxLike.isTopologicallyMixing_subshiftShift_iff", "BoxLike.transMatrix_pow_pos"]
     relation: "split"
@@ -845,7 +904,7 @@ entries:
     end: "dimensions of planar sets and measures."
     sha256: "0bdee92040c5efba5566ac70a7215536b66d37077bde04938e17079574b1c0c2"
     status: "formalized"
-    lean: ["BoxLike.MatrixTuple.comparable_conj", "BoxLike.MatrixTuple.Comparable.pressure_eq", "BoxLike.MatrixTuple.Comparable.lyapunov₁_eq", "BoxLike.MatrixTuple.Comparable.lyapunov₂_eq", "BoxLike.MatrixTuple.Comparable.isEquilibriumState_iff", "BoxLike.dimH_image_linMap", "BoxLike.packingDim_image_linMap", "BoxLike.upperBoxDim_image_linMap", "BoxLike.hasLocalDim_map_linMap_iff", "BoxLike.isExactDim_map_linMap_iff", "BoxLike.isDoubleDim_map_linMap_iff", "BoxLike.PlanarSystem.ConjBy.attractor_eq", "BoxLike.PlanarSystem.ConjBy.dimH_attractor", "BoxLike.PlanarSystem.ConjBy.pressure_eq", "BoxLike.PlanarSystem.ConjBy.isEquilibriumState_iff", "BoxLike.System.dimaff_eq_of_conjBy"]
+    lean: ["BoxLike.MatrixTuple.comparable_conj", "BoxLike.MatrixTuple.Comparable.pressure_eq", "BoxLike.MatrixTuple.Comparable.lyapunov₁_eq", "BoxLike.MatrixTuple.Comparable.lyapunov₂_eq", "BoxLike.MatrixTuple.Comparable.isEquilibriumState_iff", "BoxLike.dimH_image_linMap", "BoxLike.packingDim_image_linMap", "BoxLike.upperBoxDim_image_linMap", "BoxLike.hasLocalDim_map_linMap_iff", "BoxLike.isExactDim_map_linMap_iff", "BoxLike.hasLocalDimPair_map_linMap_iff", "BoxLike.PlanarSystem.ConjBy.attractor_eq", "BoxLike.PlanarSystem.ConjBy.dimH_attractor", "BoxLike.PlanarSystem.ConjBy.pressure_eq", "BoxLike.PlanarSystem.ConjBy.isEquilibriumState_iff", "BoxLike.System.dimaff_eq_of_conjBy"]
     hypotheses: []
     relation: "exact"
     headline: false
@@ -853,9 +912,9 @@ entries:
   - source: "Potentials at s = 2"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
-    start: "We extend the definitions of $f_{1,s}$ and $f_{2,s}$ to $s=2$ by the same formulas."
+    start: "We extend the definitions of $f_{1,s}$ and $f_{2,s}$ to $s=2$ by the same formulae."
     end: "and hence so do the Gibbs measures."
-    sha256: "f37df5a6071c0701ec32229c67f12b8b171f7a561cadcd0a4647ff530155c59f"
+    sha256: "60376b9c6e25e03335e8d0fa2abfaa8a24219c840fe34968818918b3c4af40e7"
     status: "formalized"
     lean: ["BoxLike.System.potential₁_two_eq_potential₂_two", "BoxLike.System.eq_of_isGibbs_potential_two", "BoxLike.System.GibbsDecomposition.mu₁_eq_mu₂_of_two"]
     hypotheses: []
@@ -865,9 +924,9 @@ entries:
   - source: "Threshold remarks of the introduction"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
-    start: "When $s<2$, the exponents are distinct and the threshold lies strictly between $1$ and $2$."
-    end: "follows from the strong open set condition alone."
-    sha256: "e65dec2a36f61b2823b882e22b3188755b6c697d1f6ea164f6a44251aac01a8b"
+    start: "When $s<2$, the exponents are distinct and the threshold of condition \\cref{it:main2_threshold} lies strictly between $1$ and $2$."
+    end: "this assumption of \\cref{thm:main2} holds automatically."
+    sha256: "de599112e9f43bf29a5c520b40345f2436f641dd1e60891ce11b6803862e7cd8"
     status: "formalized"
     lean: ["BoxLike.System.threshold_mem_Ioo_of_lt_two", "BoxLike.System.threshold_mem_Ioo_dimaff", "BoxLike.System.threshold_eq_one_of_two_le", "BoxLike.System.dimaff_le_threshold_of_le_one", "BoxLike.System.main2_of_dimaff_le_one", "BoxLike.System.dimaff_le_two_of_main2_hypotheses", "BoxLike.System.dimH_attractor_of_dimaff_eq_two", "BoxLike.System.main2_of_dimaff_eq_two"]
     hypotheses: []
@@ -903,7 +962,7 @@ entries:
     file: "diagonal-antidiagonal.tex"
     start: "Let $\\A = (A_1,\\ldots,A_N) \\in \\GL^N$ be proximal box-like with rotations as defined in"
     end: "We similarly have $\\overline{h}_i(\\nu) = \\overline{h}_i(\\nu,\\iii)$ for $\\nu$-almost all $\\iii \\in \\Sigma_Z$ whenever $\\nu$ is ergodic."
-    sha256: "6dc9f450d7be9708701687ba60c0e8a37b30af9248807fa7ec7c4f3ab24c5d8c"
+    sha256: "8cb5b402f7013968147ac82a7871d802f9acaa52cf2a1d2e1bee04e33c6d48fb"
     status: "formalized"
     lean: ["BoxLike.System.xiBar", "BoxLike.System.isMeasurablePartition_xiBar", "BoxLike.System.dimEntropyBar", "BoxLike.System.dimEntropyBarAt"]
     relation: "representation"
@@ -937,7 +996,7 @@ entries:
     file: "diagonal-antidiagonal.tex"
     start: "For each $\\A \\in \\GL^N$ and $s \\ge 0$ we define the \\emph{singular value pressure} by setting"
     end: "to be the unique $s \\ge 0$ for which $P(\\A,s)=0$."
-    sha256: "aa8fbc67057dfc1917c5cf3e7979d7b789071c685bb60263565349be66b353d9"
+    sha256: "cce744abf9de9ee3e17c3f5364c560e7f467f2f13bf78edffd4501686b3b3aee"
     status: "formalized"
     lean: ["BoxLike.System.pressure", "BoxLike.System.pressure_zero", "BoxLike.System.strictAntiOn_pressure", "BoxLike.System.continuousOn_pressure", "BoxLike.System.tendsto_pressure_atTop", "BoxLike.System.existsUnique_pressure_eq_zero", "BoxLike.System.dimaff", "BoxLike.System.pressure_dimaff", "BoxLike.System.dimaff_eq", "BoxLike.MatrixTuple.pressure_convexOn_Icc_nat", "BoxLike.MatrixTuple.pressure_continuousOn_Ici", "BoxLike.MatrixTuple.pressure_existsUnique_eq_zero", "BoxLike.System.pressure_convexOn_Icc_nat", "BoxLike.PlanarSystem.tendsto_pressure", "BoxLike.PlanarSystem.existsUnique_pressure_eq_zero", "BoxLike.PlanarSystem.dimaff", "BoxLike.PlanarSystem.dimaff_eq"]
     relation: "split"
@@ -949,7 +1008,7 @@ entries:
     file: "diagonal-antidiagonal.tex"
     start: "If $X$ is a box-like self-affine set, then the singular value function admits a modification"
     end: "and there is no analogue of the convention $\\dimaff(X) = \\dimaff(\\A)$."
-    sha256: "9b3723c24a39eb0d9e0f482a7a9b8b45873563461803c496a6e780a8b87f9683"
+    sha256: "a2f4e578a01948dbc8bb47d2224d163f5c6e94a25545649902ae011e78b69bcb"
     status: "formalized"
     lean: ["BoxLike.System.modSvf", "BoxLike.System.dimmaff", "BoxLike.System.dimmaff_le_dimaff", "BoxLike.System.wordDim_eq_axis", "BoxLike.System.modSvf_of_wordBase_eq", "BoxLike.System.upperBoxDim_attractor_le_dimmaff", "BoxLike.System.fraserBound_holds", "BoxLike.System.fraserROSC_holds"]
     relation: "representation"
@@ -1008,12 +1067,12 @@ entries:
     file: "diagonal-antidiagonal.tex"
     start: "If $\\mu$ is a nonzero finite Borel measure on $\\R^d$, then the \\emph{upper and lower pointwise dimensions}"
     end: "see, for example, Falconer \\cite[\\S 10]{Falconer1997}."
-    sha256: "9c0e045414b7c6c41f32c0d69f539e32bb7b1929caa5605941575b998564ec2f"
+    sha256: "cc78b815b78a6e6561087130def0249ad210ee57629e0852f46686eec5388ef3"
     status: "formalized"
-    lean: ["BoxLike.lowerLocalDim", "BoxLike.upperLocalDim", "BoxLike.HasLocalDim", "BoxLike.IsExactDim", "BoxLike.IsDoubleDim", "BoxLike.upperPackingDim", "BoxLike.lowerHausdorffDim", "BoxLike.ofReal_upperPackingDim_eq_iInf_packingDim_of_finiteDimensional", "BoxLike.ofReal_lowerHausdorffDim_eq_iInf_dimH_of_finiteDimensional", "BoxLike.upperPackingDim_le_of_absolutelyContinuous"]
+    lean: ["BoxLike.lowerLocalDim", "BoxLike.upperLocalDim", "BoxLike.HasLocalDim", "BoxLike.IsExactDim", "BoxLike.IsDoubleDim", "BoxLike.HasLocalDimPair", "BoxLike.IsDoubleDim.not_isExactDim", "BoxLike.isDoubleDim_iff_upperPackingDim_lowerHausdorffDim", "BoxLike.upperPackingDim", "BoxLike.lowerHausdorffDim", "BoxLike.ofReal_upperPackingDim_eq_iInf_packingDim_of_finiteDimensional", "BoxLike.ofReal_lowerHausdorffDim_eq_iInf_dimH_of_finiteDimensional", "BoxLike.upperPackingDim_le_of_absolutelyContinuous"]
     relation: "representation"
     headline: false
-    note: "Pointwise dimensions use closed balls; on ℝ × ℝ these are balls of the supremum norm. Both lines of eq:dimension_measure_def are proved on a finite-dimensional space: the first for every finite Borel measure, the second for μ ≠ 0, as the paper states. With real-valued essential bounds the first needs the upper pointwise dimension essentially bounded, which holds on ℝ^d."
+    note: "Pointwise dimensions use closed balls; on ℝ × ℝ these are balls of the supremum norm. Double-dimensional (IsDoubleDim) is the printed definition: the pointwise dimension exists almost everywhere and takes exactly two values, each on a set of positive measure; HasLocalDimPair is the weaker property that it takes one of two given values almost everywhere, and isDoubleDim_iff_upperPackingDim_lowerHausdorffDim is the characterisation of the paragraph after eq:haus_dim_sum (values udimp and ldimh with ldimh < udimp), for every nonzero measure. Both lines of eq:dimension_measure_def are proved on a finite-dimensional space: the first for every finite Borel measure, the second for μ ≠ 0, as the paper states. With real-valued essential bounds the first needs the upper pointwise dimension essentially bounded, which holds on ℝ^d."
   - source: "Dimensions of a sum of measures eq:haus_dim_sum"
     kind: "prose"
     file: "diagonal-antidiagonal.tex"
@@ -1021,7 +1080,7 @@ entries:
     end: "\\ldimh(\\mu+\\nu) &= \\min\\{\\ldimh(\\mu), \\ldimh(\\nu)\\}."
     sha256: "040b90b5778ac6d3acdce65d800d9c1f0a371839b15fd7c20b11aa15133ca12f"
     status: "formalized"
-    lean: ["BoxLike.upperPackingDim_add", "BoxLike.lowerHausdorffDim_add", "BoxLike.IsExactDim.upperPackingDim_add", "BoxLike.IsExactDim.lowerHausdorffDim_add", "BoxLike.upperPackingDim_add_of_finiteDimensional", "BoxLike.upperPackingDim_add_eq_max", "BoxLike.lowerHausdorffDim_add_eq_min", "BoxLike.lowerHausdorffDim_le_of_absolutelyContinuous", "BoxLike.packingDim_union", "BoxLike.isDoubleDim_iff_upperPackingDim_lowerHausdorffDim"]
+    lean: ["BoxLike.upperPackingDim_add", "BoxLike.lowerHausdorffDim_add", "BoxLike.IsExactDim.upperPackingDim_add", "BoxLike.IsExactDim.lowerHausdorffDim_add", "BoxLike.upperPackingDim_add_of_finiteDimensional", "BoxLike.upperPackingDim_add_eq_max", "BoxLike.lowerHausdorffDim_add_eq_min", "BoxLike.lowerHausdorffDim_le_of_absolutelyContinuous", "BoxLike.packingDim_union", "BoxLike.hasLocalDimPair_iff_upperPackingDim_lowerHausdorffDim"]
     relation: "exact"
     headline: false
     note: "Proved by the set-based argument of the prose through eq:dimension_measure_def; the differentiation proofs upperPackingDim_add and lowerHausdorffDim_add remain as alternatives."

@@ -2,8 +2,9 @@ module
 
 /-
 The set-based argument of `sec:ledrappier_young_formula` for the dimensions of a sum of measures
-(tex lines 2674 to 2685), and the characterisation of double-dimensional measures by
-`\overline{dim}_p` and `\underline{dim}_H` (tex lines 2686 to 2688).
+(tex lines 2674 to 2685), and the characterisation of the measures whose pointwise dimension
+takes two values almost everywhere by `\overline{dim}_p` and `\underline{dim}_H` (tex lines 2686
+to 2688).
 
 The article derives `eq:haus_dim_sum` from `eq:dimension_measure_def`. Since `μ ≪ μ + ν`, every
 Borel set of full `(μ + ν)`-measure has full `μ`-measure and every Borel set of positive
@@ -22,12 +23,12 @@ Both lines of `eq:dimension_measure_def` are theorems of `PackingDimMeasure` and
   `eq:dimension_measure_def`.
 * `le_upperPackingDim_add_left`, `le_upperPackingDim_add_right`,
   `lowerHausdorffDim_add_le_left`, `lowerHausdorffDim_add_le_right`: the four monotonicity
-  inequalities of tex lines 2674 to 2677.
+  inequalities of tex lines 2550 to 2553.
 * `upperPackingDim_add_eq_max`, `lowerHausdorffDim_add_eq_min`: `eq:haus_dim_sum` by the
   set-based argument.
-* `isDoubleDim_iff_upperPackingDim_lowerHausdorffDim`: a nonzero measure is double-dimensional
-  if and only if the pointwise dimension exists almost everywhere with values
-  `\overline{dim}_p(μ)` and `\underline{dim}_H(μ)` only.
+* `hasLocalDimPair_iff_upperPackingDim_lowerHausdorffDim`: the pointwise dimension of a nonzero
+  measure exists almost everywhere with two values if and only if it exists almost everywhere
+  with the values `\overline{dim}_p(μ)` and `\underline{dim}_H(μ)` only.
 -/
 public import BoxLike.PackingDimMeasure
 
@@ -45,7 +46,7 @@ section Packing
 variable {X : Type*} [PseudoMetricSpace X]
 
 /-- `dim_P(E ∪ F) ≤ max {dim_P E, dim_P F}`: interleaving two countable bounded covers of `E`
-and `F` gives one of `E ∪ F` (tex lines 2677 to 2679, the countable stability of the packing
+and `F` gives one of `E ∪ F` (tex lines 2553 to 2555, the countable stability of the packing
 dimension). -/
 theorem packingDim_union_le (E F : Set X) :
     packingDim (E ∪ F) ≤ max (packingDim E) (packingDim F) := by
@@ -91,7 +92,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimension
 /-- If `μ ≪ ν` for finite Borel measures on a finite-dimensional real normed space and `μ ≠ 0`,
 then `\underline{dim}_H(ν) ≤ \underline{dim}_H(μ)`: every Borel set of positive `μ`-measure has
 positive `ν`-measure, so the infimum in the second line of `eq:dimension_measure_def` for `ν` is
-taken over more sets. This is the argument of tex lines 2674 to 2677 for
+taken over more sets. This is the argument of tex lines 2550 to 2553 for
 `\underline{dim}_H(μ + ν) ≤ \underline{dim}_H(μ)`.
 Depends on: `ofReal_lowerHausdorffDim_eq_iInf_dimH_of_finiteDimensional`. -/
 theorem lowerHausdorffDim_le_of_absolutelyContinuous [IsFiniteMeasure μ] [IsFiniteMeasure ν]
@@ -200,19 +201,21 @@ section DoubleDim
 
 variable {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X] {μ : Measure X}
 
-/-- Tex lines 2686 to 2688: a nonzero measure is double-dimensional if and only if the pointwise
-dimension exists almost everywhere and `\overline{dim}_p(μ)` and `\underline{dim}_H(μ)` are its
-only possible values. If both values `d₂ ≤ d₁` occur on sets of positive measure, they are
-`\underline{dim}_H(μ)` and `\overline{dim}_p(μ)`; if one of them occurs only on a null set, the
-measure is exact-dimensional with the other value, which is then both dimensions.
-Depends on: `IsDoubleDim.upperPackingDim_eq`, `IsDoubleDim.lowerHausdorffDim_eq`,
+/-- Tex lines 2686 to 2688: the pointwise dimension of a nonzero measure exists almost
+everywhere with two values if and only if it exists almost everywhere and `\overline{dim}_p(μ)`
+and `\underline{dim}_H(μ)` are its only possible values. If both values `d₂ ≤ d₁` occur on sets
+of positive measure, they are `\underline{dim}_H(μ)` and `\overline{dim}_p(μ)`; if one of them
+occurs only on a null set, the measure is exact-dimensional with the other value, which is then
+both dimensions. The double-dimensional measures of the article are characterised in
+`isDoubleDim_iff_upperPackingDim_lowerHausdorffDim`.
+Depends on: `HasLocalDimPair.upperPackingDim_eq`, `HasLocalDimPair.lowerHausdorffDim_eq`,
 `IsExactDim.upperPackingDim_eq`, `IsExactDim.lowerHausdorffDim_eq`. -/
-theorem isDoubleDim_iff_upperPackingDim_lowerHausdorffDim (hne : μ ≠ 0) :
-    (∃ d₁ d₂, IsDoubleDim μ d₁ d₂) ↔
-      IsDoubleDim μ (upperPackingDim μ) (lowerHausdorffDim μ) := by
+theorem hasLocalDimPair_iff_upperPackingDim_lowerHausdorffDim (hne : μ ≠ 0) :
+    (∃ d₁ d₂, HasLocalDimPair μ d₁ d₂) ↔
+      HasLocalDimPair μ (upperPackingDim μ) (lowerHausdorffDim μ) := by
   refine ⟨fun ⟨d₁, d₂, h⟩ => ?_, fun h => ⟨_, _, h⟩⟩
   -- A value occurring only on a null set can be discarded.
-  have hex : ∀ {a b : ℝ}, IsDoubleDim μ a b → μ {x | HasLocalDim μ x b} = 0 →
+  have hex : ∀ {a b : ℝ}, HasLocalDimPair μ a b → μ {x | HasLocalDim μ x b} = 0 →
       IsExactDim μ a := fun {a b} hab h0 => by
     have h0' : ∀ᵐ x ∂μ, ¬HasLocalDim μ x b := by
       rw [ae_iff]
@@ -220,9 +223,9 @@ theorem isDoubleDim_iff_upperPackingDim_lowerHausdorffDim (hne : μ ≠ 0) :
     filter_upwards [hab, h0'] with x hx hx'
     exact hx.resolve_right hx'
   have hexact : ∀ {a : ℝ}, IsExactDim μ a →
-      IsDoubleDim μ (upperPackingDim μ) (lowerHausdorffDim μ) := fun {a} ha => by
+      HasLocalDimPair μ (upperPackingDim μ) (lowerHausdorffDim μ) := fun {a} ha => by
     rw [ha.upperPackingDim_eq hne, ha.lowerHausdorffDim_eq hne]
-    exact ha.isDoubleDim
+    exact ha.hasLocalDimPair
   wlog hle : d₂ ≤ d₁ generalizing d₁ d₂
   · exact this d₂ d₁ h.symm (le_of_not_ge hle)
   rcases eq_or_ne (μ {x | HasLocalDim μ x d₂}) 0 with h2 | h2

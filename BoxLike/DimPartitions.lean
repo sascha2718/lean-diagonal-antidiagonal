@@ -45,13 +45,13 @@ section Planar
 
 variable {ι : Type u} [MeasurableSpace ι] (S : System ι)
 
-/-- The partitions `ξ_0, ξ_1, ξ_2` of `Σ'` (`sec:entropies`, tex lines 1858 to 1863):
+/-- The partitions `ξ_0, ξ_1, ξ_2` of `Σ'` (`sec:entropies`, tex lines 1779 to 1784):
 `ξ_i(𝐢) = {𝐣 ∈ Σ' : 𝐣^- = 𝐢^-, π(𝐣) - π(𝐢) ∈ V_𝐢^i}`, extended to `Σ` by the atom `Σ ∖ Σ'`. -/
 noncomputable def xi (μ : Measure (ℤ → ι)) (i : ℕ) : (ℤ → ι) → Set (ℤ → ι) :=
   atomsOn (S.SigmaPrime μ) fun x =>
     {y | SamePast y x ∧ S.proj y - S.proj x ∈ S.oseledets μ x i}
 
-/-- The partition `ξ_1^⊥` of `Σ'` (`sec:entropies`, tex lines 1864 to 1867):
+/-- The partition `ξ_1^⊥` of `Σ'` (`sec:entropies`, tex lines 1785 to 1788):
 `ξ_1^⊥(𝐢) = {𝐣 ∈ Σ' : 𝐣^- = 𝐢^-, π(𝐣) - π(𝐢) ⊥ V_𝐢^1}`, extended to `Σ` by the atom `Σ ∖ Σ'`.
 Orthogonality to the axis `slowAxis` is the vanishing of that coordinate. -/
 noncomputable def xiPerp (μ : Measure (ℤ → ι)) : (ℤ → ι) → Set (ℤ → ι) :=
@@ -110,7 +110,7 @@ theorem xi_eq_of_mem (μ : Measure (ℤ → ι)) (i : ℕ) {x y : ℤ → ι} (h
   · rw [atomsOn_of_notMem hx] at h
     rw [atomsOn_of_notMem hx, atomsOn_of_notMem h]
 
-/-- `ξ_2(𝐢) ⊆ ξ_1(𝐢) ⊆ ξ_0(𝐢)` (`sec:entropies`, tex line 1873). -/
+/-- `ξ_2(𝐢) ⊆ ξ_1(𝐢) ⊆ ξ_0(𝐢)` (`sec:entropies`, tex line 1794). -/
 theorem xi_succ_subset (μ : Measure (ℤ → ι)) (i : ℕ) (x : ℤ → ι) :
     S.xi μ (i + 1) x ⊆ S.xi μ i x := by
   unfold xi
@@ -125,7 +125,7 @@ theorem xi_succ_subset (μ : Measure (ℤ → ι)) (i : ℕ) (x : ℤ → ι) :
     · exact hv
   · rw [atomsOn_of_notMem hx, atomsOn_of_notMem hx]
 
-/-- `ξ_2(𝐢) ⊆ ξ_1^⊥(𝐢)` (`sec:entropies`, tex line 1874). -/
+/-- `ξ_2(𝐢) ⊆ ξ_1^⊥(𝐢)` (`sec:entropies`, tex line 1795). -/
 theorem xi_two_subset_xiPerp (μ : Measure (ℤ → ι)) (x : ℤ → ι) :
     S.xi μ 2 x ⊆ S.xiPerp μ x := by
   unfold xi xiPerp
@@ -137,7 +137,7 @@ theorem xi_two_subset_xiPerp (μ : Measure (ℤ → ι)) (x : ℤ → ι) :
     simp [hv, coord]
   · rw [atomsOn_of_notMem hx, atomsOn_of_notMem hx]
 
-/-- `ξ_1^⊥(𝐢) ⊆ ξ_0(𝐢)` (`sec:entropies`, tex line 1874). -/
+/-- `ξ_1^⊥(𝐢) ⊆ ξ_0(𝐢)` (`sec:entropies`, tex line 1795). -/
 theorem xiPerp_subset_xi_zero (μ : Measure (ℤ → ι)) (x : ℤ → ι) :
     S.xiPerp μ x ⊆ S.xi μ 0 x := by
   unfold xi xiPerp
@@ -155,14 +155,14 @@ section Projective
 
 variable {ι : Type u} (S : System ι)
 
-/-- The partitions `\overline{ξ}_0`, `\overline{ξ}_1` of `Σ_Z` (`sec:entropies`, tex lines 1915
+/-- The partitions `\overline{ξ}_0`, `\overline{ξ}_1` of `Σ_Z` (`sec:entropies`, tex lines 1836
 to 1920), extended to `{1, …, 2N}^ℤ` by the atom `{1, …, 2N}^ℤ ∖ Σ_Z`. They do not depend on a
 measure. Indices above `1` repeat `\overline{ξ}_1`. -/
 noncomputable def xiBar : ℕ → (ℤ → ι × ZMod 2) → Set (ℤ → ι × ZMod 2)
   | 0 => atomsOn (subshift S.o) fun y => {z | SamePast z y}
   | _ => atomsOn (subshift S.o) fun y => {z | SamePast z y ∧ S.projBar z = S.projBar y}
 
-/-- `\overline{ξ}_1(𝐢) ⊆ \overline{ξ}_0(𝐢)` (`sec:entropies`, tex line 1925). -/
+/-- `\overline{ξ}_1(𝐢) ⊆ \overline{ξ}_0(𝐢)` (`sec:entropies`, tex line 1842). -/
 theorem xiBar_succ_subset (i : ℕ) (y : ℤ → ι × ZMod 2) : S.xiBar (i + 1) y ⊆ S.xiBar i y := by
   by_cases hy : y ∈ subshift S.o
   · rcases i with _ | i
@@ -188,17 +188,17 @@ noncomputable def dimEntropy (μ : Measure (ℤ → ι)) [IsFiniteMeasure μ] (i
   condEntropy μ (S.xi μ i)
 
 /-- The pointwise `i`-dimensional entropy `h_i(μ, 𝐢) = E_μ(I_μ(𝒫 | \widehat{ξ}_i) | ℐ)(𝐢)`
-(`sec:entropies`, tex lines 1884 to 1890), determined up to a `μ`-null set. -/
+(`sec:entropies`, tex lines 1805 to 1811), determined up to a `μ`-null set. -/
 noncomputable def dimEntropyAt (μ : Measure (ℤ → ι)) [IsFiniteMeasure μ] (i : ℕ) :
     (ℤ → ι) → ℝ :=
   localEntropy μ (S.xi μ i)
 
 /-- The entropy `\overline{h}_i(ν) = H_ν(\overline{𝒫} | \widehat{\overline{ξ}}_i)`
-(`sec:entropies`, tex lines 1934 to 1939). -/
+(`sec:entropies`, tex lines 1848 to 1853). -/
 noncomputable def dimEntropyBar (ν : Measure (ℤ → ι × ZMod 2)) [IsFiniteMeasure ν] (i : ℕ) : ℝ :=
   condEntropy ν (S.xiBar i)
 
-/-- The pointwise entropy `\overline{h}_i(ν, 𝐢)` (`sec:entropies`, tex lines 1927 to 1933),
+/-- The pointwise entropy `\overline{h}_i(ν, 𝐢)` (`sec:entropies`, tex lines 1842 to 1847),
 determined up to a `ν`-null set. -/
 noncomputable def dimEntropyBarAt (ν : Measure (ℤ → ι × ZMod 2)) [IsFiniteMeasure ν] (i : ℕ) :
     (ℤ → ι × ZMod 2) → ℝ :=

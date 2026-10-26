@@ -3,7 +3,7 @@ module
 /-
 Ergodicity of the Gibbs measures of the potential `‖·‖^q` of a quasi-multiplicative tuple, the
 last step of the proof of the existence half of Feng–Käenmäki, Proposition 1.2
-(`thm:irred_eq_state`, tex lines 2225 to 2239), after Feng–Käenmäki, *Equilibrium states of the
+(`thm:irred_eq_state`, tex lines 2113 to 2127), after Feng–Käenmäki, *Equilibrium states of the
 pressure function for products of matrices*, Discrete Contin. Dyn. Syst. 30 (2011), and the
 ergodicity step of Bowen's theorem in `BoxLike/Bowen/Ergodic.lean`. Let `μ` be an
 invariant probability measure on `Σ = ℤ → ι` with the Gibbs bounds of `‖·‖^q`. For words `𝐮`, `𝐯`
@@ -317,7 +317,7 @@ theorem NormGibbsBounds.ergodic [IsProbabilityMeasure μ]
   exact le_antisymm hle zero_le
 
 /-- An invariant probability measure on `Σ` with the Gibbs property of `‖·‖^q` for a
-quasi-multiplicative tuple and `q ≥ 0` is ergodic (`thm:irred_eq_state`, tex lines 2225 to
+quasi-multiplicative tuple and `q ≥ 0` is ergodic (`thm:irred_eq_state`, tex lines 2113 to
 2234). -/
 theorem HasNormGibbs.ergodic [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (hμ : HasNormGibbs A q μ)
