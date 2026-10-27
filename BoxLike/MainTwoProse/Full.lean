@@ -19,9 +19,10 @@ Cases `it:main2_threshold` and `it:main2_sosc` are `System.main2_prose` of
 * `System.main2_full`: `thm:main2`, the dimension formula, with the statements
   `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`,
   `FraserJordanJurgaDecomposition`, `FengLedrappierYoung` and `KittleKoglerDimension`, which
-  the library proves, and the literature hypothesis `RapaportDiagonalDimension`.
-* `System.main2_full_of_library`: the same with the library theorems plugged in, so that only
-  `RapaportDiagonalDimension` remains.
+  the library proves, and Rapaport's theorem, which the library proves as well
+  (`Rapaport.rapaportDiagonalDimension_holds`).
+* `System.main2_full_of_library`: the same with the library theorems plugged in, with no
+  literature hypothesis.
 * `System.main2_furthermore`: the furthermore clause, with the hypotheses of
   `System.main_extended_min`.
 * `System.main2_furthermore_of_library`: the furthermore clause with the library theorems
@@ -61,11 +62,10 @@ set condition (`it:main2_sosc`), or `X` satisfies the projective exponential sep
 condition (`it:main2_pesc`). Under `it:main2_threshold` or `it:main2_sosc` one has
 `dimaff(X) ≤ 2` and `\dim_H X = dimaff(X)` by `main2_prose`; under `it:main2_pesc` the formula
 is `main2_pesc`.
-Depends on: `RapaportDiagonalDimension`, `ShannonMcMillanBreimanStatement`,
+Depends on: `ShannonMcMillanBreimanStatement`,
 `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`,
 `FengLedrappierYoung`, `KittleKoglerDimension`. -/
-theorem main2_full (hrap : RapaportDiagonalDimension.{u})
-    (hsmb : ShannonMcMillanBreimanStatement.{u}) (hms : MorrisShmerkinLyapunov.{u})
+theorem main2_full (hsmb : ShannonMcMillanBreimanStatement.{u}) (hms : MorrisShmerkinLyapunov.{u})
     (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hly : FengLedrappierYoung.{u}) (hkk : KittleKoglerDimension.{u}) (hrot : S.WithRotations)
     (hprox : S.Proximal) (hfree : S.NoExactOverlaps) (μ : Measure (ℤ → ι))
@@ -79,21 +79,20 @@ theorem main2_full (hrap : RapaportDiagonalDimension.{u})
     exact S.main2_prose hsmb hms hfk hfjj hly hkk hrot hprox hfree μ hinv heq (Or.inl h)
   · rw [min_eq_right (S.dimaff_le_two_of_main2_hypotheses μ hinv (Or.inr h))]
     exact S.main2_prose hsmb hms hfk hfjj hly hkk hrot hprox hfree μ hinv heq (Or.inr h)
-  · exact S.main2_pesc hrap hsmb hms hfk hfjj hrot hprox h
+  · exact S.main2_pesc hsmb hms hfk hfjj hrot hprox h
 
 /-- `thm:main2`, the dimension formula, with the library theorems `shannonMcMillanBreiman`,
 `morrisShmerkinLyapunov_holds`, `equilibriumGibbs`, `fraserJordanJurgaDecomposition_holds`,
-`fengLedrappierYoung_holds` and `kittleKoglerDimension_holds` plugged in: only the literature
-hypothesis `RapaportDiagonalDimension` remains.
-Depends on: `RapaportDiagonalDimension`. -/
-theorem main2_full_of_library (hrap : RapaportDiagonalDimension.{u}) (hrot : S.WithRotations)
+`fengLedrappierYoung_holds` and `kittleKoglerDimension_holds` plugged in, with no literature
+hypothesis. -/
+theorem main2_full_of_library (hrot : S.WithRotations)
     (hprox : S.Proximal) (hfree : S.NoExactOverlaps) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState S.dimaff μ)
     (hor : S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∨ S.StrongOpenSet ∨
       S.ProjExpSeparation) :
     dimH S.attractor = ENNReal.ofReal (min 2 S.dimaff) :=
-  S.main2_full hrap shannonMcMillanBreiman morrisShmerkinLyapunov_holds equilibriumGibbs
+  S.main2_full shannonMcMillanBreiman morrisShmerkinLyapunov_holds equilibriumGibbs
     fraserJordanJurgaDecomposition_holds fengLedrappierYoung_holds kittleKoglerDimension_holds
     hrot hprox hfree μ hinv heq hor
 

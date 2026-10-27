@@ -28,7 +28,7 @@ again `eq:hausdorff_affinity_upper_bound`."
 The axis separation of the subsystems is `BoxLike/MainTwoProse/AxisSeparationSubsystem.lean`,
 the pressure and the affinity dimension of the homogeneous subsystems and the limit of
 `eq:diml_min2` are `BoxLike/MainTwoProse/HomogeneousAffinity.lean`, and Rapaport's theorem
-`thm:rapaport` enters as the hypothesis `hrap : RapaportDiagonalDimension`.
+`thm:rapaport` is `Rapaport.rapaportDiagonalDimension_holds` (`BoxLike/Rapaport/`).
 
 * `System.IsEquilibriumState.le_lyapDim`: `\dim_L(𝖠, μ_t) ≥ t` for a `t`-equilibrium state with
   `t ≤ dimaff(𝖠)`.
@@ -45,9 +45,9 @@ the pressure and the affinity dimension of the homogeneous subsystems and the li
 * `System.main2_pesc`: `thm:main2` under `it:main2_pesc`, `\dim_H X = min{2, dimaff(X)}`, with
   `t = s` if `s < 2` and `t → 2` otherwise; with the statements `ShannonMcMillanBreimanStatement`,
   `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement` and `FraserJordanJurgaDecomposition`,
-  which the library proves, and the literature hypothesis `RapaportDiagonalDimension`.
-* `System.main2_pesc_of_library`: the same with the library theorems plugged in, so that only
-  `RapaportDiagonalDimension` remains.
+  which the library proves, and Rapaport's theorem, which the library proves as well.
+* `System.main2_pesc_of_library`: the same with the library theorems plugged in, with no
+  literature hypothesis.
 -/
 public import BoxLike.AffinityMain
 public import BoxLike.EquilibriumExistence
@@ -56,6 +56,7 @@ public import BoxLike.FalconerBound
 public import BoxLike.FraserJordanJurga.Main
 public import BoxLike.General
 public import BoxLike.LiteratureRapaport
+public import BoxLike.Rapaport.Core
 public import BoxLike.MainTwoProse.AxisSeparationSubsystem
 public import BoxLike.MainTwoProse.HomogeneousAffinity
 public import BoxLike.MainTwoProse.TypicalWordsSMB
@@ -102,8 +103,8 @@ the systems it induces on both coordinate axes are exponentially separated
 and `dimaff(X_n)` is the right-hand side of `eq:diml_min2` with entropy `H_n = log #W_n` and
 Lyapunov exponents `-χ_{1,n} = log |a|`, `-χ_{2,n} = log |b|`, since the pressure of the
 homogeneous subsystem at `u ≥ 0` is `H_n + log φ^u(diag(a, b))` (`IsHomDiag.dimaff_eq`).
-Depends on: `RapaportDiagonalDimension`. -/
-theorem dimH_subsystem_attractor_eq (hrap : RapaportDiagonalDimension.{u}) [Nonempty ι]
+`thm:rapaport` is `Rapaport.rapaportDiagonalDimension_holds`. -/
+theorem dimH_subsystem_attractor_eq [Nonempty ι]
     (hsep : S.ProjExpSeparation) {κ : Type u} [Fintype κ] [Nonempty κ] {w : κ → List ι}
     {hw : ∀ k, w k ≠ []} {n : ℕ} (hn : 0 < n) (hlen : ∀ k, (w k).length = n)
     (hinj : Function.Injective w) {a b : ℝ} (hmat : ∀ k, S.matWord (w k) = boxMat 0 a b)
@@ -121,18 +122,17 @@ theorem dimH_subsystem_attractor_eq (hrap : RapaportDiagonalDimension.{u}) [None
   have hax : ∀ c, (S.subsystem w hw).AxisExpSeparation c := fun c =>
     S.subsystem_axisExpSeparation hsep (fun k => (hdiagW k).1) hn hlen hinj c
   -- `thm:rapaport` and the affinity dimension of the homogeneous subsystem
-  rw [hrap (S.subsystem w hw) hT.o_eq (hT.proximal hab) (hax 0) (hax 1), hT.dimaff_eq hab.le]
+  rw [Rapaport.rapaportDiagonalDimension_holds (S.subsystem w hw) hT.o_eq (hT.proximal hab)
+    (hax 0) (hax 1), hT.dimaff_eq hab.le]
 
 omit [MeasurableSpace ι] [MeasurableSingletonClass ι] in
 /-- `\dim_H X ≥ \dim_H X_n = min{2, dimaff(X_n)}` for one family `W` of diagonal planar words of
 length `n` with the common matrix `diag(a, b)`, `|b| < |a|`, where `dimaff(X_n)` is the
 right-hand side of `eq:diml_min2` for `H_n = log #W`, `-χ_{1,n} = log |a|`, `-χ_{2,n} = log |b|`
-(proof of `thm:main2`, case `it:main2_pesc`): `X_n ⊆ X`.
-Depends on: `RapaportDiagonalDimension`. -/
-theorem min_lyapDim_le_dimH_attractor_of_family (hrap : RapaportDiagonalDimension.{u})
-    [Nonempty ι] (hsep : S.ProjExpSeparation) {W : Finset (List ι)} (hW : W.Nonempty) {n : ℕ}
-    (hn : 0 < n) {a b : ℝ} (hWn : ∀ w ∈ W, w.length = n ∧ S.matWord w = boxMat 0 a b)
-    (hab : |b| < |a|) :
+(proof of `thm:main2`, case `it:main2_pesc`): `X_n ⊆ X`. -/
+theorem min_lyapDim_le_dimH_attractor_of_family [Nonempty ι] (hsep : S.ProjExpSeparation)
+    {W : Finset (List ι)} (hW : W.Nonempty) {n : ℕ} (hn : 0 < n) {a b : ℝ}
+    (hWn : ∀ w ∈ W, w.length = n ∧ S.matWord w = boxMat 0 a b) (hab : |b| < |a|) :
     ENNReal.ofReal (min 2 (lyapDim (Real.log W.card) (Real.log |a|) (Real.log |b|))) ≤
       dimH S.attractor := by
   classical
@@ -143,7 +143,7 @@ theorem min_lyapDim_le_dimH_attractor_of_family (hrap : RapaportDiagonalDimensio
     rw [h] at this
     simp at this
     omega
-  have hdim := S.dimH_subsystem_attractor_eq hrap hsep (w := fun w : W => (w : List ι))
+  have hdim := S.dimH_subsystem_attractor_eq hsep (w := fun w : W => (w : List ι))
     (hw := hwne) hn hlen Subtype.val_injective (fun w => (hWn w w.2).2) hab
   rw [Fintype.card_coe] at hdim
   rw [← hdim]
@@ -152,9 +152,8 @@ theorem min_lyapDim_le_dimH_attractor_of_family (hrap : RapaportDiagonalDimensio
 omit [MeasurableSpace ι] [MeasurableSingletonClass ι] in
 /-- A corollary of `min_lyapDim_le_dimH_attractor_of_family`: `\dim_H X ≥ u` for `0 ≤ u ≤ 2`
 when the pressure `H_n + Λ(-χ_{1,n}, -χ_{2,n}, u)` of the homogeneous diagonal subsystem of the
-family `W` is non-negative at `u`, so that `dimaff(X_n) ≥ u` (`le_lyapDim_of_add_energy_nonneg`).
-Depends on: `RapaportDiagonalDimension`. -/
-theorem le_dimH_attractor_of_family_pesc (hrap : RapaportDiagonalDimension.{u}) [Nonempty ι]
+family `W` is non-negative at `u`, so that `dimaff(X_n) ≥ u` (`le_lyapDim_of_add_energy_nonneg`). -/
+theorem le_dimH_attractor_of_family_pesc [Nonempty ι]
     (hsep : S.ProjExpSeparation) {W : Finset (List ι)} (hW : W.Nonempty) {n : ℕ} (hn : 0 < n)
     {a b : ℝ} (hWn : ∀ w ∈ W, w.length = n ∧ S.matWord w = boxMat 0 a b) (hab : |b| < |a|)
     {u : ℝ} (hu0 : 0 ≤ u) (hu2 : u ≤ 2)
@@ -177,7 +176,7 @@ theorem le_dimH_attractor_of_family_pesc (hrap : RapaportDiagonalDimension.{u}) 
   have hu : u ≤ min 2 (lyapDim (Real.log W.card) (Real.log |a|) (Real.log |b|)) :=
     le_min hu2 (le_lyapDim_of_add_energy_nonneg hl hl1 hh hpos)
   exact ((ENNReal.ofReal_le_ofReal_iff (hu0.trans hu)).2 hu).trans
-    (S.min_lyapDim_le_dimH_attractor_of_family hrap hsep hW hn hWn hab)
+    (S.min_lyapDim_le_dimH_attractor_of_family hsep hW hn hWn hab)
 
 /-! ### The lower bound -/
 
@@ -193,11 +192,11 @@ right-hand side of `eq:diml_min2` for `H_n`, `-χ_{1,n}`, `-χ_{2,n}`
 (`min_lyapDim_le_dimH_attractor_of_family`), which tends to `\dim_L(𝖠, μ_t)`
 (`lyapDim_div`, `tendsto_lyapDim`); so `\dim_H X ≥ min{2, \dim_L(𝖠, μ_t)} ≥ min{2, t} = t`
 (`IsEquilibriumState.le_lyapDim`).
-Depends on: `RapaportDiagonalDimension`, `ShannonMcMillanBreimanStatement`,
+Depends on: `ShannonMcMillanBreimanStatement`,
 `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`. -/
-theorem main2_pesc_normalised (hrap : RapaportDiagonalDimension.{u})
-    (hsmb : ShannonMcMillanBreimanStatement.{u}) (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+theorem main2_pesc_normalised (hsmb : ShannonMcMillanBreimanStatement.{u})
+    (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
+    (hfjj : FraserJordanJurgaDecomposition.{u})
     (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hsep : S.ProjExpSeparation)
     {t : ℝ} (ht0 : 0 < t) (ht2 : t < 2) (hts : t ≤ S.dimaff) :
     ENNReal.ofReal t ≤ dimH S.attractor := by
@@ -236,7 +235,7 @@ theorem main2_pesc_normalised (hrap : RapaportDiagonalDimension.{u})
       (min 2 (lyapDim (Real.log (W m).card) (Real.log |a m|) (Real.log |b m|))) ≤
         dimH S.attractor := by
     filter_upwards [hlt] with m hm
-    exact S.min_lyapDim_le_dimH_attractor_of_family hrap hsep (hWne m) (hnpos m) (hWn m) hm
+    exact S.min_lyapDim_le_dimH_attractor_of_family hsep (hWne m) (hnpos m) (hWn m) hm
   -- `dimaff(X_n) → \dim_L(𝖠, μ_t)`, since `H_n/n → h_0(μ_t)` and `χ_{i,n}/n → -λ_i(𝖠, μ_t)`
   have hlim : Tendsto
       (fun m => lyapDim (Real.log (W m).card) (Real.log |a m|) (Real.log |b m|)) atTop
@@ -256,20 +255,20 @@ theorem main2_pesc_normalised (hrap : RapaportDiagonalDimension.{u})
 and `0 < t < 2` with `t ≤ dimaff(X)`: the reduction to a proximal diagonal generator through
 `thm:two-block-normalisation`, the projective exponential separation condition passing to the
 second iterate, which has the same attractor and the same affinity dimension.
-Depends on: `RapaportDiagonalDimension`, `ShannonMcMillanBreimanStatement`,
+Depends on: `ShannonMcMillanBreimanStatement`,
 `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`. -/
-theorem le_dimH_attractor_pesc (hrap : RapaportDiagonalDimension.{u})
-    (hsmb : ShannonMcMillanBreimanStatement.{u}) (hms : MorrisShmerkinLyapunov.{u})
-    (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
+theorem le_dimH_attractor_pesc (hsmb : ShannonMcMillanBreimanStatement.{u})
+    (hms : MorrisShmerkinLyapunov.{u}) (hfk : EquilibriumGibbsStatement.{u})
+    (hfjj : FraserJordanJurgaDecomposition.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation) {t : ℝ}
     (ht0 : 0 < t) (ht2 : t < 2) (hts : t ≤ S.dimaff) :
     ENNReal.ofReal t ≤ dimH S.attractor := by
   rcases hprox.hasProximalDiagonal_or_sq with h | h
-  · exact S.main2_pesc_normalised hrap hsmb hms hfk hfjj hrot h hsep ht0 ht2 hts
+  · exact S.main2_pesc_normalised hsmb hms hfk hfjj hrot h hsep ht0 ht2 hts
   · have hd : S.sq.dimaff = S.dimaff :=
       S.sq.dimaff_eq S.dimaff_nonneg
         (by rw [S.pressure_sq S.dimaff_nonneg, S.pressure_dimaff, mul_zero])
-    have key := S.sq.main2_pesc_normalised hrap hsmb hms hfk hfjj (S.sq_withRotations hrot) h
+    have key := S.sq.main2_pesc_normalised hsmb hms hfk hfjj (S.sq_withRotations hrot) h
       (ProjExpSeparation.sq S hsep) ht0 ht2 (by rw [hd]; exact hts)
     rwa [S.attractor_sq] at key
 
@@ -280,10 +279,9 @@ proximal box-like self-affine set with rotations, `\dim_H X = min{2, dimaff(X)}`
 bound `\dim_H X ≥ t` holds for every `0 < t < 2` with `t ≤ dimaff(X)`; "taking `t = s` if
 `s < 2` and letting `t → 2` otherwise", along `t_k = 2 - 1/(k + 1)`, gives
 `\dim_H X ≥ min{2, dimaff(X)}`; the opposite inequality is `eq:hausdorff_affinity_upper_bound`.
-Depends on: `RapaportDiagonalDimension`, `ShannonMcMillanBreimanStatement`,
+Depends on: `ShannonMcMillanBreimanStatement`,
 `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`. -/
-theorem main2_pesc (hrap : RapaportDiagonalDimension.{u})
-    (hsmb : ShannonMcMillanBreimanStatement.{u}) (hms : MorrisShmerkinLyapunov.{u})
+theorem main2_pesc (hsmb : ShannonMcMillanBreimanStatement.{u}) (hms : MorrisShmerkinLyapunov.{u})
     (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation) :
     dimH S.attractor = ENNReal.ofReal (min 2 S.dimaff) := by
@@ -293,7 +291,7 @@ theorem main2_pesc (hrap : RapaportDiagonalDimension.{u})
   rcases lt_or_ge S.dimaff 2 with h2 | h2
   · -- `t = s`
     rw [min_eq_right h2.le]
-    exact S.le_dimH_attractor_pesc hrap hsmb hms hfk hfjj hrot hprox hsep hs0 h2 le_rfl
+    exact S.le_dimH_attractor_pesc hsmb hms hfk hfjj hrot hprox hsep hs0 h2 le_rfl
   · -- `t → 2` along `t_k = 2 - 1/(k + 1)`
     rw [min_eq_left h2]
     have hlim : Tendsto (fun k : ℕ => ENNReal.ofReal (2 - 1 / ((k : ℝ) + 1))) atTop
@@ -306,17 +304,16 @@ theorem main2_pesc (hrap : RapaportDiagonalDimension.{u})
     have hk1 : 1 / ((k : ℝ) + 1) ≤ 1 := by
       rw [div_le_one (by positivity)]
       linarith [(Nat.cast_nonneg k : (0 : ℝ) ≤ k)]
-    exact S.le_dimH_attractor_pesc hrap hsmb hms hfk hfjj hrot hprox hsep (by linarith)
+    exact S.le_dimH_attractor_pesc hsmb hms hfk hfjj hrot hprox hsep (by linarith)
       (by linarith) (by linarith)
 
 /-- `thm:main2` under `it:main2_pesc` with the library theorems `shannonMcMillanBreiman`,
 `morrisShmerkinLyapunov_holds`, `equilibriumGibbs` and `fraserJordanJurgaDecomposition_holds`
-plugged in: only the literature hypothesis `RapaportDiagonalDimension` remains.
-Depends on: `RapaportDiagonalDimension`. -/
-theorem main2_pesc_of_library (hrap : RapaportDiagonalDimension.{u}) (hrot : S.WithRotations)
+plugged in, with no literature hypothesis. -/
+theorem main2_pesc_of_library (hrot : S.WithRotations)
     (hprox : S.Proximal) (hsep : S.ProjExpSeparation) :
     dimH S.attractor = ENNReal.ofReal (min 2 S.dimaff) :=
-  S.main2_pesc hrap shannonMcMillanBreiman morrisShmerkinLyapunov_holds equilibriumGibbs
+  S.main2_pesc shannonMcMillanBreiman morrisShmerkinLyapunov_holds equilibriumGibbs
     fraserJordanJurgaDecomposition_holds hrot hprox hsep
 
 end System

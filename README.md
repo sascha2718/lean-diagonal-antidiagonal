@@ -33,26 +33,27 @@ below the threshold `2 - λ₁/λ₂` when the projective system has no exact ov
 ## The formalisation
 
 [Challenge.lean](Challenge.lean) states Theorems A, B and 4.16 over Mathlib alone, with the
-46 definitions their statements need, and [Solution.lean](Solution.lean) proves them for the full
+42 definitions their statements need, and [Solution.lean](Solution.lean) proves them for the full
 parameter range of the paper and for every invariant equilibrium state. The library `BoxLike/`
 covers all 44 numbered statements of the paper, with one entry per statement in
-`Solution.lean`: 41 are formalised; Theorems 1.1 and 1.2, the theorems of Hochman–Rapaport and
-Rapaport that the paper cites, are recorded as the `Prop`-valued statements
-`HochmanRapaportDimension` and `RapaportDiagonalDimension` and are not proved; Question 1.4 is
-recorded as the proposition `CoincidentProjectionDimensionsQuestion`, with no answer claimed.
-The library has no `sorry` and no axiom beyond `propext`, `Classical.choice` and `Quot.sound`.
-Theorems A and 4.16 take no literature hypothesis. Theorem B takes one, Rapaport's theorem,
-which case (iii) of its proof applies to finite diagonal subsystems; cases (i) and (ii) and the
-furthermore clause use none. Every other result the paper cites is proved in the library.
+`Solution.lean`: 42 are formalised, among them Theorem 1.2, Rapaport's theorem, proved in
+`BoxLike/Rapaport/`; Theorem 1.1, the theorem of Hochman–Rapaport that the paper cites, is
+recorded as the `Prop`-valued statement `HochmanRapaportDimension` and is not proved; Question
+1.4 is recorded as the proposition `CoincidentProjectionDimensionsQuestion`, with no answer
+claimed. The library has no `sorry` and no axiom beyond `propext`, `Classical.choice` and
+`Quot.sound`. No headline statement takes a literature hypothesis. Every result the paper cites
+is proved in the library, except Hochman–Rapaport's theorem, which nothing uses.
 
 - M. Hochman and A. Rapaport, *Hausdorff dimension of planar self-affine sets and measures with
   overlaps*, J. Eur. Math. Soc. 24 (2022): Theorem 1.1 (Theorem 1.1 of the paper), stated as
   `HochmanRapaportDimension`, not proved; nothing uses it,
   `BoxLike/LiteratureHochmanRapaport.lean`.
 - A. Rapaport, *Dimension of diagonal self-affine sets and measures via non-conformal
-  partitions*, arXiv:2309.03985: Theorem 1.3 (Theorem 1.2 of the paper), stated as
-  `RapaportDiagonalDimension`, not proved; the hypothesis of case (iii) of Theorem B,
-  `BoxLike/LiteratureRapaport.lean`.
+  partitions*, arXiv:2309.03985: Theorem 1.3 in the plane (Theorem 1.2 of the paper), stated as
+  `RapaportDiagonalDimension` in `BoxLike/LiteratureRapaport.lean` and proved as
+  `Rapaport.rapaportDiagonalDimension_holds` in `BoxLike/Rapaport/`, along his Sections 2 to 7
+  (the declaration index of [docs/correspondence.md](docs/correspondence.md) maps his statements
+  to the modules). Case (iii) of Theorem B applies it to homogeneous diagonal subsystems.
 - J. M. Fraser, *On the packing dimension of box-like self-affine sets in the plane*,
   Nonlinearity 25 (2012): Theorem 2.3 and Corollary 2.5 (Theorem 1.3 of the paper),
   `BoxLike/Fraser/`.

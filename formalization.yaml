@@ -12,12 +12,11 @@ project:
   description: >-
     Lean formalisation of the manuscript, with an entry for every numbered statement in
     Solution.lean. Challenge.lean states the three headline results (Theorems A, B and 4.16) over
-    Mathlib with the 46 definitions their statements need; all three are proved for their full
-    ranges. Theorems A and 4.16 take no literature hypothesis; Theorem B takes Rapaport's theorem
-    (Theorem 1.2 of the paper) as the explicit hypothesis RapaportDiagonalDimension, used in
-    case (iii) only. Every numbered statement is formalised except the two cited theorems of the
-    introduction (Theorems 1.1 and 1.2), recorded as Prop-valued statements that are not proved,
-    and Question 1.4, which is open.
+    Mathlib with the 42 definitions their statements need; all three are proved for their full
+    ranges with no literature hypothesis. Every numbered statement is formalised, including
+    Rapaport's theorem (Theorem 1.2 of the paper, proved in BoxLike/Rapaport/), except the cited
+    theorem of Hochman–Rapaport (Theorem 1.1), recorded as a Prop-valued statement that is not
+    proved and used nowhere, and Question 1.4, which is open.
   authors:
     - "Sascha Troscheit"
   license: "Apache-2.0"
@@ -52,12 +51,13 @@ sources:
     location: "arXiv:2309.03985v1, Theorem 1.3 (Theorem 1.2 of the paper)"
     relationship: "other"
     note: >-
-      Theorem 1.3 as the Prop-valued statement RapaportDiagonalDimension
-      (BoxLike/LiteratureRapaport.lean), restated in Challenge.lean: for a box-like system with
-      diagonal linear parts, proximal, whose induced systems on both coordinate axes are
-      exponentially separated, dim_H X = min{2, dimaff(X)}. Not proved. The hypothesis of
-      case (iii) of Theorem B (Challenge.audit_main2, binder hrap). No deviation in the
-      hypotheses or the conclusion.
+      Theorem 1.3 in the plane as the Prop-valued statement RapaportDiagonalDimension
+      (BoxLike/LiteratureRapaport.lean): for a box-like system with diagonal linear parts,
+      proximal, whose induced systems on both coordinate axes are exponentially separated,
+      dim_H X = min{2, dimaff(X)}. Proved as Rapaport.rapaportDiagonalDimension_holds in
+      BoxLike/Rapaport/ along Sections 2 to 7 of the source, with the vendored Kittle-Kogler
+      central limit theorem in place of Berry-Esseen (docs/correspondence.md).
+      Used by case (iii) of Theorem B. No deviation in the hypotheses or the conclusion.
   - title: "Hausdorff dimension of planar self-affine sets and measures with overlaps"
     authors:
       - "Michael Hochman"
@@ -235,11 +235,13 @@ related_formalizations:
 
 status:
   scope: >-
-    All 44 numbered statements: 41 formalised, 2 cited (Theorems 1.1 and 1.2, recorded as
-    Prop-valued statements that are not proved) and 1 open question (Question 1.4, recorded as a
-    proposition). With the 47 prose spans the manifest reads 87 formalised, 2 cited and 2
-    intentionally unformalised, with 2 literature hypotheses. The three headline proofs are
-    complete; the library and Solution have no sorry and no declared axiom.
+    All 44 numbered statements: 42 formalised (among them Theorem 1.2, Rapaport's theorem, proved
+    in BoxLike/Rapaport/), 1 cited (Theorem 1.1, Hochman–Rapaport, recorded as a Prop-valued
+    statement that is not proved and used nowhere) and 1 open question (Question 1.4, recorded as
+    a proposition). With the 48 prose spans the manifest reads 88 formalised, 1 cited and 3
+    intentionally unformalised, with 1 literature hypothesis. The three headline proofs are
+    complete with no literature hypothesis; the library and Solution have no sorry and no
+    declared axiom.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: ["propext", "Classical.choice", "Quot.sound"]
@@ -306,12 +308,11 @@ fidelity:
     state. Theorem A is stated with the printed notion of a double-dimensional measure
     (IsDoubleDim): the pointwise dimension exists almost everywhere and takes exactly two values,
     each on a set of positive measure. Theorem B is stated with its three conditions as a
-    disjunction and its furthermore clause as a second conjunct; case (iii) takes Rapaport's
-    theorem as the explicit hypothesis RapaportDiagonalDimension, restated in Challenge.lean, so
-    the headline results take one literature hypothesis, and Theorems A and 4.16 none. Theorem
-    4.16 is stated as exact-dimensionality of the projected equilibrium state with dimension
-    min{2, dimaff(X)}. Every other cited theorem the main line uses is a theorem of the library
-    (see sources). Challenge.lean has one sorry per audited theorem; comparator-config.json
+    disjunction and its furthermore clause as a second conjunct; case (iii) uses Rapaport's
+    theorem, proved in BoxLike/Rapaport/, so no headline result takes a literature hypothesis.
+    Theorem 4.16 is stated as exact-dimensionality of the projected equilibrium state with
+    dimension min{2, dimaff(X)}. Every cited theorem the main line uses is a theorem of the
+    library (see sources). Challenge.lean has one sorry per audited theorem; comparator-config.json
     declares no definition_names.
 
 review:

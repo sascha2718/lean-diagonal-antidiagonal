@@ -488,3 +488,4 @@ public import BoxLike.Support.HolderPressure
 public import BoxLike.Support.GibbsUniqueness
 public import BoxLike.Support.PlanarProjection
 public import BoxLike.ProjectiveLineSystem
+public import BoxLike.Rapaport

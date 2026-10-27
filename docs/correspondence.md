@@ -1,51 +1,51 @@
 # Correspondence with the manuscript
 
-All 44 numbered statements are assessed: 41 formalised; Theorems 1.1 and 1.2, the theorems of
-Hochman–Rapaport and Rapaport that the paper cites, recorded as `Prop`-valued statements that
-are not proved; and Question 1.4, the question the paper poses, recorded as a proposition with
-no answer claimed. [Solution.lean](../Solution.lean) has one `PAPER_ENTRY` per statement with
+All 44 numbered statements are assessed: 42 formalised, among them Theorem 1.2, Rapaport's
+theorem, proved in `BoxLike/Rapaport/`; Theorem 1.1, the theorem of
+Hochman–Rapaport that the paper cites, recorded as a `Prop`-valued statement that is not proved;
+and Question 1.4, the question the paper poses, recorded as a proposition with no answer
+claimed. [Solution.lean](../Solution.lean) has one `PAPER_ENTRY` per statement with
 the declarations that cover it; [paper-correspondence.yaml](../paper-correspondence.yaml)
-fingerprints the statements and 47 prose spans (87 formalised, 2 cited, 2 intentionally
-unformalised, 2 literature hypotheses).
+fingerprints the statements and 48 prose spans (88 formalised, 1 cited, 3 intentionally
+unformalised, 1 literature hypothesis).
 
 ## The three headline statements
 
 `Challenge.lean` imports Mathlib alone and contains the three headline statements with their
 holes: `Challenge.audit_main1` (Theorem A), `Challenge.audit_main2` (Theorem B) and
-`Challenge.audit_main_extended` (Theorem 4.16). Its 46 definitions are those their types need,
+`Challenge.audit_main_extended` (Theorem 4.16). Its 42 definitions are those their types need,
 and its definition block is identical to `Solution/Definitions.lean`. Solution proves all three
-for the full parameter range and for every invariant equilibrium state. Theorems A and 4.16 take
-no literature hypothesis. Theorem B takes one, Rapaport's theorem (Theorem 1.2 of the paper), as
-the binder `hrap : RapaportDiagonalDimension`; `Challenge.lean` states it over the definitions
-`axisWord`, `System.axisGap` and `System.AxisExpSeparation`, and
-`Solution.Transport.rapaportDiagonalDimension_iff` identifies it with the library statement.
-Only case (iii) of Theorem B uses it. The only kernel axioms are `propext`, `Classical.choice`
-and `Quot.sound`.
+for the full parameter range and for every invariant equilibrium state. No headline statement
+takes a literature hypothesis: Rapaport's theorem (Theorem 1.2 of the paper), which case (iii) of
+Theorem B applies to homogeneous diagonal subsystems, is proved in `BoxLike/Rapaport/`
+(`Rapaport.rapaportDiagonalDimension_holds`). The only kernel axioms are `propext`,
+`Classical.choice` and `Quot.sound`.
 
 | Headline | Proof |
 |---|---|
 | A `audit_main1` | `System.main1_dimaff_all`: below the threshold the marginal is the sum of two nonzero exact-dimensional Gibbs projections of distinct dimensions, hence double-dimensional by `thm:exact-dimensional-mixture` (`System.main1_isDoubleDim`); from the threshold on it is exact-dimensional of dimension one; below two by the Gibbs decomposition, from two on by the orientation lift of `thm:eq_state_proj_dim` |
-| B `audit_main2` | `System.main2_full_of_library`: cases (i) and (ii) by `System.main2_prose`, along the prose; case (iii) by `System.main2_pesc`, Rapaport's theorem applied to the homogeneous diagonal subsystems; the furthermore clause by `System.main2_furthermore_of_library`, from `System.main_extended_min` |
+| B `audit_main2` | `System.main2_full_of_library`: cases (i) and (ii) by `System.main2_prose`, along the prose; case (iii) by `System.main2_pesc`, Rapaport's theorem (`Rapaport.rapaportDiagonalDimension_holds`) applied to the homogeneous diagonal subsystems; the furthermore clause by `System.main2_furthermore_of_library`, from `System.main_extended_min` |
 | 4.16 `audit_main_extended` | `System.main_extended_min` |
 
-The cited results these proofs use are theorems of the library, with one exception:
+The cited results these proofs use are theorems of the library: `Rapaport.rapaportDiagonalDimension_holds`,
 `morrisShmerkinLyapunov_holds`, `equilibriumGibbs`, `fraserJordanJurgaDecomposition_holds`,
 `shannonMcMillanBreiman`, `kittleKoglerDimension_holds`, `fengLedrappierYoung_holds`,
 `fengLedrappierYoungBar_holds`, `fengInfoSum_holds`, `fengInfoSumBar_holds` and
 `jordanRapaportDimension_of_shmerkin` with `shmerkinLqDimension_holds`. The library statements
-take them as hypotheses and Solution passes the proofs. The exception is Rapaport's theorem,
-`RapaportDiagonalDimension`, which the library states and does not prove; `audit_main2` takes it
-as a hypothesis.
+take them as hypotheses and Solution passes the proofs; `System.main2_pesc` uses Rapaport's
+theorem directly.
 
 ## Verification
 
 On the current tree: the build passes with only the three intentional `sorry` of
-`Challenge.lean`; the axiom audit passes for 6,564 project constants and 3,463 vendored ones;
-the module header check (247 Lean sources), the vocabulary check (46 definitions), the Solution
-entry check (`--require-complete`) and the correspondence check pass, with the manuscript at
-commit `58f9f40a26814aeee36a318da54d576e363bb821`; `git diff --check` is clean; the local
-unsandboxed comparator run accepts the three headlines (con-ron, nanoda and the Lean kernel). The
-review edits and compiles no LaTeX.
+`Challenge.lean`; the axiom audit passes for 7,580 project constants and 3,463 vendored ones;
+the module header check (272 Lean sources), the vocabulary check (42 definitions) and the
+Solution entry check (`--require-complete`) pass; the correspondence check reports that the
+manuscript has changed since the manifest was reviewed at commit
+`58f9f40a26814aeee36a318da54d576e363bb821` (the statements `thm:two-block-normalisation` and
+`thm:eq_state_proj_dim` and one prose anchor), which is a manuscript review still to do, not a
+Lean discrepancy; `git diff --check` is clean; the local unsandboxed comparator run accepts the
+three headlines (con-ron, nanoda and the Lean kernel). The review edits and compiles no LaTeX.
 
 ## Every numbered entry
 
@@ -55,10 +55,10 @@ column names the library theorems that stand in for a result the manuscript cite
 | No. | Label | Coverage | Proved in place of a citation |
 |---|---|---|---|
 | 1.1 | `thm:hochman_rapaport` | Cited: the `Prop`-valued statement `HochmanRapaportDimension`, not proved; nothing uses it | |
-| 1.2 | `thm:rapaport` | Cited: the `Prop`-valued statement `RapaportDiagonalDimension`, not proved; the hypothesis `hrap` of case (iii) of Theorem B | |
+| 1.2 | `thm:rapaport` | Formalised: `Rapaport.rapaportDiagonalDimension_holds`, along Rapaport's Sections 2 to 7 in the plane (`BoxLike/Rapaport/`; the declaration index maps his statements to the modules) | Rapaport, Theorem 1.3 (`RapaportDiagonalDimension`); the vendored quantitative central limit theorem of Kittle–Kogler in place of Berry–Esseen |
 | 1.3 | `thm:fraser` | Formalised | Fraser, Theorem 2.3 (`System.FraserBound`, `System.FraserROSC`) and Corollary 2.5 |
 | A | `thm:main1` | Formalised in the printed form: `IsDoubleDim` below the threshold, exact-dimensional of dimension one from it on | `ShmerkinLqDimension` (`shmerkinLqDimension_holds`), `JordanRapaportDimension` (from `ShmerkinLqDimension`), `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition` |
-| B | `thm:main2` | Formalised: cases (i) and (ii) along the prose, case (iii) with Rapaport's theorem as the hypothesis `hrap`, and the furthermore clause | `FengLedrappierYoung` (`fengLedrappierYoung_holds`), `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`, `KittleKoglerDimension` (from the authors' Lean formalisation of Kittle–Kogler), Shannon–McMillan–Breiman, Falconer's bound; the furthermore clause uses the inputs of 4.16; `RapaportDiagonalDimension` is a hypothesis, not proved |
+| B | `thm:main2` | Formalised: cases (i) and (ii) along the prose, case (iii) with Rapaport's theorem (`Rapaport.rapaportDiagonalDimension_holds`), and the furthermore clause | `FengLedrappierYoung` (`fengLedrappierYoung_holds`), `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`, `KittleKoglerDimension` (from the authors' Lean formalisation of Kittle–Kogler), Shannon–McMillan–Breiman, Falconer's bound; the furthermore clause uses the inputs of 4.16; `RapaportDiagonalDimension` is a hypothesis, not proved |
 | 1.4 | `q:coincident-projection-dimensions` | The question the paper poses, recorded as `CoincidentProjectionDimensionsQuestion` | |
 | 2.1 | `thm:box_like_sa` | Formalised | |
 | 2.2 | `thm:A_classification` | Formalised | Bárány–Käenmäki–Rossi, Bárány–Käenmäki–Yu |
@@ -114,6 +114,33 @@ Changes of proof, not missing statements. Entries not listed follow the prose.
   In the super-multiplicative case of his Lemma 5.1 (2) a block sum `F(𝐢) = ∑_{m<b} ∑_{|𝐣|=m}
   ψ^t(𝐢𝐣)` replaces his `k`-block stopping set, which need not be prefix-free
   (`System.exists_le_fraserStopSum_of_ge`).
+- **1.2.** Rapaport's theorem is proved for `d = 2` only, along his Sections 2 to 7
+  (`BoxLike/Rapaport/`; the declaration index maps his statements to the modules). Logarithms
+  are natural, and his level-`n` partition `ℰ_n` is the
+  dyadic rectangle partition at the levels `⌊χ_j n / log 2⌋`. His Theorem 1.2 (self-affine
+  measures) is proved for homogeneous systems with arbitrary positive weights: the case of two
+  full-dimensional coordinate projections is his entropy increase argument
+  (`Rapaport.HomogeneousCore`, `Rapaport.homogeneousCore`); the cases with a deficient
+  projection follow the library's treatment of the homogeneous subsystems through Feng's
+  Ledrappier–Young formula and Kittle–Kogler (`Rapaport.Weighted`), so his induction on `d` does
+  not appear. Berry–Esseen (his Theorem 3.1) is replaced by the vendored Kittle–Kogler
+  quantitative central limit theorem in Wasserstein distance (`bounded_law_entropy_growth`);
+  accordingly his Lemma 3.2 works at the unscaled levels, with the rescaling by `A_χ^{-a}` and the
+  set `S` replaced by `H(X ∣ Y, Z) ≥ H(X ∣ Y) - H(Z)` and a Chebyshev bound on `H(Z)`
+  (`Rapaport.Exps.slices_one`, `slices_two`). Corollary 5.2 (Kaimanovich–Vershik) is proved
+  through couplings of the measures with their lattice discretisations, with an absolute error
+  constant (`Rapaport.Exps.kv_E`). Theorem 6.3 is proved directly, as `eventually ≤ ε`, and for a
+  homogeneous system Theorem 1.4 applies to the rescaled components themselves, so his level-`0`
+  components are not needed; Lemma 6.4 is a uniform `O(1)` bound. In Proposition 1.7 the
+  parameter `δ` is not shrunk; instead the numbers `k_j` of convolutions are taken large
+  (`Rapaport.Exps.proposition`). In Section 7, his Lemma 7.2 (the central-limit lemma for
+  `|r_{u,1}| = |r_{u,2}|`) is replaced by a perturbation of the Käenmäki weights that separates
+  the two Lyapunov exponents while keeping the energy positive, and his Lemma 7.3 (continuity of
+  the Lyapunov dimension) by the monotonicity and linearity of the energy
+  (`Rapaport.Diagonal.rapaportDiagonalDimension_of_core`); the coordinate swap is handled on the
+  attractor through Hutchinson's theorem. The affinity dimension of a diagonal system is his
+  (7.1), `max(Φ_a(s), Φ_b(s)) = 1`, proved from the library's pressure
+  (`Rapaport.Diagonal.dimaff_diag`).
 - **A.** Jordan–Rapaport gives exact-dimensionality under separation directly; Feng–Hu is not
   used. Below the threshold the marginal is the sum of its two nonzero exact-dimensional Gibbs
   components, whose dimensions `min{1, -h_0/λ_1}` and `min{1, -h_0/λ_2}` differ exactly there,
@@ -123,8 +150,8 @@ Changes of proof, not missing statements. Entries not listed follow the prose.
   through Cesàro averages (`frequently_measure_inter_shift_ge`), not from mixing; the scalar
   Ledrappier–Young formula for the diagonal subsystem (tex lines 3538 to 3544) comes from the
   planar `FengLedrappierYoung` on an auxiliary box-like system carrying the line system on the
-  horizontal axis; Falconer's bound is proved. Case (iii): Rapaport's theorem enters as the
-  hypothesis `hrap`; the reduction to a proximal diagonal generator is the two-block reduction of
+  horizontal axis; Falconer's bound is proved. Case (iii): Rapaport's theorem is
+  `Rapaport.rapaportDiagonalDimension_holds`; the reduction to a proximal diagonal generator is the two-block reduction of
   cases (i) and (ii); the induced systems of the subsystem are exponentially separated with the
   constant `(min c 1)^{2n}` (`System.subsystem_axisExpSeparation`); of the proximality of the
   subsystem only `|b_n| < |a_n|` is used; the rest is the prose: Rapaport gives
@@ -202,11 +229,14 @@ Changes of proof, not missing statements. Entries not listed follow the prose.
 
 ## Unnumbered material
 
-The manifest fingerprints 47 unnumbered spans, 46 formalised and 1 intentionally unformalised:
-the dimension-drop paragraph of `sec:intro_fraser` (tex line 517), where projective exact
-overlaps with projection dimension `t < min{1, s}` force `dimmaff(X) < dimaff(X)` by a
-large-deviation argument, and Fraser's example has projection dimension `0.891`; the paper does
-not use it. With Question 1.4 the manifest has 2 intentionally unformalised entries. The
+The manifest fingerprints 48 unnumbered spans, 46 formalised and 2 intentionally unformalised:
+the dimension-drop discussion and Fraser's example in `sec:intro_fraser`, and their supporting
+pressure argument in `sec:dimension-drop`. The latter invokes large deviations for
+the two Gibbs measures with locally constant potentials. For proximal
+box-like systems with rotations and `s = dimaff(X) < 2`, projection dimension `t < min{1, s}`
+then forces `dimmaff(X) < dimaff(X)`. This argument and the numerical projection dimension
+`0.891` of Fraser's example are not formalised or used by the main results. With Question 1.4
+the manifest has 3 intentionally unformalised entries. The
 open-questions discussion of `sec:intro_questions` around Question 1.4 is not fingerprinted and
 not formalised. Among the formalised spans: Bowen's theorem (`BoxLike/Bowen/`),
 `eq:simple_lyapunov` (`morrisShmerkinLyapunov_holds`), `eq:gibbs_proj_dim` (Jordan–Rapaport,
@@ -281,7 +311,22 @@ the manuscript at commit `58f9f40a26814aeee36a318da54d576e363bb821`.
 | the modified affinity dimension `dimmaff(X)` (tex line 2077), Fraser's Lemma 2.1, the existence of the Minkowski dimensions of the projections (after Fraser's Lemma 2.7), `dimmaff(X) ≤ dimaff(X)` (tex lines 457 and 515) | `System.projDim`, `System.modSvf`, `System.modSvf_append_le`, `System.le_modSvf_append`, `System.modPressure`, `System.tendsto_modPressure`, `System.dimmaff`, `System.dimmaff_eq`, `System.lowerBoxDim_coord_eq`, `System.projDim_eq_lowerBoxDim`, `System.upperBoxDim_coord_le_dimaff`, `System.projDim_le_dimaff`, `System.dimmaff_le_dimaff`, `System.dimmaff_eq_dimaff_of_full`, `System.dimaff_eq_dimmaff_of_projDim_eq_one` | `ModifiedAffinity` | **done**, with no literature input; `s(𝐢)` is the Minkowski dimension of the projection, the modified pressure is a limit, and `dimmaff(X) ≤ dimaff(X)` holds for every box-like set |
 | `thm:hochman_rapaport`, with the planar exponential separation condition in the distance of the affine coefficients (tex lines 398 to 404) | `PlanarSystem.affDist`, `PlanarSystem.affDist_eq_zero_iff`, `PlanarSystem.affGap`, `PlanarSystem.affGap_le`, `PlanarSystem.ExpSeparation`, `PlanarSystem.expSeparation_iff_frequently`, `HochmanRapaportDimension`, `IsProximalMatrix.exists_ne_zero_mulVec_eq_smul`, `HochmanRapaportDimension.not_tupleStronglyIrreducible_of_subsingleton`, `HochmanRapaportDimension.degenerate_subsingleton` | `LiteratureHochmanRapaport` | **cited**: the `Prop`-valued statement of Hochman–Rapaport's Theorem 1.1 (arXiv:1904.09812v2) for every finite nonempty alphabet and every planar system that is proximal, strongly irreducible, without a common fixed point and exponentially separated, concluding `dim_H X = min{2, dimaff(X)}`; not proved, and nothing uses it. Deviations from the source: the coefficient distance in place of a left-invariant Riemannian metric, comparable along words of length `n` up to factors exponential in `n`, so the same condition with another constant (the article itself passes from the coefficient norm at tex line 1460); `≥ c^n` along infinitely many `n` in place of `> c^n` for every `n`, the weaker form the source allows; proximal strongly irreducible, the article's phrasing, in place of non-conformal and totally irreducible, so the statement is a consequence of the source's theorem. A one-letter system is never proximal and strongly irreducible, so the statement is vacuous there |
 | proximality of a system without rotations is `\|a_i\| ≠ \|b_i\|` for some `i` (tex lines 407 to 409); exponential separation of the systems induced on the coordinate axes (tex lines 410 to 418) | `System.proximal_iff_of_diagonal`, `axisWord`, `System.codeWord_eq_axisWord`, `System.gDeriv_axisWord_zero`, `System.gDeriv_axisWord_one`, `System.axisGap`, `System.axisGap_le`, `System.axisGap_succ_le`, `System.axisGap_anti`, `System.AxisExpSeparation`, `System.axisExpSeparation_iff_frequently`, `System.axisExpSeparation_of_frequently`, `System.axisGap_eq_top_of_subsingleton`, `System.axisExpSeparation_of_subsingleton` | `LiteratureRapaport`, `AxisSeparation` | **done**: the system induced on the axis `c` consists of the maps `g_{(i,c)}` of `Ψ`, a planar word acts on it by `S.gWord (axisWord c 𝐢)`, and the gap `Δ_n` of the induced system is `⊤` for the empty minimum; the definitions are those of `Challenge.lean` |
-| `thm:rapaport` | `RapaportDiagonalDimension`, `RapaportDiagonalDimension.oneLetter`, `RapaportDiagonalDimension.degenerate_oneLetter`, `RapaportDiagonalDimension.degenerate_oneLetter_eq_zero`, `System.dimaff_of_subsingleton`, `System.dimH_attractor_of_subsingleton` | `LiteratureRapaport` | **cited**: the `Prop`-valued statement of Rapaport's Theorem 1.3 (arXiv:2309.03985v1) for every finite nonempty alphabet and every system with all `S.o i = 0` that is proximal and has both induced systems exponentially separated, concluding `dim_H X = min{2, dimaff(X)}` in `ℝ≥0∞` with the supremum metric; not proved; no deviation in the hypotheses or the conclusion. The hypothesis `hrap` of case (iii) of `thm:main2` (`System.main2_pesc`, `Challenge.audit_main2`), restated in `Challenge.lean` as `Challenge.RapaportDiagonalDimension` and identified by `Solution.Transport.rapaportDiagonalDimension_iff`. The one-letter instance `φ(x, y) = (x/2, y/4)` satisfies every hypothesis, and both sides are `0` |
+| `thm:rapaport` | `RapaportDiagonalDimension`, `Rapaport.rapaportDiagonalDimension_holds`, `Rapaport.homogeneousCore`, `Rapaport.Diagonal.rapaportDiagonalDimension_of_core`, `RapaportDiagonalDimension.oneLetter`, `RapaportDiagonalDimension.degenerate_oneLetter`, `RapaportDiagonalDimension.degenerate_oneLetter_eq_zero`, `System.dimaff_of_subsingleton`, `System.dimH_attractor_of_subsingleton` | `LiteratureRapaport`, `Rapaport/` | **done**: the statement of Rapaport's Theorem 1.3 (arXiv:2309.03985v1) for every finite nonempty alphabet and every system with all `S.o i = 0` that is proximal and has both induced systems exponentially separated, concluding `dim_H X = min{2, dimaff(X)}` in `ℝ≥0∞` with the supremum metric, with no deviation in the hypotheses or the conclusion, is proved in `BoxLike/Rapaport/` along his Sections 2 to 7 (the rows below; deviations under **1.2** in "Proof deviations"). Case (iii) of `thm:main2` uses it (`System.main2_pesc`). The one-letter instance `φ(x, y) = (x/2, y/4)` satisfies every hypothesis, and both sides are `0` |
+| Rapaport, Section 2.4 (lines 648 to 735): entropy of countable partitions, conditional entropy, chain rules, concavity and almost convexity, commensurability | `Rapaport.ent`, `Rapaport.cent`, `Rapaport.comp`, `Rapaport.cavg`, `Rapaport.FiniteLabels`, `Rapaport.ent_eq_finiteEntropy`, `Rapaport.cent_pair_left`, `Rapaport.cent_eq_cavg`, `Rapaport.sum_ent_le_ent`, `Rapaport.ent_le_sum_ent_add`, `Rapaport.ent_le_ent_add_log_of_fiber_card`, `Rapaport.abs_ent_sub_ent_le_log_of_commensurable`, `Rapaport.cent_le_cent_add_two_log_of_commensurable_cond` | `Rapaport/Defs`, `Rapaport/Entropy/Basic` | **done**, through the vendored `finiteEntropy` calculus; partitions are labellings into countable types |
+| Rapaport, Section 2.5 (lines 737 to 775), the non-conformal partitions `ℰ_n` and (2.5) to (2.7) | `Rapaport.rect`, `Rapaport.lvl`, `Rapaport.Exps`, `Rapaport.Exps.E`, `Rapaport.FiberBound`, `Rapaport.fiberBound_rect_translate`, `Rapaport.fiberBound_rect_perturb`, `Rapaport.Exps.fiberBound_E_resc`, `Rapaport.HomSystem.fiberBound_E_Apow`, `Rapaport.Exps.fiberBound_E_E` | `Rapaport/Entropy/FiberBound`, `Rapaport/Entropy/Rect` | **done**; levels `⌊χ_j n / log 2⌋` |
+| Rapaport, Lemma 2.1 (lines 815 to 823), multiscale averaging | `Rapaport.abs_ent_E_div_sub_avg_le`, `Rapaport.cent_E_add_le`, `Rapaport.ent_comp_E_resc` | `Rapaport/Entropy/Multiscale` | **done** |
+| exact dimension gives entropy dimension for planar measures (lines 1290 to 1294) | `Rapaport.tendsto_ent_rect_div_of_isExactDim`, `Rapaport.Exps.tendsto_ent_Dsq_div_of_isExactDim` | `Rapaport/Entropy/ExactDimEntropy` | **done**, the planar form of the vendored one-dimensional theorem |
+| Rapaport, Lemmas 3.5 and 3.6 (lines 1023 to 1073), small variance and variable components | `Rapaport.ent_E_div_lt_of_var_le`, `Rapaport.exists_many_levels_var_gt` | `Rapaport/Entropy/Variance` | **done** |
+| Rapaport, Lemma 3.2 (lines 867 to 1017), slices of convolutions, with his Theorem 3.1 (Berry–Esseen) | `Rapaport.Exps.slices_one`, `Rapaport.Exps.slices_two`, `Rapaport.convk`, `Rapaport.convPow`, `Rapaport.map_fst_convk_eq_continuousSumLaw`, `Rapaport.var₁_convk`, `Rapaport.integral_cent_le_cent_bind`, `Rapaport.cent_conv_ge_of_fiberBound`, `Rapaport.abs_ent_conv_sub_ent_le_rect` | `Rapaport/Entropy/Conv`, `Rapaport/Entropy/ConvBind`, `Rapaport/Entropy/Slices` | **done**, with the vendored Wasserstein central limit theorem `bounded_law_entropy_growth` in place of Berry–Esseen, at the unscaled levels |
+| Rapaport, Proposition 1.7 (lines 1075 to 1188) | `Rapaport.Prop17`, `Rapaport.Exps.proposition` | `Rapaport/Entropy/PropositionStatement`, `Rapaport/Entropy/PropositionAux`, `Rapaport/Entropy/Proposition` | **done**; `δ` is not shrunk, the numbers `k_j` are taken large |
+| Rapaport, Corollary 5.2 (lines 1380 to 1429), Kaimanovich–Vershik for `ℰ_n` | `Rapaport.Exps.kv_E`, `Rapaport.Exps.kv_E_div` | `Rapaport/Entropy/KV` | **done**, through couplings with the lattice discretisations, with an absolute error constant |
+| Rapaport, Section 2.2 and (6.?) `μ = ∑ p_u φ_u μ` (line 1632), the laws `ν^{(n)}`, exponential separation (lines 1902 to 1908) | `Rapaport.HomSystem`, `Rapaport.HomSystem.IsInvariant`, `Rapaport.HomSystem.XSep`, `Rapaport.HomSystem.eq_ν_conv_map_Apow`, `Rapaport.HomSystem.eq_sum_map_add_point`, `Rapaport.HomSystem.XSep.exists_ent_ν_E_eq` | `Rapaport/SelfAffine/Basic` | **done**, for homogeneous systems with positive weights |
+| Rapaport, Lemma 4.1, Lemmas 1.5 and 1.6 (lines 1218 to 1357), Lemma 6.4 (lines 1713 to 1772) | `Rapaport.HomSystem.kappa`, `Rapaport.HomSystem.tendsto_ent_E_div`, `Rapaport.HomSystem.cent_E₁_ge`, `Rapaport.HomSystem.cent_E₂_ge`, `Rapaport.HomSystem.cent_E_ge`, `Rapaport.HomSystem.abs_ent_sub_ent_ν_le` | `Rapaport/SelfAffine/Asymptotics` | **done**; Lemma 6.4 as a uniform `O(1)` bound |
+| Rapaport, Theorem 1.4 (lines 1434 to 1515), the entropy increase | `Rapaport.HomSystem.entropyIncrease` | `Rapaport/SelfAffine/EntropyIncrease` | **done**, against `Prop17` |
+| Rapaport, Theorem 6.3 (lines 1594 to 1711) and the proof of Theorem 1.2 in the case of two full-dimensional projections (lines 1905 to 1926) | `Rapaport.HomSystem.tendsto_cent_ν_div`, `Rapaport.HomSystem.dim_eq_of_prop`, `Rapaport.homogeneousCore_of_prop`, `Rapaport.HomogeneousCore`, `Rapaport.homogeneousCore` | `Rapaport/SelfAffine/Main`, `Rapaport/Core` | **done**; Theorem 6.3 directly as `eventually ≤ ε`, without the level-`0` components |
+| Rapaport, Theorem 1.2 for homogeneous systems, all cases, in the library's terms | `Rapaport.IsHomDiag.dimH_attractor_eq`, `Rapaport.rapaportDiagonalDimension_homogeneous`, `Rapaport.rapaportDiagonalDimension_homogeneous_holds`, `Rapaport.Weighted.isExactDim_map_proj_weighted`, `Rapaport.Weighted.le_dimH_attractor_weighted` | `Rapaport/Glue`, `Rapaport/Diagonal/Weighted` | **done**; the cases with a deficient projection through Feng's Ledrappier–Young formula and Kittle–Kogler, as for the library's homogeneous subsystems |
+| Rapaport, (7.1) and the Käenmäki weights (lines 1930 to 1957, 2028 to 2077) | `Rapaport.Diagonal.pressure_diag`, `Rapaport.Diagonal.dimaff_diag`, `Rapaport.Diagonal.kaenmaki_weights`, `Rapaport.Diagonal.lyapDim_weights` | `Rapaport/Diagonal/Pressure` | **done** |
+| Rapaport, Section 7, Lemmas 7.2 to 7.4 and the proof of Theorem 1.1 (lines 1959 to 2159) | `Rapaport.Diagonal.eventually_exists_good_group`, `Rapaport.Diagonal.subsystem_axisExpSeparation_of_axis`, `Rapaport.Diagonal.exists_good_weights`, `Rapaport.Diagonal.ofReal_le_dimH_attractor`, `Rapaport.Diagonal.rapaportDiagonalDimension_of_core`, `Rapaport.rapaportDiagonalDimension_holds` | `Rapaport/Diagonal/Iterate`, `Rapaport/Diagonal/Reduction`, `Rapaport/Core` | **done**; Lemma 7.2 replaced by a perturbation of the weights, Lemma 7.3 by the monotonicity of the energy |
 | `thm:fraser` | `System.FraserBound`, `System.FraserROSC`, `System.fraserBound_holds`, `System.fraserROSC_holds`, `System.packingDim_attractor`, `System.fraserBound_iff`, `System.fraserROSC_of_le`, `System.fraserROSC_of_fraserBound`, `System.FraserROSC.dimmaff_eq_dimaff`, `System.FraserROSC.dim_eq_dimaff`, `System.fraserBound_of_subsingleton`, `System.fraserROSC_of_subsingleton` | `FraserChain`, `Fraser/UpperBound`, `Fraser/Lower`, `Fraser/Main` | **done** for every box-like set, with no literature input: the first two parts are Fraser's Theorem 2.3 as the `Prop`s `System.FraserBound` and `System.FraserROSC`, compared with arXiv:1108.2639v1 and proved along his Section 5; the results that use them take them as hypotheses, and Solution passes the proofs; the third part (Fraser's Corollary 2.5) from `System.FraserROSC`, and without the rectangular open set condition when `dimaff(X) ≤ 2` (`System.dimmaff_eq_dimaff_of_full`) |
 | `thm:fraser`: the upper bound `\overline{\dim}_M X ≤ dimmaff(X)` (Fraser, §5, "Upper bound (assuming no separation conditions)", Lemma 5.1 (1), (5.7) and (5.8)) | `FraserUpper.externalCoveringNumber_union_le`, `FraserUpper.exists_externalCoveringNumber_le`, `FraserUpper.externalCoveringNumber_le_mul_grid`, `FraserUpper.attractor_subset_iUnion`, `FraserUpper.externalCoveringNumber_phiWord_le`, `FraserUpper.exists_sum_modSvfSum_le`, `System.upperBoxDim_attractor_le_of_modPressure_neg`, `System.upperBoxDim_attractor_le_dimmaff` | `Fraser/Upper` | **done**, with no separation condition: the copies `φ_𝐢(X)` of the stopping words cover `X`, and each needs at most `C (D + 1) δ₀^{-s} ρ^{-(s+ε)} ψ^s(𝐢)` squares of side `2ρ` |
 | `thm:fraser`: the `δ`-stoppings `I_δ` and Fraser's Lemma 5.1 (2) | `System.fraserStopSum`, `System.le_fraserStopSum`, `System.fraserStopSum_le`, `System.fraserTail`, `System.fraserModSvf_append_le`, `System.fraserTail_le_fraserStopSum`, `System.one_lt_fraserStopSum_of_le`, `System.exists_le_fraserStopSum_of_ge`, `System.exists_le_fraserStopSum` | `Fraser/LowerStop` | **done**: a sum over `I_δ` is a sum over a tree of words, and two tree inequalities take the place of the combinatorics of prefix codes; the super-multiplicative case uses a block sum ("Proof deviations", 1.1) |
@@ -289,7 +334,7 @@ the manuscript at commit `58f9f40a26814aeee36a318da54d576e363bb821`.
 | `eq:hausdorff_affinity_upper_bound` and Falconer's bound for the upper Minkowski dimension (tex lines 2062 to 2075, 336 to 339) | `PlanarSystem.upperBoxDim_attractor_le`, `PlanarSystem.dimH_attractor_le`, `PlanarSystem.packingDim_attractor_le`, `PlanarSystem.upperBoxDim_attractor_le_dimaff`, `Ellipse.exists_strip`, `Ellipse.exists_finset_cover`, `MatrixTuple.ContractionBound.upperBoxDim_le_of_pressure_neg`, `System.upperBoxDim_attractor_le_planar`, `System.dimH_attractor_le_planar`, `System.upperBoxDim_attractor_le`, `System.dimH_attractor_le`, `System.falconerBoxBound` | `Planar/FalconerBound`, `FalconerBound`, `FraserChain` | **done**, with no literature input, for every planar self-affine set by the Euclidean ellipse cover of tex lines 2065 to 2068; for box-like sets also by the covering in the supremum metric; no separation, rotations or proximality |
 | the chain `\dim_H X = \dim_P X = \dim_M X = dimaff(X)` and the squeeze `dimmaff(X) = dimaff(X)` (tex lines 509 to 515) | `System.FalconerBoxBound`, `System.falconerBoxBound_iff`, `System.falconerBoxBound_iff_euclidean`, `System.FalconerBoxBound.dimH_le`, `System.FalconerBoxBound.dimmaff_le_dimaff`, `System.dim_chain`, `System.dimmaff_eq_dimaff`, `System.dim_chain_noExactOverlaps`, `System.dimmaff_eq_dimaff_noExactOverlaps`, `System.dim_chain_main2`, `System.dimmaff_eq_dimaff_main2` | `FraserChain`, `MainTwoFree` | **done**: the chain for every box-like set with `\dim_H X = dimaff(X)`, with no hypothesis beyond it; the squeeze from `System.FraserBound`, which holds (`System.fraserBound_holds`), so for every such set with no literature input; the `noExactOverlaps` forms take the hypotheses of `thm:main2`, the `main2` forms are the special case under projective exponential separation |
 | `dimmaff(X) = dimaff(X)` for `dimaff(X) < 2` without the threshold or the strong open set condition (`sec:intro_fraser`, tex line 515) | `svfExp_eq_min`, `System.modSvf_eq_svf_of_projDim_eq_min`, `System.modPressure_eq_pressure_of_projDim_eq_min`, `System.dimmaff_eq_dimaff_of_projDim_eq_min`, `System.dimmaff_eq_dimaff_of_noExactOverlaps`, `System.dimmaff_eq_dimaff_of_noExactOverlaps_proved` | `ModifiedAffinityEquality` | **done**: when both coordinate projections of `X` have Minkowski dimension `min{1, s}` and `s ≤ 2`, the modified and the ordinary singular value functions agree, so the two pressures agree at `s`, and `dimmaff(X)`, the unique zero of the modified pressure on `[0, ∞)`, equals `dimaff(X)`; the `_proved` form takes no literature hypothesis |
-| without projective exact overlaps and for `dimaff(X) < 2`, both coordinate projections of `X` have Hausdorff and Minkowski dimension `min{1, dimaff(X)}` (proof of `thm:main2`, tex line 3534) | `dimH_image_affine`, `min_one_div_neg_eq`, `IsExactDim.le_dimH_coord_image`, `System.upperBoxDim_coord_le_upperBoxDim_attractor`, `System.upperBoxDim_coord_le_min`, `System.dimH_coord_add_le`, `System.dimH_coord_eq`, `System.le_dimH_coord_of_family`, `System.le_dimH_coord_zero_normalised`, `System.le_dimH_coord_zero_of_pressure`, `System.dimH_coord_image_eq`, `System.lowerBoxDim_coord_image_eq`, `System.upperBoxDim_coord_image_eq`, `System.projDim_eq_min`, `System.dimH_coord_image_eq_proved`, `System.projDim_eq_min_proved` | `MainTwoProse/ProjectionDimension` | **done**: the lower bound by Kittle–Kogler for the `x`-marginal of the Bernoulli measure of one typical family and the mass distribution principle, with `min{1, H_n/χ_{1,n}} → min{1, -h/λ_1} = min{1, s}`; the affine copy of `proj_x(X)` inside `proj_y(X)` through an anti-diagonal generator; the upper bound from the Lipschitz images of `X` and Falconer's bound; the `_proved` forms take no literature hypothesis |
+| without projective exact overlaps and for `dimaff(X) < 2`, both coordinate projections of `X` have Hausdorff and Minkowski dimension `min{1, dimaff(X)}` (following the proof of `thm:main2` in `sec:dimension_result_proof`) | `dimH_image_affine`, `min_one_div_neg_eq`, `IsExactDim.le_dimH_coord_image`, `System.upperBoxDim_coord_le_upperBoxDim_attractor`, `System.upperBoxDim_coord_le_min`, `System.dimH_coord_add_le`, `System.dimH_coord_eq`, `System.le_dimH_coord_of_family`, `System.le_dimH_coord_zero_normalised`, `System.le_dimH_coord_zero_of_pressure`, `System.dimH_coord_image_eq`, `System.lowerBoxDim_coord_image_eq`, `System.upperBoxDim_coord_image_eq`, `System.projDim_eq_min`, `System.dimH_coord_image_eq_proved`, `System.projDim_eq_min_proved` | `MainTwoProse/ProjectionDimension` | **done**: the lower bound by Kittle–Kogler for the `x`-marginal of the Bernoulli measure of one typical family and the mass distribution principle, with `min{1, H_n/χ_{1,n}} → min{1, -h/λ_1} = min{1, s}`; the affine copy of `proj_x(X)` inside `proj_y(X)` through an anti-diagonal generator; the upper bound from the Lipschitz images of `X` and Falconer's bound; the `_proved` forms take no literature hypothesis |
 | `thm:irred_eq_state`: the Gibbs bounds for `0 < s < 2` | `System.HasGibbsBounds`, `FengKaenmakiGibbs`, `fengKaenmakiGibbs_holds`, `EquilibriumGibbsStatement`, `equilibriumGibbs` | `Thermodynamic`, `Literature`, `QuasiMultiplicative/Main`, `EquilibriumGibbsStatement`, `EquilibriumGibbs` | **done**, with no literature input: for tuples with rotations `equilibriumGibbs`; for irreducible tuples `FengKaenmakiGibbs` holds (`fengKaenmakiGibbs_holds`) |
 | `thm:irred_eq_state`: uniqueness for every `s > 0`, for a box-like tuple with rotations | `System.unique_equilibrium_of_lt_two`, `System.unique_equilibrium_of_two_le`, `System.unique_equilibrium` | `UniqueEquilibrium` | **done**, with no literature hypothesis; for `0 < s < 2` both states are `q_*μ_1` (`System.IsEquilibriumState.eq_map_unCode`), for `s ≥ 2` both are the Bernoulli measure, with no hypothesis on the tuple |
 | `thm:irred_eq_state` for `s ≥ 2`: existence, uniqueness, ergodicity | `System.isEquilibriumState_bernoulli`, `System.IsEquilibriumState.eq_bernoulli`, `System.existsUnique_isEquilibriumState_of_two_le`, `System.IsEquilibriumState.ergodic_of_two_le` | `BernoulliEquilibrium` | **done**, with no literature hypothesis: the equilibrium state is the Bernoulli measure with weights `|det A_i|^{s/2} / ∑_j |det A_j|^{s/2}` |
@@ -393,7 +438,7 @@ the manuscript at commit `58f9f40a26814aeee36a318da54d576e363bb821`.
 | `thm:main_extended`, `0 < s < 2` | `System.main_extended_normalised`, `System.main_extended_lt_two'`, `System.main_extended_dimaff` | `MainTwo` | **done**; hypotheses: `hjr`, `hly`, and `hlyb`, `hms`, `hfk`, `hfjj`, `hfi`, `hfib`, which hold |
 | `thm:main2` under projective exponential separation | `System.main2_of_bounds`, `System.main2` | `MainTwo` | **done**: the special case deduced from the dimension of the equilibrium state, with the hypotheses of `thm:main_extended`; the upper bound is the theorem `System.dimH_attractor_le` |
 | `thm:main2`, cases (i) and (ii), along the prose (tex lines 3451 to 3560): the endpoint at two, the reduction to a proximal diagonal generator, typical words by the Shannon–McMillan–Breiman theorem with returns to horizontal orientation, the pigeonhole, the diagonal subsystems, Kittle–Kogler, the entropy threshold, strong separation in the open-set branch, past independence, the limit | `System.main2_prose`, `System.main2_prose_all`, `System.main2_noExactOverlaps_prose`, `System.StrongOpenSet.dimaff_eq_two`, `System.exists_typical_words_prose`, `exists_class_smb`, `frequently_measure_inter_shift_ge`, `log_card_le_log_card_class_add`, `System.isHomDiag_subsystem`, `System.IsHomDiag.isExactDim_map_proj`, `condEntropyPoint_eq_zero_of_le`, `System.subsystem_strongSeparation`, `System.le_dimH_attractor_of_family` | `MainTwoProse/Endpoint` with the modules of `MainTwoProse/`, `MainTwoEndpoint` | **done**; hypothesis `hly`, and `hkk`, `hms`, `hfk`, `hfjj`, which hold, and the theorem `shannonMcMillanBreiman`; the scalar formula comes from `FengLedrappierYoung` on an auxiliary box-like system |
-| `thm:main2`, case (iii) (tex lines 3562 to 3566): the typical families of the `t`-equilibrium state, the homogeneous diagonal subsystems `X_n ⊆ X`, Rapaport's theorem, `dimaff(X_n) → dim_L(𝖠, μ_t) ≥ t`, the limit `t → 2` | `System.dimH_subsystem_attractor_eq`, `System.min_lyapDim_le_dimH_attractor_of_family`, `System.IsEquilibriumState.le_lyapDim`, `System.main2_pesc_normalised`, `System.le_dimH_attractor_pesc`, `System.main2_pesc`, `System.main2_pesc_of_library`, `System.le_dimH_attractor_of_family_pesc` | `MainTwoProse/ProjExpBranch` | **done**, along the prose, with the literature hypothesis `hrap : RapaportDiagonalDimension`, which is not proved, and the statements `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`, which hold: `dim_H X ≥ dim_H X_n = min{2, dimaff(X_n)} → min{2, dim_L(𝖠, μ_t)} ≥ min{2, t}` |
+| `thm:main2`, case (iii) (tex lines 3562 to 3566): the typical families of the `t`-equilibrium state, the homogeneous diagonal subsystems `X_n ⊆ X`, Rapaport's theorem, `dimaff(X_n) → dim_L(𝖠, μ_t) ≥ t`, the limit `t → 2` | `System.dimH_subsystem_attractor_eq`, `System.min_lyapDim_le_dimH_attractor_of_family`, `System.IsEquilibriumState.le_lyapDim`, `System.main2_pesc_normalised`, `System.le_dimH_attractor_pesc`, `System.main2_pesc`, `System.main2_pesc_of_library`, `System.le_dimH_attractor_of_family_pesc` | `MainTwoProse/ProjExpBranch` | **done**, along the prose, with Rapaport's theorem `Rapaport.rapaportDiagonalDimension_holds` and the statements `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`, which hold: `dim_H X ≥ dim_H X_n = min{2, dimaff(X_n)} → min{2, dim_L(𝖠, μ_t)} ≥ min{2, t}` |
 | the induced systems of a diagonal subsystem are exponentially separated (tex lines 3562 to 3566) | `System.gDeriv_eq_gWord_sub`, `System.subsystem_codeWord_gDeriv`, `System.gap_mul_le_axisGap_subsystem`, `System.subsystem_axisExpSeparation` | `MainTwoProse/AxisSeparationSubsystem` | **done**: `Δ_{nk}^Ψ ≤ Δ_k` for the system the subsystem induces on either axis, so projective exponential separation of `Ψ` with constant `c` gives exponential separation of both induced systems with constant `(min c 1)^{2n}` |
 | the pressure and the affinity dimension of a homogeneous diagonal system, and `dim_L` as a continuous function of entropy and exponents (tex line 3566) | `energy_mul`, `energy_div`, `tendsto_energy`, `energy_eq_svfExp`, `energy_strictAnti`, `le_lyapDim_of_add_energy_nonneg`, `lt_lyapDim_of_add_energy_pos`, `lyapDim_lt_of_add_energy_neg`, `lyapDim_div`, `tendsto_lyapDim`, `System.IsHomDiag.log_svf_matWord`, `System.IsHomDiag.svfSum_eq`, `System.IsHomDiag.pressure_eq`, `System.IsHomDiag.dimaff_eq`, `System.IsHomDiag.le_dimaff_of_nonneg` | `MainTwoProse/HomogeneousAffinity` | **done**: `P(u) = log #κ + Λ(log \|a\|, log \|b\|, u)` for `u ≥ 0` and `dimaff = dim_L(log #κ, log \|a\|, log \|b\|)`; the energy is linear in the exponents and strictly decreasing in `u` |
 | `thm:main2` in full and the furthermore clause (tex lines 3451 to 3569) | `System.main2_full`, `System.main2_full_of_library`, `System.main2_furthermore`, `System.main2_furthermore_of_library` | `MainTwoProse/Full` | **done**: the dimension formula under any of the three conditions, `RapaportDiagonalDimension` being the only literature hypothesis of `System.main2_full_of_library`; the furthermore clause from `System.main_extended_min`, with no literature hypothesis in `System.main2_furthermore_of_library` |
@@ -425,12 +470,11 @@ the manuscript at commit `58f9f40a26814aeee36a318da54d576e363bb821`.
   hypothesis with a named binder by every result that uses it. New ones need authorisation;
   proposals go in `BoxLike/Proposals/` (none pending).
 - Results of the article are proved or recorded as open; they never become hypotheses or axioms.
-- The library declares no axiom. `Challenge.lean` states one cited theorem,
-  `RapaportDiagonalDimension`, as the hypothesis `hrap` of `audit_main2`;
-  `Solution.Transport.rapaportDiagonalDimension_iff` identifies it with the library statement.
+- The library declares no axiom. `Challenge.lean` states no cited theorem: the headline
+  statements take no literature hypothesis.
 
-Every literature statement is a theorem of the library, except the two theorems of the
-introduction, Rapaport's and Hochman–Rapaport's, which are stated and not proved:
+Every literature statement is a theorem of the library, except Hochman–Rapaport's theorem of the
+introduction, which is stated and not proved:
 
 | Source | `Prop` (binder) | Proved by | Reductions |
 |---|---|---|---|
@@ -448,7 +492,7 @@ introduction, Rapaport's and Hochman–Rapaport's, which are stated and not prov
 | Feng, Lemma 4.6 | `FengInfoSum` (`hfi`), `FengInfoSumBar` (`hfib`) | `fengInfoSum_holds`, `fengInfoSumBar_holds` | neither ergodicity nor his (4.7) |
 | Kittle–Kogler, Theorem 1.1 (arXiv:2610.10511) | `KittleKoglerDimension` (`hkk`) | `kittleKoglerDimension_holds` | from the vendored library; `h = H(p)` without exact overlaps |
 | Feng–Hu, Theorem 2.8 (arXiv:1002.2036v1) | `FengHuExactDim` (`hfh`) | `fengHuExactDim_holds` | two-sided shift directly |
-| Rapaport, Theorem 1.3 (arXiv:2309.03985v1) | `RapaportDiagonalDimension` (`hrap`) | not proved; the hypothesis of case (iii) of `thm:main2` (`System.main2_pesc`, `Challenge.audit_main2`) | none in the hypotheses or the conclusion; the plane with the supremum metric; proximality of a diagonal system as `∃ i, \|a i\| ≠ \|b i\|` (`System.proximal_iff_of_diagonal`) |
+| Rapaport, Theorem 1.3 (arXiv:2309.03985v1) | `RapaportDiagonalDimension` | `Rapaport.rapaportDiagonalDimension_holds` (`BoxLike/Rapaport/`), used by `System.main2_pesc` | none in the hypotheses or the conclusion; the plane with the supremum metric; proximality of a diagonal system as `∃ i, \|a i\| ≠ \|b i\|` (`System.proximal_iff_of_diagonal`); the proof deviations are listed under **1.2** in "Proof deviations" |
 | Hochman–Rapaport, Theorem 1.1 (arXiv:1904.09812v2) | `HochmanRapaportDimension` | not proved; nothing uses it | the coefficient distance `PlanarSystem.affDist` in place of a left-invariant Riemannian metric; `≥ c^n` along infinitely many `n`; proximal strongly irreducible in place of non-conformal and totally irreducible |
 
 Other cited results, proved: Birkhoff (`birkhoff_ergodic`), Shannon–McMillan–Breiman

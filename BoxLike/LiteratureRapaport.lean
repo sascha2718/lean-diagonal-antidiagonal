@@ -2,8 +2,8 @@ module
 
 /-
 Rapaport's theorem on diagonal self-affine sets, `thm:rapaport` of `sec:intro_setting`, as a
-`Prop`-valued definition; a result that uses it takes it as a hypothesis. Nothing in the library
-proves it.
+`Prop`-valued definition, proved in `BoxLike/Rapaport/` as
+`Rapaport.rapaportDiagonalDimension_holds` and used by case (iii) of `thm:main2`.
 
 * `System.proximal_iff_of_diagonal`: for a system without rotations, proximality is
   `|a_i| ≠ |b_i|` for some `i`, the form in which `sec:intro_setting` states it.

@@ -69,10 +69,9 @@ theorem audit_eq_state_proj_dim {ι : Type u} [Fintype ι] [MeasurableSpace ι]
 /-! ## Dimension of the equilibrium state and of the self-affine set -/
 
 /-- Theorem B (`thm:main2`), for every `s`-equilibrium state with `s = dimaff(X)`: the dimension
-formula under any of the three conditions, with Rapaport's theorem as the hypothesis of the third
-case, and the furthermore clause. -/
+formula under any of the three conditions, and the furthermore clause. -/
 theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-    (S : System ι) (hrap : RapaportDiagonalDimension.{u})
+    (S : System ι)
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
     (hfree : S.NoExactOverlaps) (μ : Measure (ℤ → ι))
     [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
@@ -82,13 +81,12 @@ theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableS
     dimH S.attractor = ENNReal.ofReal (min 2 S.dimaff) ∧
       (S.ProjExpSeparation → S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∨ S.StrongOpenSet →
         IsExactDim (μ.map S.proj) S.dimaff ∧ S.dimaff ≤ 2) := by
-  have hrap' : BoxLike.RapaportDiagonalDimension.{u} := rapaportDiagonalDimension_iff.1 hrap
   simp only [withRotations_iff, proximal_iff, noExactOverlaps_iff, dimaff_eq, shift_eq,
     isEquilibriumState_iff, lyapunov₁_eq, lyapunov₂_eq, strongOpenSet_iff, projExpSeparation_iff]
     at hrot hprox hfree hinv heq hor
   refine ⟨?_, fun hsep hor' => ?_⟩
   · rw [attractor_eq, dimaff_eq]
-    exact (toLib S).main2_full_of_library hrap' hrot hprox hfree μ hinv heq hor
+    exact (toLib S).main2_full_of_library hrot hprox hfree μ hinv heq hor
   · rw [projExpSeparation_iff] at hsep
     simp only [dimaff_eq, lyapunov₁_eq, lyapunov₂_eq, strongOpenSet_iff] at hor'
     rw [isExactDim_iff, proj_eq, dimaff_eq]
@@ -187,19 +185,25 @@ noncomputable abbrev paper_1_1_2 := @BoxLike.PlanarSystem.ExpSeparation
 noncomputable abbrev paper_1_1_3 := @BoxLike.HochmanRapaportDimension.degenerate_subsingleton
 
 -- PAPER_ENTRY thm:rapaport
-/-! 1.2 (`thm:rapaport`): cited.
-Rapaport's theorem as the `Prop`-valued statement `RapaportDiagonalDimension`, the hypothesis of
-case (iii) of `thm:main2`, restated in `Challenge.lean`; its one-letter instance is checked. It is
-not proved.
+/-! 1.2 (`thm:rapaport`): formalized.
+Rapaport's Theorem 1.3 in the plane, the statement `RapaportDiagonalDimension`, proved as
+`Rapaport.rapaportDiagonalDimension_holds` along Rapaport's Sections 2 to 7 (`BoxLike/Rapaport/`):
+the homogeneous case with two full-dimensional projections through the
+non-conformal entropy increase argument (`Rapaport.homogeneousCore`), the other homogeneous cases
+through Feng's Ledrappier–Young formula and Kittle–Kogler, and the general diagonal case through
+the subsystems of the iterates grouped by linear part (`Rapaport.Diagonal`). Deviations: see
+`docs/correspondence.md`.
 -/
-/-- Theorem 1.2 as a proposition; nothing is asserted. -/
-abbrev paper_1_2_1 : Prop := BoxLike.RapaportDiagonalDimension.{u}
-abbrev paper_1_2_2 : Prop := Challenge.RapaportDiagonalDimension.{u}
-noncomputable abbrev paper_1_2_3 := @Solution.Transport.rapaportDiagonalDimension_iff
-noncomputable abbrev paper_1_2_4 := @BoxLike.System.AxisExpSeparation
-noncomputable abbrev paper_1_2_5 := @BoxLike.System.axisGap
-noncomputable abbrev paper_1_2_6 := @BoxLike.System.proximal_iff_of_diagonal
-noncomputable abbrev paper_1_2_7 := @BoxLike.RapaportDiagonalDimension.degenerate_oneLetter
+noncomputable abbrev paper_1_2_1 := @BoxLike.Rapaport.rapaportDiagonalDimension_holds
+/-- Theorem 1.2 as a proposition. -/
+abbrev paper_1_2_2 : Prop := BoxLike.RapaportDiagonalDimension.{u}
+noncomputable abbrev paper_1_2_3 := @BoxLike.Rapaport.homogeneousCore
+noncomputable abbrev paper_1_2_4 := @BoxLike.Rapaport.rapaportDiagonalDimension_homogeneous_holds
+noncomputable abbrev paper_1_2_5 := @BoxLike.Rapaport.Diagonal.rapaportDiagonalDimension_of_core
+noncomputable abbrev paper_1_2_6 := @BoxLike.System.AxisExpSeparation
+noncomputable abbrev paper_1_2_7 := @BoxLike.System.axisGap
+noncomputable abbrev paper_1_2_8 := @BoxLike.System.proximal_iff_of_diagonal
+noncomputable abbrev paper_1_2_9 := @BoxLike.RapaportDiagonalDimension.degenerate_oneLetter
 
 -- PAPER_ENTRY thm:fraser
 /-! 1.3 (`thm:fraser`): formalized.
@@ -258,13 +262,13 @@ noncomputable abbrev paper_A_9 := @BoxLike.System.main1_isDoubleDim
 -- PAPER_ENTRY thm:main2
 /-! B (`thm:main2`): formalized.
 For every value of `dimaff` and every equilibrium state. Cases (i) and (ii) along the prose
-(`System.main2_prose`); case (iii) with Rapaport's theorem `RapaportDiagonalDimension` as the
-explicit hypothesis (`System.main2_pesc`); the furthermore clause from `thm:main_extended`
-(`System.main2_furthermore`). Deviations: the returns to horizontal orientation come from
-ergodicity, not mixing; the scalar Ledrappier–Young formula for the diagonal subsystem comes from
-the planar `FengLedrappierYoung` applied to an auxiliary box-like system; Falconer's bound is
-proved. Case (iii) follows the prose: `dim_H X_n = min{2, dimaff(X_n)}` by Rapaport's theorem,
-`dimaff(X_n) → dim_L(𝖠, μ_t) ≥ t`, then `t = s` or `t → 2`.
+(`System.main2_prose`); case (iii) with Rapaport's theorem, which the library proves
+(`System.main2_pesc`, `Rapaport.rapaportDiagonalDimension_holds`); the furthermore clause from
+`thm:main_extended` (`System.main2_furthermore`). Deviations: the returns to horizontal orientation
+come from ergodicity, not mixing; the scalar Ledrappier–Young formula for the diagonal subsystem
+comes from the planar `FengLedrappierYoung` applied to an auxiliary box-like system; Falconer's
+bound is proved. Case (iii) follows the prose: `dim_H X_n = min{2, dimaff(X_n)}` by Rapaport's
+theorem, `dimaff(X_n) → dim_L(𝖠, μ_t) ≥ t`, then `t = s` or `t → 2`.
 -/
 noncomputable abbrev paper_B_1 := @Challenge.audit_main2
 noncomputable abbrev paper_B_2 := @BoxLike.System.main2_prose
