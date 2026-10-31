@@ -1,107 +1,91 @@
 # Hausdorff dimension of planar box-like self-affine sets with rotations
 
-Lean 4 formalisation of the paper
+Lean 4 formalisation of *Hausdorff dimension of planar box-like self-affine sets with rotations*
+by Antti Käenmäki, R. Dániel Prokaj, Károly Simon and Sascha Troscheit (2026).
 
-> Antti Käenmäki, R. Dániel Prokaj, Károly Simon and Sascha Troscheit,
-> *Hausdorff dimension of planar box-like self-affine sets with rotations*, arXiv:XXXX.XXXXX
-> (placeholder identifier until the paper is posted).
+## Scope
 
-## The paper
+The library proves dimension formulas for proximal planar self-affine systems with diagonal
+and anti-diagonal linear parts, with both types present. Let `X` be the attractor, `μ` its
+symbolic equilibrium state at the affinity dimension `s = dimaff(X)`, and `λ₂ ≤ λ₁ < 0` its
+Lyapunov exponents.
 
-A planar box-like self-affine set with rotations is the attractor of finitely many contracting
-affine maps of the plane whose linear parts are diagonal or anti-diagonal, with both types
-present. Up to a linear change of coordinates these are the proximal planar systems that are
-irreducible but not strongly irreducible, the case between the strongly irreducible systems of
-Hochman–Rapaport (Theorem 1.1) and the diagonal systems of Rapaport (Theorem 1.2). Let `μ` be
-the unique equilibrium state at the affinity dimension `s = dimaff(X)`, with Lyapunov exponents
-`λ₂ ≤ λ₁ < 0`. Under a projective exponential separation condition, the paper shows that the
-coordinate projections of `π_*μ` are double-dimensional if `s < 2 - λ₁/λ₂`, their pointwise
-dimension existing almost everywhere and taking exactly two values, each on a set of positive
-measure, and exact-dimensional of dimension one otherwise (Theorem A); the two values are
-identified in Theorem 4.4. Assuming only that the projected maps have no exact overlaps, the
-Hausdorff dimension of `X` equals `min{2, dimaff(X)}` whenever (i) `dimaff(X) ≤ 2 - λ₁/λ₂`,
-or (ii) the strong open set condition holds, or (iii) the projective exponential separation
-condition holds; if (iii) holds together with (i) or (ii), then `π_*μ` is exact-dimensional of
-dimension `dimaff(X) ≤ 2` (Theorem B, whose last clause is Theorem 4.16). For `dimaff(X) < 2`
-and without (ii) and (iii), the proof still gives `dim_H X ≥ min{dimaff(X), 2 - λ₁/λ₂}`
-(Remark 4.17). The paper also shows that the projective exponential separation condition is not
-implied by the strong separation condition, even when the projected maps generate a free
-semigroup (Proposition 2.7), and poses Question 1.4: can the coordinate projections of the
-equilibrium state be exact-dimensional, with their two Gibbs components of equal dimension,
-below the threshold `2 - λ₁/λ₂` when the projective system has no exact overlaps?
+- **Coordinate projections (Theorem A):** under projective exponential separation, the
+  coordinate projections of `π_*μ` are double-dimensional when `s < 2 - λ₁/λ₂`: their pointwise
+  dimension exists almost everywhere and takes two distinct values, each on a set of positive
+  measure. At and above the threshold, both projections are exact-dimensional of dimension one.
+- **Hausdorff dimension (Theorem B):** if the projected maps have no exact overlaps, then
+  `dim_H X = min{2, s}` whenever `s ≤ 2 - λ₁/λ₂`, the strong open set condition holds, or
+  projective exponential separation holds. Under projective exponential separation together
+  with either of the first two conditions, `π_*μ` is exact-dimensional of dimension `s ≤ 2`.
+- **Equilibrium measure (Theorem 4.16):** if the entropy satisfies `h(μ) ≤ -λ₂` or the strong
+  open set condition holds, then `π_*μ` is exact-dimensional of dimension `s ≤ 2`, assuming
+  projective exponential separation when `s < 2`.
 
-## The formalisation
+Supporting results include the Gibbs decomposition of the equilibrium state, the two projection
+dimensions (Theorem 4.4), the lower bound of Remark 4.17, and the separation counterexample of
+Proposition 2.7.
 
-[Challenge.lean](Challenge.lean) states Theorems A, B and 4.16 over Mathlib alone, with the
-42 definitions their statements need, and [Solution.lean](Solution.lean) proves them for the full
-parameter range of the paper and for every invariant equilibrium state. The library `BoxLike/`
-covers all 44 numbered statements of the paper, with one entry per statement in
-`Solution.lean`: 42 are formalised, among them Theorem 1.2, Rapaport's theorem, proved in
-`BoxLike/Rapaport/`; Theorem 1.1, the theorem of Hochman–Rapaport that the paper cites, is
-recorded as the `Prop`-valued statement `HochmanRapaportDimension` and is not proved; Question
-1.4 is recorded as the proposition `CoincidentProjectionDimensionsQuestion`, with no answer
-claimed. The library has no `sorry` and no axiom beyond `propext`, `Classical.choice` and
-`Quot.sound`. No headline statement takes a literature hypothesis. Every result the paper cites
-is proved in the library, except Hochman–Rapaport's theorem, which nothing uses.
+## Statements and proofs
 
-- M. Hochman and A. Rapaport, *Hausdorff dimension of planar self-affine sets and measures with
-  overlaps*, J. Eur. Math. Soc. 24 (2022): Theorem 1.1 (Theorem 1.1 of the paper), stated as
-  `HochmanRapaportDimension`, not proved; nothing uses it,
-  `BoxLike/LiteratureHochmanRapaport.lean`.
-- A. Rapaport, *Dimension of diagonal self-affine sets and measures via non-conformal
-  partitions*, arXiv:2309.03985: Theorem 1.3 in the plane (Theorem 1.2 of the paper), stated as
-  `RapaportDiagonalDimension` in `BoxLike/LiteratureRapaport.lean` and proved as
-  `Rapaport.rapaportDiagonalDimension_holds` in `BoxLike/Rapaport/`, along his Sections 2 to 7
-  (the declaration index of [docs/correspondence.md](docs/correspondence.md) maps his statements
-  to the modules). Case (iii) of Theorem B applies it to homogeneous diagonal subsystems.
-- J. M. Fraser, *On the packing dimension of box-like self-affine sets in the plane*,
-  Nonlinearity 25 (2012): Theorem 2.3 and Corollary 2.5 (Theorem 1.3 of the paper),
-  `BoxLike/Fraser/`.
-- D.-J. Feng and A. Käenmäki, *Equilibrium states of the pressure function for products of
-  matrices*, Discrete Contin. Dyn. Syst. 30 (2011): Proposition 1.2 (Proposition 3.10),
-  `BoxLike/QuasiMultiplicative/`.
-- J. M. Fraser, T. Jordan and N. Jurga, *Dimensions of equilibrium measures on a class of planar
-  self-affine sets*, J. Fractal Geom. 7 (2020): Lemma 1.3 and Corollaries 1.5 and 1.6
-  (Proposition 3.14), `BoxLike/FraserJordanJurga/`.
-- I. D. Morris and P. Shmerkin, *On equality of Hausdorff and affinity dimensions, via
-  self-affine measures on positive subsystems*, Trans. Amer. Math. Soc. 371 (2019): Theorem 3.1,
-  the distinct Lyapunov exponents of the equilibrium state, `BoxLike/MorrisShmerkin.lean`.
-- D.-J. Feng, *Dimension of invariant measures for affine iterated function systems*, Duke
-  Math. J. 172 (2023): Theorems 1.2 and 1.3, the Ledrappier–Young formula (Theorem 4.2), proved
-  in the plane, and Lemma 4.6, `BoxLike/FengLedrappierYoung.lean`, `BoxLike/FengIdentity.lean`.
-- D.-J. Feng and H. Hu, *Dimension theory of iterated function systems*, Comm. Pure Appl.
-  Math. 62 (2009): Theorem 2.8, `BoxLike/FengHu.lean`.
-- T. Jordan and A. Rapaport, *Dimension of ergodic measures projected onto self-similar sets
-  with overlaps*, Proc. Lond. Math. Soc. (3) 122 (2021): Theorem 1.1,
-  `BoxLike/JordanRapaport.lean`.
-- P. Shmerkin, *On Furstenberg's intersection conjecture, self-similar measures, and the `L^q`
-  norms of convolutions*, Ann. of Math. (2) 189 (2019): Theorem 6.6, the input of
-  Jordan–Rapaport's proof, `BoxLike/Shmerkin/`. Bourgain's structure theorem (Shmerkin's
-  Theorem 3.1) is proved in a weak form, with some positive doubling exponent in place of
-  `2^{-2T-1}`, which suffices.
-- S. Kittle and C. Kogler, *The exact overlaps conjecture for self-similar measures on the real
-  line*, arXiv:2610.10511: Theorem 1.1, derived from the authors' Lean formalisation, carried
-  verbatim in [vendor/](vendor/README.md), `BoxLike/KittleKogler.lean`.
-- B. Bárány and A. Käenmäki, *Super-exponential condensation without exact overlaps*, Adv.
-  Math. 379 (2021): the condensation theorem (Theorem 2.1) in the form the proof of
-  Proposition 2.7 uses, `BoxLike/BaranyKaenmaki.lean`.
-- E. Rossi, *Local dimensions of measures on infinitely generated self-affine sets*, J. Math.
-  Anal. Appl. 413 (2014): Theorem 2.2, `BoxLike/Rossi.lean`.
-- K. J. Falconer, *The Hausdorff dimension of self-affine fractals*, Math. Proc. Cambridge
-  Philos. Soc. 103 (1988): the upper bound `min{2, dimaff(X)}`, `BoxLike/FalconerBound.lean`.
+[Challenge.lean](Challenge.lean) states the three headline results using Mathlib alone, with
+the definitions needed to read them independently of the proof library. Each theorem has an
+intentional `sorry` placeholder:
 
-The library also proves the ergodic theorems the paper uses: Birkhoff, Kingman, Oseledets for
-invertible planar cocycles, Shannon–McMillan–Breiman, the Kolmogorov–Sinai generator theorem,
-and Bowen's theorem on Gibbs measures of Hölder potentials on the mixing sub-shift.
+| Result | Endpoint |
+| --- | --- |
+| A Coordinate projections | `Challenge.audit_main1` |
+| B Hausdorff dimension | `Challenge.audit_main2` |
+| 4.16 Equilibrium measure | `Challenge.audit_main_extended` |
 
-[docs/correspondence.md](docs/correspondence.md) records the correspondence with the paper
-statement by statement, with the proof deviations, and
-[paper-correspondence.yaml](paper-correspondence.yaml) fingerprints every numbered statement.
+[Solution.lean](Solution.lean) proves these statements from [BoxLike](BoxLike.lean), for the
+full parameter range and every invariant equilibrium state. The library and Solution contain
+no `sorry`. No literature result is assumed as an axiom or left as a hypothesis of the headline
+theorems. [comparator-config.json](comparator-config.json) selects the three declarations and
+permits only the standard axioms `propext`, `Classical.choice` and `Quot.sound`.
 
-## Build and checks
+**Coverage:** 42 of the 44 numbered statements are formalised, including Rapaport's theorem
+(Theorem 1.2), proved in [BoxLike/Rapaport](BoxLike/Rapaport/). Hochman–Rapaport's theorem
+(Theorem 1.1) is stated but unproved and is not used by the proofs. Question 1.4 is recorded as
+an open question. Solution has an entry for each numbered statement.
 
-Lean and Mathlib are pinned to `v4.35.0-rc2`. On this machine `.lake/packages` is shared with
-other projects: do not run `lake update`. On a fresh checkout run `lake exe cache get` first.
+[docs/correspondence.md](docs/correspondence.md) gives the detailed correspondence, literature
+references and differences in statements and proofs. [paper-correspondence.yaml](paper-correspondence.yaml)
+identifies the manuscript revision and maps its numbered statements. The module index in
+[BoxLike.lean](BoxLike.lean) describes the library's organisation.
+
+## Literature results
+
+The library contains proofs of the following results in the indicated forms. Theorem numbers
+refer to the linked sources; proof differences are recorded in [docs/correspondence.md](docs/correspondence.md).
+
+| Source | Result formalised | Lean proof |
+| --- | --- | --- |
+| A. Rapaport, [*Dimension of diagonal self-affine sets and measures via non-conformal partitions*](https://arxiv.org/abs/2309.03985v1) (2023) | Theorem 1.3, in the plane | [Rapaport](BoxLike/Rapaport/) |
+| J. M. Fraser, [*On the packing dimension of box-like self-affine sets in the plane*](https://arxiv.org/abs/1108.2639v1), Nonlinearity 25 (2012) | Theorem 2.3 and Corollary 2.5 | [Fraser](BoxLike/Fraser/) |
+| D.-J. Feng and A. Käenmäki, [*Equilibrium states of the pressure function for products of matrices*](https://arxiv.org/abs/1009.3129v1), DCDS 30 (2011) | Proposition 1.2 | [QuasiMultiplicative](BoxLike/QuasiMultiplicative/) |
+| J. M. Fraser, T. Jordan and N. Jurga, [*Dimensions of equilibrium measures on a class of planar self-affine sets*](https://arxiv.org/abs/1706.06833v2), J. Fractal Geom. 7 (2020) | Lemma 1.3 and Corollaries 1.5–1.6, the Gibbs decomposition | [FraserJordanJurga](BoxLike/FraserJordanJurga/) |
+| I. D. Morris and P. Shmerkin, [*On equality of Hausdorff and affinity dimensions, via self-affine measures on positive subsystems*](https://arxiv.org/abs/1602.08789v3), Trans. Amer. Math. Soc. 371 (2019) | Theorem 3.1, distinct Lyapunov exponents | [MorrisShmerkin](BoxLike/MorrisShmerkin.lean) |
+| D.-J. Feng, [*Dimension of invariant measures for affine iterated function systems*](https://arxiv.org/abs/1901.01691v2), Duke Math. J. 172 (2023) | Theorems 1.2(ii) and 1.3, the planar Ledrappier–Young formula; Lemma 4.6 | [FengLedrappierYoung](BoxLike/FengLedrappierYoung.lean), [FengIdentity](BoxLike/FengIdentity.lean), [FengIdentityBar](BoxLike/FengIdentityBar.lean) |
+| D.-J. Feng and H. Hu, [*Dimension theory of iterated function systems*](https://arxiv.org/abs/1002.2036v1), Comm. Pure Appl. Math. 62 (2009) | Theorem 2.8, exact dimensionality for the self-similar projections used here | [FengHu](BoxLike/FengHu.lean) |
+| T. Jordan and A. Rapaport, [*Dimension of ergodic measures projected onto self-similar sets with overlaps*](https://arxiv.org/abs/1908.00271v2), Proc. Lond. Math. Soc. 122 (2021) | Theorem 1.1 | [JordanRapaport](BoxLike/JordanRapaport.lean) |
+| P. Shmerkin, [*On Furstenberg's intersection conjecture, self-similar measures, and the L^q norms of convolutions*](https://arxiv.org/abs/1609.07802v3), Ann. of Math. 189 (2019) | Theorem 6.6, the `L^q`-dimension lower bound; Theorem 3.1 (Bourgain) with a weaker positive doubling exponent | [Shmerkin](BoxLike/Shmerkin/) |
+| B. Bárány and A. Käenmäki, [*Super-exponential condensation without exact overlaps*](https://arxiv.org/abs/1910.04623v4), Adv. Math. 379 (2021) | Theorem 2.1 in the corrected form for `n ≥ 5`, and the bound `Δ_n ≤ C₀ exp(-n²)` used here | [BaranyKaenmaki](BoxLike/BaranyKaenmaki.lean) |
+| E. Rossi, [*Local dimensions of measures on infinitely generated self-affine sets*](https://doi.org/10.1016/j.jmaa.2013.12.030), J. Math. Anal. Appl. 413 (2014) | The upper Hausdorff dimension bound from Theorem 2.2, for box-like systems | [Rossi](BoxLike/Rossi.lean), [RossiBound](BoxLike/RossiBound.lean) |
+| K. J. Falconer, [*The Hausdorff dimension of self-affine fractals*](https://doi.org/10.1017/S0305004100064926), Math. Proc. Cambridge Philos. Soc. 103 (1988) | The affinity-dimension upper bound for Hausdorff and upper Minkowski dimensions, in the plane | [FalconerBound](BoxLike/FalconerBound.lean), [Planar/FalconerBound](BoxLike/Planar/FalconerBound.lean) |
+| R. Bowen, [*Equilibrium states and the ergodic theory of Anosov diffeomorphisms*](https://doi.org/10.1007/BFb0081279), LNM 470 (1975), Chapter 1 | Existence and uniqueness of the ergodic Gibbs measure for Hölder potentials on the mixing subshift used here | [Bowen](BoxLike/Bowen/Main.lean) |
+| S. Kittle and C. Kogler, [*The exact overlaps conjecture for self-similar measures on the real line*](https://arxiv.org/abs/2610.10511) (2026) | Theorem 1.1, derived from the authors' Lean library [ExactOverlaps](vendor/README.md), vendored verbatim | [KittleKogler](BoxLike/KittleKogler.lean) |
+
+The library also proves [Birkhoff's pointwise](BoxLike/Birkhoff.lean) and
+[Kingman's subadditive](BoxLike/Kingman.lean) ergodic theorems,
+[Oseledets' theorem for invertible planar cocycles](BoxLike/Planar/OseledetsTheorem.lean),
+[Shannon–McMillan–Breiman for the finite-alphabet shift](BoxLike/ShannonMcMillanBreiman.lean),
+and the [Kolmogorov–Sinai generator theorem for that shift](BoxLike/KolmogorovSinai.lean).
+
+## Build and verification
+
+Lean and Mathlib are pinned to `v4.35.0-rc2`. On a fresh independent checkout, obtain the
+dependencies with `lake exe cache get`, then run:
 
 ```bash
 lake build BoxLike Challenge Solution
@@ -110,14 +94,23 @@ python3 -B scripts/check_module_headers.py
 python3 -B scripts/check_challenge_vocabulary.py
 python3 -B scripts/check_solution_entries.py --require-complete
 python3 -B scripts/check_paper_correspondence.py
-./comparator-audit.sh --local-unsandboxed
 ```
 
-All pass on the current tree; the only build warnings are the three `sorry` of `Challenge.lean`.
-The comparator run is local and unsandboxed, not a Palomar verdict; on Linux omit
-`--local-unsandboxed`.
+The three Challenge warnings are intentional. The correspondence check needs
+`../diagonal-antidiagonal.tex`; it checks source drift and declaration consistency, not
+mathematical equivalence. This workstation shares `.lake/packages` with other projects, so
+do not run `lake update` or replace those dependencies there.
+
+On Linux, `./comparator-audit.sh` runs the sandboxed Comparator with the Lean kernel, NanoDa
+and con-ron. On macOS, `./comparator-audit.sh --local-unsandboxed` provides a local development
+check without Linux sandbox isolation. The [build workflow](.github/workflows/build.yml)
+builds the library and runs the Comparator audit. The
+[Palomar preflight](.github/workflows/palomar-preflight.yml) runs the registry verifier on
+demand; local checks do not establish Palomar acceptance.
 
 ## Licence
 
-Apache License 2.0 ([LICENSE](LICENSE)); see [CITATION.cff](CITATION.cff). Provenance is in
-[formalization.yaml](formalization.yaml).
+The Lean sources use the [Apache License 2.0](LICENSE), with the vendored library's licences
+recorded in [vendor/README.md](vendor/README.md). Citation details are in
+[CITATION.cff](CITATION.cff); [formalization.yaml](formalization.yaml) records authorship,
+sources, AI assistance and review.
