@@ -4,26 +4,27 @@ module
 `rem:threshold_bound` in `sec:dimension_result_proof`: the proof of `thm:main2` gives
 `\dim_H X ≥ min{dimaff(X), 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)}` for every proximal box-like self-affine set
 with rotations whose projective system has no exact overlaps and `dimaff(X) < 2`, without the
-strong open set condition or projective exponential separation. In the notation of that proof,
-suppose `h > -λ_2` and reduce `W_n` to `⌊|b_n|⁻¹⌋` words, as in the case `h ≤ -λ_2`. Then
-`H_n ≤ χ_{2,n}`, so `q_{y,n} = 0` and hence `q_n = 0`. Since `H_n / n → -λ_2 > -λ_1`,
-`dim((proj_x)_* ν_n) = min{1, H_n / χ_{1,n}} = 1` for all large `n`, so
-`dim ν_n = 1 + (H_n - χ_{1,n}) / χ_{2,n}`, which tends to `2 - λ_1/λ_2`. Each `ν_n` is supported
-on `X`, so `\dim_H X ≥ 2 - λ_1/λ_2`; the case `h ≤ -λ_2` is `thm:main2` itself, and `h ≤ -λ_2` is
-equivalent to `dimaff(X) ≤ 2 - λ_1/λ_2` by `eq:diml_min2`.
+strong open set condition or projective exponential separation. "In the notation of that
+proof, suppose that `h > -λ_2` and reduce `W_n` to `⌊|b_n|⁻¹⌋` words. Then `#W_n ≤ |b_n|⁻¹` gives
+`h_2(ν_n) = 0` by the same argument. Since `n⁻¹ log #W_n → -λ_2 > -λ_1`, we have
+`dim((proj_x ∘ π_n)_*ν_n) = 1` for all sufficiently large `n`, and hence
+`dim((π_n)_*ν_n) = 1 + (log #W_n + log |a_n|)/(-log |b_n|) → 2 - λ_1/λ_2`." Each `(π_n)_*ν_n` is
+supported on `X`, so `\dim_H X ≥ 2 - λ_1/λ_2`; the case `h ≤ -λ_2` is `thm:main2` itself, and
+`h ≤ -λ_2` is equivalent to `dimaff(X) ≤ 2 - λ_1/λ_2` by `eq:diml_min2`.
 
 The typical families `W_n`, the diagonal subsystems and their Bernoulli measures `ν_n`, the
-vanishing of `q_n` from `H_n ≤ χ_{2,n}`, and the dimension formula
-`dim ν_n = d_{x,n} + (H_n - χ_{1,n} d_{x,n}) / χ_{2,n}` with `d_{x,n} = min{1, H_n / χ_{1,n}}` are
-those of `BoxLike/MainTwoProse/Endpoint.lean`. The reduction to `⌊|b_n|⁻¹⌋` words is possible for
+vanishing of `q_n = h_2(ν_n)` from `log #W_n ≤ -log |b_n|`, and the dimension formula
+`dim((π_n)_*ν_n) = d_{x,n} + (log #W_n + d_{x,n} log |a_n|) / (-log |b_n|)` with
+`d_{x,n} = min{1, log #W_n / (-log |a_n|)}` are those of `BoxLike/MainTwoProse/Endpoint.lean`.
+The reduction to `⌊|b_n|⁻¹⌋` words is possible for
 all large `n`, since `log #W_n / n → h > -λ_2` and `log ⌊|b_n|⁻¹⌋ / n → -λ_2`, by the squeeze
 `|b_n|⁻¹ / 2 ≤ ⌊|b_n|⁻¹⌋ ≤ |b_n|⁻¹`. The reduction to a proximal diagonal generator through
 `thm:two-block-normalisation` is as in `System.main2_prose_of_pressure`, the attractor, `dimaff`
 and the ratio `λ_1/λ_2` being invariant under the second iterate.
 
 * `eventually_subsystemDim_eq_of_tendsto`: `d_{x,n} = 1` for all large `n`, so
-  `dim ν_n = 1 + (H_n - χ_{1,n}) / χ_{2,n}`.
-* `tendsto_one_add_sub_div`: `1 + (H_n - χ_{1,n}) / χ_{2,n} → 2 - λ_1/λ_2`.
+  `dim((π_n)_*ν_n) = 1 + (log #W_n + log |a_n|) / (-log |b_n|)`.
+* `tendsto_one_add_sub_div`: `1 + (log #W_n + log |a_n|) / (-log |b_n|) → 2 - λ_1/λ_2`.
 * `lyapDim_neg_eq_threshold`: the limit is the middle case of `eq:diml_min2` at `h_0 = -λ_2`.
 * `System.le_dimH_attractor_of_entropy_gt_normalised`: `\dim_H X ≥ 2 - λ_1/λ_2` when `h > -λ_2`,
   for a tuple containing a proximal diagonal generator.
@@ -57,11 +58,12 @@ universe u
 
 /-! ### The limit of the dimensions -/
 
-/-- `rem:threshold_bound`, "since `H_n / n → -λ_2 > -λ_1`, we also have
-`dim((proj_x)_* ν_n) = 1` for all large `n`, so `dim ν_n = 1 + (H_n - χ_{1,n}) / χ_{2,n}`": the
-ratio `H_n / χ_{1,n}` tends to `λ_2/λ_1 > 1`, so `d_{x,n} = min{1, H_n / χ_{1,n}} = 1` for all
-large `n`, and the formula `dim ν_n = d_{x,n} + (H_n - χ_{1,n} d_{x,n}) / χ_{2,n}` of
-`System.IsHomDiag.isExactDim_map_proj` becomes `1 + (H_n - χ_{1,n}) / χ_{2,n}`. -/
+/-- `rem:threshold_bound`, "since `n⁻¹ log #W_n → -λ_2 > -λ_1`, we have
+`dim((proj_x ∘ π_n)_*ν_n) = 1` for all sufficiently large `n`, and hence
+`dim((π_n)_*ν_n) = 1 + (log #W_n + log |a_n|)/(-log |b_n|)`": the ratio `log #W_n / (-log |a_n|)`
+tends to `λ_2/λ_1 > 1`, so `d_{x,n} = min{1, log #W_n / (-log |a_n|)} = 1` for all large `n`, and
+the formula `dim((π_n)_*ν_n) = d_{x,n} + (log #W_n + d_{x,n} log |a_n|) / (-log |b_n|)` of
+`System.IsHomDiag.isExactDim_map_proj` becomes `1 + (log #W_n + log |a_n|) / (-log |b_n|)`. -/
 theorem eventually_subsystemDim_eq_of_tendsto {H χ₁ : ℕ → ℝ} (χ₂ : ℕ → ℝ) {n : ℕ → ℝ} {l₁ l₂ : ℝ}
     (hl : l₂ < l₁) (hl₁ : l₁ < 0) (hn : ∀ᶠ m in atTop, n m ≠ 0)
     (hH : Tendsto (fun m => H m / n m) atTop (𝓝 (-l₂)))
@@ -76,8 +78,9 @@ theorem eventually_subsystemDim_eq_of_tendsto {H χ₁ : ℕ → ℝ} (χ₂ : �
   rw [div_div_div_cancel_right₀ hm] at hlt
   rw [subsystemDim, min_eq_left hlt.le, mul_one]
 
-/-- `rem:threshold_bound`, "`dim ν_n = 1 + (H_n - χ_{1,n}) / χ_{2,n}` tends to `2 - λ_1/λ_2`":
-when `H_n / n → -λ_2` and `χ_{i,n} / n → -λ_i`, the quotient tends to
+/-- `rem:threshold_bound`, "`dim((π_n)_*ν_n) = 1 + (log #W_n + log |a_n|)/(-log |b_n|) →
+2 - λ_1/λ_2`": when `log #W_n / n → -λ_2`, `log |a_n| / n → λ_1` and `log |b_n| / n → λ_2`, the
+quotient tends to
 `(-λ_2 + λ_1) / (-λ_2) = 1 - λ_1/λ_2`. -/
 theorem tendsto_one_add_sub_div {H χ₁ χ₂ : ℕ → ℝ} {n : ℕ → ℝ} {l₁ l₂ : ℝ} (hl : l₂ < l₁)
     (hl₁ : l₁ < 0) (hn : ∀ᶠ m in atTop, n m ≠ 0)
@@ -120,11 +123,12 @@ variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonCla
 /-- `rem:threshold_bound`, the bound `\dim_H X ≥ 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)` for an `s`-equilibrium
 state `μ` with `0 < s < 2` and `h_0(μ) > -λ_2(𝖠, μ)`, for a tuple containing a proximal diagonal
 generator whose projective system has no exact overlaps. The typical families of the proof of
-`thm:main2` (`exists_typical_words_prose`) are reduced to `⌊|b_n|⁻¹⌋` words, as in the case
-`h ≤ -λ_2`, which is possible for all large `n` since `log #W_n / n → h > -λ_2` and
-`log ⌊|b_n|⁻¹⌋ / n → -λ_2`. Then `H_n = log ⌊|b_n|⁻¹⌋ ≤ χ_{2,n}`, so `q_{y,n} = 0` and `q_n = 0`,
-and `le_dimH_attractor_of_family` gives `\dim_H X ≥ dim ν_n`; `H_n / n → -λ_2 > -λ_1`, so
-`dim((proj_x)_* ν_n) = 1` for all large `n` and `dim ν_n = 1 + (H_n - χ_{1,n}) / χ_{2,n}`
+`thm:main2` (`exists_typical_words_prose`) are reduced to `⌊|b_n|⁻¹⌋` words, as under
+`it:main2_threshold`, which is possible for all large `n` since `log #W_n / n → h > -λ_2` and
+`log ⌊|b_n|⁻¹⌋ / n → -λ_2`. Then `log #W_n = log ⌊|b_n|⁻¹⌋ ≤ -log |b_n|`, so `q_{y,n} = 0` and
+`q_n = h_2(ν_n) = 0`, and `le_dimH_attractor_of_family` gives `\dim_H X ≥ dim((π_n)_*ν_n)`;
+`log #W_n / n → -λ_2 > -λ_1`, so `dim((proj_x ∘ π_n)_*ν_n) = 1` for all large `n` and
+`dim((π_n)_*ν_n) = 1 + (log #W_n + log |a_n|) / (-log |b_n|)`
 (`eventually_subsystemDim_eq_of_tendsto`), which tends to `2 - λ_1/λ_2`
 (`tendsto_one_add_sub_div`).
 Depends on: `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`,
@@ -215,7 +219,7 @@ theorem le_dimH_attractor_of_entropy_gt_normalised (hsmb : ShannonMcMillanBreima
     filter_upwards [hW'card'] with m hm
     rw [← Finset.card_pos, hm]
     exact hfloor m
-  -- `H_m = log ⌊|b_m|⁻¹⌋ ≤ χ_{2,m}`, so `q_m = 0` and `\dim_H X ≥ dim ν_m`
+  -- `log #W_m = log ⌊|b_m|⁻¹⌋ ≤ -log |b_m|`, so `q_m = 0` and `\dim_H X ≥ dim((π_m)_*ν_m)`
   have hle : ∀ᶠ m in atTop, ENNReal.ofReal (subsystemDim (Real.log (W' m).card)
       (-Real.log |a m|) (-Real.log |b m|)) ≤ dimH S.attractor := by
     filter_upwards [hlt, hW'card', hW'ne] with m hm hmc hmne
@@ -225,10 +229,11 @@ theorem le_dimH_attractor_of_entropy_gt_normalised (hsmb : ShannonMcMillanBreima
     · simp only [codeWord_nil, gDeriv_nil, one_mul]
       rw [← Real.log_inv, hmc]
       exact Real.log_le_log (hflpos m) (Nat.floor_le (inv_nonneg.2 (abs_nonneg _)))
-  -- `H_m / m → -λ_2`
+  -- `log #W_m / m → -λ_2`
   have hH' : Tendsto (fun m => Real.log (W' m).card / n m) atTop (𝓝 (-S.lyapunov₂ μ)) :=
     hfl.congr' (hW'card'.mono fun m hm => by simp only [hm])
-  -- `d_{x,m} = 1` for all large `m`, so `dim ν_m = 1 + (H_m - χ_{1,m}) / χ_{2,m}`
+  -- `d_{x,m} = 1` for all large `m`, so
+  -- `dim((π_m)_*ν_m) = 1 + (log #W_m + log |a_m|) / (-log |b_m|)`
   have hle' : ∀ᶠ m in atTop, ENNReal.ofReal (1 + (Real.log (W' m).card - -Real.log |a m|) /
       -Real.log |b m|) ≤ dimH S.attractor := by
     filter_upwards [hle, eventually_subsystemDim_eq_of_tendsto (fun m => -Real.log |b m|) hl hl1

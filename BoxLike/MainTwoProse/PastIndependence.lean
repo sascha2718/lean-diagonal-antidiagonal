@@ -2,10 +2,11 @@ module
 
 /-
 The independence of the past and the future of a Bernoulli measure in the proof of `thm:main2`
-in `sec:dimension_result_proof`: "The past and future of a Bernoulli measure are independent ...
-Thus the entropies in the planar Ledrappier–Young formula are `H_n`, `q_{x,n}` and `q_n`." The
-conditional entropies `q_{x,n}`, `q_{y,n}`, `q_n` of the prose condition the first symbol on the
-horizontal coordinate, the vertical coordinate and the planar point of the coded point only;
+in `sec:dimension_result_proof`: "Since `ν_n` is Bernoulli and the Oseledets subspace `V^1` is
+the `y`-axis, `h_1(ν_n)` is the conditional entropy of the first symbol given the horizontal
+coordinate of the coded point." The conditional entropies `q_{x,n}`, `q_{y,n}`, `q_n` of
+`BoxLike/MainTwoProse/SubsystemEntropies.lean` condition the first symbol on the horizontal
+coordinate, the vertical coordinate and the planar point of the coded point only;
 the partitions `ξ_1`, `ξ_1^⊥`, `ξ_2` of `sec:entropies` condition also on the past. For a
 Bernoulli measure the past `σ`-algebra is independent of the future `σ`-algebra, which contains
 the cylinder `[a]` and the coded point, so the conditional expectations agree and the
@@ -236,7 +237,8 @@ theorem isMeasurablePartition_fibre {Y : Type*} [MeasurableSpace Y] [StandardBor
 
 /-- For a Bernoulli measure and a Borel map `F` of the future into a standard Borel space,
 conditioning the first symbol on the past in addition to `F` does not change the conditional
-entropy (proof of `thm:main2`: "the past and future of a Bernoulli measure are independent"). -/
+entropy (proof of `thm:main2`: "since `ν_n` is Bernoulli and the Oseledets subspace `V^1` is the
+`y`-axis"). -/
 theorem condEntropy_samePast_eq_of_future (p : Measure α) [IsProbabilityMeasure p]
     {Y : Type*} [MeasurableSpace Y] [StandardBorelSpace Y] {F : (ℤ → α) → Y}
     (hF : Measurable F) (hfut : ∀ x y : ℤ → α, (∀ k : ℕ, x k = y k) → F x = F y) :

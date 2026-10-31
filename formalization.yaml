@@ -75,7 +75,9 @@ sources:
       exponential in n, so the same condition with another constant; the bound c^n along
       infinitely many n in place of every n, the weaker form the source allows; proximal strongly
       irreducible, the paper's phrasing, in place of non-conformal and totally irreducible, so the
-      statement is a consequence of the source's theorem.
+      statement is a consequence of the source's theorem. The printed statement of the paper
+      omits the hypothesis of no common fixed point; the Lean statement keeps it (see
+      docs/correspondence.md).
   - title: "On equality of Hausdorff and affinity dimensions, via self-affine measures on positive subsystems"
     authors:
       - "Ian D. Morris"
@@ -311,7 +313,8 @@ fidelity:
     disjunction and its furthermore clause as a second conjunct; case (iii) uses Rapaport's
     theorem, proved in BoxLike/Rapaport/, so no headline result takes a literature hypothesis.
     Theorem 4.16 is stated as exact-dimensionality of the projected equilibrium state with
-    dimension min{2, dimaff(X)}. Every cited theorem the main line uses is a theorem of the
+    dimension dimaff(X) together with dimaff(X) ≤ 2, projective exponential separation being
+    assumed only when dimaff(X) < 2. Every cited theorem the main line uses is a theorem of the
     library (see sources). Challenge.lean has one sorry per audited theorem; comparator-config.json
     declares no definition_names.
 
@@ -348,16 +351,18 @@ alignment:
       note: >-
         Full parameter range, from System.main2_full_of_library and
         System.main2_furthermore_of_library: cases (i) and (ii) along the proof of the manuscript
-        (System.main2_prose); case (iii) from Rapaport's theorem, taken as the hypothesis
-        RapaportDiagonalDimension and applied to the homogeneous diagonal subsystems
-        (System.main2_pesc); the furthermore clause from Theorem 4.16 (System.main_extended_min).
-        Literature input: RapaportDiagonalDimension, in case (iii) only.
+        (System.main2_prose); case (iii) from Rapaport's theorem, proved in BoxLike/Rapaport/
+        (Rapaport.rapaportDiagonalDimension_holds) and applied to the homogeneous diagonal
+        subsystems (System.main2_pesc); the furthermore clause from Theorem 4.16
+        (System.main_extended_min). No literature input.
     - source: "Theorem 4.16 (thm:main_extended)"
       lean: "Challenge.audit_main_extended"
       module: "Challenge"
       status: "literature-dependency"
       note: >-
-        Full parameter range, from System.main_extended_min. No literature input.
+        Full parameter range, from System.main_extended: exact dimension dimaff(X) and
+        dimaff(X) ≤ 2, with projective exponential separation required only when
+        dimaff(X) < 2. No literature input.
 
 acknowledgements: >-
   Lean 4 and Mathlib (leanprover-community), the leanprover comparator with the kernels bundled

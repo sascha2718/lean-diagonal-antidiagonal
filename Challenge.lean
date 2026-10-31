@@ -382,9 +382,10 @@ theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableS
 theorem audit_main_extended {ι : Type u} [Fintype ι] [MeasurableSpace ι]
     [MeasurableSingletonClass ι] (S : System ι)
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
-    (hsep : S.ProjExpSeparation) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
+    (hsep : S.dimaff < 2 → S.ProjExpSeparation)
+    (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
     (hor : entropy μ ≤ -S.lyapunov₂ μ ∨ S.StrongOpenSet) :
-    IsExactDim (μ.map S.proj) (min 2 S.dimaff) := sorry
+    IsExactDim (μ.map S.proj) S.dimaff ∧ S.dimaff ≤ 2 := sorry
 
 end Challenge

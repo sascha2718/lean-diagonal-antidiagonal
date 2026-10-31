@@ -3,8 +3,12 @@ module
 /-
 The scalar Ledrappier–Young formula for the coordinate projections of the diagonal subsystems
 of the proof of `thm:main2` in `sec:dimension_result_proof`. The proof cites Feng's Theorems 1.2
-and 1.3 for the self-similar measures `(proj_x)_* ν_n` and `(proj_y)_* ν_n` on the line:
-`q_{x,n} = H_n - χ_{1,n} d_{x,n}` and `q_{y,n} = H_n - χ_{2,n} d_{y,n}`.
+and 1.3 for the self-similar measures `(proj_x ∘ π_n)_*ν_n` and `(proj_y ∘ π_n)_*ν_n` on the
+line: `h_1(ν_n) = log #W_n + log |a_n| dim((proj_x ∘ π_n)_*ν_n)` and, under
+`it:main2_threshold`,
+`H_{ν_n}(𝒫 | \widehat{ξ_1^⊥}) = log #W_n + log |b_n| dim((proj_y ∘ π_n)_*ν_n)`. In the notation of these docstrings, `q_{x,n} = log #W_n + d_{x,n} log |a_n|` and
+`q_{y,n} = log #W_n + d_{y,n} log |b_n|`, with `d_{x,n}` and `d_{y,n}` the dimensions of the two
+marginals.
 
 Feng's theorems hold for affine iterated function systems in every dimension. The library
 records their planar case `d = 2` as `FengLedrappierYoung`, for every box-like system, and their
@@ -15,7 +19,8 @@ degenerate planar system `z ↦ diag(r, r/2) z + (t_k, 0)`, whose attractor lies
 axis: its projection of `ν_n` is the image of the self-similar measure under `t ↦ (t, 0)`, its
 slow subspace is vertical, its partition `ξ_1` is the partition of the diagonal subsystem by the
 past and the coordinate `c` of the coded point, and its partition `ξ_2` equals `ξ_1`, since the
-vertical coordinate vanishes. The planar formula then reads `d_c = (H_n - q_c) / χ_{c,n}`. This is
+vertical coordinate vanishes. The planar formula then reads `d_c = (q_c - log #W_n) / log |r|`
+for the ratio `r` of the coordinate `c`. This is
 the scalar Feng interface for the actual subsystem, derived from the existing statement
 `FengLedrappierYoung` with no new premise. `BoxLike/ProjectiveLineSystem.lean` applies the same
 construction to the projective system of every box-like system
@@ -31,9 +36,9 @@ the past is independent of the future, as the proof observes.
 * `System.IsHomDiag.xi_one_lineSystem`, `…xi_two_lineSystem`: its partitions `ξ_1 = ξ_2`.
 * `isExactDim_map_prodMk_zero`: the embedding `t ↦ (t, 0)` preserves exact dimensions.
 * `System.IsHomDiag.dimEntropy_one_lineSystem`: the formula `q_c = H - χ_c d_c`.
-* `System.IsHomDiag.dimEntropy_one_eq_scalar`: `q_{x,n} = h_1(ν_n) = H_n - χ_{1,n} d_{x,n}`.
+* `System.IsHomDiag.dimEntropy_one_eq_scalar`: `q_{x,n} = h_1(ν_n) = log #W_n + d_{x,n} log |a_n|`.
 * `System.IsHomDiag.condEntropy_xiPerp_eq_scalar`:
-  `q_{y,n} = H(𝒫 | \widehat{ξ_1^⊥}) = H_n - χ_{2,n} d_{y,n}`.
+  `q_{y,n} = H(𝒫 | \widehat{ξ_1^⊥}) = log #W_n + d_{y,n} log |b_n|`.
 -/
 public import BoxLike.LiteratureFeng
 public import BoxLike.MainTwoProse.DiagonalSubsystem
@@ -214,11 +219,11 @@ variable {κ : Type u} [Fintype κ] [MeasurableSpace κ] [MeasurableSingletonCla
   {T : System κ} {a b : ℝ} (hT : T.IsHomDiag a b)
 include hT
 
-/-- The scalar Ledrappier–Young formula `q_c = H_n - χ_{c,n} d_{c,n}` for the coordinate `c`
-of the diagonal subsystem (proof of `thm:main2`, citing Feng, Theorems 1.2 and 1.3): the
-planar formula `thm:feng1` for the line system of the coordinate `c` gives
-`dim = (h_1 - H_n) / log |r|`, since its partitions `ξ_2` and `ξ_1` agree, and Kittle–Kogler give
-`dim = min{1, H_n / χ_{c,n}}` for the same measure on the horizontal axis.
+/-- The scalar Ledrappier–Young formula `q_c = log #W_n + d_c log |r|` for the coordinate `c` of
+the diagonal subsystem with ratio `r` (proof of `thm:main2`, citing Feng, Theorems 1.2 and 1.3):
+the planar formula `thm:feng1` for the line system of the coordinate `c` gives
+`dim = (h_1 - log #W_n) / log |r|`, since its partitions `ξ_2` and `ξ_1` agree, and Kittle–Kogler
+give `dim = min{1, log #W_n / (-log |r|)}` for the same measure on the horizontal axis.
 Depends on: `FengLedrappierYoung`, `KittleKoglerDimension`. -/
 theorem dimEntropy_one_lineSystem (hly : FengLedrappierYoung.{u})
     (hkk : KittleKoglerDimension.{u}) (c : ZMod 2)
@@ -259,8 +264,9 @@ theorem dimEntropy_one_lineSystem (hly : FengLedrappierYoung.{u})
   rw [div_eq_iff hlr.ne] at heq
   linarith
 
-/-- `q_{x,n} = h_1(ν_n) = H_n - χ_{1,n} d_{x,n}` with `d_{x,n} = min{1, H_n / χ_{1,n}}` (proof of
-`thm:main2`): the scalar Ledrappier–Young formula for the horizontal coordinate. The partition
+/-- `q_{x,n} = h_1(ν_n) = log #W_n + d_{x,n} log |a_n|` with
+`d_{x,n} = min{1, log #W_n / (-log |a_n|)}` (proof of `thm:main2`): the scalar Ledrappier–Young
+formula for the horizontal coordinate. The partition
 `ξ_1` of the diagonal subsystem conditions on the past and the horizontal coordinate, since its
 slow subspace `V^1` is the vertical axis.
 Depends on: `FengLedrappierYoung`, `KittleKoglerDimension`. -/
@@ -275,8 +281,9 @@ theorem dimEntropy_one_eq_scalar (hly : FengLedrappierYoung.{u})
   rw [hT.xi_one_eq_lineSystem hab (measurePreserving_shift_uniformBernoulli 1)]
   exact h
 
-/-- `q_{y,n} = H_n - χ_{2,n} d_{y,n}` with `d_{y,n} = min{1, H_n / χ_{2,n}}` (proof of
-`thm:main2`): the scalar Ledrappier–Young formula for the vertical coordinate, where `q_{y,n}`
+/-- `q_{y,n} = log #W_n + d_{y,n} log |b_n|` with `d_{y,n} = min{1, log #W_n / (-log |b_n|)}`
+(proof of `thm:main2`): the scalar Ledrappier–Young formula for the vertical coordinate, where
+`q_{y,n}`
 is the conditional entropy given the partition `ξ_1^⊥` by the past and the vertical coordinate.
 Depends on: `FengLedrappierYoung`, `KittleKoglerDimension`. -/
 theorem condEntropy_xiPerp_eq_scalar (hly : FengLedrappierYoung.{u})

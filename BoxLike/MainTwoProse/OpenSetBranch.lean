@@ -3,10 +3,10 @@ module
 /-
 The strong open set branch of the proof of `thm:main2` in `sec:dimension_result_proof`: the
 words of the typical families are prefixed by a word `v` with `φ_v(X) ⊆ U` for a feasible open
-set `U`, "the resulting subsystem has attractor `Y_n ⊆ φ_v(X) ⊆ U`; its first-level images lie
-in distinct, disjoint images of `U` of the same level, so it satisfies the strong separation
-condition", and later "strong separation of the subsystem gives unique coding, so again
-`q_n = 0`".
+set `U`: "The resulting attractor lies in `φ_v(X) ⊆ U`, so its first-level images lie in
+pairwise disjoint level-`n` images of `U`. The subsystem therefore satisfies the strong
+separation condition, which gives unique codings and hence `h_2(ν_n) = 0`." The conditional
+entropy `h_2(ν_n)` is `q_n` in these docstrings.
 
 * `System.subsystem_strongSeparation`: the subsystem of distinct words of equal length that all
   start with `v`, where `φ_v(X) ⊆ U`, satisfies the strong separation condition.

@@ -199,7 +199,7 @@ theorem ae_isSome_optionBernoulli [Nonempty κ] :
   obtain rfl : j = 0 := Subsingleton.elim j 0
   simpa using hx
 
-/-- The entropy of `ν_n` is `H_n = log #W_n` (tex line 3520). -/
+/-- The entropy of `ν_n` is `log #W_n` (tex line 3520). -/
 theorem entropy_optionBernoulli [Nonempty κ] :
     entropy (optionBernoulli κ) = Real.log (Fintype.card κ) := by
   have hc : (Fintype.card κ : ℝ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
@@ -320,7 +320,7 @@ theorem log_abs_det_div_norm_matWord_of_forall_isSome [Nonempty κ] (hab : |b| �
     mul_div_cancel_left₀ _ (pow_ne_zero _ (abs_ne_zero.2 hT.a_ne_zero)), Real.log_pow]
 
 /-- `λ_1(𝖠_n, ν_n) = log |a|` for the subsystem: tex lines 3518 to 3520, with
-`χ_{1,n} = -log |a_n|`. -/
+`-log |a_n|`. -/
 theorem lyapunov₁_optionBernoulli [Nonempty κ] (hab : |b| ≤ |a|) :
     T.lyapunov₁ (optionBernoulli κ) = Real.log |a| :=
   tendsto_nhds_unique (T.tendsto_lyapunov₁ (measurePreserving_shift_optionBernoulli 1))
@@ -328,7 +328,7 @@ theorem lyapunov₁_optionBernoulli [Nonempty κ] (hab : |b| ≤ |a|) :
       fun u hu => hT.log_norm_matWord_of_forall_isSome hab u hu)
 
 /-- `λ_2(𝖠_n, ν_n) = log |b|` for the subsystem: tex lines 3518 to 3520, with
-`χ_{2,n} = -log |b_n|`. -/
+`-log |b_n|`. -/
 theorem lyapunov₂_optionBernoulli [Nonempty κ] (hab : |b| ≤ |a|) :
     T.lyapunov₂ (optionBernoulli κ) = Real.log |b| :=
   tendsto_nhds_unique (T.tendsto_lyapunov₂ (measurePreserving_shift_optionBernoulli 1))
@@ -390,7 +390,7 @@ theorem measure_SigmaPrime_compl [Nonempty κ] (hab : |b| ≤ |a|) :
     optionBernoulli κ (T.SigmaPrime (optionBernoulli κ))ᶜ = 0 :=
   measure_mono_null (fun _ hx hx' => hx (Or.inl hx')) (ae_iff.1 (hT.ae_mem_SigmaTau hab))
 
-/-- `h_0(ν_n) = H_n = log #W_n` (tex line 3520 and 3551). -/
+/-- `h_0(ν_n) = log #W_n` (tex line 3520 and 3551). -/
 theorem dimEntropy_zero [Nonempty κ] (hab : |b| ≤ |a|) :
     T.dimEntropy (optionBernoulli κ) 0 = Real.log (Fintype.card κ) := by
   rw [T.dimEntropy_zero_eq_entropy' _ (measurePreserving_shift_optionBernoulli 1)

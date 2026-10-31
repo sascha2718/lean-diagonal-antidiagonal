@@ -1,22 +1,24 @@
 module
 
 /-
-The conditional entropies `q_{x,n}`, `q_{y,n}` and `q_n` of the proof of `thm:main2` in
-`sec:dimension_result_proof`, in the form of the prose: "Let `q_{x,n}` and `q_{y,n}` be the
-conditional entropies of the first subsystem symbol given the horizontal and vertical
-coordinates of the coded point, respectively, and let `q_n` be its conditional entropy given
-the planar point." For the Bernoulli measure `ν_n` of a homogeneous diagonal system with
-`|b| < |a|` they satisfy the steps of the prose:
+The conditional entropies `q_{x,n}`, `q_{y,n}` and `q_n` of the first subsystem symbol given the
+horizontal coordinate, the vertical coordinate and the planar point of the coded point, in the
+proof of `thm:main2` in `sec:dimension_result_proof`. The manuscript writes them as entropies
+of `sec:entropies`: "Since `ν_n` is Bernoulli and the Oseledets subspace `V^1` is the `y`-axis,
+`h_1(ν_n)` is the conditional entropy of the first symbol given the horizontal coordinate of
+the coded point", `H_{ν_n}(𝒫 | \widehat{ξ_1^⊥})` is "the conditional entropy given the vertical
+coordinate", and `h_2(ν_n)` is the one given the planar point. For the Bernoulli measure `ν_n`
+of a homogeneous diagonal system with `|b| < |a|` they satisfy the steps of the prose:
 
 * `System.condEntropyCoord`, `System.condEntropyPoint`: `q_{x,n}`, `q_{y,n}` (the coordinate
   `c = 0, 1`) and `q_n`.
 * `System.IsHomDiag.condEntropyCoord_zero_eq_scalar`, `…condEntropyCoord_one_eq_scalar`: the
-  scalar Ledrappier–Young formula `q_{x,n} = H_n - χ_{1,n} d_{x,n}`,
-  `q_{y,n} = H_n - χ_{2,n} d_{y,n}`.
+  scalar Ledrappier–Young formula `q_{x,n} = log #W_n + d_{x,n} log |a_n|`,
+  `q_{y,n} = log #W_n + d_{y,n} log |b_n|`.
 * `System.condEntropyPoint_le_condEntropyCoord`: conditioning on the planar point gives at least
   as much information as conditioning on one of its coordinates.
 * `System.IsHomDiag.condEntropyCoord_one_eq_zero_of_le`, `…condEntropyPoint_eq_zero_of_le`: in
-  the case `H_n ≤ χ_{2,n}`, `q_{y,n} = 0` and `0 ≤ q_n ≤ q_{y,n} = 0`.
+  the case `log #W_n ≤ -log |b_n|`, `q_{y,n} = 0` and `0 ≤ q_n ≤ q_{y,n} = 0`.
 * `System.StrongSeparation.condEntropyPoint_eq_zero`: strong separation gives unique coding and
   `q_n = 0`.
 * `System.IsHomDiag.dimEntropy_one_eq_condEntropyCoord`,
@@ -129,8 +131,9 @@ variable {κ : Type u} [Fintype κ] [MeasurableSpace κ] [MeasurableSingletonCla
   {T : System κ} {a b : ℝ} (hT : T.IsHomDiag a b)
 include hT
 
-/-- The scalar Ledrappier–Young formula `q_{x,n} = H_n - χ_{1,n} d_{x,n}` with
-`d_{x,n} = min{1, H_n / χ_{1,n}}` (proof of `thm:main2`, citing Feng, Theorems 1.2 and 1.3).
+/-- The scalar Ledrappier–Young formula `q_{x,n} = log #W_n + d_{x,n} log |a_n|` with
+`d_{x,n} = min{1, log #W_n / (-log |a_n|)}` (proof of `thm:main2`, citing Feng, Theorems 1.2
+and 1.3).
 Depends on: `FengLedrappierYoung`, `KittleKoglerDimension`. -/
 theorem condEntropyCoord_zero_eq_scalar (hly : FengLedrappierYoung.{u})
     (hkk : KittleKoglerDimension.{u}) (hab : |b| ≤ |a|)
@@ -141,8 +144,9 @@ theorem condEntropyCoord_zero_eq_scalar (hly : FengLedrappierYoung.{u})
   rw [← hT.dimEntropy_one_eq_condEntropyCoord hab]
   exact hT.dimEntropy_one_eq_scalar hly hkk hab hfreex
 
-/-- The scalar Ledrappier–Young formula `q_{y,n} = H_n - χ_{2,n} d_{y,n}` with
-`d_{y,n} = min{1, H_n / χ_{2,n}}` (proof of `thm:main2`, citing Feng, Theorems 1.2 and 1.3).
+/-- The scalar Ledrappier–Young formula `q_{y,n} = log #W_n + d_{y,n} log |b_n|` with
+`d_{y,n} = min{1, log #W_n / (-log |b_n|)}` (proof of `thm:main2`, citing Feng, Theorems 1.2
+and 1.3).
 Depends on: `FengLedrappierYoung`, `KittleKoglerDimension`. -/
 theorem condEntropyCoord_one_eq_scalar (hly : FengLedrappierYoung.{u})
     (hkk : KittleKoglerDimension.{u}) (hab : |b| ≤ |a|)
@@ -153,7 +157,8 @@ theorem condEntropyCoord_one_eq_scalar (hly : FengLedrappierYoung.{u})
   rw [← hT.condEntropy_xiPerp_eq_condEntropyCoord hab]
   exact hT.condEntropy_xiPerp_eq_scalar hly hkk hab hfreey
 
-/-- `q_{y,n} = 0` when `H_n ≤ χ_{2,n}` (proof of `thm:main2`): then `d_{y,n} = H_n / χ_{2,n}`.
+/-- `q_{y,n} = 0` when `log #W_n ≤ -log |b_n|` (proof of `thm:main2`): then
+`d_{y,n} = log #W_n / (-log |b_n|)`.
 Depends on: `FengLedrappierYoung`, `KittleKoglerDimension`. -/
 theorem condEntropyCoord_one_eq_zero_of_le (hly : FengLedrappierYoung.{u})
     (hkk : KittleKoglerDimension.{u}) (hab : |b| ≤ |a|)
@@ -164,7 +169,7 @@ theorem condEntropyCoord_one_eq_zero_of_le (hly : FengLedrappierYoung.{u})
   rw [hT.condEntropyCoord_one_eq_scalar hly hkk hab hfreey, min_eq_right ((div_le_one hlb).2 hH),
     mul_div_cancel₀ _ hlb.ne', sub_self]
 
-/-- The entropy threshold case of the proof of `thm:main2`: if `H_n ≤ χ_{2,n}`, then
+/-- The entropy threshold case of the proof of `thm:main2`: if `log #W_n ≤ -log |b_n|`, then
 `0 ≤ q_n ≤ q_{y,n} = 0`, since conditioning on the planar point gives at least as much
 information as conditioning on its vertical coordinate.
 Depends on: `FengLedrappierYoung`, `KittleKoglerDimension`. -/

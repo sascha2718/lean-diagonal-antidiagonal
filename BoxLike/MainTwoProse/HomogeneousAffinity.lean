@@ -2,10 +2,9 @@ module
 
 /-
 The affinity dimension of a homogeneous diagonal system, for the projective exponential
-separation case of the proof of `thm:main2` in `sec:dimension_result_proof`: "As the subsystem
-is homogeneous, its pressure at `u ≥ 0` equals `H_n + log φ^u(diag(a_n, b_n))`, so
-`eq:energy_def` shows that `dimaff(X_n)` is given by the right-hand side of `eq:diml_min2` with
-entropy `H_n` and Lyapunov exponents `-χ_{1,n}` and `-χ_{2,n}`." The energy `Λ(l_1, l_2, u)` of
+separation case of the proof of `thm:main2` in `sec:dimension_result_proof`: "The pressure of
+this subsystem at `u ≥ 0` is `log #W_n + log φ^u(diag(a_n, b_n))`. By `eq:diml_min2` and the
+three limits above, `dimaff(X_n) → \dim_L(𝖠, μ_t)`." The energy `Λ(l_1, l_2, u)` of
 `eq:energy_def` is linear in the exponents, and the Lyapunov dimension is the zero of the
 strictly decreasing function `u ↦ h + Λ(l_1, l_2, u)`.
 
@@ -16,7 +15,8 @@ strictly decreasing function `u ↦ h + Λ(l_1, l_2, u)`.
   `lyapDim_lt_of_add_energy_neg`: the Lyapunov dimension is the zero of the strictly decreasing
   function `u ↦ h + Λ(l_1, l_2, u)`, so the sign of `h + Λ(l_1, l_2, u)` places `u` relative to
   `dim_L(h, l_1, l_2)`.
-* `lyapDim_div`: `eq:diml_min2` is unchanged when `H_n`, `χ_{1,n}`, `χ_{2,n}` are divided by `n`.
+* `lyapDim_div`: `eq:diml_min2` is unchanged when `log #W_n`, `log |a_n|`, `log |b_n|` are
+  divided by `n`.
 * `tendsto_lyapDim`: `eq:diml_min2` is continuous where `l_2 < l_1 < 0` and `h > 0`: the limit
   `dimaff(X_n) → dim_L(𝖠, μ_t)` of the proof of `thm:main2`.
 * `System.IsHomDiag.log_svf_matWord`: `log φ^u(A_𝐰) = |𝐰| Λ(log |a|, log |b|, u)`.
@@ -44,12 +44,13 @@ theorem energy_mul (c l1 l2 s : ℝ) : energy (c * l1) (c * l2) s = c * energy l
   split_ifs <;> ring
 
 /-- The `s`-energy of `eq:energy_def` is linear in the pair of exponents: the form with
-quotients, as for `H_n / n`, `χ_{1,n} / n`, `χ_{2,n} / n` in the proof of `thm:main2`. -/
+quotients, as for `log #W_n / n`, `log |a_n| / n`, `log |b_n| / n` in the proof of `thm:main2`. -/
 theorem energy_div (l1 l2 s c : ℝ) : energy (l1 / c) (l2 / c) s = energy l1 l2 s / c := by
   rw [div_eq_inv_mul, div_eq_inv_mul, div_eq_inv_mul, energy_mul]
 
 /-- The `s`-energy of `eq:energy_def` is continuous in the pair of exponents, for a fixed `s`:
-the step `χ_{i,n} / n → -λ_i(𝖠, μ_t)` of the proof of `thm:main2`. -/
+the limits `log |a_n| / n → λ_1(𝖠, μ_t)` and `log |b_n| / n → λ_2(𝖠, μ_t)` of
+`eq:diagonal-subsystem-limits` in the proof of `thm:main2`. -/
 theorem tendsto_energy {x y : ℕ → ℝ} {l1 l2 : ℝ} (hx : Tendsto x atTop (𝓝 l1))
     (hy : Tendsto y atTop (𝓝 l2)) (s : ℝ) :
     Tendsto (fun m => energy (x m) (y m) s) atTop (𝓝 (energy l1 l2 s)) := by
@@ -111,8 +112,9 @@ theorem lyapDim_lt_of_add_energy_neg {h l1 l2 u : ℝ} (hl : l2 ≤ l1) (hl1 : l
   linarith
 
 /-- The right-hand side of `eq:diml_min2` is unchanged when the entropy and both exponents are
-divided by the same `c > 0`: `dimaff(X_n)` is the formula for `H_n`, `-χ_{1,n}`, `-χ_{2,n}` as
-well as for `H_n / n`, `-χ_{1,n} / n`, `-χ_{2,n} / n` (proof of `thm:main2`). -/
+divided by the same `c > 0`: `dimaff(X_n)` is the formula for `log #W_n`, `log |a_n|`,
+`log |b_n|` as well as for `log #W_n / n`, `log |a_n| / n`, `log |b_n| / n` (proof of
+`thm:main2`). -/
 theorem lyapDim_div (h l1 l2 : ℝ) {c : ℝ} (hc : 0 < c) :
     lyapDim (h / c) (l1 / c) (l2 / c) = lyapDim h l1 l2 := by
   have hc' : c ≠ 0 := hc.ne'
@@ -125,19 +127,19 @@ theorem lyapDim_div (h l1 l2 : ℝ) {c : ℝ} (hc : 0 < c) :
   split_ifs <;> field_simp
 
 /-- The right-hand side of `eq:diml_min2` is continuous where `l_2 < l_1 < 0` and `h > 0`: if
-`H_n → h`, `l_{1,n} → l_1` and `l_{2,n} → l_2`, then
-`dim_L(H_n, l_{1,n}, l_{2,n}) → dim_L(h, l_1, l_2)`. This is the limit
-"`dimaff(X_n)` ... tends to `\dim_L(𝖠, μ_t)`, since `H_n/n → h_0(μ_t)` and
-`χ_{i,n}/n → -λ_i(𝖠, μ_t)`" of the proof of `thm:main2`. The Lyapunov dimension is the zero of
+`log #W_n → h`, `l_{1,n} → l_1` and `l_{2,n} → l_2`, then
+`dim_L(log #W_n, l_{1,n}, l_{2,n}) → dim_L(h, l_1, l_2)`. This is the limit "by `eq:diml_min2`
+and the three limits above, `dimaff(X_n) → \dim_L(𝖠, μ_t)`" of the proof of `thm:main2`, the
+three limits being `eq:diagonal-subsystem-limits`. The Lyapunov dimension is the zero of
 the strictly decreasing function `u ↦ h + Λ(l_1, l_2, u)`, and the energy is continuous in the
-exponents, so for `u` on either side of the limit the sign of `H_n + Λ(l_{1,n}, l_{2,n}, u)`
+exponents, so for `u` on either side of the limit the sign of `log #W_n + Λ(l_{1,n}, l_{2,n}, u)`
 is eventually that of `h + Λ(l_1, l_2, u)`. -/
 theorem tendsto_lyapDim {H l1 l2 : ℕ → ℝ} {h a b : ℝ} (hH : Tendsto H atTop (𝓝 h))
     (h1 : Tendsto l1 atTop (𝓝 a)) (h2 : Tendsto l2 atTop (𝓝 b)) (hb : b < a) (ha : a < 0)
     (hh : 0 < h) :
     Tendsto (fun n => lyapDim (H n) (l1 n) (l2 n)) atTop (𝓝 (lyapDim h a b)) := by
   have hb0 : b < 0 := hb.trans ha
-  -- eventually `l_{2,n} ≤ l_{1,n} < 0` and `H_n ≥ 0`
+  -- eventually `l_{2,n} ≤ l_{1,n} < 0` and `log #W_n ≥ 0`
   have hev : ∀ᶠ n in atTop, l2 n ≤ l1 n ∧ l1 n < 0 ∧ 0 ≤ H n := by
     filter_upwards [h2.eventually_lt h1 hb, h1.eventually (gt_mem_nhds ha),
       hH.eventually (lt_mem_nhds hh)] with n hn1 hn2 hn3
@@ -189,8 +191,8 @@ theorem svfSum_eq (hab : |b| ≤ |a|) (u : ℝ) (n : ℕ) :
     nsmul_eq_mul, Nat.cast_pow]
 
 /-- The pressure of a homogeneous diagonal system with `|b| ≤ |a|`:
-`P(u) = log #κ + Λ(log |a|, log |b|, u)` for `u ≥ 0`, the sentence "its pressure at `u ≥ 0`
-equals `H_n + log φ^u(diag(a_n, b_n))`" of the proof of `thm:main2`. -/
+`P(u) = log #κ + Λ(log |a|, log |b|, u)` for `u ≥ 0`, the sentence "the pressure of this
+subsystem at `u ≥ 0` is `log #W_n + log φ^u(diag(a_n, b_n))`" of the proof of `thm:main2`. -/
 theorem pressure_eq (hab : |b| ≤ |a|) {u : ℝ} (hu : 0 ≤ u) :
     T.pressure u = Real.log (Fintype.card κ) + energy (Real.log |a|) (Real.log |b|) u := by
   obtain ⟨δ, hδ⟩ := T.exists_ratioLowerBound
@@ -202,8 +204,9 @@ theorem pressure_eq (hab : |b| ≤ |a|) {u : ℝ} (hu : 0 ≤ u) :
     Real.log_exp, ← mul_add, mul_div_cancel_left₀ _ hn']
 
 /-- `dimaff = dim_L(log #κ, log |a|, log |b|)` for a homogeneous diagonal system with
-`|b| ≤ |a|`: "`dimaff(X_n)` is given by the right-hand side of `eq:diml_min2` with entropy
-`H_n` and Lyapunov exponents `-χ_{1,n}` and `-χ_{2,n}`" in the proof of `thm:main2`. -/
+`|b| ≤ |a|`: in the proof of `thm:main2`, `dimaff(X_n)` is the right-hand side of `eq:diml_min2`
+with entropy `log #W_n` and Lyapunov exponents `log |a_n|` and `log |b_n|`, which "by
+`eq:diml_min2` and the three limits above" tends to `\dim_L(𝖠, μ_t)`. -/
 theorem dimaff_eq (hab : |b| ≤ |a|) :
     T.dimaff = lyapDim (Real.log (Fintype.card κ)) (Real.log |a|) (Real.log |b|) := by
   have hl : Real.log |b| ≤ Real.log |a| := Real.log_le_log (abs_pos.2 hT.b_ne_zero) hab

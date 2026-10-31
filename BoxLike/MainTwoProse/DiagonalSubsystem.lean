@@ -7,12 +7,12 @@ its maps have the common diagonal linear part `diag(a_n, b_n)`, and the measure 
 equal probabilities to them. For such a system the Lyapunov exponents of every invariant measure
 are `log |a|` and `log |b|`, every sequence lies in `Σ^τ`, the slow subspace `V^1` is the vertical
 axis, and the partitions of `sec:entropies` are given by the past and the coordinates of the
-coded point. Both coordinate projections of `ν_n` are self-similar measures with equal weights,
-whose dimensions Kittle–Kogler give without exact overlaps.
+coded point. Both coordinate projections of `(π_n)_*ν_n` are self-similar measures with equal
+weights, whose dimensions Kittle–Kogler give without exact overlaps.
 
 * `uniformMeasure`, `uniformBernoulli`: the equal weights `1 / #κ` and the Bernoulli measure
   `ν_n`; it is invariant and ergodic, its cylinder measures are products, and its entropy is
-  `H_n = log #κ`.
+  `log #κ = log #W_n`.
 * `System.IsHomDiag`: all maps of the system have the linear part `diag(a, b)`.
 * `System.IsHomDiag.eps_eq_zero`, `…tau_eq`, `…omega_eq`, `…matWord_eq`: no orientation
   changes, and `A_𝐮 = diag(a^n, b^n)` for a word of length `n`.
@@ -22,9 +22,10 @@ whose dimensions Kittle–Kogler give without exact overlaps.
   vertical axis at every sequence.
 * `System.IsHomDiag.xi_one_eq`, `…xiPerp_eq`, `…xi_two_eq`: the atoms of `ξ_1`, `ξ_1^⊥`, `ξ_2`
   fix the past and the horizontal coordinate, the vertical coordinate, the planar point.
-* `System.IsHomDiag.dimEntropy_zero`: `h_0(ν_n) = H_n`.
+* `System.IsHomDiag.dimEntropy_zero`: `h_0(ν_n) = log #W_n`.
 * `System.IsHomDiag.marginal_eq_sum`, `…marginal_isExactDim`: each coordinate marginal of
-  `ν_n` is the self-similar measure with equal weights, of dimension `min{1, H_n / χ_{c,n}}`.
+  `(π_n)_*ν_n` is the self-similar measure with equal weights, of dimension
+  `min{1, log #W_n / (-log |a_n|)}` or `min{1, log #W_n / (-log |b_n|)}`.
 -/
 public import BoxLike.HomogeneousSubsystem
 public import BoxLike.Literature
@@ -105,7 +106,7 @@ theorem measureReal_uniformBernoulli_cylinder_prod [Nonempty κ] {n : ℕ} (w : 
   rw [measureReal_uniformMeasure_singleton, ← uniformBernoulli,
     measureReal_uniformBernoulli_cylinder_single]
 
-/-- The entropy of `ν_n` is `H_n = log #W_n`. -/
+/-- The entropy of `ν_n` is `log #W_n`. -/
 theorem entropy_uniformBernoulli [Nonempty κ] :
     entropy (uniformBernoulli κ) = Real.log (Fintype.card κ) := by
   have hc : (Fintype.card κ : ℝ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
@@ -158,11 +159,11 @@ theorem abs_b_lt_one [Nonempty κ] : |b| < 1 := by
   obtain ⟨k⟩ : Nonempty κ := inferInstance
   simpa [hT.b_eq k] using T.abs_b_lt_one k
 
-/-- `log |a| < 0`, so that `χ_{1,n} = -log |a_n| > 0`. -/
+/-- `log |a| < 0`, so that `-log |a_n| > 0`. -/
 theorem log_abs_a_neg [Nonempty κ] : Real.log |a| < 0 :=
   Real.log_neg (abs_pos.2 hT.a_ne_zero) hT.abs_a_lt_one
 
-/-- `log |b| < 0`, so that `χ_{2,n} = -log |b_n| > 0`. -/
+/-- `log |b| < 0`, so that `-log |b_n| > 0`. -/
 theorem log_abs_b_neg [Nonempty κ] : Real.log |b| < 0 :=
   Real.log_neg (abs_pos.2 hT.b_ne_zero) hT.abs_b_lt_one
 
@@ -245,7 +246,7 @@ section Measure
 variable [Fintype κ] [MeasurableSpace κ] [MeasurableSingletonClass κ]
 
 /-- `λ_1(𝖠, μ) = log |a|` for every invariant probability measure `μ`, when `|b| ≤ |a|`; with
-`χ_{1,n} = -log |a_n|` in the proof of `thm:main2`. -/
+`-log |a_n|` in the proof of `thm:main2`. -/
 theorem lyapunov₁_eq (hab : |b| ≤ |a|) {μ : Measure (ℤ → κ)} [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) : T.lyapunov₁ μ = Real.log |a| := by
   refine tendsto_nhds_unique (T.tendsto_lyapunov₁ hinv) (tendsto_const_nhds.congr' ?_)
@@ -256,7 +257,7 @@ theorem lyapunov₁_eq (hab : |b| ≤ |a|) {μ : Measure (ℤ → κ)} [IsProbab
   rw [mul_div_cancel_left₀ _ (Nat.cast_ne_zero.2 hn)]
 
 /-- `λ_2(𝖠, μ) = log |b|` for every invariant probability measure `μ`, when `|b| ≤ |a|`; with
-`χ_{2,n} = -log |b_n|` in the proof of `thm:main2`. -/
+`-log |b_n|` in the proof of `thm:main2`. -/
 theorem lyapunov₂_eq (hab : |b| ≤ |a|) {μ : Measure (ℤ → κ)} [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) : T.lyapunov₂ μ = Real.log |b| := by
   have : Nonempty κ := nonempty_of_measure μ
@@ -326,7 +327,7 @@ theorem xi_two_eq (hab : |b| ≤ |a|) {μ : Measure (ℤ → κ)} [IsProbability
   ext y
   simp only [Set.mem_ofPred_eq, oseledets, Set.mem_singleton_iff, sub_eq_zero]
 
-/-- `h_0(ν_n) = H_n = log #W_n` in the proof of `thm:main2`. -/
+/-- `h_0(ν_n) = log #W_n` in the proof of `thm:main2`. -/
 theorem dimEntropy_zero [Nonempty κ] (hab : |b| ≤ |a|) :
     T.dimEntropy (uniformBernoulli κ) 0 = Real.log (Fintype.card κ) := by
   rw [T.dimEntropy_zero_eq_entropy' _ (measurePreserving_shift_uniformBernoulli 1)
@@ -396,7 +397,8 @@ include hT
 /-- The dimension of a coordinate marginal of `ν_n` (proof of `thm:main2`): the marginal is the
 self-similar measure with equal weights on the `#κ` coordinate maps `g_{(k, c)}`, all with the
 ratio `a` for `c = 0` and `b` for `c = 1`; without exact overlaps, that is, when the words in
-these maps compose injectively, Kittle–Kogler give `dim = min{1, H_n / χ_{c,n}}`.
+these maps compose injectively, Kittle–Kogler give `dim = min{1, log #W_n / (-log |r|)}` for the
+ratio `r = a` or `r = b`.
 Depends on: `KittleKoglerDimension`. -/
 theorem marginal_isExactDim (hkk : KittleKoglerDimension.{u}) (c : ZMod 2)
     (hfree : Function.Injective

@@ -3,14 +3,13 @@ module
 /-
 Exponential separation of the systems a finite diagonal subsystem induces on the coordinate
 axes, from the projective exponential separation condition of the ambient system: the passage
-"a composition of `k` of these maps acts on each coordinate axis by a map `g_𝐢` for a word `𝐢`
-of length `kn` in `Ψ`. Distinct sequences of `k` maps give distinct words, and on a given axis
-all these maps `g_𝐢` have the same derivative. Given `m ≥ n` with `Δ_m^Ψ ≥ c^m`, put
-`k = ⌊m/n⌋`, so that `kn ≤ m < 2kn`. Since the sequence `(Δ_j^Ψ)` is non-increasing, any two
-words `𝐢 ≠ 𝐣` obtained in this way on the same axis satisfy
-`|g_𝐢(0) - g_𝐣(0)| ≥ Δ_{kn}^Ψ ≥ Δ_m^Ψ ≥ c^m ≥ (c^{2n})^k`. As `m` ranges over infinitely many
-values, so does `k`, and hence the systems induced by `{φ_w}_{w ∈ W_n}` on the two coordinate
-axes are exponentially separated" of the proof of `thm:main2` in `sec:dimension_result_proof`.
+"A composition of `k` subsystem maps acts on either coordinate axis by a map `g_𝐢` with
+`|𝐢| = kn`. Distinct compositions give distinct words, and on a given axis the derivatives are
+equal. Given `m ≥ n` with `Δ_m^Ψ ≥ c^m`, put `k = ⌊m/n⌋`, so that `kn ≤ m < 2kn`. By the
+monotonicity of `(Δ_j^Ψ)_{j ∈ ℕ}` established in `sec:exponential_separation`, any two such
+words `𝐢 ≠ 𝐣` satisfy `|g_𝐢(0) - g_𝐣(0)| ≥ Δ_{kn}^Ψ ≥ Δ_m^Ψ ≥ c^m ≥ (c^{2n})^k`. Hence, both
+induced systems are exponentially separated" of the proof of `thm:main2` in
+`sec:dimension_result_proof`.
 
 * `System.gDeriv_eq_gWord_sub`: `g_𝐣' = g_𝐣(1) - g_𝐣(0)`.
 * `System.subsystem_codeWord_gDeriv`: the derivative along a word of the subsystem is the

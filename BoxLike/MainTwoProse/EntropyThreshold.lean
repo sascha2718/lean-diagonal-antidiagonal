@@ -2,9 +2,10 @@ module
 
 /-
 The entropy threshold case of the proof of `thm:main2` in `sec:dimension_result_proof`: when
-`H_n ≤ χ_{2,n}`, the scalar Ledrappier–Young formula gives `q_{y,n} = 0`, and "since conditioning
-on the planar point gives at least as much information as conditioning on its vertical
-coordinate, `0 ≤ q_n ≤ q_{y,n} = 0`". The inequality `q_n ≤ q_{y,n}` is the monotonicity of the
+`#W_n ≤ |b_n|⁻¹`, "the conditional entropy is
+`H_{ν_n}(𝒫 | \widehat{ξ_1^⊥}) = log #W_n + log |b_n| dim((proj_y ∘ π_n)_*ν_n) = 0`. Further,
+since `ξ_2` refines `ξ_1^⊥`, we obtain `h_2(ν_n) = 0`." In the notation of these docstrings,
+`q_{y,n} = 0` and `0 ≤ q_n ≤ q_{y,n}`. The inequality `q_n ≤ q_{y,n}` is the monotonicity of the
 conditional entropy under refinement: the atom `ξ_2(𝐢)` of the planar point lies in the atom
 `ξ_1^⊥(𝐢)` of the vertical coordinate, so `\widehat{ξ_1^⊥} ⊆ \widehat{ξ_2}`, and the conditional
 Jensen inequality for the concave function `η(t) = -t log t` and the tower property of the
@@ -17,9 +18,9 @@ conditional expectations give `H(𝒫 | \widehat{ξ_2}) ≤ H(𝒫 | \widehat{ξ
   system and every finite measure.
 * `System.IsHomDiag.condEntropy_xiPerp_eq_zero_of_le`,
   `System.IsHomDiag.dimEntropy_two_eq_zero_of_le`: `q_{y,n} = 0` and `q_n = 0` when
-  `H_n ≤ χ_{2,n}`, for the partitions `ξ_1^⊥` and `ξ_2` of `sec:entropies`, which condition on
-  the past as well; `BoxLike/MainTwoProse/SubsystemEntropies.lean` has the same step for the
-  conditional entropies of the prose, which the endpoint uses.
+  `log #W_n ≤ -log |b_n|`, for the partitions `ξ_1^⊥` and `ξ_2` of `sec:entropies`, which
+  condition on the past as well; `BoxLike/MainTwoProse/SubsystemEntropies.lean` has the same
+  step for the conditional entropies of the prose, which the endpoint uses.
 -/
 public import BoxLike.MainTwoProse.ScalarFeng
 public import BoxLike.PastEntropy
@@ -111,8 +112,9 @@ variable {κ : Type u} [Fintype κ] [MeasurableSpace κ] [MeasurableSingletonCla
   {T : System κ} {a b : ℝ} (hT : T.IsHomDiag a b)
 include hT
 
-/-- `q_{y,n} = 0` when `H_n ≤ χ_{2,n}` (proof of `thm:main2`): then `d_{y,n} = H_n / χ_{2,n}`
-and the scalar Ledrappier–Young formula gives `q_{y,n} = H_n - χ_{2,n} d_{y,n} = 0`.
+/-- `q_{y,n} = 0` when `log #W_n ≤ -log |b_n|` (proof of `thm:main2`): then
+`d_{y,n} = log #W_n / (-log |b_n|)` and the scalar Ledrappier–Young formula gives
+`q_{y,n} = log #W_n + d_{y,n} log |b_n| = 0`.
 Depends on: `FengLedrappierYoung`, `KittleKoglerDimension`. -/
 theorem condEntropy_xiPerp_eq_zero_of_le (hly : FengLedrappierYoung.{u})
     (hkk : KittleKoglerDimension.{u}) (hab : |b| ≤ |a|)
@@ -124,8 +126,8 @@ theorem condEntropy_xiPerp_eq_zero_of_le (hly : FengLedrappierYoung.{u})
   rw [min_eq_right ((div_le_one hlb).2 hH), mul_div_cancel₀ _ hlb.ne', sub_self] at hqy
   exact hqy
 
-/-- The entropy threshold case of the proof of `thm:main2`: if `H_n ≤ χ_{2,n}`, then
-`0 ≤ q_n ≤ q_{y,n} = 0`, so `q_n = h_2(ν_n) = 0`.
+/-- The entropy threshold case of the proof of `thm:main2`: if `log #W_n ≤ -log |b_n|`, then
+`0 ≤ q_n ≤ q_{y,n} = 0`, so `q_n = h_2(ν_n) = 0`, "since `ξ_2` refines `ξ_1^⊥`".
 Depends on: `FengLedrappierYoung`, `KittleKoglerDimension`. -/
 theorem dimEntropy_two_eq_zero_of_le (hly : FengLedrappierYoung.{u})
     (hkk : KittleKoglerDimension.{u}) (hab : |b| ≤ |a|)

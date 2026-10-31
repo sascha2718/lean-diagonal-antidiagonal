@@ -2,14 +2,17 @@ module
 
 /-
 The typical words of the proof of `thm:main2` in `sec:dimension_result_proof`, by the route of
-the prose: the Gibbs measure `μ_1` of `f_{1,s}` on `Σ_Z` returns to the horizontal orientation
-`E = τ(Σ)`, the Shannon–McMillan–Breiman and Birkhoff theorems control the cylinder measures
-and the coordinate derivatives of the returning words, the counting bounds
-`c e^{n(h-ε)} ≤ # ≤ e^{n(h+ε)}` follow from the cylinder measures, and a pigeonhole on the
-count vectors of the `2N` symbols keeps a class with constant coordinate derivatives. The
-result is a sequence of finite families `W_n` of planar words of length `n` with a common
-diagonal matrix `A_w = diag(a_n, b_n)`, `log #W_n / n → h_0(μ)`, `log |a_n| / n → λ_1(𝖠, μ)` and
-`log |b_n| / n → λ_2(𝖠, μ)`.
+the prose: the Gibbs measure `μ_1` of `f_{1,t}` on `Σ_Z` returns to the horizontal orientation
+`τ(Σ)`, the words of `W_{n,ε}` start and end in `τ(Σ)` and have their cylinder measures and
+coordinate derivatives controlled by the Shannon–McMillan–Breiman and Birkhoff theorems, the
+counting bounds `exp(n(h-ε)) ≤ #W_{n,ε} ≤ exp(n(h+ε))` follow from the cylinder measures (here
+with a constant in front of the lower bound), and a pigeonhole on the digit frequencies `k⃗` of
+the `2N` symbols keeps a class `W_{n,ε}(k⃗)` with constant coordinate derivatives. The result
+is a sequence of finite families `W_n` of planar words of length `n` with a common diagonal
+matrix `A_w = diag(a_n, b_n)` and the limits `eq:diagonal-subsystem-limits`:
+`log #W_n / n → h_0(μ)`, `log |a_n| / n → λ_1(𝖠, μ)` and `log |b_n| / n → λ_2(𝖠, μ)`. The
+manuscript obtains the returns to `τ(Σ)` from the mixing of `μ_1`; here they come from
+ergodicity through Cesàro averages.
 
 The Shannon–McMillan–Breiman theorem enters as the hypothesis
 `hsmb : ShannonMcMillanBreimanStatement.{u}` of `BoxLike/SMBStatement.lean`, a result of the
@@ -21,8 +24,8 @@ hypothesis.
 * `frequently_half_le_of_tendsto_cesaro`, `tendsto_cesaro_measure_inter_shift`,
   `frequently_measure_inter_shift_ge`: the return `ν(E ∩ σ^{-n} E) ≥ ν(E)² / 2` for infinitely
   many `n`, from the mean ergodic form of `n⁻¹ ∑_{k<n} ν(E ∩ σ^{-k} E) → ν(E)²`.
-* `System.returnSet`, `System.typicalBad`: the set `E ∩ σ^{-n} E` and the exceptional set of
-  the two theorems.
+* `System.returnSet`, `System.typicalBad`: the set `τ(Σ) ∩ σ^{-n} τ(Σ)` and the exceptional set
+  of the two theorems.
 * `System.block_tau`, `System.shift_tau_mem_range_tau_iff`, `System.liftBlock_zero_injective`,
   `System.sum_potential₁_one_tau`, `System.sum_potential₂_one_tau`: a word starting in `E` is the
   lift of its planar word, it ends in `E` exactly when its planar matrix is diagonal, forgetting

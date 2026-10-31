@@ -114,8 +114,8 @@ noncomputable def toHomSystem : HomSystem κ where
 /-- The weights of `toHomSystem` are `1 / #κ`. -/
 @[simp] theorem toHomSystem_p (k : κ) : (toHomSystem hT hab).p k = 1 / Fintype.card κ := rfl
 
-/-- The entropy of the equal weights is `H = log #κ`, the entropy `H_n` of `ν_n` in the proof of
-`thm:main2`. -/
+/-- The entropy of the equal weights is `H = log #κ`, the entropy `log #W_n` of `ν_n` in the
+proof of `thm:main2`. -/
 theorem toHomSystem_H : (toHomSystem hT hab).H = Real.log (Fintype.card κ) := by
   simp only [HomSystem.H, toHomSystem_p]
   rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, Real.negMulLog, one_div, Real.log_inv]

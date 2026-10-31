@@ -40,7 +40,7 @@ Ledrappier–Young formula then gives the dimension `subsystemDim H χ_1 χ_2` o
 * `System.IsHomogeneousOption.dimEntropy_eq_zero_of_condMeas_xi_eq_dirac`,
   `System.IsHomogeneousOption.dimEntropy_two_eq_zero_of_le`,
   `System.IsHomogeneousOption.dimEntropy_two_eq_zero_of_unique_coding`: `h_2(ν_n) = 0`.
-* `System.IsHomogeneousOption.isExactDim_map_proj`: `dim(ν_n) = subsystemDim H χ_1 χ_2`.
+* `System.IsHomogeneousOption.isExactDim_map_proj`: `dim((π_n)_*ν_n) = subsystemDim H χ_1 χ_2`.
 -/
 public import BoxLike.AverageEntropy
 public import BoxLike.ConditionalLemmas
@@ -65,8 +65,8 @@ universe u
 /-! ### The dimension formula of the subsystem -/
 
 /-- The dimension of the subsystem measure `ν_n` of tex lines 3553 to 3555:
-`d + (H - χ_1 d) / χ_2` with `d = min{1, H / χ_1}`, for `H = H_n`, `χ_1 = χ_{1,n}` and
-`χ_2 = χ_{2,n}`. -/
+`d + (H - χ_1 d) / χ_2` with `d = min{1, H / χ_1}`, for `H = log #W_n`, `χ_1 = -log |a_n|` and
+`χ_2 = -log |b_n|`. -/
 noncomputable def subsystemDim (H χ₁ χ₂ : ℝ) : ℝ :=
   min 1 (H / χ₁) + (H - χ₁ * min 1 (H / χ₁)) / χ₂
 
@@ -88,7 +88,7 @@ theorem subsystemDim_eq_lyapDim {h l₁ l₂ : ℝ} (hl : l₂ < l₁) (hl₁ : 
     ring
 
 /-- The dimension formula is invariant under dividing all three parameters by the same nonzero
-number, as happens with `H_n / n`, `χ_{1,n} / n` and `χ_{2,n} / n` (tex line 3557). -/
+number, as happens with `log #W_n / n`, `log |a_n| / n` and `log |b_n| / n` (tex line 3557). -/
 theorem subsystemDim_div (H χ₁ χ₂ : ℝ) {n : ℝ} (hn : n ≠ 0) :
     subsystemDim (H / n) (χ₁ / n) (χ₂ / n) = subsystemDim H χ₁ χ₂ := by
   unfold subsystemDim
@@ -238,12 +238,12 @@ include hT
 /-! ### The exponents -/
 
 omit [Fintype κ] in
-/-- `log |a| < 0`, so that `χ_{1,n} = -log |a_n| > 0` (tex line 3518). -/
+/-- `log |a| < 0`, so that `-log |a_n| > 0` (tex line 3518). -/
 theorem log_abs_a_neg : Real.log |a| < 0 :=
   Real.log_neg (abs_pos.2 hT.a_ne_zero) hT.abs_a_lt_one
 
 omit [Fintype κ] in
-/-- `log |b| < 0`, so that `χ_{2,n} = -log |b_n| > 0` (tex line 3518). -/
+/-- `log |b| < 0`, so that `-log |b_n| > 0` (tex line 3518). -/
 theorem log_abs_b_neg : Real.log |b| < 0 :=
   Real.log_neg (abs_pos.2 hT.b_ne_zero) hT.abs_b_lt_one
 
@@ -258,7 +258,8 @@ theorem lyapunov₂_lt_lyapunov₁ (hab : |b| < |a|) :
 /-- Tex lines 3703 to 3712: each coordinate marginal of `ν_n` is a self-similar measure with
 equal weights on the `#κ` coordinate maps `g_{(some k, c)}` of the subsystem, with the common
 ratio `a` for `c = 0` and `b` for `c = 1`; without exact overlaps, that is, when the words in
-these maps compose injectively, Kittle–Kogler gives `dim = min{1, H_n / χ_{c,n}}`. -/
+these maps compose injectively, Kittle–Kogler gives `dim = min{1, log #W_n / (-log |r|)}` for
+the ratio `r = a` or `r = b`. -/
 theorem marginal_isExactDim (hkk : KittleKoglerDimension.{u}) (c : ZMod 2)
     (hfree : Function.Injective
       (simWord (fun _ : κ => if c = 0 then a else b) (fun k => T.trans (some k, c)))) :
@@ -292,14 +293,16 @@ theorem marginal_isExactDim (hkk : KittleKoglerDimension.{u}) (c : ZMod 2)
     field_simp
   simpa only [h1, h2] using key
 
-/-- Tex lines 3707 to 3712 for the horizontal marginal: `d_{x,n} = min{1, H_n / χ_{1,n}}`. -/
+/-- Tex lines 3707 to 3712 for the horizontal marginal:
+`d_{x,n} = min{1, log #W_n / (-log |a_n|)}`. -/
 theorem marginal_zero_isExactDim (hkk : KittleKoglerDimension.{u})
     (hfreex : Function.Injective (simWord (fun _ : κ => a) (fun k => T.trans (some k, 0)))) :
     IsExactDim (T.marginal 0 (optionBernoulli κ))
       (min 1 (Real.log (Fintype.card κ) / -Real.log |a|)) := by
   simpa using hT.marginal_isExactDim hkk 0 (by simpa using hfreex)
 
-/-- Tex lines 3707 to 3712 for the vertical marginal: `d_{y,n} = min{1, H_n / χ_{2,n}}`. -/
+/-- Tex lines 3707 to 3712 for the vertical marginal:
+`d_{y,n} = min{1, log #W_n / (-log |b_n|)}`. -/
 theorem marginal_one_isExactDim (hkk : KittleKoglerDimension.{u})
     (hfreey : Function.Injective (simWord (fun _ : κ => b) (fun k => T.trans (some k, 1)))) :
     IsExactDim (T.marginal 1 (optionBernoulli κ))
@@ -308,8 +311,8 @@ theorem marginal_one_isExactDim (hkk : KittleKoglerDimension.{u})
 
 /-! ### The scalar Ledrappier–Young formula for the coded measures -/
 
-/-- Tex lines 3714 to 3721: `q_{x,n} = \overline{h}_1(τ_*ν_n) = H_n - χ_{1,n} d_{x,n}` with
-`d_{x,n} = min{1, H_n / χ_{1,n}}`, by comparing the scalar Ledrappier–Young formula
+/-- Tex lines 3714 to 3721: `q_{x,n} = \overline{h}_1(τ_*ν_n) = log #W_n + d_{x,n} log |a_n|` with
+`d_{x,n} = min{1, log #W_n / (-log |a_n|)}`, by comparing the scalar Ledrappier–Young formula
 `thm:feng1` for `τ_*ν_n`, whose projection is the horizontal marginal
 (`eq:commutative_diagram`), with the dimension of Kittle–Kogler, through the uniqueness of the
 exact dimension. -/
@@ -332,8 +335,8 @@ theorem dimEntropyBar_map_tau (hlyb : FengLedrappierYoungBar.{u}) (hkk : KittleK
   rw [div_eq_iff hT.log_abs_a_neg.ne] at heq
   linarith
 
-/-- Tex lines 3714 to 3724: `q_{y,n} = \overline{h}_1(ω_*ν_n) = H_n - χ_{2,n} d_{y,n}` with
-`d_{y,n} = min{1, H_n / χ_{2,n}}`, which vanishes when `H_n ≤ χ_{2,n}`. -/
+/-- Tex lines 3714 to 3724: `q_{y,n} = \overline{h}_1(ω_*ν_n) = log #W_n + d_{y,n} log |b_n|` with
+`d_{y,n} = min{1, log #W_n / (-log |b_n|)}`, which vanishes when `log #W_n ≤ -log |b_n|`. -/
 theorem dimEntropyBar_map_omega_eq_zero (hlyb : FengLedrappierYoungBar.{u})
     (hkk : KittleKoglerDimension.{u}) (hab : |b| < |a|)
     (hfreey : Function.Injective (simWord (fun _ : κ => b) (fun k => T.trans (some k, 1))))
@@ -422,7 +425,7 @@ theorem dimEntropy_eq_zero_of_condMeas_xi_eq_dirac (i : ℕ)
   rw [hx, measureReal_def, Measure.dirac_apply_of_mem (show x ∈ {y | y 0 = x 0} from rfl),
     ENNReal.toReal_one, Real.log_one, neg_zero]
 
-/-- Tex lines 3722 to 3724, the case `H_n ≤ χ_{2,n}`: then `q_{y,n} = 0`, the conditional
+/-- Tex lines 3722 to 3724, the case `log #W_n ≤ -log |b_n|`: then `q_{y,n} = 0`, the conditional
 measures of `\overline{ξ}_1` under `ω_*ν_n` are Dirac (`thm:feng_entropy_zero`), hence those
 of `ξ_1^⊥` under `ν_n`, hence those of the finer partition `ξ_2`
 (`thm:finer_partition_dirac_mass`), and `h_2(ν_n) = 0`. -/
@@ -469,10 +472,11 @@ theorem dimEntropy_two_eq_zero_of_unique_coding (hab : |b| < |a|)
 
 /-! ### The dimension of `ν_n` -/
 
-/-- Tex lines 3728 to 3733: `dim(ν_n) = d_{x,n} + (H_n - χ_{1,n} d_{x,n}) / χ_{2,n}`, by the
-planar Ledrappier–Young formula `thm:feng1` with the entropies `h_0 = H_n`, `h_1 = q_{x,n}`
-and `h_2 = 0`, and the exponents `λ_1 = -χ_{1,n}`, `λ_2 = -χ_{2,n}`. The hypothesis `hzero`
-is the case distinction of the article: `H_n ≤ χ_{2,n}`, or unique coding of the subsystem
+/-- Tex lines 3728 to 3733:
+`dim((π_n)_*ν_n) = d_{x,n} + (log #W_n + d_{x,n} log |a_n|) / (-log |b_n|)`, by the planar
+Ledrappier–Young formula `thm:feng1` with the entropies `h_0 = log #W_n`, `h_1 = q_{x,n}` and
+`h_2 = 0`, and the exponents `λ_1 = log |a_n|`, `λ_2 = log |b_n|`. The hypothesis `hzero` is the
+case distinction of the article: `log #W_n ≤ -log |b_n|`, or unique coding of the subsystem
 among the sequences over `some κ`. -/
 theorem isExactDim_map_proj (hfib : FengInfoSumBar.{u}) (hly : FengLedrappierYoung.{u})
     (hlyb : FengLedrappierYoungBar.{u}) (hkk : KittleKoglerDimension.{u}) (hab : |b| < |a|)

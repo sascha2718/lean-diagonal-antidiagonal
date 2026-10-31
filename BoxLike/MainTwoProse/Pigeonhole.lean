@@ -1,11 +1,13 @@
 module
 
 /-
-The pigeonhole step of the proof of `thm:main2` in `sec:dimension_result_proof`: "Partition
-these words according to the number of occurrences of each of the `2N` symbols and keep a
-largest class. There are at most `(n+1)^{2N}` classes. In a fixed class both coordinate
-derivatives, including their signs, are constant, since they are products of the same scalar
-factors." The loss of the pigeonhole is the factor `(n+1)^{2N}`, which is `e^{o(n)}`.
+The pigeonhole step of the proof of `thm:main2` in `sec:dimension_result_proof`: "Write
+`k⃗ = (k_1, …, k_{2N}) ∈ {0, …, n}^{2N}` for the vector of digit frequencies and set
+`W_{n,ε}(k⃗) = {𝐢 ∈ W_{n,ε} : #{0 ≤ r < n : i_r = j} = k_j for j = 1, …, 2N}`. By pigeonholing, we
+may choose `k⃗` such that `#W_{n,ε}(k⃗) ≥ (n+1)^{-2N} exp(n(h-ε))`. By construction, for all words
+in `W_{n,ε}(k⃗)` both diagonal entries are products of the same scalar factors with the same
+multiplicities, so the associated planar matrices coincide." The loss of the pigeonhole is the
+factor `(n+1)^{2N}`, which is `e^{o(n)}`.
 
 * `card_piFinset_range`: there are `(n+1)^{#D}` count vectors with entries at most `n`.
 * `countVector_mem_piFinset`: the count vector of a word of length `n` is one of them.

@@ -120,45 +120,54 @@ theorem main_extended_ge_two (hsosc : S.StrongOpenSet) (hs : 2 ≤ s) (hP : S.pr
   rwa [hinvμ.unique hp hinvν]
 
 /-- `thm:main_extended`: let `X` be a proximal box-like self-affine set with rotations
-satisfying the projective exponential separation condition, let `s = dimaff(𝖠)` and let `μ` be
-an `s`-equilibrium state. If `h_0(μ) ≤ -λ_2(𝖠, μ)` or the strong open set condition holds, then
-`π_*μ` is exact-dimensional with `dim π_*μ = min{2, dimaff(𝖠)}`. For `s ≥ 2` the entropy
+and let `μ` be an `s`-equilibrium state for `s = dimaff(𝖠)`. Assume projective exponential
+separation only when `s < 2`. If `h_0(μ) ≤ -λ_2(𝖠, μ)` or the strong open set condition holds, then
+`π_*μ` is exact-dimensional with `dim π_*μ = dimaff(𝖠) ≤ 2`. For `s ≥ 2` the entropy
 alternative is impossible. -/
 theorem main_extended (hms : MorrisShmerkinLyapunov.{u})
     (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
     (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
     (hrot : S.WithRotations) (hprox : S.Proximal)
-    (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (hP : S.pressure s = 0)
+    (hsep : s < 2 → S.ProjExpSeparation) (hs0 : 0 < s) (hP : S.pressure s = 0)
     (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState s μ)
     (hor : entropy μ ≤ -S.lyapunov₂ μ ∨ S.StrongOpenSet) :
-    IsExactDim (μ.map S.proj) (min 2 s) := by
+    IsExactDim (μ.map S.proj) s ∧ s ≤ 2 := by
+  have := S.nontrivial_of_withRotations hrot
   rcases lt_or_ge s 2 with hs2 | hs2
-  · rw [min_eq_right hs2.le]
-    exact S.main_extended_lt_two' hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox hsep hs0 hs2
-      hP μ hinv heq hor
-  · rw [min_eq_left hs2]
-    have henergy : entropy μ + energy (S.lyapunov₁ μ) (S.lyapunov₂ μ) s = 0 := by
+  · refine ⟨?_, hs2.le⟩
+    exact S.main_extended_lt_two' hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox (hsep hs2)
+      hs0 hs2 hP μ hinv heq hor
+  · have henergy : entropy μ + energy (S.lyapunov₁ μ) (S.lyapunov₂ μ) s = 0 := by
       rw [← heq.pressure_eq hinv hs0.le, hP]
     have hgt := neg_lt_entropy_of_two_le (S.lyapunov₂_le_lyapunov₁ hinv) (S.lyapunov₁_neg hinv)
       hs2 henergy
-    exact S.main_extended_ge_two (hor.resolve_left (not_le.2 hgt)) hs2 hP μ hinv heq
+    have hsosc := hor.resolve_left (not_le.2 hgt)
+    have hsum := (hsosc.sum_abs_det_eq_one S hs2 hP).2
+    have hP2 : S.pressure 2 = 0 := by
+      rw [S.pressure_of_two_le le_rfl]
+      simpa using congrArg Real.log hsum
+    have hs_eq : s = 2 := (S.dimaff_eq hs0.le hP).symm.trans (S.dimaff_eq zero_le_two hP2)
+    subst s
+    exact ⟨S.main_extended_ge_two hsosc le_rfl hP μ hinv heq, le_rfl⟩
 
-/-- `thm:main_extended` with `s = dimaff(𝖠)`, the zero of the pressure:
+/-- A consequence of `thm:main_extended` with `s = dimaff(𝖠)`, the zero of the pressure:
 `dim π_*μ = min{2, dimaff(𝖠)}`. -/
 theorem main_extended_min (hms : MorrisShmerkinLyapunov.{u})
     (hfk : EquilibriumGibbsStatement.{u}) (hfjj : FraserJordanJurgaDecomposition.{u})
     (hjr : JordanRapaportDimension.{u}) (hfi : FengInfoSum.{u}) (hfib : FengInfoSumBar.{u})
     (hly : FengLedrappierYoung.{u}) (hlyb : FengLedrappierYoungBar.{u})
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
-    (hsep : S.ProjExpSeparation) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
+    (hsep : S.dimaff < 2 → S.ProjExpSeparation)
+    (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
     (hor : entropy μ ≤ -S.lyapunov₂ μ ∨ S.StrongOpenSet) :
     IsExactDim (μ.map S.proj) (min 2 S.dimaff) := by
   have := S.nontrivial_of_withRotations hrot
-  exact S.main_extended hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox hsep S.dimaff_pos
-    S.pressure_dimaff μ hinv heq hor
+  obtain ⟨hdim, hs⟩ := S.main_extended hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox hsep
+    S.dimaff_pos S.pressure_dimaff μ hinv heq hor
+  simpa only [min_eq_right hs] using hdim
 
 end System
 

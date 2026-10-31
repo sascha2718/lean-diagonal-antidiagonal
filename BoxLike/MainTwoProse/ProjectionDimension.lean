@@ -2,23 +2,28 @@ module
 
 /-
 The dimension of the coordinate projections in the proof of `thm:main2`,
-`sec:dimension_result_proof`, the paragraph "The formula for `dim((proj_x)_*ν_n)` uses only
-the absence of projective exact overlaps": for a proximal box-like self-affine set `X` with
-rotations whose projective system has no exact overlaps and `dimaff(X) < 2`, both coordinate
-projections of `X` have Hausdorff and Minkowski dimension `min{1, dimaff(X)}`. This is the
-statement `sec:intro_fraser` uses for `dimmaff(X) = dimaff(X)`.
+`sec:dimension_result_proof`, the passage "When `s < 2`, we have `t = s` and
+`log #W_n/(-log |a_n|) → -h/λ_1 ≥ min{1, s}` by `eq:diml_min2`. Since `(proj_x ∘ π_n)_*ν_n` is
+supported on `proj_x(X)`, it follows that `\dim_H(proj_x(X)) ≥ min{1, s}`. An anti-diagonal
+generator maps `proj_x(X)` bi-Lipschitzly into `proj_y(X)`, and so both coordinate projections
+of `X` have Hausdorff (and Minkowski) dimension `min{1, s}`": for a proximal box-like
+self-affine set `X` with rotations whose projective system has no exact overlaps and
+`dimaff(X) < 2`, both coordinate projections of `X` have Hausdorff and Minkowski dimension
+`min{1, dimaff(X)}`. This is the statement `sec:intro_fraser` uses for `dimmaff(X) = dimaff(X)`,
+and the manuscript deduces `thm:main2` for `s ≤ 1` from it.
 
-The families `W_n` of `BoxLike/MainTwoProse/TypicalWordsSMB.lean`, constructed before the case
-distinction of the proof, give homogeneous diagonal subsystems with the Bernoulli measures
-`ν_n` of `BoxLike/MainTwoProse/DiagonalSubsystem.lean`. Kittle–Kogler
-(`IsHomDiag.marginal_isExactDim`) give `dim((proj_x)_*ν_n) = min{1, H_n/χ_{1,n}}`, and
-`H_n/χ_{1,n} → -h/λ_1`, which is `min{1, s}` by `eq:diml_min2`. The measure `(proj_x)_*ν_n`
-is carried by `proj_x(X)`, since the attractor of the subsystem lies in `X`, so the mass
-distribution principle gives `\dim_H proj_x(X) ≥ min{1, s}`. An anti-diagonal generator maps
-`proj_x(X)` affinely into `proj_y(X)`, and the Hausdorff dimension is invariant under affine
-bijections of the line. Both projections are Lipschitz images of `X`, whose upper Minkowski
-dimension is at most `s` (`eq:hausdorff_affinity_upper_bound`), and bounded subsets of the
-line, so their upper Minkowski dimension is at most `min{1, s}`.
+The families `W_n` of `BoxLike/MainTwoProse/TypicalWordsSMB.lean`, before the modifications of
+cases `it:main2_threshold` and `it:main2_sosc`, give homogeneous diagonal subsystems with the
+Bernoulli measures `ν_n` of `BoxLike/MainTwoProse/DiagonalSubsystem.lean`. Kittle–Kogler
+(`IsHomDiag.marginal_isExactDim`) give
+`dim((proj_x ∘ π_n)_*ν_n) = min{1, log #W_n/(-log |a_n|)}`, and `log #W_n/(-log |a_n|) → -h/λ_1`,
+which is `min{1, s}` by `eq:diml_min2`. The measure `(proj_x ∘ π_n)_*ν_n` is carried by
+`proj_x(X)`, since the attractor of the subsystem lies in `X`, so the mass distribution
+principle gives `\dim_H proj_x(X) ≥ min{1, s}`. An anti-diagonal generator maps `proj_x(X)`
+affinely into `proj_y(X)`, and the Hausdorff dimension is invariant under affine bijections of
+the line. Both projections are Lipschitz images of `X`, whose upper Minkowski dimension is at
+most `s` (`eq:hausdorff_affinity_upper_bound`), and bounded subsets of the line, so their upper
+Minkowski dimension is at most `min{1, s}`.
 
 * `dimH_image_affine`: an affine bijection of the line preserves the Hausdorff dimension.
 * `min_one_div_neg_eq`: `min{1, -h/λ_1} = min{1, s}` for `h + Λ(𝖠, μ, s) = 0` and `s < 2`.
@@ -27,8 +32,8 @@ line, so their upper Minkowski dimension is at most `min{1, s}`.
   Lipschitz upper bound.
 * `System.dimH_coord_add_le`, `System.dimH_coord_eq`: the affine copy of one projection inside
   the other.
-* `System.le_dimH_coord_of_family`: the lower bound `\dim_H proj_c(X) ≥ min{1, H_n/χ_{c,n}}`
-  for one family of diagonal words.
+* `System.le_dimH_coord_of_family`: the lower bound `\dim_H proj_c(X) ≥ min{1, log #W_n/(-log |r|)}`
+  for one family of diagonal words, `r` the contraction ratio of the coordinate `c`.
 * `System.le_dimH_coord_zero_normalised`, `System.le_dimH_coord_zero_of_pressure`: the lower
   bound `\dim_H proj_x(X) ≥ min{1, s}`.
 * `System.dimH_coord_image_eq`, `System.lowerBoxDim_coord_image_eq`,
@@ -88,7 +93,7 @@ theorem dimH_image_affine {a : ℝ} (ha : a ≠ 0) (b : ℝ) (F : Set ℝ) :
 
 /-- `min{1, h/(-λ_1)} = min{1, s}` when `h + Λ(𝖠, μ, s) = 0` and `s < 2`, from `eq:diml_min2`:
 `h = -sλ_1` for `s ≤ 1`, and `h > -λ_1` for `1 < s < 2`. It identifies the limit of the
-dimensions `min{1, H_n/χ_{1,n}}` in the proof of `thm:main2` with `min{1, s}`. -/
+dimensions `min{1, log #W_n/(-log |a_n|)}` in the proof of `thm:main2` with `min{1, s}`. -/
 theorem min_one_div_neg_eq {h l1 l2 s : ℝ} (hl : l2 ≤ l1) (hl1 : l1 < 0) (hs2 : s < 2)
     (heq : h + energy l1 l2 s = 0) : min 1 (h / -l1) = min 1 s := by
   have hl2 : l2 < 0 := hl.trans_lt hl1
@@ -108,8 +113,9 @@ theorem min_one_div_neg_eq {h l1 l2 s : ℝ} (hl : l2 ≤ l1) (hl1 : l1 < 0) (hs
 
 /-! ### The mass distribution principle for a coordinate marginal -/
 
-/-- The mass distribution principle for a coordinate projection, the step "`(proj_x)_*ν_n` is
-supported on `proj_x(X)`, so `\dim_H proj_x(X) ≥ min{1, s}`" of the proof of `thm:main2`: if
+/-- The mass distribution principle for a coordinate projection, the step "since
+`(proj_x ∘ π_n)_*ν_n` is supported on `proj_x(X)`, it follows that
+`\dim_H(proj_x(X)) ≥ min{1, s}`" of the proof of `thm:main2`: if
 the coordinate marginal `(proj_c)_*(π_*ν)` of a probability measure `ν` on the sequence space
 of a system `T` is exact-dimensional, and the attractor of `T` lies in a compact set `A`, then
 its dimension is at most `\dim_H proj_c(A)`. -/
@@ -162,7 +168,7 @@ theorem upperBoxDim_coord_le_min [Nonempty ι] (c : ZMod 2) :
 omit [Fintype ι] in
 /-- `\dim_H proj_{c + o(i)}(X) ≤ \dim_H proj_c(X)`: by `eq:phi_def_by_g`, `proj_c(X)` contains
 the affine copy `g_{(i,c)}(proj_{c + o(i)}(X))` of `proj_{c + o(i)}(X)`. For an anti-diagonal
-generator this is the step "an anti-diagonal generator maps `proj_x(X)` affinely into
+generator this is the step "an anti-diagonal generator maps `proj_x(X)` bi-Lipschitzly into
 `proj_y(X)`" of the proof of `thm:main2`. -/
 theorem dimH_coord_add_le [Finite ι] (i : ι) (c : ZMod 2) :
     dimH (coord (c + S.o i) '' S.attractor) ≤ dimH (coord c '' S.attractor) := by
@@ -191,7 +197,8 @@ theorem dimH_coord_eq [Finite ι] (h : ∃ i, S.o i = 1) (c c' : ZMod 2) :
 
 /-! ### The lower bound for one family -/
 
-/-- The lower bound `\dim_H proj_c(X) ≥ min{1, H_n/χ_{c,n}}` for one family `W` of diagonal
+/-- The lower bound `\dim_H proj_c(X) ≥ min{1, log #W_n/(-log |r|)}`, with `r` the contraction
+ratio of the coordinate `c`, for one family `W` of diagonal
 planar words of length `n` with the common matrix `diag(a, b)` (proof of `thm:main2`): the
 coordinate maps of the subsystem generate free semigroups, since the projective system of `Φ`
 has no exact overlaps, so Kittle–Kogler give the dimension of the coordinate marginal of
@@ -243,9 +250,9 @@ variable [MeasurableSpace ι] [MeasurableSingletonClass ι]
 
 /-- `\dim_H proj_x(X) ≥ min{1, s}` for a tuple containing a proximal diagonal generator, with
 `s` the zero of the pressure in `(0, 2)`, along the prose of the proof of `thm:main2`: the
-typical families of `exists_typical_words_prose`, constructed before the case distinction,
-give `\dim_H proj_x(X) ≥ min{1, H_n/χ_{1,n}}`, and `H_n/χ_{1,n} → -h/λ_1`, which is
-`min{1, s}` by `eq:diml_min2`.
+typical families of `exists_typical_words_prose`, before the modifications of cases
+`it:main2_threshold` and `it:main2_sosc`, give `\dim_H proj_x(X) ≥ min{1, log #W_n/(-log |a_n|)}`,
+and `log #W_n/(-log |a_n|) → -h/λ_1`, which is `min{1, s}` by `eq:diml_min2`.
 Depends on: `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`,
 `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`, `KittleKoglerDimension`. -/
 theorem le_dimH_coord_zero_normalised (hsmb : ShannonMcMillanBreimanStatement.{u})
@@ -268,7 +275,7 @@ theorem le_dimH_coord_zero_normalised (hsmb : ShannonMcMillanBreimanStatement.{u
       dimH (coord 0 '' S.attractor) := fun m => by
     have key := S.le_dimH_coord_of_family hkk hfree (hWne m) (hnpos m) (hWn m) 0
     rwa [ite_eq_left rfl] at key
-  -- the limit `H_n / χ_{1,n} → -h/λ_1`
+  -- the limit `log #W_n / (-log |a_n|) → -h/λ_1`
   have ha' : Tendsto (fun m => -Real.log |a m| / n m) atTop (𝓝 (-S.lyapunov₁ μ)) := by
     simpa only [neg_div] using ha.neg
   have hdiv : Tendsto (fun m => Real.log (W m).card / n m / (-Real.log |a m| / n m)) atTop

@@ -5,16 +5,17 @@ module
 conditions `it:main2_threshold`, `it:main2_sosc`, `it:main2_pesc`, and the furthermore clause,
 "if `it:main2_pesc` holds together with `it:main2_threshold` or `it:main2_sosc`, then `π_*μ` is
 exact-dimensional with `dim(π_*μ) = dimaff(X) ≤ 2`", along the prose of
-`sec:dimension_result_proof`: "By the first paragraph of this proof, `s ≤ 2`. Under
-`it:main2_threshold`, we have `s < 2`, and `eq:diml_min2`, `eq:simple_lyapunov` give
-`h_0(μ) ≤ -λ_2(𝖠, μ)` as above. In either case, the hypotheses of `thm:main_extended` are
-satisfied, and hence `dim(π_*μ) = min{2, s} = dimaff(X)`."
+`sec:dimension_result_proof`: "Suppose that `it:main2_pesc` holds together with
+`it:main2_threshold` or `it:main2_sosc`. Under `it:main2_threshold`, we have `s < 2`, and
+`eq:diml_min2`, `eq:simple_lyapunov` give `h_0(μ) ≤ -λ_2(𝖠, μ)`. In either case, the hypotheses
+of `thm:main_extended` are satisfied, and hence `dim(π_*μ) = dimaff(X) ≤ 2`."
 
 Cases `it:main2_threshold` and `it:main2_sosc` are `System.main2_prose` of
 `BoxLike/MainTwoProse/Endpoint.lean`, where `dimaff(X) ≤ 2`
 (`System.dimaff_le_two_of_main2_hypotheses`); case `it:main2_pesc` is `System.main2_pesc` of
 `BoxLike/MainTwoProse/ProjExpBranch.lean`; the furthermore clause is `thm:main_extended`
-(`System.main_extended_min`).
+(`System.main_extended_min`, the form `dim(π_*μ) = min{2, dimaff(X)}` of `System.main_extended`,
+which concludes `dim(π_*μ) = dimaff(X) ≤ 2`).
 
 * `System.main2_full`: `thm:main2`, the dimension formula, with the statements
   `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`,
@@ -131,7 +132,8 @@ theorem main2_furthermore (hms : MorrisShmerkinLyapunov.{u})
       exact (entropy_le_iff hl hl1 hs2 henergy).2 h
     · exact Or.inr h
   refine ⟨?_, h2⟩
-  have := S.main_extended_min hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox hsep μ hinv heq hor'
+  have := S.main_extended_min hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox (fun _ => hsep)
+    μ hinv heq hor'
   rwa [min_eq_right h2] at this
 
 /-- `thm:main2`, the furthermore clause, with the library theorems plugged in: no literature

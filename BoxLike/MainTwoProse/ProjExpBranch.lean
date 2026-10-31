@@ -2,28 +2,20 @@ module
 
 /-
 Case `it:main2_pesc` of `thm:main2`, the projective exponential separation condition, along the
-prose of `sec:dimension_result_proof`: "Suppose now that `it:main2_pesc` holds. By
-`thm:two-block-normalisation`, the projective exponential separation condition passes to the
-second iterate, so we may again assume that `𝖠` contains a proximal diagonal generator. Fix
-`0 < c < 1` such that `Δ_m^Ψ ≥ c^m` for infinitely many `m`, and fix `t ∈ (0, 2)` with `t ≤ s`.
-Construct `W_n` as before the case distinction, with `t` in place of `s` and the
-`t`-equilibrium state `μ_t` in place of `μ`, discard finitely many lengths so that
-`0 < |b_n| < |a_n| < 1`, and define `H_n`, `χ_{1,n}`, and `χ_{2,n}` as above. Let `X_n ⊆ X` be
-the attractor of the subsystem `{φ_w}_{w ∈ W_n}`. Its maps share the linear part
-`diag(a_n, b_n)` with `|b_n| < |a_n|`, so the subsystem is proximal. As observed above, a
-composition of `k` of these maps acts on each coordinate axis by a map `g_𝐢` for a word `𝐢` of
-length `kn` in `Ψ` ... hence the systems induced by `{φ_w}_{w ∈ W_n}` on the two coordinate axes
-are exponentially separated, as required in `thm:rapaport`, which thus gives
-`\dim_H(X_n) = min{2, dimaff(X_n)}`. As the subsystem is homogeneous, its pressure at `u ≥ 0`
-equals `H_n + log φ^u(diag(a_n, b_n))`, so `eq:energy_def` shows that `dimaff(X_n)` is given by
-the right-hand side of `eq:diml_min2` with entropy `H_n` and Lyapunov exponents `-χ_{1,n}` and
-`-χ_{2,n}`. This tends to `\dim_L(𝖠, μ_t)`, since `H_n/n → h_0(μ_t)` and
-`χ_{i,n}/n → -λ_i(𝖠, μ_t)`. As `t ≤ s` and the pressure is decreasing, `eq:eq_state_def` gives
-`h_0(μ_t) + Λ(𝖠, μ_t, t) = P(𝖠, t) ≥ P(𝖠, s) = 0`, so `\dim_L(𝖠, μ_t) ≥ t` by the definition of
-the Lyapunov dimension, as `Λ(𝖠, μ_t, ·)` is decreasing. Since `X_n ⊆ X`, we obtain
-`\dim_H(X) ≥ lim_n \dim_H(X_n) = min{2, \dim_L(𝖠, μ_t)} ≥ t`. Taking `t = s` if `s < 2` and
-letting `t → 2` otherwise, we obtain `\dim_H(X) ≥ min{2, s}`, and the opposite inequality is
-again `eq:hausdorff_affinity_upper_bound`."
+prose of `sec:dimension_result_proof`. The proof fixes `t = s` if `s < 2` and `0 < t < 2`
+otherwise, reduces to a proximal diagonal generator through `thm:two-block-normalisation`, and
+takes the `t`-equilibrium state `μ_t`, for which "`h + Λ(𝖠, μ_t, t) = P(𝖠, t) ≥ P(𝖠, s) = 0`.
+Hence `\dim_L(𝖠, μ_t) ≥ t`, with equality when `t = s`." The typical families `W_n` of
+`eq:diagonal-subsystem-limits` then give: "Let `X_n ⊆ X` be the attractor of `(φ_w)_{w ∈ W_n}`.
+Fix `0 < c < 1` such that `Δ_m^Ψ ≥ c^m` for infinitely many `m`. A composition of `k` subsystem
+maps acts on either coordinate axis by a map `g_𝐢` with `|𝐢| = kn` ... Hence, both induced
+systems are exponentially separated. Since `|b_n| < |a_n|`, the subsystem is proximal, and
+`thm:rapaport` gives `\dim_H(X_n) = min{2, dimaff(X_n)}`. The pressure of this subsystem at
+`u ≥ 0` is `log #W_n + log φ^u(diag(a_n, b_n))`. By `eq:diml_min2` and the three limits above,
+`dimaff(X_n) → \dim_L(𝖠, μ_t)`. Thus `\dim_H(X) ≥ lim_n \dim_H(X_n) = min{2, \dim_L(𝖠, μ_t)} ≥ t`.
+Since `t = s`, or `t` is arbitrarily close to `2`, we obtained the required lower bound. The
+upper bound is `eq:hausdorff_affinity_upper_bound`." The manuscript settles `s ≤ 1` beforehand
+from the projection bound; the statements below take every `0 < t < 2` with `t ≤ dimaff(X)`.
 
 The axis separation of the subsystems is `BoxLike/MainTwoProse/AxisSeparationSubsystem.lean`,
 the pressure and the affinity dimension of the homogeneous subsystems and the limit of
@@ -33,11 +25,11 @@ the pressure and the affinity dimension of the homogeneous subsystems and the li
 * `System.IsEquilibriumState.le_lyapDim`: `\dim_L(𝖠, μ_t) ≥ t` for a `t`-equilibrium state with
   `t ≤ dimaff(𝖠)`.
 * `System.dimH_subsystem_attractor_eq`: `\dim_H X_n = min{2, dimaff(X_n)}`, with `dimaff(X_n)`
-  the right-hand side of `eq:diml_min2` for `H_n`, `-χ_{1,n}`, `-χ_{2,n}`.
+  the right-hand side of `eq:diml_min2` for `log #W_n`, `log |a_n|`, `log |b_n|`.
 * `System.min_lyapDim_le_dimH_attractor_of_family`: `\dim_H X ≥ \dim_H X_n` for one family,
   since `X_n ⊆ X`.
 * `System.le_dimH_attractor_of_family_pesc`: the corollary `\dim_H X ≥ u` when
-  `H_n + Λ(-χ_{1,n}, -χ_{2,n}, u) ≥ 0` for some `u ≤ 2`.
+  `log #W_n + Λ(log |a_n|, log |b_n|, u) ≥ 0` for some `u ≤ 2`.
 * `System.main2_pesc_normalised`: `\dim_H X ≥ t` for a tuple containing a proximal diagonal
   generator and `0 < t < 2` with `t ≤ dimaff(X)`, by the limit `n → ∞`.
 * `System.le_dimH_attractor_pesc`: the same for every proximal tuple, through
@@ -79,9 +71,9 @@ variable {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonCla
 
 variable {S} in
 /-- `\dim_L(𝖠, μ_t) ≥ t` for a `t`-equilibrium state `μ_t` with `0 ≤ t ≤ dimaff(𝖠)` (proof of
-`thm:main2`): "as `t ≤ s` and the pressure is decreasing, `eq:eq_state_def` gives
-`h_0(μ_t) + Λ(𝖠, μ_t, t) = P(𝖠, t) ≥ P(𝖠, s) = 0`, so `\dim_L(𝖠, μ_t) ≥ t` by the definition of
-the Lyapunov dimension, as `Λ(𝖠, μ_t, ·)` is decreasing". -/
+`thm:main2`): "By `eq:eq_state_def` and the monotonicity of the pressure,
+`h + Λ(𝖠, μ_t, t) = P(𝖠, t) ≥ P(𝖠, s) = 0`. Hence `\dim_L(𝖠, μ_t) ≥ t`, with equality when
+`t = s`"; the energy `Λ(𝖠, μ_t, ·)` is decreasing. -/
 theorem IsEquilibriumState.le_lyapDim [Nonempty ι] {t : ℝ} (ht0 : 0 ≤ t) (hts : t ≤ S.dimaff)
     {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
     (heq : S.IsEquilibriumState t μ) :
@@ -100,9 +92,9 @@ omit [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] in
 `it:main2_pesc`): the subsystem is homogeneous diagonal, hence without rotations and proximal,
 the systems it induces on both coordinate axes are exponentially separated
 (`subsystem_axisExpSeparation`), so `thm:rapaport` gives `\dim_H X_n = min{2, dimaff(X_n)}`;
-and `dimaff(X_n)` is the right-hand side of `eq:diml_min2` with entropy `H_n = log #W_n` and
-Lyapunov exponents `-χ_{1,n} = log |a|`, `-χ_{2,n} = log |b|`, since the pressure of the
-homogeneous subsystem at `u ≥ 0` is `H_n + log φ^u(diag(a, b))` (`IsHomDiag.dimaff_eq`).
+and `dimaff(X_n)` is the right-hand side of `eq:diml_min2` with entropy `log #W_n` and
+Lyapunov exponents `log |a|`, `log |b|`, since the pressure of the homogeneous subsystem at
+`u ≥ 0` is `log #W_n + log φ^u(diag(a, b))` (`IsHomDiag.dimaff_eq`).
 `thm:rapaport` is `Rapaport.rapaportDiagonalDimension_holds`. -/
 theorem dimH_subsystem_attractor_eq [Nonempty ι]
     (hsep : S.ProjExpSeparation) {κ : Type u} [Fintype κ] [Nonempty κ] {w : κ → List ι}
@@ -128,8 +120,8 @@ theorem dimH_subsystem_attractor_eq [Nonempty ι]
 omit [MeasurableSpace ι] [MeasurableSingletonClass ι] in
 /-- `\dim_H X ≥ \dim_H X_n = min{2, dimaff(X_n)}` for one family `W` of diagonal planar words of
 length `n` with the common matrix `diag(a, b)`, `|b| < |a|`, where `dimaff(X_n)` is the
-right-hand side of `eq:diml_min2` for `H_n = log #W`, `-χ_{1,n} = log |a|`, `-χ_{2,n} = log |b|`
-(proof of `thm:main2`, case `it:main2_pesc`): `X_n ⊆ X`. -/
+right-hand side of `eq:diml_min2` for `log #W`, `log |a|`, `log |b|` (proof of `thm:main2`, case
+`it:main2_pesc`): `X_n ⊆ X`. -/
 theorem min_lyapDim_le_dimH_attractor_of_family [Nonempty ι] (hsep : S.ProjExpSeparation)
     {W : Finset (List ι)} (hW : W.Nonempty) {n : ℕ} (hn : 0 < n) {a b : ℝ}
     (hWn : ∀ w ∈ W, w.length = n ∧ S.matWord w = boxMat 0 a b) (hab : |b| < |a|) :
@@ -151,8 +143,9 @@ theorem min_lyapDim_le_dimH_attractor_of_family [Nonempty ι] (hsep : S.ProjExpS
 
 omit [MeasurableSpace ι] [MeasurableSingletonClass ι] in
 /-- A corollary of `min_lyapDim_le_dimH_attractor_of_family`: `\dim_H X ≥ u` for `0 ≤ u ≤ 2`
-when the pressure `H_n + Λ(-χ_{1,n}, -χ_{2,n}, u)` of the homogeneous diagonal subsystem of the
-family `W` is non-negative at `u`, so that `dimaff(X_n) ≥ u` (`le_lyapDim_of_add_energy_nonneg`). -/
+when the pressure `log #W_n + Λ(log |a_n|, log |b_n|, u)` of the homogeneous diagonal subsystem
+of the family `W` is non-negative at `u`, so that `dimaff(X_n) ≥ u`
+(`le_lyapDim_of_add_energy_nonneg`). -/
 theorem le_dimH_attractor_of_family_pesc [Nonempty ι]
     (hsep : S.ProjExpSeparation) {W : Finset (List ι)} (hW : W.Nonempty) {n : ℕ} (hn : 0 < n)
     {a b : ℝ} (hWn : ∀ w ∈ W, w.length = n ∧ S.matWord w = boxMat 0 a b) (hab : |b| < |a|)
@@ -185,10 +178,11 @@ variable [Nonempty ι]
 /-- `thm:main2`, case `it:main2_pesc`, the lower bound `\dim_H X ≥ t` for a tuple containing a
 proximal diagonal generator and `0 < t < 2` with `t ≤ dimaff(X)`, along the prose. The
 `t`-equilibrium state `μ_t` exists; the typical families `W_n` of `exists_typical_words_prose`
-for `μ_t` have `H_n / n → h_0(μ_t)`, `χ_{1,n} / n → -λ_1(𝖠, μ_t)` and `χ_{2,n} / n → -λ_2(𝖠, μ_t)`;
+for `μ_t` have `log #W_n / n → h_0(μ_t)`, `log |a_n| / n → λ_1(𝖠, μ_t)` and
+`log |b_n| / n → λ_2(𝖠, μ_t)` (`eq:diagonal-subsystem-limits`);
 finitely many lengths are discarded so that `|b_n| < |a_n|`, since `λ_2 < λ_1`; for the
 remaining lengths `\dim_H X ≥ \dim_H X_n = min{2, dimaff(X_n)}` with `dimaff(X_n)` the
-right-hand side of `eq:diml_min2` for `H_n`, `-χ_{1,n}`, `-χ_{2,n}`
+right-hand side of `eq:diml_min2` for `log #W_n`, `log |a_n|`, `log |b_n|`
 (`min_lyapDim_le_dimH_attractor_of_family`), which tends to `\dim_L(𝖠, μ_t)`
 (`lyapDim_div`, `tendsto_lyapDim`); so `\dim_H X ≥ min{2, \dim_L(𝖠, μ_t)} ≥ min{2, t} = t`
 (`IsEquilibriumState.le_lyapDim`).
@@ -236,7 +230,8 @@ theorem main2_pesc_normalised (hsmb : ShannonMcMillanBreimanStatement.{u})
         dimH S.attractor := by
     filter_upwards [hlt] with m hm
     exact S.min_lyapDim_le_dimH_attractor_of_family hsep (hWne m) (hnpos m) (hWn m) hm
-  -- `dimaff(X_n) → \dim_L(𝖠, μ_t)`, since `H_n/n → h_0(μ_t)` and `χ_{i,n}/n → -λ_i(𝖠, μ_t)`
+  -- `dimaff(X_n) → \dim_L(𝖠, μ_t)` by `eq:diml_min2` and the three limits
+  -- `eq:diagonal-subsystem-limits`
   have hlim : Tendsto
       (fun m => lyapDim (Real.log (W m).card) (Real.log |a m|) (Real.log |b m|)) atTop
       (𝓝 (lyapDim (entropy μ) (S.lyapunov₁ μ) (S.lyapunov₂ μ))) :=
@@ -276,8 +271,8 @@ theorem le_dimH_attractor_pesc (hsmb : ShannonMcMillanBreimanStatement.{u})
 
 /-- `thm:main2` under the projective exponential separation condition `it:main2_pesc`: for a
 proximal box-like self-affine set with rotations, `\dim_H X = min{2, dimaff(X)}`. The lower
-bound `\dim_H X ≥ t` holds for every `0 < t < 2` with `t ≤ dimaff(X)`; "taking `t = s` if
-`s < 2` and letting `t → 2` otherwise", along `t_k = 2 - 1/(k + 1)`, gives
+bound `\dim_H X ≥ t` holds for every `0 < t < 2` with `t ≤ dimaff(X)`; "since `t = s`, or `t` is
+arbitrarily close to `2`", along `t_k = 2 - 1/(k + 1)`, this gives
 `\dim_H X ≥ min{2, dimaff(X)}`; the opposite inequality is `eq:hausdorff_affinity_upper_bound`.
 Depends on: `ShannonMcMillanBreimanStatement`,
 `MorrisShmerkinLyapunov`, `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`. -/

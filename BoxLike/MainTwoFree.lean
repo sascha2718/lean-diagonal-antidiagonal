@@ -7,19 +7,20 @@ consequences for the dimension chain of the introduction (tex lines 509 to 515),
 application to the example of `prop:ssc_no_overlap_not_pesc` (tex lines 1447 to 1450).
 
 The typical words of `BoxLike/TypicalWords.lean` give families `W_n` of words of a common
-length with a common diagonal linear part `diag(a_n, b_n)` and the asymptotics `H_n ∼ n h_0(μ)`,
-`χ_{i,n} ∼ -n λ_i(𝖠, μ)`. In the entropy case `h_0(μ) ≤ -λ_2(𝖠, μ)` the family is trimmed to
+length with a common diagonal linear part `diag(a_n, b_n)` and the asymptotics
+`log #W_n ∼ n h_0(μ)`, `log |a_n| ∼ n λ_1(𝖠, μ)` and `log |b_n| ∼ n λ_2(𝖠, μ)`. In the entropy
+case `h_0(μ) ≤ -λ_2(𝖠, μ)` the family is trimmed to
 `min{#W_n, ⌊|b_n|⁻¹⌋}` words; under the strong open set condition every word is prefixed by a
 word `v` with `φ_v(X) ⊆ U`. The subsystem of `BoxLike/Subsystem.lean` with the extra
 anti-diagonal word of zero weight is a homogeneous system in the sense of
 `BoxLike/HomogeneousSubsystem.lean`, and `BoxLike/SubsystemEntropy.lean` gives the exact
-dimension `subsystemDim (H_n, χ_{1,n}, χ_{2,n})` of its Bernoulli measure. The mass
+dimension `subsystemDim (log #W_n, -log |a_n|, -log |b_n|)` of its Bernoulli measure. The mass
 distribution principle bounds `\dim_H X` from below by these dimensions, which tend to
 `\dim_L(𝖠, μ) = s`; the upper bound is Falconer's.
 
 * `System.antiWord`, `System.subWords`: the words `v w`, `w ∈ W`, and the anti-diagonal word
   `v i_1 i_0^{n-1}` of the same length.
-* `System.le_dimH_attractor_of_words`: the lower bound `\dim_H X ≥ dim ν_n` for one family.
+* `System.le_dimH_attractor_of_words`: the lower bound `\dim_H X ≥ dim((π_n)_*ν_n)` for one family.
 * `tendsto_add_div_add`, `le_dimH_of_subsystemDim`: the passage to the limit (tex line 3557
   to 3737).
 * `System.main2_noExactOverlaps_normalised`: the lower bound for a tuple containing a proximal
@@ -72,7 +73,8 @@ theorem tendsto_add_div_add {x : ℕ → ℝ} {n : ℕ → ℕ} {L c d : ℝ} (h
   field_simp
 
 /-- The limit step of the proof of `thm:main2` (tex lines 3557 to 3560): lower bounds
-`\dim_H X ≥ dim ν_n` with `H_n / n → h`, `χ_{i,n} / n → -λ_i` give `\dim_H X ≥ dim_L = s`. -/
+`\dim_H X ≥ dim((π_n)_*ν_n)` with `log #W_n / n → h`, `log |a_n| / n → λ_1` and
+`log |b_n| / n → λ_2` give `\dim_H X ≥ dim_L = s`. -/
 theorem le_dimH_of_subsystemDim {H χ₁ χ₂ : ℕ → ℝ} {n : ℕ → ℝ} {h l₁ l₂ s : ℝ} (hl : l₂ < l₁)
     (hl₁ : l₁ < 0) (hh₂ : h ≤ -l₁ - l₂) (hdim : lyapDim h l₁ l₂ = s)
     (hn : ∀ᶠ m in atTop, n m ≠ 0) (hH : Tendsto (fun m => H m / n m) atTop (𝓝 h))
@@ -124,7 +126,7 @@ omit [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] in
     subWords v W u₀ (some w) = v ++ (w : List ι) := rfl
 
 omit [MeasurableSpace ι] [MeasurableSingletonClass ι] in
-/-- The lower bound `\dim_H X ≥ dim ν_n` for one family `W` of diagonal words of length `n`
+/-- The lower bound `\dim_H X ≥ dim((π_n)_*ν_n)` for one family `W` of diagonal words of length `n`
 with the common linear part `diag(a, b)`, prefixed by the diagonal word `v`, in either of the two
 cases of tex lines 3505 to 3515: the trimmed family with `H ≤ χ_2`, or a feasible open set
 `U ⊇ φ_v(X)`. -/
@@ -431,8 +433,9 @@ theorem main2_noExactOverlaps_of_pressure (hms : MorrisShmerkinLyapunov.{u})
       (μ.map group) (measurePreserving_shift_map_group hinv) (heq.map_group hinv hs0.le) hor2
     rwa [S.attractor_sq] at key
 
-/-- The case `dimaff(X) < 2` of `thm:main2`. Let `X` be a proximal box-like self-affine set with rotations whose projective
-system has no exact overlaps, such that `dimaff(X) < 2`, and let `μ` be the `s`-equilibrium
+/-- The case `dimaff(X) < 2` of `thm:main2`. Let `X` be a proximal box-like self-affine set with
+rotations whose projective system has no exact overlaps, such that `dimaff(X) < 2`, and let `μ`
+be the `s`-equilibrium
 state for `s = dimaff(X)`. If `dimaff(X) ≤ 2 - λ_1(𝖠, μ)/λ_2(𝖠, μ)`, or if `X` satisfies the
 strong open set condition, then `\dim_H(X) = dimaff(X)`. The upper bound is Falconer's,
 `eq:hausdorff_affinity_upper_bound`; the lower bound comes from the finite diagonal subsystems.

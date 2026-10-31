@@ -96,21 +96,23 @@ theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableS
 theorem audit_main_extended {ι : Type u} [Fintype ι] [MeasurableSpace ι]
     [MeasurableSingletonClass ι] (S : System ι)
     [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
-    (hsep : S.ProjExpSeparation) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
+    (hsep : S.dimaff < 2 → S.ProjExpSeparation)
+    (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
     (hor : entropy μ ≤ -S.lyapunov₂ μ ∨ S.StrongOpenSet) :
-    IsExactDim (μ.map S.proj) (min 2 S.dimaff) := by
+    IsExactDim (μ.map S.proj) S.dimaff ∧ S.dimaff ≤ 2 := by
   have hjr : BoxLike.JordanRapaportDimension.{u} :=
     BoxLike.jordanRapaportDimension_of_shmerkin BoxLike.shmerkinLqDimension_holds
   simp only [withRotations_iff, proximal_iff, projExpSeparation_iff, dimaff_eq, shift_eq,
     isEquilibriumState_iff, entropy_eq, lyapunov₂_eq, strongOpenSet_iff]
     at hrot hprox hsep hinv heq hor
   rw [isExactDim_iff, proj_eq, dimaff_eq]
-  exact (toLib S).main_extended_min BoxLike.morrisShmerkinLyapunov_holds BoxLike.equilibriumGibbs
+  have := (toLib S).nontrivial_of_withRotations hrot
+  exact (toLib S).main_extended BoxLike.morrisShmerkinLyapunov_holds BoxLike.equilibriumGibbs
     BoxLike.fraserJordanJurgaDecomposition_holds hjr
     BoxLike.fengInfoSum_holds BoxLike.fengInfoSumBar_holds BoxLike.fengLedrappierYoung_holds
     BoxLike.fengLedrappierYoungBar_holds hrot hprox
-    hsep μ hinv heq hor
+    hsep (toLib S).dimaff_pos (toLib S).pressure_dimaff μ hinv heq hor
 
 /-- Theorem 4.16 (`thm:main_extended`) for `s ≥ 2` under the strong open set condition:
 `π_*μ` is exact-dimensional of dimension two. Rotations, proximality and separation are not
@@ -177,7 +179,9 @@ universe u
 /-! 1.1 (`thm:hochman_rapaport`): cited.
 Hochman–Rapaport's theorem as the `Prop`-valued statement `HochmanRapaportDimension`, with the
 distance of the affine coefficients in place of a left-invariant Riemannian metric. No result of
-the library uses it, and it is not proved; at one letter its hypotheses cannot all hold.
+the library uses it, and it is not proved; at one letter its hypotheses cannot all hold. The
+statement keeps the hypothesis of the source that the maps have no common fixed point, which the
+printed theorem omits (see `docs/correspondence.md`).
 -/
 /-- Theorem 1.1 as a proposition; nothing is asserted. -/
 abbrev paper_1_1_1 : Prop := BoxLike.HochmanRapaportDimension.{u}
@@ -264,11 +268,16 @@ noncomputable abbrev paper_A_9 := @BoxLike.System.main1_isDoubleDim
 For every value of `dimaff` and every equilibrium state. Cases (i) and (ii) along the prose
 (`System.main2_prose`); case (iii) with Rapaport's theorem, which the library proves
 (`System.main2_pesc`, `Rapaport.rapaportDiagonalDimension_holds`); the furthermore clause from
-`thm:main_extended` (`System.main2_furthermore`). Deviations: the returns to horizontal orientation
-come from ergodicity, not mixing; the scalar Ledrappier–Young formula for the diagonal subsystem
-comes from the planar `FengLedrappierYoung` applied to an auxiliary box-like system; Falconer's
-bound is proved. Case (iii) follows the prose: `dim_H X_n = min{2, dimaff(X_n)}` by Rapaport's
-theorem, `dimaff(X_n) → dim_L(𝖠, μ_t) ≥ t`, then `t = s` or `t → 2`.
+`thm:main_extended` (`System.main2_furthermore`). The prose builds one family of typical words
+for the `t`-equilibrium state, `t = s` below two and `0 < t < 2` otherwise, settles `s ≤ 1` from
+the projection bound, proves case (iii) from the unmodified families, and then trims the
+families or prepends a word for cases (i) and (ii) with `1 < s < 2`. Deviations: the returns to
+horizontal orientation come from ergodicity, not mixing; the scalar Ledrappier–Young formula for
+the diagonal subsystem comes from the planar `FengLedrappierYoung` applied to an auxiliary
+box-like system; Falconer's bound is proved; `0 < s < 2` is treated uniformly in cases (i) and
+(ii), without the projection shortcut for `s ≤ 1`. Case (iii) follows the prose:
+`dim_H X_n = min{2, dimaff(X_n)}` by Rapaport's theorem, `dimaff(X_n) → dim_L(𝖠, μ_t) ≥ t`, then
+`t = s` or `t → 2`.
 -/
 noncomputable abbrev paper_B_1 := @Challenge.audit_main2
 noncomputable abbrev paper_B_2 := @BoxLike.System.main2_prose
@@ -802,8 +811,8 @@ noncomputable abbrev paper_4_15_1 := @BoxLike.System.SOSC_h2_zero
 
 -- PAPER_ENTRY thm:main_extended
 /-! 4.16 (`thm:main_extended`): formalized.
-For every `s`; for `s ≥ 2` the equilibrium state is Bernoulli and the open set condition gives
-dimension two.
+The conclusion includes `dimaff(X) ≤ 2`. For `s ≥ 2` the equilibrium state is Bernoulli
+and the open set condition forces `s = 2` and dimension two.
 -/
 noncomputable abbrev paper_4_16_1 := @BoxLike.System.main_extended_min
 noncomputable abbrev paper_4_16_2 := @BoxLike.System.main_extended
@@ -814,9 +823,10 @@ noncomputable abbrev paper_4_16_4 := @BoxLike.System.main_extended_ge_two
 /-! 4.17 (`rem:threshold_bound`): formalized.
 The bound `min{dimaff(X), 2 - λ₁/λ₂} ≤ dim_H X` for `dimaff(X) < 2` without the strong open set
 condition or projective exponential separation, for every invariant equilibrium state, along
-the remark: the families are reduced to `⌊|b_n|⁻¹⌋` words above the threshold,
-`dim((proj_x)_*ν_n) = 1` for all large `n`, and `1 + (H_n - χ_{1,n})/χ_{2,n} → 2 - λ₁/λ₂`. The
-closing commentary of the remark is not a claim.
+the remark: the families are reduced to `⌊|b_n|⁻¹⌋` words above the threshold, which gives
+`h_2(ν_n) = 0`, `dim((proj_x ∘ π_n)_*ν_n) = 1` for all large `n`, and
+`dim((π_n)_*ν_n) = 1 + (log #W_n + log |a_n|)/(-log |b_n|) → 2 - λ₁/λ₂`. The closing commentary of
+the remark is not a claim.
 -/
 noncomputable abbrev paper_4_17_1 := @BoxLike.System.threshold_bound
 noncomputable abbrev paper_4_17_2 := @BoxLike.System.threshold_bound_prose

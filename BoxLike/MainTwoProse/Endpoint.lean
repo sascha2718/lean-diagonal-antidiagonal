@@ -3,27 +3,35 @@ module
 /-
 The assembled proof of `thm:main2` in `sec:dimension_result_proof` along the prose:
 
-* the determinant argument of `thm:main_extended` at `s ≥ 2`;
+* the case `s ≥ 2`, where `thm:main_extended` under the strong open set condition gives `s = 2`
+  and `dim(π_*μ) = 2`;
 * the reduction to a proximal diagonal generator through `thm:two-block-normalisation`;
 * the typical families of `BoxLike/MainTwoProse/TypicalWordsSMB.lean`: Shannon–McMillan–Breiman,
   Birkhoff, the return to the horizontal orientation, the pigeonhole of
   `BoxLike/MainTwoProse/Pigeonhole.lean`;
-* the trimming to `min{#W_n, ⌊|b_n|⁻¹⌋}` words, or the prefix `v` with `φ_v(X) ⊆ U`;
 * the genuinely diagonal subsystems of `BoxLike/MainTwoProse/DiagonalSubsystem.lean` with their
-  Bernoulli measures `ν_n`, and Kittle–Kogler for their coordinate projections;
+  Bernoulli measures `ν_n`, and Kittle–Kogler for the coordinate projections of `(π_n)_*ν_n`;
+* the modifications of the families for `1 < s < 2`: the trimming to `min{#W_n, ⌊|b_n|⁻¹⌋}`
+  words under `it:main2_threshold`, or the prefix `v` with `φ_v(X) ⊆ U` under `it:main2_sosc`;
 * the conditional entropies `q_{x,n}`, `q_{y,n}`, `q_n` of
-  `BoxLike/MainTwoProse/SubsystemEntropies.lean`: the scalar Ledrappier–Young formula of
-  `BoxLike/MainTwoProse/ScalarFeng.lean`, `0 ≤ q_n ≤ q_{y,n} = 0` by the monotonicity of
-  `BoxLike/MainTwoProse/EntropyThreshold.lean`, strong separation and unique coding of
+  `BoxLike/MainTwoProse/SubsystemEntropies.lean`, written `h_1(ν_n)`,
+  `H_{ν_n}(𝒫 | \widehat{ξ_1^⊥})` and `h_2(ν_n)` in the manuscript: the scalar Ledrappier–Young
+  formula of `BoxLike/MainTwoProse/ScalarFeng.lean`, `0 ≤ q_n ≤ q_{y,n} = 0` by the monotonicity
+  of `BoxLike/MainTwoProse/EntropyThreshold.lean`, strong separation and unique coding of
   `BoxLike/MainTwoProse/OpenSetBranch.lean`, and the independence of the past and the future of
   `BoxLike/MainTwoProse/PastIndependence.lean`;
-* the planar Ledrappier–Young formula `thm:feng1`, the limit `dim ν_n → \dim_L(𝖠, μ) = s`, and
-  the upper bound `eq:hausdorff_affinity_upper_bound`.
+* the planar Ledrappier–Young formula `thm:feng1`, the limit
+  `dim((π_n)_*ν_n) → \dim_L(𝖠, μ) = s`, and the upper bound `eq:hausdorff_affinity_upper_bound`.
 
-* `System.IsHomDiag.isExactDim_map_proj`: `dim ν_n = d_{x,n} + (H_n - χ_{1,n} d_{x,n}) / χ_{2,n}`.
+The manuscript settles `s ≤ 1` from the projection bound of
+`BoxLike/MainTwoProse/ProjectionDimension.lean` and Falconer's upper bound; the proof below
+treats `0 < s < 2` uniformly through the dimension of `(π_n)_*ν_n`.
+
+* `System.IsHomDiag.isExactDim_map_proj`:
+  `dim((π_n)_*ν_n) = d_{x,n} + (log #W_n + d_{x,n} log |a_n|) / (-log |b_n|)`.
 * `System.isHomDiag_subsystem`: the subsystem of the words `v w`, `w ∈ W_n`, is homogeneous
   diagonal.
-* `System.le_dimH_attractor_of_family`: `\dim_H X ≥ dim ν_n` for one family.
+* `System.le_dimH_attractor_of_family`: `\dim_H X ≥ dim((π_n)_*ν_n)` for one family.
 * `System.main2_prose_normalised`, `System.main2_prose_of_pressure`, `System.main2_prose_lt_two`:
   the case `0 < s < 2`.
 * `System.main2_prose`: `thm:main2` with the hypotheses the proof uses: the statements
@@ -60,14 +68,15 @@ variable {κ : Type u} [Fintype κ] [MeasurableSpace κ] [MeasurableSingletonCla
   {T : System κ} {a b : ℝ} (hT : T.IsHomDiag a b)
 include hT
 
-/-- The dimension of `ν_n` in the proof of `thm:main2`:
-`dim(ν_n) = (H_n - q_{x,n}) / χ_{1,n} + (q_{x,n} - q_n) / χ_{2,n}`, which is
-`d_{x,n} + (H_n - χ_{1,n} d_{x,n}) / χ_{2,n}`. The conditional entropy `q_n` of the first symbol
-given the planar point vanishes, by `0 ≤ q_n ≤ q_{y,n} = 0` when `H_n ≤ χ_{2,n}` and by unique
-coding under strong separation; the scalar Ledrappier–Young formula gives
-`q_{x,n} = H_n - χ_{1,n} d_{x,n}`; the past and future of `ν_n` are independent and `V^1` is the
-vertical axis, so the entropies of the planar Ledrappier–Young formula `thm:feng1` are
-`h_0 = H_n`, `h_1 = q_{x,n}` and `h_2 = q_n`, with `λ_1 = -χ_{1,n}`, `λ_2 = -χ_{2,n}`.
+/-- The dimension of `(π_n)_*ν_n` in the proof of `thm:main2`:
+`dim((π_n)_*ν_n) = (q_{x,n} - log #W_n) / log |a_n| + (q_n - q_{x,n}) / log |b_n|`, which is
+`d_{x,n} + (log #W_n + d_{x,n} log |a_n|) / (-log |b_n|)`. The conditional entropy `q_n` of the
+first symbol given the planar point vanishes, by `0 ≤ q_n ≤ q_{y,n} = 0` when
+`log #W_n ≤ -log |b_n|` and by unique coding under strong separation; the scalar
+Ledrappier–Young formula gives `q_{x,n} = log #W_n + d_{x,n} log |a_n|`; the past and future of
+`ν_n` are independent and `V^1` is the vertical axis, so the entropies of the planar
+Ledrappier–Young formula `thm:feng1` are
+`h_0 = log #W_n`, `h_1 = q_{x,n}` and `h_2 = q_n`, with `λ_1 = log |a_n|`, `λ_2 = log |b_n|`.
 Depends on: `FengLedrappierYoung`, `KittleKoglerDimension`. -/
 theorem isExactDim_map_proj (hly : FengLedrappierYoung.{u}) (hkk : KittleKoglerDimension.{u})
     (hab : |b| < |a|)
@@ -116,9 +125,9 @@ theorem isHomDiag_subsystem {v : List ι} (hv : S.oWord v = 0) {W : Finset (List
   · simp [codeWord_append, gDeriv_append, hv, (hdiagW w).2.2]
 
 omit [MeasurableSpace ι] [MeasurableSingletonClass ι] in
-/-- The lower bound `\dim_H X ≥ dim ν_n` for one family `W` of diagonal planar words of length
-`n` with the common matrix `diag(a, b)`, prefixed by the diagonal word `v`, in either case of
-the proof of `thm:main2`: the trimmed family with `H_n ≤ χ_{2,n}`, or a feasible open set
+/-- The lower bound `\dim_H X ≥ dim((π_n)_*ν_n)` for one family `W` of diagonal planar words of
+length `n` with the common matrix `diag(a, b)`, prefixed by the diagonal word `v`, in either case of
+the proof of `thm:main2`: the trimmed family with `log #W_n ≤ -log |b_n|`, or a feasible open set
 `U ⊇ φ_v(X)`, in which case the subsystem satisfies the strong separation condition. The
 coordinate maps of the subsystem generate free semigroups, since the projective system of `Φ`
 has no exact overlaps, and `ν_n` is carried by the attractor of the subsystem, which lies in
@@ -206,7 +215,7 @@ generator, with `s` the zero of the pressure in `(0, 2)` and the alternative in 
 Breiman theorem (`exists_typical_words_prose`); in the entropy case the families are trimmed to
 `min{#W_n, ⌊|b_n|⁻¹⌋}` words; under the strong open set condition every word is prefixed by a
 diagonal word `v` with `φ_v(X) ⊆ U`; the lengths and logarithms of the coordinate contraction
-ratios change by bounded amounts; `|b_n| < |a_n|` for all large `n`; and `dim ν_n → s`.
+ratios change by bounded amounts; `|b_n| < |a_n|` for all large `n`; and `dim((π_n)_*ν_n) → s`.
 Depends on: `ShannonMcMillanBreimanStatement`, `MorrisShmerkinLyapunov`,
 `EquilibriumGibbsStatement`, `FraserJordanJurgaDecomposition`, `FengLedrappierYoung`,
 `KittleKoglerDimension`. -/

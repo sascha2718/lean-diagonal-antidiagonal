@@ -65,7 +65,7 @@ theorem dimH_attractor_eq_min (hms : MorrisShmerkinLyapunov.{u})
     dimH S.attractor = ENNReal.ofReal (min 2 S.dimaff) :=
   le_antisymm S.dimH_attractor_le
     (S.le_dimH_attractor (S.main_extended_min hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox
-      hsep μ hinv heq hor))
+      (fun _ => hsep) μ hinv heq hor))
 
 /-- Under the strong open set condition, `dimaff(𝖠) ≥ 2` gives `dimH X = 2`. The equilibrium
 state for `s = dimaff(𝖠) ≥ 2` is the Bernoulli measure of `sec:normalisation`, which exists, so
@@ -121,8 +121,8 @@ theorem upperHausdorffDim_map_proj_eq (hms : MorrisShmerkinLyapunov.{u})
     upperHausdorffDim (μ.map S.proj) =
       min 2 (lyapDim (entropy μ) (S.lyapunov₁ μ) (S.lyapunov₂ μ)) := by
   rw [heq.lyapDim_eq_dimaff hinv]
-  exact (S.main_extended_min hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox hsep μ hinv heq
-    hor).upperHausdorffDim_eq (IsProbabilityMeasure.ne_zero _)
+  exact (S.main_extended_min hms hfk hfjj hjr hfi hfib hly hlyb hrot hprox (fun _ => hsep)
+    μ hinv heq hor).upperHausdorffDim_eq (IsProbabilityMeasure.ne_zero _)
 
 end System
 
