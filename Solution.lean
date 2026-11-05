@@ -5,12 +5,1417 @@ public import Solution.Transport
 @[expose] public section
 
 /-!
-# Proofs of the challenge statements
+# Definitions and numbered statements of the manuscript
 
-Each headline proof applies the library theorem to `toLib S` through `Solution.Transport`.
-The second part has one entry per numbered statement of the manuscript, listing the Lean
-declarations that cover it; `docs/correspondence.md` records the assessment and the proof
-deviations.
+The definitions below display the mathematical vocabulary used by the statements. A `recall`
+command checks that both the displayed type and formula agree with the imported definition;
+it introduces no new abbreviation. Recursive definitions are displayed through their defining
+equations, checked by `rfl`. The numbered theorems follow the manuscript order and
+apply the proofs in `BoxLike`. Supporting lemmas and proof comparisons are recorded in
+`paper-correspondence.yaml` and `docs/correspondence.md`.
+
+Theorem 1.1 is recorded as an unproved proposition and Question 1.4 as an open question.
+Neither is an axiom. The final section proves the independent statements of `Challenge.lean`
+under their existing names for the comparator.
+-/
+
+section Manuscript
+
+open BoxLike BoxLike.System MeasureTheory ProbabilityTheory Filter Topology Set Matrix Metric Classical
+open scoped ENNReal NNReal Matrix.Norms.L2Operator
+
+universe u u_1 u_2 u_3
+
+/-! ## Basic systems and codings -/
+
+/-- A box-like system: orientations, row entries, translations, and invertible contractions. -/
+recall BoxLike.System.mk {ι : Type u_1} (o : ι → ZMod 2) (a b : ι → ℝ) (v : ι → ℝ × ℝ) (a_ne_zero : ∀ (i : ι), a i ≠ 0)
+  (b_ne_zero : ∀ (i : ι), b i ≠ 0) (abs_a_lt_one : ∀ (i : ι), |a i| < 1) (abs_b_lt_one : ∀ (i : ι), |b i| < 1) :
+  System ι
+
+/-- A planar system: invertible matrices of operator norm below one and translations. -/
+recall BoxLike.PlanarSystem.mk {ι : Type u_1} (mat : ι → Matrix (Fin 2) (Fin 2) ℝ) (v : ι → ℝ × ℝ)
+  (det_ne_zero : ∀ (i : ι), (mat i).det ≠ 0) (norm_lt_one : ∀ (i : ι), ‖mat i‖ < 1) : PlanarSystem ι
+
+/-- The iterate `σ^n`, `n ∈ ℤ`, of the left shift of `sec:two_sided_shift_space`:
+`(σ^n 𝐢)_k = i_{n+k}`. -/
+recall BoxLike.shift {ι : Type u_1} (n : ℤ) (x : ℤ → ι) : ℤ → ι := fun k => x (n + k)
+
+/-- The orientation cocycle `ε_n(𝐢)` of `eq:def_of_eps_mod2`: the parity of the number of
+anti-diagonal symbols among `i_0, …, i_{n-1}` when `n ≥ 0`, and among `i_{-1}, …, i_n`
+when `n < 0`. -/
+recall BoxLike.eps {ι : Type u_1} (o : ι → ZMod 2) (x : ℤ → ι) : ℤ → ZMod 2
+  | Int.ofNat n => ∑ j ∈ Finset.range n, o (x j)
+  | Int.negSucc n => ∑ j ∈ Finset.range (n + 1), o (x (-(j + 1 : ℤ)))
+
+/-- The coding `τ` of `eq:def_of_tau_omega`: `τ_n(𝐢) = i_n + N ε_n(𝐢)`. -/
+recall BoxLike.tau {ι : Type u_1} (o : ι → ZMod 2) (x : ℤ → ι) : ℤ → ι × ZMod 2 :=
+  fun n => (x n, eps o x n)
+
+/-- The coding `ω` of `eq:def_of_tau_omega`: `ω_n(𝐢) = i_n + N (1 - ε_n(𝐢))`. -/
+recall BoxLike.omega {ι : Type u_1} (o : ι → ZMod 2) (x : ℤ → ι) : ℤ → ι × ZMod 2 :=
+  fun n => (x n, eps o x n + 1)
+
+/-- The common inverse `\overline{τ}`, `\overline{ω}` of the codings: forget the axis. -/
+recall BoxLike.unCode {ι : Type u_1} (y : ℤ → ι × ZMod 2) : ℤ → ι := fun n => (y n).1
+
+/-- The two-sided sub-shift of finite type `Σ_Z` of `sec:subshift`. -/
+recall BoxLike.subshift {ι : Type u_1} (o : ι → ZMod 2) : Set (ℤ → ι × ZMod 2) :=
+  {y | ∀ n, Trans o (y n) (y (n + 1))}
+
+/-- The diagonal matrix `diag(a, b)` for `c = 0` and the anti-diagonal matrix with
+first-row entry `a` and second-row entry `b` for `c = 1`. -/
+recall BoxLike.boxMat (c : ZMod 2) (a b : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  if c = 0 then !![a, 0; 0, b] else !![0, a; b, 0]
+
+/-- The system is box-like with rotations: both diagonal and anti-diagonal linear parts
+occur, as in `thm:box_like_sa`. -/
+recall BoxLike.System.WithRotations {ι : Type u_1} (S : System ι) : Prop :=
+  (∃ i, S.o i = 0) ∧ ∃ i, S.o i = 1
+
+/-- The normalisation of `sec:gibbs_measures`: some diagonal generator has entries of distinct
+absolute values, that is, the tuple contains a proximal diagonal generator. -/
+recall BoxLike.System.HasProximalDiagonal {ι : Type u_1} (S : System ι) : Prop :=
+  ∃ i, S.o i = 0 ∧ |S.a i| ≠ |S.b i|
+
+/-- The linear part `A_i`. -/
+recall BoxLike.System.mat {ι : Type u_1} (S : System ι) (i : ι) : Matrix (Fin 2) (Fin 2) ℝ :=
+  boxMat (S.o i) (S.a i) (S.b i)
+
+/-- The coordinate `proj_x` for `c = 0` and `proj_y` for `c = 1`. -/
+recall BoxLike.System.coord (c : ZMod 2) (z : ℝ × ℝ) : ℝ := if c = 0 then z.1 else z.2
+
+/-- The contraction ratio `g_j'` of the projective system: `a_i` for the symbol `(i, 0)`
+and `b_i` for the symbol `(i, 1)`. -/
+recall BoxLike.System.ratio {ι : Type u_1} (S : System ι) (p : ι × ZMod 2) : ℝ :=
+  if p.2 = 0 then S.a p.1 else S.b p.1
+
+/-- The translation `g_j(0)` of the projective system: `v_i^{(1)}` for the symbol `(i, 0)`
+and `v_i^{(2)}` for the symbol `(i, 1)`. -/
+recall BoxLike.System.trans {ι : Type u_1} (S : System ι) (p : ι × ZMod 2) : ℝ :=
+  coord p.2 (S.v p.1)
+
+/-- The maps `g_j` of the projective system `Ψ` of `eq:def_of_g_system`. -/
+recall BoxLike.System.g {ι : Type u_1} (S : System ι) (p : ι × ZMod 2) (t : ℝ) : ℝ :=
+  S.ratio p * t + S.trans p
+
+/-- The affine map `φ_i(z) = A_i z + v_i`. -/
+recall BoxLike.System.phi {ι : Type u_1} (S : System ι) (i : ι) (z : ℝ × ℝ) : ℝ × ℝ :=
+  (S.a i * coord (S.o i) z + (S.v i).1, S.b i * coord (S.o i + 1) z + (S.v i).2)
+
+/-- The product `A_𝐢 = A_{i_0} ⋯ A_{i_{n-1}}`. -/
+recall BoxLike.System.matWord {ι : Type u_1} (S : System ι) (w : List ι) : Matrix (Fin 2) (Fin 2) ℝ :=
+  (w.map S.mat).prod
+
+/-- The derivative `g_𝐣'` of `g_𝐣 = g_{j_0} ∘ ⋯ ∘ g_{j_{n-1}}`, a constant. -/
+recall BoxLike.System.gDeriv {ι : Type u_1} (S : System ι) (u : List (ι × ZMod 2)) : ℝ :=
+  (u.map S.ratio).prod
+
+/-- The prefix `𝐢|_n = i_0 ⋯ i_{n-1}` of a two-sided sequence. -/
+recall BoxLike.futureWord {α : Type u_1} (x : ℤ → α) (n : ℕ) : List α :=
+  (List.range n).map fun k : ℕ => x (k : ℤ)
+
+/-- The word `i_{-n} ⋯ i_{-1}` of the past of `𝐢`. -/
+recall BoxLike.pastWord {α : Type u_1} (x : ℤ → α) : ℕ → List α
+example {α : Type*} (x : ℤ → α) : pastWord x 0 = [] := rfl
+example {α : Type*} (x : ℤ → α) (n : ℕ) :
+    pastWord x (n + 1) = x (-((n : ℤ) + 1)) :: pastWord x n := rfl
+
+/-- The canonical projection `\overline{π}` of `sec:projective_system`. It is defined on every
+sequence over `ι × ZMod 2`, in particular on `Σ_Z`. -/
+recall BoxLike.System.projBar {ι : Type u_1} (S : System ι) (y : ℤ → ι × ZMod 2) : ℝ :=
+  ∑' k, S.projBarTerm y k
+
+/-- The canonical projection `π` of `sec:two_sided_shift_space`, given through its
+coordinates; `tendsto_phiWord` shows that it is the limit of `eq:canonical_projection`. -/
+recall BoxLike.System.proj {ι : Type u_1} (S : System ι) (x : ℤ → ι) : ℝ × ℝ :=
+  (S.projBar (tau S.o x), S.projBar (omega S.o x))
+
+/-- The self-affine set `X = π(Σ)`. -/
+recall BoxLike.System.attractor {ι : Type u_1} (S : System ι) : Set (ℝ × ℝ) := Set.range S.proj
+
+/-! ## Pressure, separation and dimensions -/
+
+/-- The singular value function `φ^s(A)` of `sec:Singular_value_function`, with
+`‖A‖ = α_1(A)` the `ℓ²` operator norm and `|det A| = α_1(A) α_2(A)`. -/
+recall BoxLike.svf (s : ℝ) (A : Matrix (Fin 2) (Fin 2) ℝ) : ℝ := if s ≤ 1 then ‖A‖ ^ s
+  else if s ≤ 2 then ‖A‖ ^ (2 - s) * |A.det| ^ (s - 1)
+  else |A.det| ^ (s / 2)
+
+/-- The sum `∑_{|𝐢| = n} φ^s(A_𝐢)` of `sec:affinity_dim`. -/
+recall BoxLike.System.svfSum {ι : Type u_1} (S : System ι) [Fintype ι] (s : ℝ) (n : ℕ) : ℝ :=
+  ∑ w : Fin n → ι, svf s (S.matWord (List.ofFn w))
+
+/-- The singular value pressure `P(𝖠, s)` of `sec:affinity_dim`. -/
+recall BoxLike.System.pressure {ι : Type u_1} (S : System ι) [Fintype ι] (s : ℝ) : ℝ :=
+  sInf ((fun n : ℕ => Real.log (S.svfSum s n) / n) '' Set.Ici 1)
+
+/-- The affinity dimension `dimaff(𝖠)` of `sec:affinity_dim`: the unique `s ≥ 0` for which
+`P(𝖠, s) = 0`. -/
+recall BoxLike.System.dimaff {ι : Type u_1} [Fintype ι] [Nonempty ι] (S : System ι) : ℝ :=
+  (S.existsUnique_pressure_eq_zero).exists.choose
+
+/-- The composition `g_𝐣 = g_{j_0} ∘ ⋯ ∘ g_{j_{n-1}}` of `sec:exponential_separation`. -/
+recall BoxLike.System.gWord {ι : Type u_1} (S : System ι) : List (ι × ZMod 2) → ℝ → ℝ
+example {ι : Type*} (S : System ι) : S.gWord [] = id := rfl
+example {ι : Type*} (S : System ι) (p : ι × ZMod 2) (w : List (ι × ZMod 2)) :
+    S.gWord (p :: w) = S.g p ∘ S.gWord w := rfl
+
+/-- The projective gap `Δ_n^Ψ`: the least `|g_𝐢(0) - g_𝐣(0)|` over distinct words `𝐢, 𝐣` of
+length `n` with `g_𝐢' = g_𝐣'`. The minimum of the empty set is `⊤`. -/
+recall BoxLike.System.gap {ι : Type u_1} (S : System ι) (n : ℕ) : ℝ≥0∞ :=
+  ⨅ (u : List (ι × ZMod 2)) (u' : List (ι × ZMod 2)) (_ : u.length = n) (_ : u'.length = n)
+    (_ : u ≠ u') (_ : S.gDeriv u = S.gDeriv u'), ENNReal.ofReal |S.gWord u 0 - S.gWord u' 0|
+
+/-- The projective exponential separation condition of `sec:exponential_separation`: there
+are `c > 0` and a strictly increasing sequence `(n_k)` with `Δ_{n_k}^Ψ ≥ c^{n_k}`. -/
+recall BoxLike.System.ProjExpSeparation {ι : Type u_1} (S : System ι) : Prop :=
+  ∃ c : ℝ, 0 < c ∧ ∃ n : ℕ → ℕ, StrictMono n ∧ ∀ k, ENNReal.ofReal (c ^ n k) ≤ S.gap (n k)
+
+/-- The projective system has no exact overlaps (`sec:exponential_separation`): `g_𝐢 ≠ g_𝐣` for
+any two distinct finite words `𝐢`, `𝐣` over the alphabet of `Ψ`, that is, the maps of `Ψ`
+generate a free semigroup. The separation hypothesis of `thm:main2`. -/
+recall BoxLike.System.NoExactOverlaps {ι : Type u_1} (S : System ι) : Prop :=
+  ∀ u u' : List (ι × ZMod 2), u ≠ u' → S.gWord u ≠ S.gWord u'
+
+/-- A `2 × 2` real matrix is proximal, as in `sec:irreducibility`, if it has two real
+eigenvalues with different absolute values. The eigenvalues are stated through the
+characteristic polynomial: it is the product of `X - l₁` and `X - l₂` with `|l₁| ≠ |l₂|`.
+The paper states the definition for `A ∈ GL_2(ℝ)`; the products `A_𝐢` of a `System` are
+invertible. -/
+recall BoxLike.IsProximalMatrix (A : Matrix (Fin 2) (Fin 2) ℝ) : Prop := ∃ l₁ l₂ : ℝ, |l₁| ≠ |l₂| ∧
+    A.charpoly = (Polynomial.X - Polynomial.C l₁) * (Polynomial.X - Polynomial.C l₂)
+
+/-- The tuple `𝖠` is proximal, as in `sec:irreducibility`: the semigroup generated by `𝖠`
+contains a proximal matrix, that is, some product `A_𝐢` over a non-empty word is proximal. -/
+recall BoxLike.System.Proximal {ι : Type u_1} (S : System ι) : Prop :=
+  ∃ w : List ι, w ≠ [] ∧ IsProximalMatrix (S.matWord w)
+
+/-- The strong open set condition of `sec:box_like_self_affine`: there is an open set `U` with
+`U ∩ X ≠ ∅`, `⋃_i φ_i(U) ⊆ U`, and `φ_i(U) ∩ φ_j(U) = ∅` whenever `i ≠ j`. -/
+recall BoxLike.System.StrongOpenSet {ι : Type u_1} (S : System ι) : Prop :=
+  ∃ U : Set (ℝ × ℝ), IsOpen U ∧ (U ∩ S.attractor).Nonempty ∧ (∀ i, S.phi i '' U ⊆ U) ∧
+    Pairwise fun i j => Disjoint (S.phi i '' U) (S.phi j '' U)
+
+/-- The strong separation condition of `sec:box_like_self_affine`: the sets
+`φ_1(X), …, φ_N(X)` are pairwise disjoint. -/
+recall BoxLike.System.StrongSeparation {ι : Type u_1} (S : System ι) : Prop :=
+  Pairwise fun i j => Disjoint (S.phi i '' S.attractor) (S.phi j '' S.attractor)
+
+/-- The rectangular open set condition of `sec:box_like_self_affine`: there is a non-empty open
+rectangle `R = (a, b) × (c, d)` with sides parallel to the coordinate axes such that the sets
+`φ_1(R), …, φ_N(R)` are pairwise disjoint subsets of `R`. -/
+recall BoxLike.System.RectangularOpenSet {ι : Type u_1} (S : System ι) : Prop :=
+  ∃ a b c d : ℝ, a < b ∧ c < d ∧
+    (∀ i, S.phi i '' (Set.Ioo a b ×ˢ Set.Ioo c d) ⊆ Set.Ioo a b ×ˢ Set.Ioo c d) ∧
+    Pairwise fun i j => Disjoint (S.phi i '' (Set.Ioo a b ×ˢ Set.Ioo c d))
+      (S.phi j '' (Set.Ioo a b ×ˢ Set.Ioo c d))
+
+/-- The gap `Δ_n` of the system induced on the axis `c`: the least `|g_𝐢(0) - g_𝐣(0)|` over
+distinct planar words `𝐢, 𝐣` of length `n` with `g_𝐢' = g_𝐣'` along the axis `c`. The minimum of
+the empty set is `⊤`. -/
+recall BoxLike.System.axisGap {ι : Type u_1} (S : System ι) (c : ZMod 2) (n : ℕ) : ℝ≥0∞ :=
+  ⨅ (u : List ι) (u' : List ι) (_ : u.length = n) (_ : u'.length = n) (_ : u ≠ u')
+    (_ : S.gDeriv (axisWord c u) = S.gDeriv (axisWord c u')),
+    ENNReal.ofReal |S.gWord (axisWord c u) 0 - S.gWord (axisWord c u') 0|
+
+/-- The system induced on the axis `c` is exponentially separated: there are `r > 0` and a
+strictly increasing sequence `(n_k)` with `Δ_{n_k} ≥ r^{n_k}`, the definition before
+`thm:rapaport`. -/
+recall BoxLike.System.AxisExpSeparation {ι : Type u_1} (S : System ι) (c : ZMod 2) : Prop :=
+  ∃ r : ℝ, 0 < r ∧ ∃ n : ℕ → ℕ, StrictMono n ∧ ∀ k, ENNReal.ofReal (r ^ n k) ≤ S.axisGap c (n k)
+
+/-- The number `s_1` for `c = 0` and `s_2` for `c = 1` of Fraser, §2.1: the Minkowski dimension
+of the coordinate projection `proj_c(X)`. It is the upper Minkowski dimension, converted to a
+real number; it is finite by `projDim_le_one`, and the lower Minkowski dimension has the same
+value by `lowerBoxDim_coord_eq`. -/
+recall BoxLike.System.projDim {ι : Type u_1} (S : System ι) (c : ZMod 2) : ℝ :=
+  (upperBoxDim (coord c '' S.attractor)).toReal
+
+/-- Fraser's modified singular value function
+`ψ^s(𝐢) = α_1(𝐢)^{s(𝐢)} α_2(𝐢)^{s - s(𝐢)}`, equation (2.1) of his article. -/
+recall BoxLike.System.modSvf {ι : Type u_1} (S : System ι) (s : ℝ) (w : List ι) : ℝ :=
+  S.alpha₁ w ^ S.wordDim w * S.alpha₂ w ^ (s - S.wordDim w)
+
+/-- The modified pressure `lim_n n⁻¹ log Ψ_n^s`, the logarithm of Fraser's `P(s)`, §2.1. It is
+defined as the `lim sup`; `tendsto_modPressure` shows that the limit exists. -/
+recall BoxLike.System.modPressure {ι : Type u_1} (S : System ι) [Fintype ι] (s : ℝ) : ℝ :=
+  limsup (fun n : ℕ => Real.log (S.modSvfSum s n) / n) atTop
+
+/-- Fraser's modified affinity dimension `dimmaff(X)` of tex lines 2077 to 2077: the unique
+`s ≥ 0` at which the modified pressure vanishes, that is, the unique solution of `P(s) = 1` in
+Fraser's Theorem 2.3. It depends on the set `X` through `s_1` and `s_2`, not on the matrices
+alone. -/
+recall BoxLike.System.dimmaff {ι : Type u_1} (S : System ι) [Fintype ι] [Nonempty ι] : ℝ :=
+  (S.existsUnique_modPressure_eq_zero).exists.choose
+
+/-- The pointwise dimension of `μ` at `x` exists and equals `d`, that is `dimloc(μ, x) = d`:
+the quotient `log μ(B(x, r)) / log r` tends to `d` as `r ↓ 0`. The balls are closed. At a point
+`x` with `μ(B(x, r)) = 0` for small `r`, the convention `Real.log 0 = 0` gives
+`dimloc(μ, x) = 0`; such points lie outside the support of `μ`. -/
+recall BoxLike.HasLocalDim {X : Type u_1} [PseudoMetricSpace X] [MeasurableSpace X] (μ : Measure X) (x : X) (d : ℝ) :
+  Prop := Tendsto (fun r : ℝ => Real.log (μ.real (closedBall x r)) / Real.log r) (𝓝[>] 0) (𝓝 d)
+
+/-- The measure `μ` is exact-dimensional with `dim μ = d`: `dimloc(μ, x) = d` for `μ`-almost
+every `x`. -/
+recall BoxLike.IsExactDim {X : Type u_1} [PseudoMetricSpace X] [MeasurableSpace X] (μ : Measure X) (d : ℝ) : Prop :=
+  ∀ᵐ x ∂μ, HasLocalDim μ x d
+
+/-- The measure `μ` is double-dimensional (`sec:ledrappier_young_formula`): its pointwise
+dimension exists at `μ`-almost every point and takes exactly two values, each on a set of
+positive `μ`-measure. -/
+recall BoxLike.IsDoubleDim {X : Type u_1} [PseudoMetricSpace X] [MeasurableSpace X] (μ : Measure X) : Prop :=
+  ∃ d₁ d₂ : ℝ, d₁ ≠ d₂ ∧ (∀ᵐ x ∂μ, HasLocalDim μ x d₁ ∨ HasLocalDim μ x d₂) ∧
+    0 < μ {x | HasLocalDim μ x d₁} ∧ 0 < μ {x | HasLocalDim μ x d₂}
+
+/-- For `μ`-almost every `x` the pointwise dimension `dimloc(μ, x)` exists and equals `d₁` or
+`d₂`. The article has no name for this; its double-dimensional measures are those for which,
+in addition, the two values differ and each occurs on a set of positive measure
+(`IsDoubleDim`). -/
+recall BoxLike.HasLocalDimPair {X : Type u_1} [PseudoMetricSpace X] [MeasurableSpace X] (μ : Measure X) (d₁ d₂ : ℝ) :
+  Prop := ∀ᵐ x ∂μ, HasLocalDim μ x d₁ ∨ HasLocalDim μ x d₂
+
+/-- The upper packing dimension `\overline{dim}_p(μ)`: the essential supremum of the upper
+pointwise dimension with respect to `μ`. The value is real. For a finite Borel measure on
+`ℝ^d` the pointwise dimensions lie in `[0, d]` almost everywhere, so the real-valued `essSup`
+carries its usual meaning. -/
+recall BoxLike.upperPackingDim {X : Type u_1} [PseudoMetricSpace X] [MeasurableSpace X] (μ : Measure X) : ℝ :=
+  essSup (upperLocalDim μ) μ
+
+/-- The lower Hausdorff dimension `\underline{dim}_H(μ)`: the essential infimum of the lower
+pointwise dimension with respect to `μ`. The value is real. For a finite Borel measure on
+`ℝ^d` the pointwise dimensions lie in `[0, d]` almost everywhere, so the real-valued `essInf`
+carries its usual meaning. -/
+recall BoxLike.lowerHausdorffDim {X : Type u_1} [PseudoMetricSpace X] [MeasurableSpace X] (μ : Measure X) : ℝ :=
+  essInf (lowerLocalDim μ) μ
+
+/-! ## Entropy and equilibrium states -/
+
+/-- The cylinder `[w] = {x : x_0 ⋯ x_{n-1} = w}` of `sec:two_sided_shift_space`. -/
+recall BoxLike.cylinder {α : Type u_2} {n : ℕ} (w : Fin n → α) : Set (ℤ → α) :=
+  {x | ∀ k : Fin n, x (k : ℤ) = w k}
+
+/-- The block `x_0 ⋯ x_{n-1}` of a point `x`. -/
+recall BoxLike.block {α : Type u_1} (n : ℕ) (x : ℤ → α) : Fin n → α := fun k => x k
+
+/-- The entropy `H_μ(𝒫_0^{n-1})` of the partition into cylinders of length `n`. -/
+recall BoxLike.blockEntropy {α : Type u_1} [Fintype α] [MeasurableSpace α] (μ : Measure (ℤ → α)) (n : ℕ) : ℝ :=
+  ∑ w : Fin n → α, Real.negMulLog (μ.real (cylinder w))
+
+/-- The Kolmogorov–Sinai entropy `h(μ) = lim_n H_μ(𝒫_0^{n-1}) / n`. -/
+recall BoxLike.entropy {α : Type u_1} [Fintype α] [MeasurableSpace α] (μ : Measure (ℤ → α)) : ℝ :=
+  limUnder atTop fun n : ℕ => blockEntropy μ n / n
+
+/-- The Lyapunov exponent `λ_1(𝖠, μ) = lim_n n⁻¹ ∫ log α_1(A_{𝐢|_n}) dμ(𝐢)` of
+`sec:lyapunov_exponents`. -/
+recall BoxLike.System.lyapunov₁ {ι : Type u_1} [MeasurableSpace ι] (S : System ι) (μ : Measure (ℤ → ι)) : ℝ :=
+  limUnder atTop fun n : ℕ => (∫ x, Real.log ‖S.matWord (futureWord x n)‖ ∂μ) / n
+
+/-- The Lyapunov exponent `λ_2(𝖠, μ) = lim_n n⁻¹ ∫ log α_2(A_{𝐢|_n}) dμ(𝐢)` of
+`sec:lyapunov_exponents`, with `α_2(A) = |det A| / ‖A‖`. -/
+recall BoxLike.System.lyapunov₂ {ι : Type u_1} [MeasurableSpace ι] (S : System ι) (μ : Measure (ℤ → ι)) : ℝ :=
+  limUnder atTop fun n : ℕ =>
+    (∫ x, Real.log (|(S.matWord (futureWord x n)).det| / ‖S.matWord (futureWord x n)‖) ∂μ) / n
+
+/-- The Lyapunov exponent `\overline{λ}(𝖠, ν)` of the projective system. For an invariant
+measure the limit defining it in `sec:lyapunov_exponents` is the integral
+`∫ log |g'_{j_0}(0)| dν(𝐣) = ∫ f_{1,1} dν` of `thm:eq_state_is_sum`. -/
+recall BoxLike.System.lyapBar {ι : Type u_1} [MeasurableSpace ι] (S : System ι) (ν : Measure (ℤ → ι × ZMod 2)) : ℝ :=
+  ∫ y, Real.log |S.ratio (y 0)| ∂ν
+
+/-- The `s`-energy `Λ(𝖠, μ, s) = lim_n n⁻¹ ∫ log φ^s(A_{𝐢|_n}) dμ(𝐢)` of `eq:energy_def`, first
+line. -/
+recall BoxLike.System.energyLim {ι : Type u_1} [MeasurableSpace ι] (S : System ι) (s : ℝ) (μ : Measure (ℤ → ι)) : ℝ :=
+  limUnder atTop fun n : ℕ => (∫ x, Real.log (svf s (S.matWord (futureWord x n))) ∂μ) / n
+
+/-- `μ` is an `s`-equilibrium state, `eq:eq_state_def`: `P(𝖠, s) = h_0(μ) + Λ(𝖠, μ, s)`. -/
+recall BoxLike.System.IsEquilibriumState {ι : Type u_1} [MeasurableSpace ι] (S : System ι) [Fintype ι] (s : ℝ)
+  (μ : Measure (ℤ → ι)) : Prop := S.pressure s = entropy μ + S.energyLim s μ
+
+/-- The Gibbs bounds of `thm:irred_eq_state` for a measure `μ` on `Σ`:
+`C⁻¹ exp(-|𝐢| P(𝖠, s)) φ^s(A_𝐢) ≤ μ([𝐢]) ≤ C exp(-|𝐢| P(𝖠, s)) φ^s(A_𝐢)` for all finite words
+`𝐢 ∈ Σ_*^+`, with a constant `C ≥ 1`. -/
+recall BoxLike.System.HasGibbsBounds {ι : Type u_1} [MeasurableSpace ι] (S : System ι) [Fintype ι] (s : ℝ)
+  (μ : Measure (ℤ → ι)) : Prop := ∃ C : ℝ, 1 ≤ C ∧ ∀ n : ℕ, 0 < n → ∀ w : Fin n → ι,
+    C⁻¹ * (Real.exp (-(n * S.pressure s)) * svf s (S.matWord (List.ofFn w))) ≤
+        μ.real (cylinder w) ∧
+      μ.real (cylinder w) ≤
+        C * (Real.exp (-(n * S.pressure s)) * svf s (S.matWord (List.ofFn w)))
+
+/-- The coordinate marginals `ν_x = (proj_x)_*(π_*μ)` for `c = 0` and `ν_y = (proj_y)_*(π_*μ)`
+for `c = 1` of `sec:dimension_of_projections`. -/
+recall BoxLike.System.marginal {ι : Type u_1} [MeasurableSpace ι] (S : System ι) (c : ZMod 2) (μ : Measure (ℤ → ι)) :
+  Measure ℝ := (μ.map S.proj).map (coord c)
+
+/-! ## Conditional measures and partitions -/
+
+/-- `𝐢^- = 𝐣^-`: the two sequences agree at all negative coordinates
+(`sec:two_sided_shift_space`, tex line 728). -/
+recall BoxLike.SamePast {α : Type u_1} (x y : ℤ → α) : Prop := ∀ n : ℤ, n < 0 → x n = y n
+
+/-- A partition of a subset `D` of `Ω`, given by its atom map `ξ`, extended to a partition of
+`Ω` by the single extra atom `Ω ∖ D`. The article's partitions `ξ_i`, `ξ_1^⊥` live on the
+full-measure set `Σ'` and `\overline{ξ}_i` on `Σ_Z` (`sec:entropies`, tex lines 1777 to 1788 and
+1914 to 1920); the conditional measures of a measure on `Σ` or on `{1, …, 2N}^ℤ` giving full
+mass to `D` do not see the extra atom. -/
+recall BoxLike.atomsOn {Ω : Type u_1} (D : Set Ω) (ξ : Ω → Set Ω) (x : Ω) : Set Ω :=
+  if x ∈ D then ξ x ∩ D else Dᶜ
+
+set_option warn.classDefReducibility false in
+/-- The sigma-algebra of measurable unions of atoms of the partition. -/
+recall BoxLike.saturated {Ω : Type u_1} [m : MeasurableSpace Ω] (ξ : Ω → Set Ω) : MeasurableSpace Ω where
+  MeasurableSet' A := MeasurableSet[m] A ∧ ∀ x y, y ∈ ξ x → (x ∈ A ↔ y ∈ A)
+  measurableSet_empty := ⟨MeasurableSet.empty, fun _ _ _ => Iff.rfl⟩
+  measurableSet_compl A hA := ⟨hA.1.compl, fun x y h => not_congr (hA.2 x y h)⟩
+  measurableSet_iUnion f hf := ⟨MeasurableSet.iUnion fun n => (hf n).1, fun x y h => by
+    simp only [mem_iUnion]
+    exact exists_congr fun n => (hf n).2 x y h⟩
+
+/-- A measurable partition in the sense used by the article (`sec:conditional`, tex lines 1671
+to 1750): the atoms are the fibres of a Borel map into a standard Borel space. Every standard
+Borel space embeds measurably into `ℝ`, so the target is `ℝ`. -/
+recall BoxLike.IsMeasurablePartition {Ω : Type u_1} [MeasurableSpace Ω] (ξ : Ω → Set Ω) : Prop :=
+  ∃ f : Ω → ℝ, Measurable f ∧ ∀ x y, y ∈ ξ x ↔ f y = f x
+
+/-- The conditional measure `μ_x^ξ` of `sec:conditional`: the value at
+`x` of Mathlib's regular conditional probability kernel of `μ` given `\widehat{ξ}`. It needs a
+standard Borel space `Ω` and a finite measure `μ`. The kernel is `\widehat{ξ}`-measurable and
+satisfies `∫_B μ_x^ξ(A) dμ(x) = μ(A ∩ B)` for `B ∈ \widehat{ξ}` by construction; it is
+determined up to a `μ`-null set of points `x`. -/
+recall BoxLike.condMeas {Ω : Type u_1} [MeasurableSpace Ω] [StandardBorelSpace Ω] (μ : Measure Ω) [IsFiniteMeasure μ]
+  (ξ : Ω → Set Ω) (x : Ω) : Measure Ω := condExpKernel μ (saturated ξ) x
+
+/-- The conditional information `I_μ(𝒫 | \widehat{ξ})(x) = -log E_μ(1_{[x_0]} | \widehat{ξ})(x)`
+of the canonical partition `𝒫 = {[i]}` given `\widehat{ξ}` (`sec:conditional`, tex lines 1652 to
+1734), with the conditional expectation realised by the kernel: `-log μ_x^ξ([x_0])`. The value is
+non-negative. Where `μ_x^ξ([x_0]) = 0` Lean gives `0` and the article `+∞`; this happens on a
+`μ`-null set (Feng, Lemma 2.2). -/
+recall BoxLike.condInfo {α : Type u_1} [Fintype α] [MeasurableSpace α] [MeasurableSingletonClass α] (μ : Measure (ℤ → α))
+  [IsFiniteMeasure μ] (ξ : (ℤ → α) → Set (ℤ → α)) (x : ℤ → α) : ℝ := -Real.log ((condMeas μ ξ x).real {y | y 0 = x 0})
+
+/-- The conditional entropy `H_μ(𝒫 | \widehat{ξ}) = ∫ I_μ(𝒫 | \widehat{ξ}) dμ`
+(`sec:conditional`, tex lines 1658 to 1662). -/
+recall BoxLike.condEntropy {α : Type u_1} [Fintype α] [MeasurableSpace α] [MeasurableSingletonClass α]
+  (μ : Measure (ℤ → α)) [IsFiniteMeasure μ] (ξ : (ℤ → α) → Set (ℤ → α)) : ℝ := ∫ x, condInfo μ ξ x ∂μ
+
+/-- The pointwise entropy `E_μ(I_μ(𝒫 | \widehat{ξ}) | ℐ)` of `sec:entropies`,
+where `ℐ` is the `σ`-algebra of shift-invariant Borel sets. It is a conditional expectation and
+so is determined up to a `μ`-null set; every statement about it is an almost-everywhere
+statement. -/
+recall BoxLike.localEntropy {α : Type u_1} [Fintype α] [MeasurableSpace α] [MeasurableSingletonClass α]
+  (μ : Measure (ℤ → α)) [IsFiniteMeasure μ] (ξ : (ℤ → α) → Set (ℤ → α)) : (ℤ → α) → ℝ := μ[condInfo μ ξ | MeasurableSpace.invariants (shift 1 : (ℤ → α) → ℤ → α)]
+
+/-- The backward growth rate of `|g'|` along `𝐣 ∈ Σ_Z` exists and equals `l`:
+`lim_n n⁻¹ log |g'_{j_{-n} ⋯ j_{-1}}(0)| = l`, as in `eq:lyapunov_exponent_gsystem`. By
+`thm:matrix_products_g_derivatives`, for `𝐣 = τ(𝐢)` this is the growth rate of
+`|A_{i_{-n}} ⋯ A_{i_{-1}} e_1|` and for `𝐣 = ω(𝐢)` that of `|A_{i_{-n}} ⋯ A_{i_{-1}} e_2|`. -/
+recall BoxLike.System.HasBackRate {ι : Type u_1} (S : System ι) (y : ℤ → ι × ZMod 2) (l : ℝ) : Prop :=
+  Tendsto (fun n : ℕ => Real.log |S.gDeriv (pastWord y n)| / n) atTop (𝓝 l)
+
+/-- `Σ^τ` of `eq:sigma_tau_omega`, in the box-like form of `sec:lyapunov_exponents` (tex lines
+1614 to 1625): the slow subspace `V_𝐢^1` is the `y`-axis, that is, `e_1` grows backwards at the
+rate `λ_1(𝖠, μ)` and `e_2` at the rate `λ_2(𝖠, μ)`. -/
+recall BoxLike.System.SigmaTau {ι : Type u_1} [MeasurableSpace ι] (S : System ι) (μ : Measure (ℤ → ι)) : Set (ℤ → ι) :=
+  {x | S.HasBackRate (tau S.o x) (S.lyapunov₁ μ) ∧ S.HasBackRate (omega S.o x) (S.lyapunov₂ μ)}
+
+/-- `Σ^ω` of `eq:sigma_tau_omega`: the slow subspace `V_𝐢^1` is the `x`-axis, that is, `e_1`
+grows backwards at the rate `λ_2(𝖠, μ)` and `e_2` at the rate `λ_1(𝖠, μ)`. -/
+recall BoxLike.System.SigmaOmega {ι : Type u_1} [MeasurableSpace ι] (S : System ι) (μ : Measure (ℤ → ι)) : Set (ℤ → ι) :=
+  {x | S.HasBackRate (tau S.o x) (S.lyapunov₂ μ) ∧ S.HasBackRate (omega S.o x) (S.lyapunov₁ μ)}
+
+/-- The set `Σ'` of `sec:lyapunov_exponents` in the box-like case: "all
+sequences for which the two backward coordinate growth rates exist and equal `λ_1(𝖠, μ)` and
+`λ_2(𝖠, μ)` in either order". It depends on `μ` through the two exponents only. -/
+recall BoxLike.System.SigmaPrime {ι : Type u_1} [MeasurableSpace ι] (S : System ι) (μ : Measure (ℤ → ι)) : Set (ℤ → ι) :=
+  S.SigmaTau μ ∪ S.SigmaOmega μ
+
+/-- The slow subspace `V_𝐢^1` as a coordinate axis: `1` for the `y`-axis, on `Σ^τ`, and `0` for
+the `x`-axis, on `Σ^ω`. Outside `Σ'` the value `0` is junk; when `λ_1 = λ_2` the sets `Σ^τ` and
+`Σ^ω` coincide and the value is `1` on `Σ'`. -/
+recall BoxLike.System.slowAxis {ι : Type u_1} [MeasurableSpace ι] (S : System ι) (μ : Measure (ℤ → ι)) (x : ℤ → ι) :
+  ZMod 2 := if x ∈ S.SigmaTau μ then 1 else 0
+
+/-- The Oseledets filtration `ℝ² = V_𝐢^0 ⊋ V_𝐢^1 ⊋ V_𝐢^2 = {0}` of `sec:lyapunov_exponents` in
+the box-like case: `V_𝐢^1` is the coordinate axis `slowAxis`, the set of vectors whose other
+coordinate vanishes. Indices above `2` repeat `{0}`. -/
+recall BoxLike.System.oseledets {ι : Type u_1} [MeasurableSpace ι] (S : System ι) (μ : Measure (ℤ → ι)) (x : ℤ → ι) :
+  ℕ → Set (ℝ × ℝ)
+  | 0 => univ
+  | 1 => {v | coord (S.slowAxis μ x + 1) v = 0}
+  | _ => {0}
+
+/-- The partitions `ξ_0, ξ_1, ξ_2` of `Σ'` (`sec:entropies`, tex lines 1779 to 1784):
+`ξ_i(𝐢) = {𝐣 ∈ Σ' : 𝐣^- = 𝐢^-, π(𝐣) - π(𝐢) ∈ V_𝐢^i}`, extended to `Σ` by the atom `Σ ∖ Σ'`. -/
+recall BoxLike.System.xi {ι : Type u} [MeasurableSpace ι] (S : System ι) (μ : Measure (ℤ → ι)) (i : ℕ) :
+  (ℤ → ι) → Set (ℤ → ι) := atomsOn (S.SigmaPrime μ) fun x =>
+    {y | SamePast y x ∧ S.proj y - S.proj x ∈ S.oseledets μ x i}
+
+/-- The partition `ξ_1^⊥` of `Σ'` (`sec:entropies`, tex lines 1785 to 1788):
+`ξ_1^⊥(𝐢) = {𝐣 ∈ Σ' : 𝐣^- = 𝐢^-, π(𝐣) - π(𝐢) ⊥ V_𝐢^1}`, extended to `Σ` by the atom `Σ ∖ Σ'`.
+Orthogonality to the axis `slowAxis` is the vanishing of that coordinate. -/
+recall BoxLike.System.xiPerp {ι : Type u} [MeasurableSpace ι] (S : System ι) (μ : Measure (ℤ → ι)) : (ℤ → ι) → Set (ℤ → ι) :=
+  atomsOn (S.SigmaPrime μ) fun x =>
+    {y | SamePast y x ∧ coord (S.slowAxis μ x) (S.proj y - S.proj x) = 0}
+
+/-- The partitions `\overline{ξ}_0`, `\overline{ξ}_1` of `Σ_Z` (`sec:entropies`, tex lines 1836
+to 1920), extended to `{1, …, 2N}^ℤ` by the atom `{1, …, 2N}^ℤ ∖ Σ_Z`. They do not depend on a
+measure. Indices above `1` repeat `\overline{ξ}_1`. -/
+recall BoxLike.System.xiBar {ι : Type u} (S : System ι) : ℕ → (ℤ → ι × ZMod 2) → Set (ℤ → ι × ZMod 2)
+  | 0 => atomsOn (subshift S.o) fun y => {z | SamePast z y}
+  | _ => atomsOn (subshift S.o) fun y => {z | SamePast z y ∧ S.projBar z = S.projBar y}
+
+/-- The `i`-dimensional entropy `h_i(μ) = H_μ(𝒫 | \widehat{ξ}_i)` (`sec:entropies`, tex lines
+1891 to 1897). -/
+recall BoxLike.System.dimEntropy {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  (μ : Measure (ℤ → ι)) [IsFiniteMeasure μ] (i : ℕ) : ℝ := condEntropy μ (S.xi μ i)
+
+/-- The pointwise `i`-dimensional entropy `h_i(μ, 𝐢) = E_μ(I_μ(𝒫 | \widehat{ξ}_i) | ℐ)(𝐢)`
+(`sec:entropies`, tex lines 1805 to 1811), determined up to a `μ`-null set. -/
+recall BoxLike.System.dimEntropyAt {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  (μ : Measure (ℤ → ι)) [IsFiniteMeasure μ] (i : ℕ) : (ℤ → ι) → ℝ := localEntropy μ (S.xi μ i)
+
+/-- The entropy `\overline{h}_i(ν) = H_ν(\overline{𝒫} | \widehat{\overline{ξ}}_i)`
+(`sec:entropies`, tex lines 1848 to 1853). -/
+recall BoxLike.System.dimEntropyBar {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+  (S : System ι) (ν : Measure (ℤ → ι × ZMod 2)) [IsFiniteMeasure ν] (i : ℕ) : ℝ := condEntropy ν (S.xiBar i)
+
+/-- The pointwise entropy `\overline{h}_i(ν, 𝐢)` (`sec:entropies`, tex lines 1842 to 1847),
+determined up to a `ν`-null set. -/
+recall BoxLike.System.dimEntropyBarAt {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+  (S : System ι) (ν : Measure (ℤ → ι × ZMod 2)) [IsFiniteMeasure ν] (i : ℕ) : (ℤ → ι × ZMod 2) → ℝ := localEntropy ν (S.xiBar i)
+
+/-- The average `\overline{μ} = (μ_1 + μ_2) / 2` of `eq:average_gibbs`. The scalar lies in
+`ℝ≥0`, for which Mathlib has the instance that a multiple of a finite measure is finite. -/
+recall BoxLike.avgMeasure {Ω : Type u_1} [MeasurableSpace Ω] (μ₁ μ₂ : Measure Ω) : Measure Ω :=
+  (2⁻¹ : ℝ≥0) • (μ₁ + μ₂)
+
+instance {Ω : Type*} [MeasurableSpace Ω] (μ₁ μ₂ : Measure Ω) [IsFiniteMeasure μ₁]
+    [IsFiniteMeasure μ₂] : IsFiniteMeasure (avgMeasure μ₁ μ₂) := by
+  unfold avgMeasure
+  infer_instance
+
+/-! ## Gibbs measures and the second iterate -/
+
+/-- The potential `f_{1,s}` of `sec:gibbs_measures`, as a function of the symbol `j_0`. -/
+recall BoxLike.System.potential₁ {ι : Type u_1} (S : System ι) (s : ℝ) (p : ι × ZMod 2) : ℝ :=
+  if s < 1 then s * Real.log |S.ratio p|
+  else Real.log |S.ratio p| + (s - 1) * Real.log |S.ratio (p.1, p.2 + 1)|
+
+/-- The potential `f_{2,s}` of `sec:gibbs_measures`: `f_{2,s}(j_0) = f_{1,s}` of the symbol on
+the other axis. -/
+recall BoxLike.System.potential₂ {ι : Type u_1} (S : System ι) (s : ℝ) (p : ι × ZMod 2) : ℝ :=
+  S.potential₁ s (p.1, p.2 + 1)
+
+/-- A Gibbs measure on `Σ_Z` for the one-symbol potential `φ`, as in `sec:gibbs_measures`:
+`C⁻¹ exp(-nP + S_n φ(𝐣)) ≤ ν([𝐣|_n]) ≤ C exp(-nP + S_n φ(𝐣))` for all `𝐣 ∈ Σ_Z` and `n ≥ 1`.
+The constant `P` is the pressure `P_Z(φ)`; the bounds determine it. -/
+recall BoxLike.IsGibbs {ι : Type u_1} [MeasurableSpace ι] (o : ι → ZMod 2) (φ : ι × ZMod 2 → ℝ)
+  (ν : Measure (ℤ → ι × ZMod 2)) : Prop := ∃ P C : ℝ, 0 < C ∧ ∀ y ∈ subshift o, ∀ n : ℕ, 0 < n →
+    C⁻¹ * Real.exp (-(n * P) + ∑ k ∈ Finset.range n, φ (y k)) ≤
+        ν.real (cylinder fun k : Fin n => y k) ∧
+      ν.real (cylinder fun k : Fin n => y k) ≤
+        C * Real.exp (-(n * P) + ∑ k ∈ Finset.range n, φ (y k))
+
+/-- The Gibbs decomposition: probability, ergodicity, support, Gibbs bounds, the four
+measure identities, and the two Lyapunov exponents. -/
+recall BoxLike.System.GibbsDecomposition.mk {ι : Type u_1} [MeasurableSpace ι] {S : System ι} {s : ℝ}
+  {μ : Measure (ℤ → ι)} {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)} (prob₁ : IsProbabilityMeasure μ₁)
+  (prob₂ : IsProbabilityMeasure μ₂) (ergodic₁ : Ergodic (shift 1) μ₁) (ergodic₂ : Ergodic (shift 1) μ₂)
+  (supp₁ : μ₁ (subshift S.o)ᶜ = 0) (supp₂ : μ₂ (subshift S.o)ᶜ = 0) (gibbs₁ : IsGibbs S.o (S.potential₁ s) μ₁)
+  (gibbs₂ : IsGibbs S.o (S.potential₂ s) μ₂)
+  (eq_tau : μ = Measure.map unCode (μ₁.restrict (range (tau S.o))) + Measure.map unCode (μ₂.restrict (range (tau S.o))))
+  (eq_omega :
+    μ = Measure.map unCode (μ₁.restrict (range (omega S.o))) + Measure.map unCode (μ₂.restrict (range (omega S.o))))
+  (eq₁ : μ = Measure.map unCode (μ₁.restrict (range (tau S.o))) + Measure.map unCode (μ₁.restrict (range (omega S.o))))
+  (eq₂ : μ = Measure.map unCode (μ₂.restrict (range (tau S.o))) + Measure.map unCode (μ₂.restrict (range (omega S.o))))
+  (lyapunov₁_eq : S.lyapunov₁ μ = S.lyapBar μ₁) (lyapunov₂_eq : S.lyapunov₂ μ = S.lyapBar μ₂) :
+  S.GibbsDecomposition s μ μ₁ μ₂
+
+/-- The grouping map `β` of `sec:normalisation`. -/
+recall BoxLike.group {α : Type u_2} (x : ℤ → α) : ℤ → α × α := fun n => (x (2 * n), x (2 * n + 1))
+
+/-- The weights `p_i = |det A_i|^{s/2} / ∑_j |det A_j|^{s/2}` of tex line 2261. -/
+recall BoxLike.System.detWeight {ι : Type u_1} [Fintype ι] (S : System ι) (s : ℝ) (i : ι) : ℝ :=
+  |(S.mat i).det| ^ (s / 2) / ∑ j, |(S.mat j).det| ^ (s / 2)
+
+/-- The Bernoulli measure on `Σ = ℤ → ι` with the one-symbol distribution `p`, tex lines 2236 to
+2360: the product of copies of `p` over `ℤ`. It is used for a probability measure `p`. -/
+recall BoxLike.bernoulli {ι : Type u_1} [MeasurableSpace ι] (p : Measure ι) : Measure (ℤ → ι) :=
+  Measure.infinitePi fun _ : ℤ => p
+
+/-! ## Classification -/
+
+/-- The tuple `𝖠` is irreducible (`sec:irreducibility`, tex lines 641 to 642): no line through
+the origin is invariant under every `A_i`. A line is given by a non-zero vector `v` spanning
+it, and `A_i v = c v` says that `A_i` maps the line into itself. For `S : System ι` this is
+`System.Irreducible`. The form with lines as subspaces and `A_i V = V` is
+`tupleIrreducible_iff_lines`. -/
+recall BoxLike.TupleIrreducible {ι : Type u_1} (A : ι → Matrix (Fin 2) (Fin 2) ℝ) : Prop :=
+  ¬ ∃ v : Fin 2 → ℝ, v ≠ 0 ∧ ∀ i, ∃ c : ℝ, A i *ᵥ v = c • v
+
+/-- The tuple `𝖠` is strongly irreducible (`sec:irreducibility`, tex lines 643 to 644): no
+non-empty finite set of lines through the origin is invariant under every `A_i`. The lines are
+spanned by the non-zero vectors of a finite set `s`, and `A_i v = c w` with `w ∈ s` says that
+`A_i` maps the line of `v` into the line of `w`. The form with sets `𝒱` of lines and
+`A_i 𝒱 = 𝒱` is `tupleStronglyIrreducible_iff_lines`. -/
+recall BoxLike.TupleStronglyIrreducible {ι : Type u_1} (A : ι → Matrix (Fin 2) (Fin 2) ℝ) : Prop :=
+  ¬ ∃ s : Finset (Fin 2 → ℝ), s.Nonempty ∧ (∀ v ∈ s, v ≠ 0) ∧
+    ∀ i, ∀ v ∈ s, ∃ w ∈ s, ∃ c : ℝ, A i *ᵥ v = c • w
+
+/-- The tuple `𝖠` is proximal (`sec:irreducibility`, tex lines 644 to 646): the semigroup
+generated by `𝖠` contains a proximal matrix, that is, some product `A_{i_1} ⋯ A_{i_n}` with
+`n ≥ 1` is proximal. For `S : System ι` this is `System.Proximal`. -/
+recall BoxLike.TupleProximal {ι : Type u_1} (A : ι → Matrix (Fin 2) (Fin 2) ℝ) : Prop :=
+  ∃ w : List ι, w ≠ [] ∧ IsProximalMatrix (w.map A).prod
+
+/-- The description in item (2) of `thm:A_classification`: in some basis, the columns of `P`,
+the matrices of `𝖠` are simultaneously diagonal or anti-diagonal, with at least one
+anti-diagonal matrix. -/
+recall BoxLike.SimultaneouslyBoxLike {ι : Type u_1} (A : ι → Matrix (Fin 2) (Fin 2) ℝ) : Prop :=
+  ∃ P : Matrix (Fin 2) (Fin 2) ℝ, P.det ≠ 0 ∧
+    (∀ i, ∃ c : ZMod 2, ∃ a b : ℝ, P⁻¹ * A i * P = boxMat c a b) ∧
+    ∃ i, ∃ a b : ℝ, P⁻¹ * A i * P = boxMat 1 a b
+
+/-- The description in item (3) of `thm:A_classification`: in some basis, the columns of `P`,
+the matrices of `𝖠` are simultaneously upper triangular. -/
+recall BoxLike.SimultaneouslyTriangular {ι : Type u_1} (A : ι → Matrix (Fin 2) (Fin 2) ℝ) : Prop :=
+  ∃ P : Matrix (Fin 2) (Fin 2) ℝ, P.det ≠ 0 ∧ ∀ i, (P⁻¹ * A i * P) 1 0 = 0
+
+/-- The tuple `𝖠` is box-like with rotations (`sec:box_like_self_affine`, tex lines 570 to 579):
+every `A_i` is `D_i R_i` with `D_i = diag(d_1(i), d_2(i))` invertible, `‖D_i‖ < 1`, and `R_i` a
+linear isometry with `R_i([-1,1]²) = [-1,1]²`, and both rotating and non-rotating isometries
+occur. The isometry `R_i` is rotating when it moves the coordinate axes, `R_i e_1 ∉ ℝ e_1`, that
+is `(R_i)_{21} ≠ 0`. -/
+recall BoxLike.IsBoxLikeWithRotations {ι : Type u_1} (A : ι → Matrix (Fin 2) (Fin 2) ℝ) : Prop :=
+  ∃ (d₁ d₂ : ι → ℝ) (R : ι → Matrix (Fin 2) (Fin 2) ℝ),
+    (∀ i, d₁ i ≠ 0 ∧ d₂ i ≠ 0 ∧ ‖boxMat 0 (d₁ i) (d₂ i)‖ < 1 ∧ IsSquareIsometry (R i) ∧
+      A i = boxMat 0 (d₁ i) (d₂ i) * R i) ∧
+    (∃ i, R i 1 0 ≠ 0) ∧ ∃ i, R i 1 0 = 0
+
+/-- The distance of `φ_𝐢` and `φ_𝐣` in the affine coefficients: the `ℓ²` operator norm of the
+difference `A_𝐢 - A_𝐣` of the linear parts plus the supremum norm of the difference
+`φ_𝐢(0) - φ_𝐣(0)` of the translation parts (`sec:intro_setting`, tex lines 388 to 397, and the
+norm on affine coefficients of tex line 1460). -/
+recall BoxLike.PlanarSystem.affDist {ι : Type u_1} (P : PlanarSystem ι) (w w' : List ι) : ℝ :=
+  ‖MatrixTuple.word P.mat w - MatrixTuple.word P.mat w'‖ + ‖P.phiWord w 0 - P.phiWord w' 0‖
+
+/-- The least coefficient distance between distinct words of length `n`; the minimum of the
+empty set is `⊤`. -/
+recall BoxLike.PlanarSystem.affGap {ι : Type u_1} (P : PlanarSystem ι) (n : ℕ) : ℝ≥0∞ :=
+  ⨅ (w : List ι) (w' : List ι) (_ : w.length = n) (_ : w'.length = n) (_ : w ≠ w'),
+    ENNReal.ofReal (P.affDist w w')
+
+/-- The exponential separation condition of `sec:intro_setting`, with
+the distance in the affine coefficients: there are `c > 0` and a strictly increasing sequence
+`(n_k)` with `min_{𝐢 ≠ 𝐣 ∈ Λ^{n_k}} ‖φ_𝐢 - φ_𝐣‖ ≥ c^{n_k}` for every `k`. -/
+recall BoxLike.PlanarSystem.ExpSeparation {ι : Type u_1} (P : PlanarSystem ι) : Prop :=
+  ∃ c : ℝ, 0 < c ∧ ∃ n : ℕ → ℕ, StrictMono n ∧ ∀ k, ENNReal.ofReal (c ^ n k) ≤ P.affGap (n k)
+
+namespace Solution.Paper
+
+/-! ## 1. Introduction -/
+
+-- PAPER_ENTRY thm:hochman_rapaport
+/-! ### Theorem 1.1: Hochman–Rapaport's dimension formula for strongly irreducible planar systems
+
+`thm:hochman_rapaport`. Cited and unproved; the source
+hypothesis of no common fixed point is retained. -/
+
+/-- Theorem 1.1 (Hochman–Rapaport), as a proposition only. The source requires no common
+fixed point; this hypothesis is retained here. No proof or axiom is asserted. -/
+def paper_1_1 : Prop :=
+  ∀ {ι : Type u} [Fintype ι] [Nonempty ι] (P : PlanarSystem ι), TupleProximal P.mat →
+    TupleStronglyIrreducible P.mat → (¬ ∃ z : ℝ × ℝ, ∀ i, P.phi i z = z) → P.ExpSeparation →
+    dimH P.attractor = ENNReal.ofReal (min 2 P.dimaff)
+
+-- PAPER_ENTRY thm:rapaport
+/-! ### Theorem 1.2: Rapaport's dimension formula for diagonal systems
+
+`thm:rapaport`. -/
+
+theorem paper_1_2 {ι : Type u} [Fintype ι] [Nonempty ι] (S : System ι) (hdiag : ∀ (i : ι), S.o i = 0)
+  (hprox : S.Proximal) (hsep₁ : S.AxisExpSeparation 0) (hsep₂ : S.AxisExpSeparation 1) :
+  dimH S.attractor = ENNReal.ofReal (min 2 S.dimaff) := by
+  exact Rapaport.rapaportDiagonalDimension_holds S hdiag hprox hsep₁ hsep₂
+
+-- PAPER_ENTRY thm:fraser
+/-! ### Theorem 1.3: Fraser's packing and Minkowski dimension formula
+
+`thm:fraser`. -/
+
+/-- Theorem 1.3: the upper bound, equality under the rectangular open set condition,
+and equality of modified affinity and affinity dimensions when both projections have dimension one. -/
+theorem paper_1_3 {ι : Type u} [Fintype ι] [Nonempty ι] (S : System ι) :
+    (packingDim S.attractor = upperBoxDim S.attractor ∧
+      upperBoxDim S.attractor ≤ ENNReal.ofReal S.dimmaff) ∧
+    (S.RectangularOpenSet →
+      packingDim S.attractor = ENNReal.ofReal S.dimmaff ∧
+      lowerBoxDim S.attractor = ENNReal.ofReal S.dimmaff ∧
+      upperBoxDim S.attractor = ENNReal.ofReal S.dimmaff) ∧
+    (S.RectangularOpenSet →
+      (∀ c, upperBoxDim (System.coord c '' S.attractor) = 1) → S.dimmaff = S.dimaff) := by
+  exact ⟨S.fraserBound_holds, S.fraserROSC_holds,
+    S.fraserROSC_holds.dimmaff_eq_dimaff⟩
+
+-- PAPER_ENTRY thm:main1
+/-! ### Theorem A: Projections of the equilibrium state at the affinity dimension
+
+`thm:main1`. -/
+
+theorem paper_A {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation) (μ : Measure (ℤ → ι))
+  [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
+  (c : ZMod 2) :
+  (S.dimaff < 2 - S.lyapunov₁ μ / S.lyapunov₂ μ → IsDoubleDim (S.marginal c μ)) ∧
+    (2 - S.lyapunov₁ μ / S.lyapunov₂ μ ≤ S.dimaff → IsExactDim (S.marginal c μ) 1) := by
+  exact System.main1_dimaff_all S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) (fraserJordanJurgaDecomposition_holds)
+    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) hrot hprox hsep μ hinv heq c
+
+-- PAPER_ENTRY thm:main2
+/-! ### Theorem B: Hausdorff dimension equals affinity dimension
+
+`thm:main2`. -/
+
+/-- Theorem B, including the furthermore clause. -/
+theorem paper_B {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+    (S : System ι) [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
+    (hfree : S.NoExactOverlaps) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
+    (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
+    (hor : S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∨ S.StrongOpenSet ∨
+      S.ProjExpSeparation) :
+    dimH S.attractor = ENNReal.ofReal (min 2 S.dimaff) ∧
+      (S.ProjExpSeparation → S.dimaff ≤ 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∨ S.StrongOpenSet →
+        IsExactDim (μ.map S.proj) S.dimaff ∧ S.dimaff ≤ 2) := by
+  exact ⟨S.main2_full_of_library hrot hprox hfree μ hinv heq hor,
+    fun hsep hor' => S.main2_furthermore_of_library hrot hprox hsep μ hinv heq hor'⟩
+
+-- PAPER_ENTRY q:coincident-projection-dimensions
+/-! ### Question 1.4: Question on coincident projection dimensions without exact overlaps
+
+`q:coincident-projection-dimensions`. Open question; no answer is asserted. -/
+
+/-- Question 1.4: does such a system exist? This definition asserts no answer. -/
+def paper_1_4 : Prop :=
+  ∃ (N : ℕ) (S : System (Fin (N + 1))) (μ : Measure (ℤ → Fin (N + 1)))
+    (μ₁ μ₂ : Measure (ℤ → Fin (N + 1) × ZMod 2)) (d : ℝ),
+    IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ ∧
+    S.WithRotations ∧ S.Proximal ∧ S.NoExactOverlaps ∧
+    S.IsEquilibriumState S.dimaff μ ∧ S.dimaff < 2 - S.lyapunov₁ μ / S.lyapunov₂ μ ∧
+    S.GibbsDecomposition S.dimaff μ μ₁ μ₂ ∧
+    IsExactDim (μ₁.map S.projBar) d ∧ IsExactDim (μ₂.map S.projBar) d ∧
+    ∀ c : ZMod 2, IsExactDim (S.marginal c μ) d
+
+/-! ## 2. Box-like systems and the projective coding -/
+
+-- PAPER_ENTRY thm:box_like_sa
+/-! ### Lemma 2.1: Box-like matrices are diagonal or anti-diagonal
+
+`thm:box_like_sa`. -/
+
+theorem paper_2_1 {ι : Type u_1} {A : ι → Matrix (Fin 2) (Fin 2) ℝ} (hdet : ∀ (i : ι), (A i).det ≠ 0)
+  (hnorm : ∀ (i : ι), ‖A i‖ < 1) :
+  IsBoxLikeWithRotations A ↔
+    (∀ (i : ι), ∃ c a b, A i = boxMat c a b) ∧ (∃ i a b, A i = boxMat 0 a b) ∧ ∃ i a b, A i = boxMat 1 a b := by
+  exact box_like_sa_of_contracting hdet hnorm
+
+-- PAPER_ENTRY thm:A_classification
+/-! ### Lemma 2.2: Classification of irreducibility for planar tuples
+
+`thm:A_classification`. -/
+
+theorem paper_2_2 {ι : Type u_1} {A : ι → Matrix (Fin 2) (Fin 2) ℝ} (hdet : ∀ (i : ι), (A i).det ≠ 0)
+  (hprox : TupleProximal A) :
+  (TupleStronglyIrreducible A ∧ ¬SimultaneouslyBoxLike A ∧ ¬SimultaneouslyTriangular A ∨
+      ¬TupleStronglyIrreducible A ∧ SimultaneouslyBoxLike A ∧ ¬SimultaneouslyTriangular A ∨
+        ¬TupleStronglyIrreducible A ∧ ¬SimultaneouslyBoxLike A ∧ SimultaneouslyTriangular A) ∧
+    (SimultaneouslyBoxLike A ↔ TupleIrreducible A ∧ ¬TupleStronglyIrreducible A) ∧
+      (SimultaneouslyTriangular A ↔ ¬TupleIrreducible A) := by
+  exact tuple_classification hdet hprox
+
+-- PAPER_ENTRY thm:box_like_proximal
+/-! ### Lemma 2.3: A proximal box-like tuple has a proximal diagonal generator or passes to second iterates
+
+`thm:box_like_proximal`. -/
+
+theorem paper_2_3 {ι : Type u_1} {S : System ι} (h : S.Proximal) : S.HasProximalDiagonal ∨ S.sq.HasProximalDiagonal := by
+  exact System.Proximal.box_like_proximal h
+
+-- PAPER_ENTRY thm:tau_omega_sigma_commutative
+/-! ### Lemma 2.4: The codings τ and ω intertwine the shifts
+
+`thm:tau_omega_sigma_commutative`. -/
+
+theorem paper_2_4 {ι : Type u_1} {o : ι → ZMod 2} {x : ℤ → ι} {n : ℤ} (h : eps o x n = 0) :
+  tau o (shift n x) = shift n (tau o x) := by
+  exact tau_shift_of_eps_eq_zero h
+
+theorem paper_2_4_2 {ι : Type u_1} {o : ι → ZMod 2} {x : ℤ → ι} {n : ℤ} (h : eps o x n = 0) :
+  omega o (shift n x) = shift n (omega o x) := by
+  exact omega_shift_of_eps_eq_zero h
+
+theorem paper_2_4_3 {ι : Type u_1} {o : ι → ZMod 2} {x : ℤ → ι} {n : ℤ} (h : eps o x n = 1) :
+  tau o (shift n x) = shift n (omega o x) := by
+  exact tau_shift_of_eps_eq_one h
+
+theorem paper_2_4_4 {ι : Type u_1} {o : ι → ZMod 2} {x : ℤ → ι} {n : ℤ} (h : eps o x n = 1) :
+  omega o (shift n x) = shift n (tau o x) := by
+  exact omega_shift_of_eps_eq_one h
+
+-- PAPER_ENTRY thm:matrix_products_g_derivatives
+/-! ### Lemma 2.5: Matrix products and derivatives of the projective system
+
+`thm:matrix_products_g_derivatives`. -/
+
+theorem paper_2_5 {ι : Type u_1} (S : System ι) (x : ℤ → ι) (n : ℕ) :
+  |(S.matWord (pastWord x n)).mulVec ![1, 0] 0| + |(S.matWord (pastWord x n)).mulVec ![1, 0] 1| =
+    |S.gDeriv (pastWord (tau S.o x) n)| := by
+  exact System.abs_matWord_pastWord_e1 S x n
+
+theorem paper_2_5_2 {ι : Type u_1} (S : System ι) (x : ℤ → ι) (n : ℕ) :
+  |(S.matWord (pastWord x n)).mulVec ![0, 1] 0| + |(S.matWord (pastWord x n)).mulVec ![0, 1] 1| =
+    |S.gDeriv (pastWord (omega S.o x) n)| := by
+  exact System.abs_matWord_pastWord_e2 S x n
+
+-- PAPER_ENTRY lem:proj_gap_dominated
+/-! ### Lemma 2.6: The projective gap is dominated by the gap of the diagonal maps
+
+`lem:proj_gap_dominated`. -/
+
+theorem paper_2_6 {ι : Type u_1} (S : System ι) {J : Set ι} {a : ℝ} (hJ : ∀ i ∈ J, S.a i = a) (n : ℕ) :
+  S.gap n ≤ S.diagGap J n := by
+  exact System.gap_le_diagGap S hJ n
+
+-- PAPER_ENTRY prop:ssc_no_overlap_not_pesc
+/-! ### Proposition 2.7: Strong separation without projective exponential separation
+
+`prop:ssc_no_overlap_not_pesc`. -/
+
+theorem paper_2_7 :
+  ∃ S : System (Fin 4),
+    S.o = ![0, 0, 0, 1] ∧
+      S.Proximal ∧
+        S.Irreducible ∧
+          ¬TupleStronglyIrreducible S.mat ∧
+            (∀ (i : Fin 4) (v : Fin 2 → ℝ), v 0 = 0 ∨ v 1 = 0 → (S.mat i).mulVec v 0 = 0 ∨ (S.mat i).mulVec v 1 = 0) ∧
+              (∃ i₀, S.o i₀ = 0 ∧ |S.a i₀| ≠ |S.b i₀|) ∧
+                S.StrongSeparation ∧ S.FreeProjective ∧ ¬S.ProjExpSeparation ∧ ∑ i, |(S.mat i).det| < 1 := by
+  exact NoOverlap.prop_ssc_no_overlap_not_pesc NoOverlap.baranyKaenmakiPair_holds
+
+/-! ## 3. Lyapunov exponents, conditional measures and equilibrium states -/
+
+-- PAPER_ENTRY thm:lyapunov_exponents_via_g_system
+/-! ### Lemma 3.1: Lyapunov exponents through the projective system
+
+`thm:lyapunov_exponents_via_g_system`. -/
+
+theorem paper_3_1 {ι : Type u_1} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+  (S : System ι) (hrot : S.WithRotations) (hprox : S.Proximal) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
+  (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ) (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) :
+  Nonempty (MatrixTuple.OseledetsSet S.mat μ) ∧
+    ∀ (O : MatrixTuple.OseledetsSet S.mat μ),
+      ∀ x ∈ O.carrier,
+        (x ∈ O.sigmaTau ∨ x ∈ O.sigmaOmega) ∧
+          (x ∈ O.sigmaTau → S.HasBackRate (tau S.o x) (S.lyapunov₁ μ) ∧ S.HasBackRate (omega S.o x) (S.lyapunov₂ μ)) ∧
+            (x ∈ O.sigmaOmega → S.HasBackRate (omega S.o x) (S.lyapunov₁ μ) ∧ S.HasBackRate (tau S.o x) (S.lyapunov₂ μ)) := by
+  exact System.lyapunov_exponents_via_g_system_manuscript S hrot hprox μ hinv herg hlt
+
+-- PAPER_ENTRY thm:conditional_measures_of_a_conditional_measure
+/-! ### Lemma 3.2: Conditional measures of a conditional measure
+
+`thm:conditional_measures_of_a_conditional_measure`. -/
+
+theorem paper_3_2 {Ω : Type u_1} [MeasurableSpace Ω] [StandardBorelSpace Ω] (μ : Measure Ω)
+  [IsProbabilityMeasure μ] {ξ : Ω → Set Ω} (_hξ : IsMeasurablePartition ξ) {Ξ : Set Ω} (hΞ : MeasurableSet Ξ)
+  (_hpos : 0 < μ Ξ) : ∀ᵐ (x : Ω) ∂μ[|Ξ], 0 < (condMeas μ ξ x) Ξ ∧ condMeas μ[|Ξ] ξ x = (condMeas μ ξ x)[|Ξ] := by
+  exact condMeas_cond μ _hξ hΞ _hpos
+
+-- PAPER_ENTRY thm:double_conditional
+/-! ### Lemma 3.3: Double conditioning
+
+`thm:double_conditional`. -/
+
+theorem paper_3_3 {Ω : Type u_1} [MeasurableSpace Ω] [StandardBorelSpace Ω] (μ : Measure Ω)
+  [IsProbabilityMeasure μ] {ξ ξ' : Ω → Set Ω} (_hξ : IsMeasurablePartition ξ) (hξ' : IsMeasurablePartition ξ')
+  (hfine : ∀ (x : Ω), ξ' x ⊆ ξ x) :
+  (∀ᵐ (j : Ω) ∂μ, ∀ᵐ (i : Ω) ∂condMeas μ ξ j, condMeas (condMeas μ ξ j) ξ' i = condMeas μ ξ' i) ∧
+    ∀ (A : Set Ω),
+      MeasurableSet A →
+        ∫⁻ (j : Ω), ∫⁻ (i : Ω), (condMeas μ ξ' i) A ∂condMeas μ ξ j ∂μ = ∫⁻ (i : Ω), (condMeas μ ξ' i) A ∂μ := by
+  exact double_conditional μ _hξ hξ' hfine
+
+-- PAPER_ENTRY thm:finer_partition_dirac_mass
+/-! ### Lemma 3.4: Dirac conditional measures of a finer partition
+
+`thm:finer_partition_dirac_mass`. -/
+
+theorem paper_3_4 {Ω : Type u_1} [MeasurableSpace Ω] [StandardBorelSpace Ω] (μ : Measure Ω)
+  [IsProbabilityMeasure μ] {ξ ξ' : Ω → Set Ω} (hξ : IsMeasurablePartition ξ) (hξ' : IsMeasurablePartition ξ')
+  (hfine : ∀ (x : Ω), ξ' x ⊆ ξ x) (h : ∀ᵐ (x : Ω) ∂μ, condMeas μ ξ x = Measure.dirac x) :
+  ∀ᵐ (x : Ω) ∂μ, condMeas μ ξ' x = Measure.dirac x := by
+  exact finer_partition_dirac_mass μ hξ hξ' hfine h
+
+-- PAPER_ENTRY thm:feng_entropy_as_limit
+/-! ### Lemma 3.5: Feng's entropies as limits
+
+`thm:feng_entropy_as_limit`. -/
+
+theorem paper_3_5 :
+  (∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+      (P : PlanarSystem ι) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ],
+      Ergodic (shift 1) μ →
+        P.lyapunov₂ μ < P.lyapunov₁ μ →
+          ∀ i ≤ 2,
+            ∀ᵐ (x : ℤ → ι) ∂μ,
+              Tendsto (fun n ↦ -Real.log ((condMeas μ (P.xi μ i) x).real (BoxLike.cylinder (block n x))) / ↑n) atTop
+                (𝓝 (P.dimEntropyAt μ i x))) ∧
+    ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
+      S.WithRotations →
+        S.Proximal →
+          ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],
+            MeasurePreserving (shift 1) ν ν →
+              ν (subshift S.o)ᶜ = 0 →
+                ∀ i ≤ 1,
+                  ∀ᵐ (y : ℤ → ι × ZMod 2) ∂ν,
+                    Tendsto (fun n ↦ -Real.log ((condMeas ν (S.xiBar i) y).real (BoxLike.cylinder (block n y))) / ↑n)
+                      atTop (𝓝 (S.dimEntropyBarAt ν i y)) := by
+  exact feng_entropy_as_limit_general
+
+-- PAPER_ENTRY thm:feng_entropy_kolmogorov_sinai
+/-! ### Lemma 3.6: Feng's entropy and the Kolmogorov–Sinai entropy
+
+`thm:feng_entropy_kolmogorov_sinai`. -/
+
+theorem paper_3_6 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+  (P : PlanarSystem ι) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (herg : Ergodic (shift 1) μ)
+  (hlt : P.lyapunov₂ μ < P.lyapunov₁ μ) :
+  ∀ᵐ (x : ℤ → ι) ∂μ,
+    x ∈ P.SigmaPrime μ →
+      Tendsto (fun n ↦ -Real.log (μ.real (BoxLike.cylinder (block n x))) / ↑n) atTop (𝓝 (P.dimEntropyAt μ 0 x)) := by
+  exact PlanarSystem.feng_entropy_kolmogorov_sinai_general P μ herg hlt
+
+-- PAPER_ENTRY thm:feng_entropy_zero
+/-! ### Lemma 3.7: Vanishing of the entropy h_0 on the finest partition
+
+`thm:feng_entropy_zero`. -/
+
+theorem paper_3_7 :
+  (∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+      (P : PlanarSystem ι) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ],
+      Ergodic (shift 1) μ →
+        P.lyapunov₂ μ < P.lyapunov₁ μ →
+          ∀ i ≤ 2, ∀ᵐ (x : ℤ → ι) ∂μ, P.dimEntropyAt μ i x = 0 ↔ condMeas μ (P.xi μ i) x = Measure.dirac x) ∧
+    ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
+      S.WithRotations →
+        S.Proximal →
+          ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],
+            MeasurePreserving (shift 1) ν ν →
+              ν (subshift S.o)ᶜ = 0 →
+                ∀ i ≤ 1,
+                  ∀ᵐ (y : ℤ → ι × ZMod 2) ∂ν, S.dimEntropyBarAt ν i y = 0 ↔ condMeas ν (S.xiBar i) y = Measure.dirac y := by
+  exact feng_entropy_zero_general
+
+-- PAPER_ENTRY thm:partitions_xi1
+/-! ### Lemma 3.8: The partitions ξ_1 on the orientation sets
+
+`thm:partitions_xi1`. -/
+
+theorem paper_3_8 {ι : Type u_1} [MeasurableSpace ι] (S : System ι) (_hrot : S.WithRotations) (_hprox : S.Proximal)
+  (μ : Measure (ℤ → ι)) (_hinv : MeasurePreserving (shift 1) μ μ) (_herg : Ergodic (shift 1) μ)
+  (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) (x : ℤ → ι) :
+  (x ∈ S.SigmaTau μ →
+      (S.xi μ 1 x = unCode '' S.xiBar 1 (tau S.o x) ∧ S.xi μ 1 x ⊆ S.SigmaTau μ) ∧
+        S.xiPerp μ x = unCode '' S.xiBar 1 (omega S.o x) ∧ S.xiPerp μ x ⊆ S.SigmaTau μ) ∧
+    (x ∈ S.SigmaOmega μ →
+      (S.xi μ 1 x = unCode '' S.xiBar 1 (omega S.o x) ∧ S.xi μ 1 x ⊆ S.SigmaOmega μ) ∧
+        S.xiPerp μ x = unCode '' S.xiBar 1 (tau S.o x) ∧ S.xiPerp μ x ⊆ S.SigmaOmega μ) := by
+  exact System.partitions_xi1 S _hrot _hprox μ _hinv _herg hlt x
+
+-- PAPER_ENTRY thm:partition_tau_conj
+/-! ### Lemma 3.9: Conjugation of the partitions by τ
+
+`thm:partition_tau_conj`. -/
+
+theorem paper_3_9 {ι : Type u_1} [MeasurableSpace ι] (S : System ι) (hrot : S.WithRotations) (hprox : S.Proximal)
+  (μ : Measure (ℤ → ι)) (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ)
+  (hlt : S.lyapunov₂ μ < S.lyapunov₁ μ) (x : ℤ → ι) (n : ℕ) :
+  (x ∈ S.SigmaTau μ →
+      S.xi μ 1 x ∩ BoxLike.cylinder (block n x) =
+        unCode '' (S.xiBar 1 (tau S.o x) ∩ BoxLike.cylinder (block n (tau S.o x)))) ∧
+    (x ∈ S.SigmaOmega μ →
+      S.xi μ 1 x ∩ BoxLike.cylinder (block n x) =
+        unCode '' (S.xiBar 1 (omega S.o x) ∩ BoxLike.cylinder (block n (omega S.o x)))) := by
+  exact System.partition_tau_conj S hrot hprox μ hinv herg hlt x n
+
+-- PAPER_ENTRY thm:irred_eq_state
+/-! ### Proposition 3.10: Equilibrium states of irreducible tuples: existence, uniqueness, ergodicity, Gibbs bounds
+
+`thm:irred_eq_state`. -/
+
+theorem paper_3_10 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+  (A : ι → Matrix (Fin 2) (Fin 2) ℝ) (hA : ∀ (i : ι), (A i).det ≠ 0) (hirr : TupleIrreducible A) {s : ℝ} (hs0 : 0 < s) :
+  ∃ μ,
+    IsProbabilityMeasure μ ∧
+      MeasurePreserving (shift 1) μ μ ∧
+        MatrixTuple.IsEquilibriumState A s μ ∧
+          (∀ (ν : Measure (ℤ → ι)),
+              IsProbabilityMeasure ν → MeasurePreserving (shift 1) ν ν → MatrixTuple.IsEquilibriumState A s ν → ν = μ) ∧
+            Ergodic (shift 1) μ ∧ MatrixTuple.HasGibbsBounds A s μ := by
+  exact MatrixTuple.irred_eq_state_of_fengKaenmaki (fengKaenmakiNormEquilibrium_holds) A hA hirr hs0
+
+-- PAPER_ENTRY thm:two-block-normalisation
+/-! ### Lemma 3.11: Two-block normalisation
+
+`thm:two-block-normalisation`. -/
+
+theorem paper_3_11 {ι : Type u} (S : System ι) [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+  {s : ℝ} (hrot : S.WithRotations) (hprox : S.Proximal) (hs0 : 0 < s) (μ : Measure (ℤ → ι))
+  [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState s μ) :
+  S.sq.attractor = S.attractor ∧
+    S.sq.WithRotations ∧
+      S.sq.HasProximalDiagonal ∧
+        (S.StrongSeparation → S.sq.StrongSeparation) ∧
+          (S.StrongOpenSet → S.sq.StrongOpenSet) ∧
+            (S.ProjExpSeparation → S.sq.ProjExpSeparation) ∧
+              (IsProbabilityMeasure (Measure.map group μ) ∧
+                  MeasurePreserving (shift 1) (Measure.map group μ) (Measure.map group μ) ∧
+                    S.sq.IsEquilibriumState s (Measure.map group μ) ∧
+                      (∀ (ν : Measure (ℤ → ι × ι)),
+                          IsProbabilityMeasure ν →
+                            MeasurePreserving (shift 1) ν ν → S.sq.IsEquilibriumState s ν → ν = Measure.map group μ) ∧
+                        Ergodic (shift 1) (Measure.map group μ)) ∧
+                (∀ (t : ℝ), 0 ≤ t → S.sq.pressure t = 2 * S.pressure t) ∧
+                  entropy (Measure.map group μ) = 2 * entropy μ ∧
+                    S.sq.lyapunov₁ (Measure.map group μ) = 2 * S.lyapunov₁ μ ∧
+                      S.sq.lyapunov₂ (Measure.map group μ) = 2 * S.lyapunov₂ μ ∧
+                        Measure.map S.sq.proj (Measure.map group μ) = Measure.map S.proj μ := by
+  exact System.two_block_normalisation S hrot hprox hs0 μ hinv heq
+
+theorem paper_3_11_2 {ι : Type u} (S : System ι) [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+  [Nonempty ι] (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ) :
+  S.sq.dimaff = S.dimaff ∧
+    lyapDim (entropy (Measure.map group μ)) (S.sq.lyapunov₁ (Measure.map group μ))
+          (S.sq.lyapunov₂ (Measure.map group μ)) =
+        lyapDim (entropy μ) (S.lyapunov₁ μ) (S.lyapunov₂ μ) ∧
+      (∀ (c : ZMod 2), S.sq.marginal c (Measure.map group μ) = S.marginal c μ) ∧
+        (IsBernoulli μ → IsBernoulli (Measure.map group μ)) := by
+  exact System.two_block_normalisation_consequences S μ hinv
+
+-- PAPER_ENTRY thm:bernoulli_equilibrium
+/-! ### Lemma 3.12: Equilibrium states for s ≥ 2 are Bernoulli
+
+`thm:bernoulli_equilibrium`. -/
+
+theorem paper_3_12 {ι : Type u_1} [Fintype ι] (S : System ι) {s : ℝ} (hs : 2 ≤ s) :
+  S.pressure s = Real.log (∑ i, |(S.mat i).det| ^ (s / 2)) := by
+  exact System.pressure_of_two_le S hs
+
+theorem paper_3_12_2 {ι : Type u_1} [Fintype ι] (S : System ι) {s : ℝ} [MeasurableSpace ι]
+  [MeasurableSingletonClass ι] [Nonempty ι] (hs : 2 ≤ s) :
+  ∃! μ, IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ ∧ S.IsEquilibriumState s μ := by
+  exact System.existsUnique_isEquilibriumState_of_two_le S hs
+
+theorem paper_3_12_3 {ι : Type u_1} [Fintype ι] {S : System ι} {s : ℝ} [MeasurableSpace ι]
+  [MeasurableSingletonClass ι] {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ] (heq : S.IsEquilibriumState s μ)
+  (hinv : MeasurePreserving (shift 1) μ μ) (hs : 2 ≤ s) : μ = bernoulli (S.detWeightMeasure s) := by
+  exact System.IsEquilibriumState.eq_bernoulli heq hinv hs
+
+-- PAPER_ENTRY thm:sigma_tau_omega_positive_eq_measure
+/-! ### Lemma 3.13: Positive measure of the orientation sets
+
+`thm:sigma_tau_omega_positive_eq_measure`. -/
+
+theorem paper_3_13 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  {s : ℝ} (hrot : S.WithRotations) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
+  (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) :
+  0 < μ (S.SigmaTau μ) ∧ 0 < μ (S.SigmaOmega μ) := by
+  exact System.sigma_tau_omega_positive_eq_measure S (equilibriumGibbs) hrot hs0 hs2 μ hinv herg heq
+
+-- PAPER_ENTRY thm:eq_state_is_sum
+/-! ### Proposition 3.14: Decomposition of the equilibrium state into two Gibbs measures
+
+`thm:eq_state_is_sum`. -/
+
+theorem paper_3_14 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+    (S : System ι) (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
+    {s : ℝ} (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
+    (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState s μ) :
+    ∃ μ₁ μ₂, S.GibbsDecomposition s μ μ₁ μ₂ := by
+  exact fraserJordanJurgaDecomposition_holds S hrot hdiag hs0 hs2 μ hinv
+    (equilibriumGibbs S hrot hs0 hs2 μ hinv heq)
+
+theorem paper_3_14_2 {ι : Type u_1} (S : System ι) [Fintype ι] (h0 : ∃ i, S.o i = 0) {s : ℝ} (hs0 : 0 < s)
+  (hs2 : s < 2) : S.pressure s = pressureZ S.o (S.potential₁ s) := by
+  exact System.pressure_eq_pressureZ₁ S h0 hs0 hs2
+
+theorem paper_3_14_3 {ι : Type u_1} (S : System ι) [Fintype ι] (h0 : ∃ i, S.o i = 0) {s : ℝ} (hs0 : 0 < s)
+  (hs2 : s < 2) : S.pressure s = pressureZ S.o (S.potential₂ s) := by
+  exact System.pressure_eq_pressureZ₂ S h0 hs0 hs2
+
+theorem paper_3_14_4 {ι : Type u_1} [MeasurableSpace ι] {S : System ι} {s : ℝ} {μ : Measure (ℤ → ι)}
+  {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)} (h : S.GibbsDecomposition s μ μ₁ μ₂) :
+  S.lyapunov₁ μ = ∫ (y : ℤ → ι × ZMod 2), S.potential₁ 1 (y 0) ∂μ₁ := by
+  exact System.GibbsDecomposition.lyapunov₁_eq_integral h
+
+theorem paper_3_14_5 {ι : Type u_1} [MeasurableSpace ι] {S : System ι} {s : ℝ} {μ : Measure (ℤ → ι)}
+  {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)} (h : S.GibbsDecomposition s μ μ₁ μ₂) :
+  S.lyapunov₂ μ = ∫ (y : ℤ → ι × ZMod 2), S.potential₁ 1 (y 0) ∂μ₂ := by
+  exact System.GibbsDecomposition.lyapunov₂_eq_integral h
+
+theorem paper_3_14_6 {ι : Type u_1} [MeasurableSpace ι] {S : System ι} {s : ℝ} {μ : Measure (ℤ → ι)}
+  {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)} [Fintype ι] [MeasurableSingletonClass ι]
+  (h : S.GibbsDecomposition s μ μ₁ μ₂) : S.lyapunov₁ μ = ∫ (y : ℤ → ι × ZMod 2), S.potential₂ 1 (y 0) ∂μ₂ := by
+  exact System.GibbsDecomposition.lyapunov₁_eq_integral_potential₂ h
+
+theorem paper_3_14_7 {ι : Type u_1} [MeasurableSpace ι] {S : System ι} {s : ℝ} {μ : Measure (ℤ → ι)}
+  {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)} [Fintype ι] [MeasurableSingletonClass ι]
+  (h : S.GibbsDecomposition s μ μ₁ μ₂) : S.lyapunov₂ μ = ∫ (y : ℤ → ι × ZMod 2), S.potential₂ 1 (y 0) ∂μ₁ := by
+  exact System.GibbsDecomposition.lyapunov₂_eq_integral_potential₂ h
+
+theorem paper_3_14_8 {ι : Type u_1} [MeasurableSpace ι] {S : System ι} {s : ℝ} {μ : Measure (ℤ → ι)}
+  {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)} [Fintype ι] [MeasurableSingletonClass ι]
+  (h : S.GibbsDecomposition s μ μ₁ μ₂) : μ₂ = Measure.map flipAxis μ₁ := by
+  exact System.GibbsDecomposition.map_flip h
+
+/-! ## 4. Dimensions of the projections and the equilibrium state -/
+
+-- PAPER_ENTRY thm:exact-dimensional-mixture
+/-! ### Lemma 4.1: Mixtures of exact-dimensional measures
+
+`thm:exact-dimensional-mixture`. -/
+
+theorem paper_4_1 {X : Type u_1} [MetricSpace X] [MeasurableSpace X] [BorelSpace X]
+  [SecondCountableTopology X] [HasBesicovitchCovering X] {ν₁ ν₂ : Measure X} {d₁ d₂ : ℝ}
+  [IsFiniteMeasure ν₁] [IsFiniteMeasure ν₂] (h₁ : IsExactDim ν₁ d₁) (h₂ : IsExactDim ν₂ d₂) (hne₁ : ν₁ ≠ 0)
+  (hne₂ : ν₂ ≠ 0) :
+  (∀ᵐ (x : X) ∂ν₁, HasLocalDim (ν₁ + ν₂) x d₁) ∧
+    (∀ᵐ (x : X) ∂ν₂, HasLocalDim (ν₁ + ν₂) x d₂) ∧
+      0 < (ν₁ + ν₂) {x | HasLocalDim (ν₁ + ν₂) x d₁} ∧
+        0 < (ν₁ + ν₂) {x | HasLocalDim (ν₁ + ν₂) x d₂} ∧
+          (d₁ ≠ d₂ → IsDoubleDim (ν₁ + ν₂)) ∧ (d₁ = d₂ → IsExactDim (ν₁ + ν₂) d₁) := by
+  exact IsExactDim.mixture h₁ h₂ hne₁ hne₂
+
+-- PAPER_ENTRY thm:feng1
+/-! ### Theorem 4.2: Feng's Ledrappier–Young formula
+
+`thm:feng1`. -/
+
+theorem paper_4_2 :
+  (∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+      (P : PlanarSystem ι) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ],
+      MeasurePreserving (shift 1) μ μ →
+        Ergodic (shift 1) μ →
+          P.lyapunov₂ μ < P.lyapunov₁ μ →
+            IsExactDim (Measure.map P.proj μ)
+              ((P.dimEntropy μ 1 - P.dimEntropy μ 0) / P.lyapunov₁ μ +
+                (P.dimEntropy μ 2 - P.dimEntropy μ 1) / P.lyapunov₂ μ)) ∧
+    ∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι),
+      S.WithRotations →
+        S.Proximal →
+          ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],
+            MeasurePreserving (shift 1) ν ν →
+              Ergodic (shift 1) ν →
+                ν (subshift S.o)ᶜ = 0 →
+                  IsExactDim (Measure.map S.projBar ν) ((S.dimEntropyBar ν 1 - S.dimEntropyBar ν 0) / S.lyapBar ν) := by
+  exact planar_feng1 planarFengLedrappierYoung_holds fengLedrappierYoungBar_holds
+
+-- PAPER_ENTRY thm:entropy_eq_gibbs
+/-! ### Proposition 4.3: Entropy of the equilibrium state and of the Gibbs measures
+
+`thm:entropy_eq_gibbs`. -/
+
+theorem paper_4_3 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] {S : System ι}
+  {s : ℝ} {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ] {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)}
+  [IsProbabilityMeasure μ₁] [IsProbabilityMeasure μ₂] (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
+  S.dimEntropy μ 0 = S.dimEntropyBar μ₁ 0 ∧ S.dimEntropy μ 0 = S.dimEntropyBar μ₂ 0 := by
+  exact System.GibbsDecomposition.dimEntropy_zero_eq_gibbs hdec
+
+-- PAPER_ENTRY thm:eq_state_proj_dim
+/-! ### Theorem 4.4: Dimensions of the projections of the equilibrium state
+
+`thm:eq_state_proj_dim`. -/
+
+theorem paper_4_4 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  {s : ℝ} (hrot : S.WithRotations) (hprox : S.Proximal) (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (μ : Measure (ℤ → ι))
+  [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState s μ)
+  (c : ZMod 2) :
+  HasLocalDimPair (S.marginal c μ) (min 1 (-entropy μ / S.lyapunov₁ μ)) (min 1 (-entropy μ / S.lyapunov₂ μ)) ∧
+    upperPackingDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₁ μ) ∧
+      lowerHausdorffDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₂ μ) ∧
+        0 < (S.marginal c μ) {x | HasLocalDim (S.marginal c μ) x (min 1 (-entropy μ / S.lyapunov₁ μ))} ∧
+          0 < (S.marginal c μ) {x | HasLocalDim (S.marginal c μ) x (min 1 (-entropy μ / S.lyapunov₂ μ))} := by
+  exact System.eq_state_proj_dim_all S (morrisShmerkinLyapunov_holds) (equilibriumGibbs)
+    (fraserJordanJurgaDecomposition_holds) (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) hrot hprox
+    hsep hs0 μ hinv heq c
+
+-- PAPER_ENTRY ex:projection_double_dimensional
+/-! ### Example 4.5: Example with double-dimensional projections
+
+`ex:projection_double_dimensional`. -/
+
+theorem paper_4_5 {s₁ s₂ : ℝ} (hs₂ : 0 < s₂) (h₂₁ : s₂ < s₁) (hs₁ : s₁ ≤ 1) :
+  ∃ p,
+    ∃ (hp : 1 / 2 < p ∧ p < 1),
+      PrescribedExample.ratio p = s₂ / s₁ ∧
+        (∀ q ∈ Ioo (1 / 2) 1, PrescribedExample.ratio q = s₂ / s₁ → q = p) ∧
+          ∃ t,
+            have S :=
+              PrescribedExample.sys (PrescribedExample.paramsOf s₁ p (LT.lt.trans hs₂ h₂₁) hs₁ hp.left hp.right) t;
+            S.WithRotations ∧
+              S.Proximal ∧
+                S.StrongSeparation ∧
+                  S.ProjExpSeparation ∧
+                    S.dimaff = s₁ ∧
+                      (∃! μ, IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ ∧ S.IsEquilibriumState s₁ μ) ∧
+                        ∀ (μ : Measure (ℤ → Fin 4)) [IsProbabilityMeasure μ],
+                          MeasurePreserving (shift 1) μ μ →
+                            S.IsEquilibriumState s₁ μ →
+                              entropy μ = Real.log 2 + PrescribedExample.H p ∧
+                                S.lyapunov₁ μ =
+                                    p * Real.log (PrescribedExample.aOf s₁ p) +
+                                      (1 - p) * Real.log (PrescribedExample.bOf s₁ p) ∧
+                                  S.lyapunov₁ μ = -(Real.log 2 + PrescribedExample.H p) / s₁ ∧
+                                    S.lyapunov₂ μ =
+                                        p * Real.log (PrescribedExample.bOf s₁ p) +
+                                          (1 - p) * Real.log (PrescribedExample.aOf s₁ p) ∧
+                                      S.lyapunov₂ μ = -(Real.log 2 + PrescribedExample.J p) / s₁ ∧
+                                        -entropy μ / S.lyapunov₁ μ = s₁ ∧
+                                          -entropy μ / S.lyapunov₂ μ = s₂ ∧
+                                            ∀ (c : ZMod 2),
+                                              IsDoubleDim (S.marginal c μ) ∧
+                                                HasLocalDimPair (S.marginal c μ) s₁ s₂ ∧
+                                                  upperPackingDim (S.marginal c μ) = s₁ ∧
+                                                    lowerHausdorffDim (S.marginal c μ) = s₂ ∧
+                                                      0 < (S.marginal c μ) {x | HasLocalDim (S.marginal c μ) x s₁} ∧
+                                                        0 < (S.marginal c μ) {x | HasLocalDim (S.marginal c μ) x s₂} := by
+  exact PrescribedExample.projection_double_dimensional (morrisShmerkinLyapunov_holds) (equilibriumGibbs)
+    (fraserJordanJurgaDecomposition_holds) (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) hs₂ h₂₁ hs₁
+
+-- PAPER_ENTRY thm:gibbs_tau_omega_positive
+/-! ### Lemma 4.6: Positivity of the Gibbs measures on the orientation sets
+
+`thm:gibbs_tau_omega_positive`. -/
+
+theorem paper_4_6 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  {s : ℝ} {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)} (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s)
+  (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+  (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
+  (μ₁ (tau S.o '' S.SigmaTau μ) + μ₁ (omega S.o '' S.SigmaOmega μ) = 1 ∧
+      μ₂ (omega S.o '' S.SigmaTau μ) + μ₂ (tau S.o '' S.SigmaOmega μ) = 1) ∧
+    (μ₂ (tau S.o '' S.SigmaTau μ) = 0 ∧
+        μ₂ (omega S.o '' S.SigmaOmega μ) = 0 ∧
+          μ₁ (omega S.o '' S.SigmaTau μ) = 0 ∧ μ₁ (tau S.o '' S.SigmaOmega μ) = 0) ∧
+      0 < μ₁ (tau S.o '' S.SigmaTau μ) ∧
+        0 < μ₁ (omega S.o '' S.SigmaOmega μ) ∧ 0 < μ₂ (omega S.o '' S.SigmaTau μ) ∧ 0 < μ₂ (tau S.o '' S.SigmaOmega μ) := by
+  exact System.gibbs_tau_omega_positive S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) hrot hdiag hs0 hs2 μ hinv herg heq
+    hdec
+
+-- PAPER_ENTRY thm:conditional_two_ways
+/-! ### Lemma 4.7: Conditional measures computed two ways
+
+`thm:conditional_two_ways`. -/
+
+theorem paper_4_7 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  {s : ℝ} {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)} (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s)
+  (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+  (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) [IsProbabilityMeasure μ₁]
+  [IsProbabilityMeasure μ₂] (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
+  ∀ᵐ (y : ℤ → ι × ZMod 2) ∂avgMeasure μ₁ μ₂,
+    (y ∈ tau S.o '' S.SigmaTau μ →
+        condMeas (avgMeasure μ₁ μ₂) (S.xiBar 1) y = condMeas μ₁ (S.xiBar 1) y ∧
+          condMeas μ₁ (S.xiBar 1) y = Measure.map (tau S.o) (condMeas μ (S.xi μ 1) (unCode y))) ∧
+      (y ∈ omega S.o '' S.SigmaTau μ →
+          condMeas (avgMeasure μ₁ μ₂) (S.xiBar 1) y = condMeas μ₂ (S.xiBar 1) y ∧
+            condMeas μ₂ (S.xiBar 1) y = Measure.map (omega S.o) (condMeas μ (S.xiPerp μ) (unCode y))) ∧
+        (y ∈ omega S.o '' S.SigmaOmega μ →
+            condMeas (avgMeasure μ₁ μ₂) (S.xiBar 1) y = condMeas μ₁ (S.xiBar 1) y ∧
+              condMeas μ₁ (S.xiBar 1) y = Measure.map (omega S.o) (condMeas μ (S.xi μ 1) (unCode y))) ∧
+          (y ∈ tau S.o '' S.SigmaOmega μ →
+            condMeas (avgMeasure μ₁ μ₂) (S.xiBar 1) y = condMeas μ₂ (S.xiBar 1) y ∧
+              condMeas μ₂ (S.xiBar 1) y = Measure.map (tau S.o) (condMeas μ (S.xiPerp μ) (unCode y))) := by
+  exact System.conditional_two_ways_normalised S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) hrot hdiag hs0 hs2 μ hinv
+    herg heq hdec
+
+-- PAPER_ENTRY thm:overline_h1_zero
+/-! ### Lemma 4.8: Vanishing of the projective entropy h̄_1 below the threshold
+
+`thm:overline_h1_zero`. -/
+
+theorem paper_4_8 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  {s : ℝ} {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)} (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
+  (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
+  (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ)
+  (hent : entropy μ ≤ -S.lyapunov₁ μ) [IsProbabilityMeasure μ₁] [IsProbabilityMeasure μ₂]
+  (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
+  ∀ᵐ (y : ℤ → ι × ZMod 2) ∂avgMeasure μ₁ μ₂, S.dimEntropyBarAt (avgMeasure μ₁ μ₂) 1 y = 0 := by
+  exact System.overline_h1_zero S (morrisShmerkinLyapunov_holds) (equilibriumGibbs)
+    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) (fengInfoSumBar_holds)
+    (fengLedrappierYoungBar_holds) hrot hdiag hsep hs0 hs2 μ hinv herg heq hent hdec
+
+-- PAPER_ENTRY thm:overline_h1_zero_large
+/-! ### Lemma 4.9: Vanishing of h̄_1 and Dirac conditional measures in the large-entropy case
+
+`thm:overline_h1_zero_large`. -/
+
+theorem paper_4_9 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  {s : ℝ} {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)} (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal)
+  (hsep : S.ProjExpSeparation) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
+  (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ)
+  (hent₂ : entropy μ ≤ -S.lyapunov₂ μ) [IsProbabilityMeasure μ₁] [IsProbabilityMeasure μ₂]
+  (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
+  S.dimEntropyBar μ₂ 1 = 0 ∧
+    ∀ᵐ (y : ℤ → ι × ZMod 2) ∂avgMeasure μ₁ μ₂,
+      y ∈ S.slowPart μ → condMeas (avgMeasure μ₁ μ₂) (S.xiBar 1) y = Measure.dirac y := by
+  exact System.overline_h1_zero_large S (morrisShmerkinLyapunov_holds) (equilibriumGibbs)
+    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) (fengInfoSumBar_holds)
+    (fengLedrappierYoungBar_holds) hrot hdiag hsep hs0 hs2 μ hinv herg heq hent₂ hdec
+
+-- PAPER_ENTRY thm:overline_h1_large
+/-! ### Lemma 4.10: The projective entropy h̄_1 of the Gibbs measures equals h_1
+
+`thm:overline_h1_large`. -/
+
+theorem paper_4_10 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  {s : ℝ} {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)} (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hs0 : 0 < s)
+  (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+  (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) [IsProbabilityMeasure μ₁]
+  [IsProbabilityMeasure μ₂] (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
+  S.dimEntropyBar μ₁ 1 = S.dimEntropy μ 1 ∧
+    ∀ᵐ (y : ℤ → ι × ZMod 2) ∂avgMeasure μ₁ μ₂,
+      y ∈ S.fastPart μ → S.dimEntropyBarAt (avgMeasure μ₁ μ₂) 1 y = S.dimEntropyBar μ₁ 1 := by
+  exact System.overline_h1_large S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) (fengInfoSum_holds)
+    (fengInfoSumBar_holds) hrot hdiag hs0 hs2 μ hinv herg heq hdec
+
+-- PAPER_ENTRY thm:eq_state_h1_zero
+/-! ### Proposition 4.11: h_1(μ) = 0 below the threshold
+
+`thm:eq_state_h1_zero`. -/
+
+theorem paper_4_11 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  {s : ℝ} (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hsep : S.ProjExpSeparation) (hs0 : 0 < s)
+  (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+  (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) (hent : entropy μ ≤ -S.lyapunov₁ μ) :
+  S.dimEntropy μ 1 = 0 ∧ ∀ᵐ (x : ℤ → ι) ∂μ, condMeas μ (S.xi μ 1) x = Measure.dirac x := by
+  exact System.eq_state_h1_zero S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) (fraserJordanJurgaDecomposition_holds)
+    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) (fengInfoSum_holds) (fengInfoSumBar_holds)
+    (fengLedrappierYoungBar_holds) hrot hdiag hsep hs0 hs2 μ hinv herg heq hent
+
+-- PAPER_ENTRY thm:eq_state_h1_large
+/-! ### Proposition 4.12: h_1(μ) = h_0(μ) + λ_1 above the threshold
+
+`thm:eq_state_h1_large`. -/
+
+theorem paper_4_12 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  {s : ℝ} (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hsep : S.ProjExpSeparation) (hs0 : 0 < s)
+  (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+  (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) (hent : -S.lyapunov₁ μ ≤ entropy μ) :
+  S.dimEntropy μ 1 = entropy μ + S.lyapunov₁ μ := by
+  exact System.eq_state_h1_large S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) (fraserJordanJurgaDecomposition_holds)
+    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) (fengInfoSum_holds) (fengInfoSumBar_holds)
+    (fengLedrappierYoungBar_holds) hrot hdiag hsep hs0 hs2 μ hinv herg heq hent
+
+-- PAPER_ENTRY thm:eq_state_h2_zero
+/-! ### Proposition 4.13: h_2(μ) = 0 below the threshold
+
+`thm:eq_state_h2_zero`. -/
+
+theorem paper_4_13 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  {s : ℝ} (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hsep : S.ProjExpSeparation) (hs0 : 0 < s)
+  (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+  (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) (hent : entropy μ ≤ -S.lyapunov₁ μ) :
+  S.dimEntropy μ 2 = 0 := by
+  exact System.eq_state_h2_zero S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) (fraserJordanJurgaDecomposition_holds)
+    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) (fengInfoSum_holds) (fengInfoSumBar_holds)
+    (fengLedrappierYoungBar_holds) hrot hdiag hsep hs0 hs2 μ hinv herg heq hent
+
+-- PAPER_ENTRY thm:orto_partition_dirac
+/-! ### Proposition 4.14: Dirac conditional measures on the orthogonal partition
+
+`thm:orto_partition_dirac`. -/
+
+theorem paper_4_14 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  {s : ℝ} (hrot : S.WithRotations) (hdiag : S.HasProximalDiagonal) (hsep : S.ProjExpSeparation) (hs0 : 0 < s)
+  (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+  (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) (hent₂ : entropy μ ≤ -S.lyapunov₂ μ) :
+  S.dimEntropy μ 2 = 0 := by
+  exact System.orto_partition_dirac S (morrisShmerkinLyapunov_holds) (equilibriumGibbs)
+    (fraserJordanJurgaDecomposition_holds) (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds)
+    (fengInfoSum_holds) (fengInfoSumBar_holds) (fengLedrappierYoungBar_holds) hrot hdiag hsep hs0 hs2 μ hinv herg heq
+    hent₂
+
+-- PAPER_ENTRY thm:SOSC_h2_zero
+/-! ### Proposition 4.15: h_2(μ) = 0 under the strong open set condition
+
+`thm:SOSC_h2_zero`. -/
+
+theorem paper_4_15 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  {s : ℝ} (hrot : S.WithRotations) (hprox : S.Proximal) (hsosc : S.StrongOpenSet) (hs0 : 0 < s) (hs2 : s < 2)
+  (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+  (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) : S.dimEntropy μ 2 = 0 := by
+  exact System.SOSC_h2_zero S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) (fengInfoSum_holds) hrot hprox hsosc hs0 hs2
+    μ hinv herg heq
+
+-- PAPER_ENTRY thm:main_extended
+/-! ### Theorem 4.16: Dimension of the projected equilibrium state
+
+`thm:main_extended`. -/
+
+/-- Theorem 4.16, at the zero of the pressure, for every invariant equilibrium state. -/
+theorem paper_4_16 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+    (S : System ι) [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal)
+    (hsep : S.dimaff < 2 → S.ProjExpSeparation)
+    (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
+    (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
+    (hor : entropy μ ≤ -S.lyapunov₂ μ ∨ S.StrongOpenSet) :
+    IsExactDim (μ.map S.proj) S.dimaff ∧ S.dimaff ≤ 2 := by
+  have := S.nontrivial_of_withRotations hrot
+  exact S.main_extended morrisShmerkinLyapunov_holds equilibriumGibbs
+    fraserJordanJurgaDecomposition_holds
+    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds)
+    fengInfoSum_holds fengInfoSumBar_holds fengLedrappierYoung_holds
+    fengLedrappierYoungBar_holds hrot hprox hsep S.dimaff_pos S.pressure_dimaff μ hinv heq hor
+
+/-- The case `s ≥ 2` under the strong open set condition. -/
+theorem paper_4_16_ge_two {ι : Type u} (S : System ι) {s : ℝ} [Fintype ι] [MeasurableSpace ι]
+  [MeasurableSingletonClass ι] (hsosc : S.StrongOpenSet) (hs : 2 ≤ s) (hP : S.pressure s = 0) (μ : Measure (ℤ → ι))
+  [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState s μ) :
+  IsExactDim (Measure.map S.proj μ) 2 := by
+  exact System.main_extended_ge_two S hsosc hs hP μ hinv heq
+
+-- PAPER_ENTRY rem:threshold_bound
+/-! ### Remark 4.17: Lower bound min{dimaff(X), 2 - λ₁/λ₂} without the strong open set condition or projective exponential separation
+
+`rem:threshold_bound`. -/
+
+theorem paper_4_17 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι] (S : System ι)
+  [Nonempty ι] (hrot : S.WithRotations) (hprox : S.Proximal) (hfree : S.NoExactOverlaps) (h9 : S.dimaff < 2)
+  (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
+  (heq : S.IsEquilibriumState S.dimaff μ) :
+  ENNReal.ofReal (min S.dimaff (2 - S.lyapunov₁ μ / S.lyapunov₂ μ)) ≤ dimH S.attractor := by
+  exact System.threshold_bound S shannonMcMillanBreiman (morrisShmerkinLyapunov_holds) (equilibriumGibbs)
+    (fraserJordanJurgaDecomposition_holds) (fengLedrappierYoung_holds) (kittleKoglerDimension_holds) hrot hprox hfree
+    h9 μ hinv heq
+
+/-! ## Two unnumbered dimension consequences -/
+
+theorem paper_rossi {ι : Type u_1} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
+  (S : System ι) {μ : Measure (ℤ → ι)} [IsProbabilityMeasure μ] (herg : Ergodic (shift 1) μ) :
+  ∀ᵐ (y : ℝ × ℝ) ∂Measure.map S.proj μ,
+    lowerLocalDim (Measure.map S.proj μ) y ≤ min 2 (lyapDim (entropy μ) (S.lyapunov₁ μ) (S.lyapunov₂ μ)) := by
+  exact System.ae_lowerLocalDim_map_proj_le S herg
+
+theorem modified_affinity_eq_of_hausdorff_eq {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι)
+    (hH : dimH S.attractor = ENNReal.ofReal S.dimaff) : S.dimmaff = S.dimaff :=
+  S.dimmaff_eq_dimaff S.fraserBound_holds hH
+
+end Solution.Paper
+
+end Manuscript
+
+/-! ## Proofs in the independent challenge vocabulary
+
+The statements below use the definitions of `Challenge.lean`, repeated in
+`Solution/Definitions.lean`. `Solution.Transport` identifies that vocabulary with the
+library vocabulary displayed above. The comparator checks Theorems A, B and 4.16 here.
 -/
 
 namespace Challenge
@@ -161,705 +1566,3 @@ theorem audit_dimH_of_two_le {ι : Type u} [Fintype ι] [MeasurableSpace ι]
   exact (toLib S).dimH_attractor_of_two_le hsosc h2
 
 end Challenge
-
-
-
-/-! ## Numbered manuscript entries
-
-One entry per numbered statement, with the declarations that cover it. An alias keeps the
-hypotheses of its declaration. No entry takes a literature hypothesis; `docs/correspondence.md`
-records the inputs and the proof deviations.
--/
-
-namespace Solution.Paper
-
-universe u
-
--- PAPER_ENTRY thm:hochman_rapaport
-/-! 1.1 (`thm:hochman_rapaport`): cited.
-Hochman–Rapaport's theorem as the `Prop`-valued statement `HochmanRapaportDimension`, with the
-distance of the affine coefficients in place of a left-invariant Riemannian metric. No result of
-the library uses it, and it is not proved; at one letter its hypotheses cannot all hold. The
-statement keeps the hypothesis of the source that the maps have no common fixed point, which the
-printed theorem omits (see `docs/correspondence.md`).
--/
-/-- Theorem 1.1 as a proposition; nothing is asserted. -/
-abbrev paper_1_1_1 : Prop := BoxLike.HochmanRapaportDimension.{u}
-noncomputable abbrev paper_1_1_2 := @BoxLike.PlanarSystem.ExpSeparation
-noncomputable abbrev paper_1_1_3 := @BoxLike.HochmanRapaportDimension.degenerate_subsingleton
-
--- PAPER_ENTRY thm:rapaport
-/-! 1.2 (`thm:rapaport`): formalized.
-Rapaport's Theorem 1.3 in the plane, the statement `RapaportDiagonalDimension`, proved as
-`Rapaport.rapaportDiagonalDimension_holds` along Rapaport's Sections 2 to 7 (`BoxLike/Rapaport/`):
-the homogeneous case with two full-dimensional projections through the
-non-conformal entropy increase argument (`Rapaport.homogeneousCore`), the other homogeneous cases
-through Feng's Ledrappier–Young formula and Kittle–Kogler, and the general diagonal case through
-the subsystems of the iterates grouped by linear part (`Rapaport.Diagonal`). Deviations: see
-`docs/correspondence.md`.
--/
-noncomputable abbrev paper_1_2_1 := @BoxLike.Rapaport.rapaportDiagonalDimension_holds
-/-- Theorem 1.2 as a proposition. -/
-abbrev paper_1_2_2 : Prop := BoxLike.RapaportDiagonalDimension.{u}
-noncomputable abbrev paper_1_2_3 := @BoxLike.Rapaport.homogeneousCore
-noncomputable abbrev paper_1_2_4 := @BoxLike.Rapaport.rapaportDiagonalDimension_homogeneous_holds
-noncomputable abbrev paper_1_2_5 := @BoxLike.Rapaport.Diagonal.rapaportDiagonalDimension_of_core
-noncomputable abbrev paper_1_2_6 := @BoxLike.System.AxisExpSeparation
-noncomputable abbrev paper_1_2_7 := @BoxLike.System.axisGap
-noncomputable abbrev paper_1_2_8 := @BoxLike.System.proximal_iff_of_diagonal
-noncomputable abbrev paper_1_2_9 := @BoxLike.RapaportDiagonalDimension.degenerate_oneLetter
-
--- PAPER_ENTRY thm:fraser
-/-! 1.3 (`thm:fraser`): formalized.
-Both parts of Fraser's Theorem 2.3 (`paper_1_3_0`) and Corollary 2.5 (`paper_1_3_13`,
-`paper_1_3_14`), along Fraser's proof. Deviation: in the super-multiplicative case of his
-Lemma 5.1 (2) a block sum replaces the `k`-block stopping set, which need not be prefix-free.
--/
-/-- `thm:fraser`: both parts of Fraser's Theorem 2.3. -/
-theorem paper_1_3_0 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι) :
-    S.FraserBound ∧ S.FraserROSC :=
-  ⟨S.fraserBound_holds, S.fraserROSC_holds⟩
-noncomputable abbrev paper_1_3_1 := @BoxLike.System.FraserBound
-noncomputable abbrev paper_1_3_2 := @BoxLike.System.FraserROSC
-noncomputable abbrev paper_1_3_3 := @BoxLike.System.packingDim_attractor
-noncomputable abbrev paper_1_3_4 := @BoxLike.System.FraserROSC.dimmaff_eq_dimaff
-noncomputable abbrev paper_1_3_5 := @BoxLike.System.FraserROSC.dim_eq_dimaff
-noncomputable abbrev paper_1_3_6 := @BoxLike.System.fraserBound_holds
-noncomputable abbrev paper_1_3_7 := @BoxLike.System.fraserROSC_holds
-noncomputable abbrev paper_1_3_8 := @BoxLike.System.upperBoxDim_attractor_le_dimmaff
-noncomputable abbrev paper_1_3_9 := @BoxLike.System.upperBoxDim_attractor_le_of_modPressure_neg
-noncomputable abbrev paper_1_3_10 := @BoxLike.System.dimmaff_le_lowerBoxDim
-noncomputable abbrev paper_1_3_11 := @BoxLike.System.exists_le_fraserStopSum
-noncomputable abbrev paper_1_3_12 := @BoxLike.System.fraserROSC_of_fraserBound
-/-- `thm:fraser`, third part (Fraser's Corollary 2.5). -/
-theorem paper_1_3_13 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι)
-    (hrosc : S.RectangularOpenSet)
-    (hproj : ∀ c, BoxLike.upperBoxDim (BoxLike.System.coord c '' S.attractor) = 1) :
-    BoxLike.packingDim S.attractor = ENNReal.ofReal S.dimaff ∧
-      BoxLike.lowerBoxDim S.attractor = ENNReal.ofReal S.dimaff ∧
-      BoxLike.upperBoxDim S.attractor = ENNReal.ofReal S.dimaff :=
-  S.fraserROSC_holds.dim_eq_dimaff hrosc hproj
-/-- `thm:fraser`, third part, as the paper states it: `dimmaff(X) = dimaff(X)`. -/
-theorem paper_1_3_14 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι)
-    (hrosc : S.RectangularOpenSet)
-    (hproj : ∀ c, BoxLike.upperBoxDim (BoxLike.System.coord c '' S.attractor) = 1) :
-    S.dimmaff = S.dimaff :=
-  S.fraserROSC_holds.dimmaff_eq_dimaff hrosc hproj
-
--- PAPER_ENTRY thm:main1
-/-! A (`thm:main1`): formalized.
-For every `s`-equilibrium state; uniqueness and ergodicity are not needed. Below the threshold
-the marginal is the sum of two nonzero exact-dimensional Gibbs projections of distinct dimensions,
-so it is double-dimensional (`System.main1_isDoubleDim`, Lemma 4.1); Jordan–Rapaport gives
-exact-dimensionality under separation directly, so Feng–Hu is not used.
--/
-noncomputable abbrev paper_A_1 := @Challenge.audit_main1
-noncomputable abbrev paper_A_2 := @BoxLike.System.main1_dimaff_all
-noncomputable abbrev paper_A_3 := @BoxLike.System.main1_all
-noncomputable abbrev paper_A_4 := @BoxLike.System.main1_of_two_le
-noncomputable abbrev paper_A_5 := @BoxLike.System.main1
-noncomputable abbrev paper_A_6 := @BoxLike.System.eq_state_proj_dim_all
-noncomputable abbrev paper_A_7 := @BoxLike.System.main1_values_all
-noncomputable abbrev paper_A_8 := @BoxLike.System.main1_dichotomy_all
-noncomputable abbrev paper_A_9 := @BoxLike.System.main1_isDoubleDim
-
--- PAPER_ENTRY thm:main2
-/-! B (`thm:main2`): formalized.
-For every value of `dimaff` and every equilibrium state. Cases (i) and (ii) along the prose
-(`System.main2_prose`); case (iii) with Rapaport's theorem, which the library proves
-(`System.main2_pesc`, `Rapaport.rapaportDiagonalDimension_holds`); the furthermore clause from
-`thm:main_extended` (`System.main2_furthermore`). The prose builds one family of typical words
-for the `t`-equilibrium state, `t = s` below two and `0 < t < 2` otherwise, settles `s ≤ 1` from
-the projection bound, proves case (iii) from the unmodified families, and then trims the
-families or prepends a word for cases (i) and (ii) with `1 < s < 2`. Deviations: the returns to
-horizontal orientation come from ergodicity, not mixing; the scalar Ledrappier–Young formula for
-the diagonal subsystem comes from the planar `FengLedrappierYoung` applied to an auxiliary
-box-like system; Falconer's bound is proved; `0 < s < 2` is treated uniformly in cases (i) and
-(ii), without the projection shortcut for `s ≤ 1`. Case (iii) follows the prose:
-`dim_H X_n = min{2, dimaff(X_n)}` by Rapaport's theorem, `dimaff(X_n) → dim_L(𝖠, μ_t) ≥ t`, then
-`t = s` or `t → 2`.
--/
-noncomputable abbrev paper_B_1 := @Challenge.audit_main2
-noncomputable abbrev paper_B_2 := @BoxLike.System.main2_prose
-noncomputable abbrev paper_B_3 := @BoxLike.System.main2_noExactOverlaps_prose
-noncomputable abbrev paper_B_4 := @BoxLike.System.main2_prose_all
-noncomputable abbrev paper_B_5 := @BoxLike.System.StrongOpenSet.dimaff_eq_two
-noncomputable abbrev paper_B_6 := @BoxLike.System.exists_typical_words_prose
-noncomputable abbrev paper_B_7 := @BoxLike.System.IsHomDiag.isExactDim_map_proj
-noncomputable abbrev paper_B_8 := @BoxLike.System.le_dimH_attractor_of_family
-noncomputable abbrev paper_B_9 := @BoxLike.System.subsystem_strongSeparation
-noncomputable abbrev paper_B_10 := @BoxLike.System.main2_noExactOverlaps_all
-noncomputable abbrev paper_B_11 := @BoxLike.System.main2_full
-noncomputable abbrev paper_B_12 := @BoxLike.System.main2_full_of_library
-noncomputable abbrev paper_B_13 := @BoxLike.System.main2_pesc
-noncomputable abbrev paper_B_14 := @BoxLike.System.main2_pesc_of_library
-noncomputable abbrev paper_B_15 := @BoxLike.System.main2_furthermore
-noncomputable abbrev paper_B_16 := @BoxLike.System.main2_furthermore_of_library
-noncomputable abbrev paper_B_17 := @BoxLike.System.le_dimH_attractor_pesc
-noncomputable abbrev paper_B_18 := @BoxLike.System.subsystem_axisExpSeparation
-noncomputable abbrev paper_B_19 := @BoxLike.System.IsHomDiag.dimaff_eq
-noncomputable abbrev paper_B_20 := @BoxLike.System.IsHomDiag.pressure_eq
-noncomputable abbrev paper_B_21 := @BoxLike.System.ProjExpSeparation.noExactOverlaps
-noncomputable abbrev paper_B_22 := @BoxLike.System.dimH_subsystem_attractor_eq
-noncomputable abbrev paper_B_23 := @BoxLike.System.min_lyapDim_le_dimH_attractor_of_family
-noncomputable abbrev paper_B_24 := @BoxLike.tendsto_lyapDim
-noncomputable abbrev paper_B_25 := @BoxLike.System.IsEquilibriumState.le_lyapDim
-
--- PAPER_ENTRY q:coincident-projection-dimensions
-/-! 1.4 (`q:coincident-projection-dimensions`): intentionally_unformalized.
-Open; recorded as a proposition with no answer asserted.
--/
-/-- Question 1.4 as a proposition; no answer is asserted. -/
-abbrev paper_1_4_1 : Prop := BoxLike.CoincidentProjectionDimensionsQuestion
-
--- PAPER_ENTRY thm:box_like_sa
-/-! 2.1 (`thm:box_like_sa`): formalized.
-"Rotating" is read as exchanging the coordinate axes, the convention of tex 373 to 376.
--/
-noncomputable abbrev paper_2_1_1 := @BoxLike.box_like_sa_of_contracting
-noncomputable abbrev paper_2_1_2 := @BoxLike.PlanarSystem.box_like_sa
-noncomputable abbrev paper_2_1_3 := @BoxLike.box_like_sa
-noncomputable abbrev paper_2_1_4 := @BoxLike.System.isBoxLikeWithRotations_iff
-noncomputable abbrev paper_2_1_5 := @BoxLike.PlanarSystem.isBoxLikeWithRotations_iff_exists_system
-noncomputable abbrev paper_2_1_6 := @BoxLike.isSquareIsometry_iff
-noncomputable abbrev paper_2_1_7 := @BoxLike.isBoxLikeMatrix_iff
-noncomputable abbrev paper_2_1_8 := @BoxLike.IsSquareIsometry.boxMat_zero_mul_orientation
-noncomputable abbrev paper_2_1_9 := @BoxLike.System.WithRotations
-
--- PAPER_ENTRY thm:A_classification
-/-! 2.2 (`thm:A_classification`): formalized.
-Proved directly for arbitrary planar tuples; the cited theorems of Bárány–Käenmäki–Rossi and
-Bárány–Käenmäki–Yu are not used.
--/
-noncomputable abbrev paper_2_2_1 := @BoxLike.tuple_classification
-noncomputable abbrev paper_2_2_2 := @BoxLike.tuple_trichotomy
-noncomputable abbrev paper_2_2_3 := @BoxLike.simultaneouslyBoxLike_iff
-noncomputable abbrev paper_2_2_4 := @BoxLike.not_tupleIrreducible_iff_simultaneouslyTriangular
-noncomputable abbrev paper_2_2_5 := @BoxLike.tupleIrreducible_iff_lines
-noncomputable abbrev paper_2_2_6 := @BoxLike.tupleStronglyIrreducible_iff_lines
-
--- PAPER_ENTRY thm:box_like_proximal
-/-! 2.3 (`thm:box_like_proximal`): formalized.
-Along the prose (`System.Proximal.box_like_proximal`).
--/
-noncomputable abbrev paper_2_3_1 := @BoxLike.System.Proximal.box_like_proximal
-noncomputable abbrev paper_2_3_2 := @BoxLike.System.isProximalMatrix_matWord
-noncomputable abbrev paper_2_3_3 := @BoxLike.System.absMat_matWord_eq_smul_pairs
-noncomputable abbrev paper_2_3_4 := @BoxLike.System.sq_o_of_mem_pairs
-noncomputable abbrev paper_2_3_5 := @BoxLike.System.prod_absMat_sq_mat_eq_smul
-noncomputable abbrev paper_2_3_6 := @BoxLike.System.exists_anti_of_isProximalMatrix
-noncomputable abbrev paper_2_3_7 := @BoxLike.System.Proximal.hasProximalDiagonal_or_sq
-
--- PAPER_ENTRY thm:tau_omega_sigma_commutative
-/-! 2.4 (`thm:tau_omega_sigma_commutative`): formalized.
-For every integer `n`.
--/
-noncomputable abbrev paper_2_4_1 := @BoxLike.tau_shift_of_eps_eq_zero
-noncomputable abbrev paper_2_4_2 := @BoxLike.omega_shift_of_eps_eq_zero
-noncomputable abbrev paper_2_4_3 := @BoxLike.tau_shift_of_eps_eq_one
-noncomputable abbrev paper_2_4_4 := @BoxLike.omega_shift_of_eps_eq_one
-noncomputable abbrev paper_2_4_5 := @BoxLike.eps_shift
-
--- PAPER_ENTRY thm:matrix_products_g_derivatives
-/-! 2.5 (`thm:matrix_products_g_derivatives`): formalized.
-Proximality and rotations are not used.
--/
-noncomputable abbrev paper_2_5_1 := @BoxLike.System.abs_matWord_pastWord_e1
-noncomputable abbrev paper_2_5_2 := @BoxLike.System.abs_matWord_pastWord_e2
-noncomputable abbrev paper_2_5_3 := @BoxLike.System.matWord_eq
-noncomputable abbrev paper_2_5_4 := @BoxLike.System.codeWord_pastWord_tau
-noncomputable abbrev paper_2_5_5 := @BoxLike.System.codeWord_pastWord_omega
-
--- PAPER_ENTRY lem:proj_gap_dominated
-/-! 2.6 (`lem:proj_gap_dominated`): formalized.
-An empty infimum is `⊤`.
--/
-noncomputable abbrev paper_2_6_1 := @BoxLike.System.diagGap
-noncomputable abbrev paper_2_6_2 := @BoxLike.System.gap_le_diagGap
-
--- PAPER_ENTRY prop:ssc_no_overlap_not_pesc
-/-! 2.7 (`prop:ssc_no_overlap_not_pesc`): formalized.
-Along the prose, with `BaranyKaenmakiPair`, Bárány–Käenmäki's theorem with the constant `C_0`
-as the proof uses it, proved (`baranyKaenmakiPair_holds`).
--/
-noncomputable abbrev paper_2_7_1 := @BoxLike.NoOverlap.prop_ssc_no_overlap_not_pesc
-noncomputable abbrev paper_2_7_2 := @BoxLike.NoOverlap.baranyKaenmakiPair_holds
-noncomputable abbrev paper_2_7_3 := @BoxLike.NoOverlap.exists_params_not_mem_exceptionalSet
-noncomputable abbrev paper_2_7_4 := @BoxLike.NoOverlap.Params.mulIndependent
-noncomputable abbrev paper_2_7_5 := @BoxLike.NoOverlap.Params.count_eq_of_gDeriv_eq
-noncomputable abbrev paper_2_7_6 := @BoxLike.NoOverlap.eq_of_valPoly_eq
-noncomputable abbrev paper_2_7_7 := @BoxLike.NoOverlap.Params.freeProjective_of_mulIndependent
-noncomputable abbrev paper_2_7_8 := @BoxLike.NoOverlap.Params.strongSeparation
-noncomputable abbrev paper_2_7_9 := @BoxLike.NoOverlap.Params.not_projExpSeparation
-noncomputable abbrev paper_2_7_10 := @BoxLike.NoOverlap.prop_ssc_no_overlap_not_pesc_holds
-
--- PAPER_ENTRY thm:lyapunov_exponents_via_g_system
-/-! 3.1 (`thm:lyapunov_exponents_via_g_system`): formalized.
-`MatrixTuple.OseledetsSet` is the article's `Σ'` with its filtration; Oseledets and
-Froyland–Lloyd–Quas are proved for box-like tuples. The Furstenberg measure is not formalised
-beyond the support of `V¹` on the axes.
--/
-noncomputable abbrev paper_3_1_1 := @BoxLike.System.lyapunov_exponents_via_g_system_manuscript
-noncomputable abbrev paper_3_1_2 := @BoxLike.System.lyapunov_exponents_via_g_system_oseledets
-noncomputable abbrev paper_3_1_3 := @BoxLike.System.oseledetsSet
-noncomputable abbrev paper_3_1_4 := @BoxLike.System.V_one_eq_axis
-noncomputable abbrev paper_3_1_5 := @BoxLike.System.V_eq_oseledetsSub
-noncomputable abbrev paper_3_1_6 := @BoxLike.System.sigmaTau_ae_eq
-noncomputable abbrev paper_3_1_7 := @BoxLike.System.sigmaOmega_ae_eq
-noncomputable abbrev paper_3_1_8 := @BoxLike.System.sigmaTau_union_sigmaOmega
-noncomputable abbrev paper_3_1_9 :=
-  @BoxLike.MatrixTuple.OseledetsSet.disjoint_sigmaTau_sigmaOmega
-noncomputable abbrev paper_3_1_10 := @BoxLike.MatrixTuple.OseledetsSet.mem_V_one_iff
-noncomputable abbrev paper_3_1_11 := @BoxLike.System.condMeas_fengXi_ae_eq
-noncomputable abbrev paper_3_1_12 := @BoxLike.System.condEntropy_oseledetsXi_eq
-noncomputable abbrev paper_3_1_13 := @BoxLike.System.lyapunov_exponents_via_g_system
-noncomputable abbrev paper_3_1_14 := @BoxLike.System.measure_SigmaPrime_compl
-
--- PAPER_ENTRY thm:conditional_measures_of_a_conditional_measure
-/-! 3.2 (`thm:conditional_measures_of_a_conditional_measure`): formalized.
-For every standard Borel space.
--/
-noncomputable abbrev paper_3_2_1 := @BoxLike.condMeas_cond
-noncomputable abbrev paper_3_2_2 := @BoxLike.condMeas_cond_of_saturated
-
--- PAPER_ENTRY thm:double_conditional
-/-! 3.3 (`thm:double_conditional`): formalized.
-For every standard Borel space; Einsiedler–Ward, Proposition 5.20 and Theorem 5.14, are proved
-directly.
--/
-noncomputable abbrev paper_3_3_1 := @BoxLike.double_conditional
-
--- PAPER_ENTRY thm:finer_partition_dirac_mass
-/-! 3.4 (`thm:finer_partition_dirac_mass`): formalized.
--/
-noncomputable abbrev paper_3_4_1 := @BoxLike.finer_partition_dirac_mass
-noncomputable abbrev paper_3_4_2 := @BoxLike.condMeas_dirac
-
--- PAPER_ENTRY thm:feng_entropy_as_limit
-/-! 3.5 (`thm:feng_entropy_as_limit`): formalized.
-At the article's scope; Feng's identity (Lemma 4.6, (4.16)) and the planar Oseledets theorem
-are proved.
--/
-noncomputable abbrev paper_3_5_1 := @BoxLike.System.feng_entropy_as_limit
-noncomputable abbrev paper_3_5_2 := @BoxLike.System.feng_entropy_as_limit_bar
-noncomputable abbrev paper_3_5_3 := @BoxLike.tendsto_neg_log_condMeas_cylinder
-noncomputable abbrev paper_3_5_4 := @BoxLike.feng_entropy_as_limit_boxLike
-noncomputable abbrev paper_3_5_5 := @BoxLike.PlanarSystem.feng_entropy_as_limit_of_infoSum
-noncomputable abbrev paper_3_5_6 := @BoxLike.feng_entropy_as_limit_boxLike_holds
-noncomputable abbrev paper_3_5_7 := @BoxLike.feng_entropy_as_limit_of_full
-noncomputable abbrev paper_3_5_8 := @BoxLike.PlanarSystem.feng_entropy_as_limit_of_full
-noncomputable abbrev paper_3_5_9 := @BoxLike.PlanarSystem.infoSum_xi
-noncomputable abbrev paper_3_5_10 := @BoxLike.fengInfoSum_holds
-noncomputable abbrev paper_3_5_11 := @BoxLike.fengInfoSumBar_holds
-noncomputable abbrev paper_3_5_12 := @BoxLike.infoSum_of_pullShift
-noncomputable abbrev paper_3_5_13 := @BoxLike.feng_entropy_as_limit_general
-
--- PAPER_ENTRY thm:feng_entropy_kolmogorov_sinai
-/-! 3.6 (`thm:feng_entropy_kolmogorov_sinai`): formalized.
-At the article's scope, through the Shannon–McMillan–Breiman theorem, the Kolmogorov–Sinai
-generator theorem and the planar Oseledets theorem, all proved.
--/
-noncomputable abbrev paper_3_6_1 := @BoxLike.PlanarSystem.feng_entropy_kolmogorov_sinai_general
-noncomputable abbrev paper_3_6_2 := @BoxLike.System.feng_entropy_kolmogorov_sinai
-noncomputable abbrev paper_3_6_3 :=
-  @BoxLike.PlanarSystem.tendsto_neg_log_cylinder_dimEntropyAt_of_ergodic
-noncomputable abbrev paper_3_6_4 :=
-  @BoxLike.PlanarSystem.feng_entropy_kolmogorov_sinai_of_oseledetsSet
-noncomputable abbrev paper_3_6_5 := @BoxLike.PlanarSystem.oseledetsSetOfErgodic
-noncomputable abbrev paper_3_6_6 := @BoxLike.MatrixTuple.measure_regularSet_compl_of_ergodic
-noncomputable abbrev paper_3_6_7 := @BoxLike.shannonMcMillanBreiman
-noncomputable abbrev paper_3_6_8 := @BoxLike.tendsto_neg_log_cylinder_localEntropy_of_atoms
-noncomputable abbrev paper_3_6_9 := @BoxLike.ksEntropy_shift_eq_entropy
-noncomputable abbrev paper_3_6_10 := @BoxLike.PlanarSystem.dimEntropy_zero_eq_ksEntropy_of_ergodic
-noncomputable abbrev paper_3_6_11 := @BoxLike.System.feng_entropy_kolmogorov_sinai_toPlanar
-noncomputable abbrev paper_3_6_12 := @BoxLike.System.feng_entropy_kolmogorov_sinai_bar
-noncomputable abbrev paper_3_6_13 := @BoxLike.kingman_ergodic
-
--- PAPER_ENTRY thm:feng_entropy_zero
-/-! 3.7 (`thm:feng_entropy_zero`): formalized.
-The pointwise equivalence `h_i(μ, 𝐢) = 0 ⟺ μ_𝐢^{ξ_i} = δ_𝐢`, at the article's scope.
--/
-noncomputable abbrev paper_3_7_1 := @BoxLike.System.feng_entropy_zero
-noncomputable abbrev paper_3_7_2 := @BoxLike.System.feng_entropy_zero_bar
-noncomputable abbrev paper_3_7_3 := @BoxLike.localEntropy_eq_zero_iff_condMeas_eq_dirac
-noncomputable abbrev paper_3_7_4 := @BoxLike.feng_entropy_zero_boxLike
-noncomputable abbrev paper_3_7_5 := @BoxLike.PlanarSystem.feng_entropy_zero_of_infoSum
-noncomputable abbrev paper_3_7_6 := @BoxLike.feng_entropy_zero_boxLike_holds
-noncomputable abbrev paper_3_7_7 := @BoxLike.feng_entropy_zero_of_full
-noncomputable abbrev paper_3_7_8 := @BoxLike.PlanarSystem.feng_entropy_zero_of_full
-noncomputable abbrev paper_3_7_9 := @BoxLike.fengInfoSum_holds
-noncomputable abbrev paper_3_7_10 := @BoxLike.fengInfoSumBar_holds
-noncomputable abbrev paper_3_7_11 := @BoxLike.feng_entropy_zero_general
-
--- PAPER_ENTRY thm:partitions_xi1
-/-! 3.8 (`thm:partitions_xi1`): formalized.
-The combined wrapper carries unused binders; the component lemmas do not.
--/
-noncomputable abbrev paper_3_8_1 := @BoxLike.System.partitions_xi1
-noncomputable abbrev paper_3_8_2 := @BoxLike.System.xi_one_of_mem_SigmaTau
-noncomputable abbrev paper_3_8_3 := @BoxLike.System.xiPerp_of_mem_SigmaTau
-noncomputable abbrev paper_3_8_4 := @BoxLike.System.xi_one_of_mem_SigmaOmega
-noncomputable abbrev paper_3_8_5 := @BoxLike.System.xiPerp_of_mem_SigmaOmega
-
--- PAPER_ENTRY thm:partition_tau_conj
-/-! 3.9 (`thm:partition_tau_conj`): formalized.
-For every `n`; the combined wrapper carries unused binders.
--/
-noncomputable abbrev paper_3_9_1 := @BoxLike.System.partition_tau_conj
-noncomputable abbrev paper_3_9_2 := @BoxLike.System.image_unCode_xiBar_inter_cylinder_tau
-noncomputable abbrev paper_3_9_3 := @BoxLike.System.image_unCode_xiBar_inter_cylinder_omega
-
--- PAPER_ENTRY thm:irred_eq_state
-/-! 3.10 (`thm:irred_eq_state`): formalized.
-At the article's scope, every irreducible tuple in `GL_2(ℝ)^N` and `s > 0` (`paper_3_10_25`),
-from Feng–Käenmäki's Proposition 1.2 in the form of the source, proved (`paper_3_10_27`);
-for box-like tuples with rotations, irreducible or not, with no literature input
-(`System.irred_eq_state_of_withRotations`, `paper_3_10_24`).
--/
-noncomputable abbrev paper_3_10_0 := @BoxLike.MatrixTuple.irred_eq_state_of_fengKaenmaki
-noncomputable abbrev paper_3_10_1 := @BoxLike.System.irred_eq_state
-noncomputable abbrev paper_3_10_2 := @BoxLike.System.unique_of_irreducible
-noncomputable abbrev paper_3_10_3 := @BoxLike.System.IsEquilibriumState.ergodic_of_irreducible
-noncomputable abbrev paper_3_10_4 :=
-  @BoxLike.System.IsEquilibriumState.hasGibbsBounds_of_irreducible
-noncomputable abbrev paper_3_10_5 := @BoxLike.MatrixTuple.exists_isEquilibriumState
-noncomputable abbrev paper_3_10_6 := @BoxLike.MatrixTuple.irred_eq_state_of_two_le
-noncomputable abbrev paper_3_10_7 := @BoxLike.MatrixTuple.ergodic_of_unique
-noncomputable abbrev paper_3_10_8 := @BoxLike.MatrixTuple.isEquilibriumState_iff_rescale
-noncomputable abbrev paper_3_10_9 := @BoxLike.MatrixTuple.hasGibbsBounds_iff_rescale
-noncomputable abbrev paper_3_10_10 := @BoxLike.MatrixTuple.isNormEquilibriumPlus_map_eta_iff
-noncomputable abbrev paper_3_10_11 := @BoxLike.MatrixTuple.exists_ergodic_isEquilibriumState
-noncomputable abbrev paper_3_10_12 := @BoxLike.FengKaenmakiNormEquilibrium.svf
-noncomputable abbrev paper_3_10_13 := @BoxLike.FengKaenmakiNormEquilibrium.twoSided
-noncomputable abbrev paper_3_10_14 := @BoxLike.FengKaenmakiNormEquilibrium.fengKaenmakiGibbs
-noncomputable abbrev paper_3_10_15 := @BoxLike.FengKaenmakiNormEquilibrium.fengKaenmakiUnique
-noncomputable abbrev paper_3_10_16 := @BoxLike.System.irred_eq_state_of_withRotations
-noncomputable abbrev paper_3_10_17 := @BoxLike.System.unique_of_withRotations
-noncomputable abbrev paper_3_10_18 := @BoxLike.System.IsEquilibriumState.ergodic_of_withRotations
-noncomputable abbrev paper_3_10_19 :=
-  @BoxLike.System.IsEquilibriumState.hasGibbsBounds_of_withRotations
-noncomputable abbrev paper_3_10_20 :=
-  @BoxLike.System.existsUnique_isEquilibriumState_of_withRotations
-noncomputable abbrev paper_3_10_21 := @BoxLike.System.IsEquilibriumState.eq_map_unCode
-noncomputable abbrev paper_3_10_22 := @BoxLike.System.IsEquilibriumState.blockRelEntropy_le
-noncomputable abbrev paper_3_10_23 := @BoxLike.absolutelyContinuous_of_blockRelEntropy_le
-/-- The Gibbs bounds of `thm:irred_eq_state` for tuples with rotations. -/
-theorem paper_3_10_24 : BoxLike.EquilibriumGibbsStatement.{u} := BoxLike.equilibriumGibbs
-open MeasureTheory in
-/-- `thm:irred_eq_state` for every irreducible tuple of invertible planar matrices and `s > 0`. -/
-theorem paper_3_10_25 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-    (A : ι → Matrix (Fin 2) (Fin 2) ℝ) (hA : ∀ i, (A i).det ≠ 0)
-    (hirr : BoxLike.TupleIrreducible A) {s : ℝ} (hs0 : 0 < s) :
-    ∃ μ : Measure (ℤ → ι), IsProbabilityMeasure μ ∧ MeasurePreserving (BoxLike.shift 1) μ μ ∧
-      BoxLike.MatrixTuple.IsEquilibriumState A s μ ∧
-      (∀ ν : Measure (ℤ → ι), IsProbabilityMeasure ν → MeasurePreserving (BoxLike.shift 1) ν ν →
-        BoxLike.MatrixTuple.IsEquilibriumState A s ν → ν = μ) ∧
-      Ergodic (BoxLike.shift 1) μ ∧ BoxLike.MatrixTuple.HasGibbsBounds A s μ :=
-  BoxLike.MatrixTuple.irred_eq_state_of_fengKaenmaki BoxLike.fengKaenmakiNormEquilibrium_holds A hA
-    hirr hs0
-open MeasureTheory in
-/-- `thm:irred_eq_state` for irreducible box-like systems. -/
-theorem paper_3_10_26 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-    (S : BoxLike.System ι) (hirr : S.Irreducible) {s : ℝ} (hs0 : 0 < s) :
-    ∃ μ : Measure (ℤ → ι), IsProbabilityMeasure μ ∧ MeasurePreserving (BoxLike.shift 1) μ μ ∧
-      S.IsEquilibriumState s μ ∧
-      (∀ ν : Measure (ℤ → ι), IsProbabilityMeasure ν → MeasurePreserving (BoxLike.shift 1) ν ν →
-        S.IsEquilibriumState s ν → ν = μ) ∧
-      Ergodic (BoxLike.shift 1) μ ∧ S.HasGibbsBounds s μ :=
-  S.irred_eq_state BoxLike.fengKaenmakiGibbs_holds BoxLike.fengKaenmakiUnique_holds hirr hs0
-/-- Feng–Käenmäki, Proposition 1.2, in the form of the source. -/
-theorem paper_3_10_27 : BoxLike.FengKaenmakiNormEquilibrium.{u} :=
-  BoxLike.fengKaenmakiNormEquilibrium_holds
-/-- The Gibbs bounds of `thm:irred_eq_state` for irreducible box-like tuples, `0 < s < 2`. -/
-theorem paper_3_10_28 : BoxLike.FengKaenmakiGibbs.{u} := BoxLike.fengKaenmakiGibbs_holds
-/-- Uniqueness in `thm:irred_eq_state` for irreducible box-like tuples, `0 < s < 2`. -/
-theorem paper_3_10_29 : BoxLike.FengKaenmakiUnique.{u} := BoxLike.fengKaenmakiUnique_holds
-noncomputable abbrev paper_3_10_30 := @BoxLike.fengKaenmakiNormEquilibrium_of_normGibbsExistence
-noncomputable abbrev paper_3_10_31 := @BoxLike.normGibbsExistence
-noncomputable abbrev paper_3_10_32 := @BoxLike.MatrixTuple.normQuasiMultiplicative_of_irreducible
-noncomputable abbrev paper_3_10_33 := @BoxLike.MatrixTuple.IsNormEquilibrium.eq_of_hasNormGibbs
-noncomputable abbrev paper_3_10_34 := @BoxLike.MatrixTuple.HasNormGibbs.ergodic
-noncomputable abbrev paper_3_10_35 := @BoxLike.MatrixTuple.exists_ergodic_hasNormGibbs_forall_eq
-noncomputable abbrev paper_3_10_36 :=
-  @BoxLike.MatrixTuple.NormQuasiMultiplicative.exists_ergodic_hasNormGibbs
-
--- PAPER_ENTRY thm:two-block-normalisation
-/-! 3.11 (`thm:two-block-normalisation`): formalized.
-Uniqueness and ergodicity of `μ^(2)` come from 3.10 for `𝖠²`, which has rotations.
--/
-noncomputable abbrev paper_3_11_1 := @BoxLike.System.two_block_normalisation
-noncomputable abbrev paper_3_11_2 := @BoxLike.System.two_block_normalisation_consequences
-noncomputable abbrev paper_3_11_3 := @BoxLike.System.Proximal.sq_hasProximalDiagonal
-noncomputable abbrev paper_3_11_4 := @BoxLike.System.sq_irreducible
-noncomputable abbrev paper_3_11_5 := @BoxLike.IsBernoulli.map_group
-noncomputable abbrev paper_3_11_6 := @BoxLike.System.IsEquilibriumState.map_group
-
--- PAPER_ENTRY thm:bernoulli_equilibrium
-/-! 3.12 (`thm:bernoulli_equilibrium`): formalized.
--/
-noncomputable abbrev paper_3_12_1 := @BoxLike.System.pressure_of_two_le
-noncomputable abbrev paper_3_12_2 := @BoxLike.System.detWeight
-noncomputable abbrev paper_3_12_3 := @BoxLike.System.isEquilibriumState_bernoulli
-noncomputable abbrev paper_3_12_4 := @BoxLike.System.IsEquilibriumState.eq_bernoulli
-noncomputable abbrev paper_3_12_5 := @BoxLike.System.existsUnique_isEquilibriumState_of_two_le
-noncomputable abbrev paper_3_12_6 := @BoxLike.bernoulli_cylinder
-
--- PAPER_ENTRY thm:sigma_tau_omega_positive_eq_measure
-/-! 3.13 (`thm:sigma_tau_omega_positive_eq_measure`): formalized.
-Proximality is not used.
--/
-noncomputable abbrev paper_3_13_1 := @BoxLike.System.sigma_tau_omega_positive_eq_measure
-noncomputable abbrev paper_3_13_2 := @BoxLike.System.measureReal_antiDiagSet_le
-noncomputable abbrev paper_3_13_3 := @BoxLike.System.birkhoffSum_antiDiagSet_le
-noncomputable abbrev paper_3_13_4 := @BoxLike.System.indicator_antiDiagSet_le
-noncomputable abbrev paper_3_13_5 := @BoxLike.System.sigma_tau_omega_positive
-noncomputable abbrev paper_3_13_6 := @BoxLike.System.measure_cylinder_le_two_mul
-
--- PAPER_ENTRY thm:eq_state_is_sum
-/-! 3.14 (`thm:eq_state_is_sum`): formalized.
-`FraserJordanJurgaDecomposition` is proved (`paper_3_14_0`); proximality is not used.
--/
-/-- `thm:eq_state_is_sum`: `FraserJordanJurgaDecomposition` holds. -/
-theorem paper_3_14_0 : BoxLike.FraserJordanJurgaDecomposition.{u} :=
-  BoxLike.fraserJordanJurgaDecomposition_holds
-noncomputable abbrev paper_3_14_1 := @BoxLike.FraserJordanJurgaDecomposition.{u}
-noncomputable abbrev paper_3_14_2 := @BoxLike.System.GibbsDecomposition
-noncomputable abbrev paper_3_14_3 := @BoxLike.System.pressure_eq_pressureZ₁
-noncomputable abbrev paper_3_14_4 := @BoxLike.System.pressure_eq_pressureZ₂
-noncomputable abbrev paper_3_14_5 := @BoxLike.System.GibbsDecomposition.lyapunov₁_eq_integral
-noncomputable abbrev paper_3_14_6 := @BoxLike.System.GibbsDecomposition.lyapunov₂_eq_integral
-noncomputable abbrev paper_3_14_7 :=
-  @BoxLike.System.GibbsDecomposition.lyapunov₁_eq_integral_potential₂
-noncomputable abbrev paper_3_14_8 :=
-  @BoxLike.System.GibbsDecomposition.lyapunov₂_eq_integral_potential₂
-noncomputable abbrev paper_3_14_9 := @BoxLike.System.GibbsDecomposition.map_flip
-noncomputable abbrev paper_3_14_10 := @BoxLike.System.decomposition₂_of_decompositions
-noncomputable abbrev paper_3_14_20 := @BoxLike.System.eq_of_hasGibbsBounds
-noncomputable abbrev paper_3_14_21 := @BoxLike.System.hasGibbsBounds_map_unCode
-noncomputable abbrev paper_3_14_22 := @BoxLike.System.lyapunov_map_unCode_of_isGibbs
-noncomputable abbrev paper_3_14_23 := @BoxLike.System.exists_isGibbs_potential₁
-noncomputable abbrev paper_3_14_24 := @BoxLike.System.IsEquilibriumState.eq_map_unCode
-
--- PAPER_ENTRY thm:exact-dimensional-mixture
-/-! 4.1 (`thm:exact-dimensional-mixture`): formalized.
-The manuscript omits the proof.
--/
-noncomputable abbrev paper_4_1_1 := @BoxLike.IsExactDim.ae_hasLocalDim_add_left
-noncomputable abbrev paper_4_1_2 := @BoxLike.IsExactDim.ae_hasLocalDim_add_right
-noncomputable abbrev paper_4_1_3 := @BoxLike.IsExactDim.hasLocalDimPair_add
-noncomputable abbrev paper_4_1_4 := @BoxLike.IsExactDim.measure_hasLocalDim_add_left_pos
-noncomputable abbrev paper_4_1_5 := @BoxLike.IsExactDim.measure_hasLocalDim_add_right_pos
-noncomputable abbrev paper_4_1_6 := @BoxLike.isExactDim_add_iff
-noncomputable abbrev paper_4_1_7 := @BoxLike.IsExactDim.isDoubleDim_add
-noncomputable abbrev paper_4_1_8 := @BoxLike.IsExactDim.isExactDim_add
-noncomputable abbrev paper_4_1_9 := @BoxLike.isDoubleDim_add_iff
-noncomputable abbrev paper_4_1_10 := @BoxLike.IsExactDim.mixture
-noncomputable abbrev paper_4_1_11 := @BoxLike.IsDoubleDim.not_isExactDim
-noncomputable abbrev paper_4_1_12 := @BoxLike.isDoubleDim_iff_upperPackingDim_lowerHausdorffDim
-
--- PAPER_ENTRY thm:feng1
-/-! 4.2 (`thm:feng1`): formalized.
-Both parts at the article's scope from `PlanarFengLedrappierYoung` (`paper_4_2_11`), which is
-proved (`paper_4_2_12`).
--/
-noncomputable abbrev paper_4_2_1 := @BoxLike.planar_feng1
-noncomputable abbrev paper_4_2_2 := @BoxLike.PlanarSystem.feng1
-noncomputable abbrev paper_4_2_3 := @BoxLike.PlanarFengLedrappierYoung.{u}
-noncomputable abbrev paper_4_2_4 := @BoxLike.PlanarFengLedrappierYoung.fengLedrappierYoung
-noncomputable abbrev paper_4_2_5 := @BoxLike.planarFengLedrappierYoung_of_fengXi
-noncomputable abbrev paper_4_2_6 := @BoxLike.FengLedrappierYoung.{u}
-noncomputable abbrev paper_4_2_7 := @BoxLike.FengLedrappierYoungBar.{u}
-noncomputable abbrev paper_4_2_8 := @BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung
-noncomputable abbrev paper_4_2_9 := @BoxLike.System.isExactDim_map_projBar_of_fengLedrappierYoung
-/-- `thm:feng1`, second part, from the first. -/
-theorem paper_4_2_10 (h : BoxLike.PlanarFengLedrappierYoung.{u}) :
-    BoxLike.FengLedrappierYoungBar.{u} :=
-  BoxLike.fengLedrappierYoungBar_of_fengLedrappierYoung h.fengLedrappierYoung
-open MeasureTheory BoxLike in
-/-- `thm:feng1`, both parts, from `PlanarFengLedrappierYoung`. -/
-theorem paper_4_2_11 (h : PlanarFengLedrappierYoung.{u}) :
-    (∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-      (P : PlanarSystem ι) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ],
-      MeasurePreserving (shift 1) μ μ → Ergodic (shift 1) μ → P.lyapunov₂ μ < P.lyapunov₁ μ →
-      IsExactDim (μ.map P.proj)
-        ((P.dimEntropy μ 1 - P.dimEntropy μ 0) / P.lyapunov₁ μ +
-          (P.dimEntropy μ 2 - P.dimEntropy μ 1) / P.lyapunov₂ μ)) ∧
-    (∀ {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-      (S : System ι), S.WithRotations → S.Proximal →
-      ∀ (ν : Measure (ℤ → ι × ZMod 2)) [IsProbabilityMeasure ν],
-      MeasurePreserving (shift 1) ν ν → Ergodic (shift 1) ν → ν (subshift S.o)ᶜ = 0 →
-      IsExactDim (ν.map S.projBar)
-        ((S.dimEntropyBar ν 1 - S.dimEntropyBar ν 0) / S.lyapBar ν)) :=
-  planar_feng1 h (paper_4_2_10 h)
-noncomputable abbrev paper_4_2_12 := @BoxLike.planarFengLedrappierYoung_holds
-noncomputable abbrev paper_4_2_13 := @BoxLike.fengLedrappierYoung_holds
-noncomputable abbrev paper_4_2_14 := @BoxLike.fengLedrappierYoungBar_holds
-
--- PAPER_ENTRY thm:entropy_eq_gibbs
-/-! 4.3 (`thm:entropy_eq_gibbs`): formalized.
-The endpoint states the conditional-past entropies, through `PastEntropy`.
--/
-noncomputable abbrev paper_4_3_1 := @BoxLike.System.GibbsDecomposition.dimEntropy_zero_eq_gibbs
-noncomputable abbrev paper_4_3_2 := @BoxLike.System.GibbsDecomposition.dimEntropy_zero_eq_gibbs
-noncomputable abbrev paper_4_3_3 := @BoxLike.System.GibbsDecomposition.zero_entropy_identities
-noncomputable abbrev paper_4_3_4 := @BoxLike.System.GibbsDecomposition.entropy_eq₁
-noncomputable abbrev paper_4_3_5 := @BoxLike.System.GibbsDecomposition.entropy_eq₂
-noncomputable abbrev paper_4_3_6 := @BoxLike.entropy_map_unCode
-noncomputable abbrev paper_4_3_7 := @BoxLike.System.dimEntropy_zero_eq_entropy'
-noncomputable abbrev paper_4_3_8 := @BoxLike.System.dimEntropyBar_zero_eq_entropy'
-
--- PAPER_ENTRY thm:eq_state_proj_dim
-/-! 4.4 (`thm:eq_state_proj_dim`): formalized.
-For every `s > 0` and every `s`-equilibrium state; for `s ≥ 2` through the orientation lift of
-the Bernoulli state.
--/
-noncomputable abbrev paper_4_4_1 := @BoxLike.System.eq_state_proj_dim_all
-noncomputable abbrev paper_4_4_2 := @BoxLike.System.eq_state_proj_dim_of_two_le
-noncomputable abbrev paper_4_4_3 := @BoxLike.System.isExactDim_marginal_of_two_le
-noncomputable abbrev paper_4_4_4 := @BoxLike.System.IsEquilibriumState.lyapunov_eq_of_two_le
-noncomputable abbrev paper_4_4_5 :=
-  @BoxLike.System.IsEquilibriumState.ergodic_orientationLift_of_two_le
-noncomputable abbrev paper_4_4_6 := @BoxLike.ergodic_orientationLift_bernoulli
-noncomputable abbrev paper_4_4_7 := @BoxLike.tendsto_orientationLift_bernoulli_cylinder_inter
-noncomputable abbrev paper_4_4_8 := @BoxLike.orientationLift_bernoulli_cylinder
-noncomputable abbrev paper_4_4_9 := @BoxLike.entropy_orientationLift
-noncomputable abbrev paper_4_4_10 := @BoxLike.System.lyapunov_eq_of_ergodic_orientationLift
-noncomputable abbrev paper_4_4_11 := @BoxLike.System.map_projBar_orientationLift
-noncomputable abbrev paper_4_4_12 := @BoxLike.System.eq_state_proj_dim
-noncomputable abbrev paper_4_4_13 := @BoxLike.System.marginal_decomposition
-noncomputable abbrev paper_4_4_14 := @BoxLike.System.marginal_decomposition_normalised
-
--- PAPER_ENTRY ex:projection_double_dimensional
-/-! 4.5 (`ex:projection_double_dimensional`): formalized.
-For every `0 < s₂ < s₁ ≤ 1`. The Markov measure is identified by Gibbs uniqueness.
--/
-noncomputable abbrev paper_4_5_1 := @BoxLike.PrescribedExample.projection_double_dimensional
-noncomputable abbrev paper_4_5_2 :=
-  @BoxLike.PrescribedExample.projection_double_dimensional_of_geometry
-noncomputable abbrev paper_4_5_3 := @BoxLike.PrescribedExample.equilibrium_spec
-noncomputable abbrev paper_4_5_4 := @BoxLike.PrescribedExample.Gibbs.isEquilibriumState_spec
-noncomputable abbrev paper_4_5_5 := @BoxLike.PrescribedExample.Gibbs.isEquilibriumState_ratios
-noncomputable abbrev paper_4_5_6 := @BoxLike.PrescribedExample.Gibbs.marginal_spec
-noncomputable abbrev paper_4_5_7 := @BoxLike.PrescribedExample.Gibbs.GibbsDecomposition.eq_markov
-noncomputable abbrev paper_4_5_8 := @BoxLike.PrescribedExample.Gibbs.markov_cylinder_eq_Q
-noncomputable abbrev paper_4_5_9 := @BoxLike.PrescribedExample.exists_geometry
-noncomputable abbrev paper_4_5_10 := @BoxLike.PrescribedExample.existsUnique_p
-noncomputable abbrev paper_4_5_11 := @BoxLike.PrescribedExample.pressure_eq
-noncomputable abbrev paper_4_5_12 := @BoxLike.PrescribedExample.exists_translation
-noncomputable abbrev paper_4_5_13 := @BoxLike.PrescribedExample.volume_badSet_le
-
--- PAPER_ENTRY thm:gibbs_tau_omega_positive
-/-! 4.6 (`thm:gibbs_tau_omega_positive`): formalized.
--/
-noncomputable abbrev paper_4_6_1 := @BoxLike.System.gibbs_tau_omega_positive
-
--- PAPER_ENTRY thm:conditional_two_ways
-/-! 4.7 (`thm:conditional_two_ways`): formalized.
--/
-noncomputable abbrev paper_4_7_1 := @BoxLike.System.conditional_two_ways_normalised
-noncomputable abbrev paper_4_7_2 := @BoxLike.System.conditional_two_ways_normalised_case
-noncomputable abbrev paper_4_7_3 := @BoxLike.System.normalised_orientation_restrictions
-noncomputable abbrev paper_4_7_4 := @BoxLike.condMeas_map_of_ae_mem
-noncomputable abbrev paper_4_7_5 := @BoxLike.System.conditional_two_ways
-noncomputable abbrev paper_4_7_6 := @BoxLike.System.conditional_two_ways_aux
-noncomputable abbrev paper_4_7_7 := @BoxLike.condMeas_transport
-
--- PAPER_ENTRY thm:overline_h1_zero
-/-! 4.8 (`thm:overline_h1_zero`): formalized.
-Feng–Hu is not used: Jordan–Rapaport gives exact-dimensionality.
--/
-noncomputable abbrev paper_4_8_1 := @BoxLike.System.overline_h1_zero
-
--- PAPER_ENTRY thm:overline_h1_zero_large
-/-! 4.9 (`thm:overline_h1_zero_large`): formalized.
-Takes `entropy μ ≤ -λ₂` only.
--/
-noncomputable abbrev paper_4_9_1 := @BoxLike.System.overline_h1_zero_large
-
--- PAPER_ENTRY thm:overline_h1_large
-/-! 4.10 (`thm:overline_h1_large`): formalized.
--/
-noncomputable abbrev paper_4_10_1 := @BoxLike.System.overline_h1_large
-
--- PAPER_ENTRY thm:eq_state_h1_zero
-/-! 4.11 (`thm:eq_state_h1_zero`): formalized.
-Stated on all sequences, since `Σ'` is conull.
--/
-noncomputable abbrev paper_4_11_1 := @BoxLike.System.eq_state_h1_zero
-
--- PAPER_ENTRY thm:eq_state_h1_large
-/-! 4.12 (`thm:eq_state_h1_large`): formalized.
--/
-noncomputable abbrev paper_4_12_1 := @BoxLike.System.eq_state_h1_large
-
--- PAPER_ENTRY thm:eq_state_h2_zero
-/-! 4.13 (`thm:eq_state_h2_zero`): formalized.
--/
-noncomputable abbrev paper_4_13_1 := @BoxLike.System.eq_state_h2_zero
-
--- PAPER_ENTRY thm:orto_partition_dirac
-/-! 4.14 (`thm:orto_partition_dirac`): formalized.
-Takes `entropy μ ≤ -λ₂` only.
--/
-noncomputable abbrev paper_4_14_1 := @BoxLike.System.orto_partition_dirac
-
--- PAPER_ENTRY thm:SOSC_h2_zero
-/-! 4.15 (`thm:SOSC_h2_zero`): formalized.
-Takes ergodicity, which holds for every equilibrium state of a tuple with rotations.
--/
-noncomputable abbrev paper_4_15_1 := @BoxLike.System.SOSC_h2_zero
-
--- PAPER_ENTRY thm:main_extended
-/-! 4.16 (`thm:main_extended`): formalized.
-The conclusion includes `dimaff(X) ≤ 2`. For `s ≥ 2` the equilibrium state is Bernoulli
-and the open set condition forces `s = 2` and dimension two.
--/
-noncomputable abbrev paper_4_16_1 := @BoxLike.System.main_extended_min
-noncomputable abbrev paper_4_16_2 := @BoxLike.System.main_extended
-noncomputable abbrev paper_4_16_3 := @BoxLike.System.main_extended_normalised
-noncomputable abbrev paper_4_16_4 := @BoxLike.System.main_extended_ge_two
-
--- PAPER_ENTRY rem:threshold_bound
-/-! 4.17 (`rem:threshold_bound`): formalized.
-The bound `min{dimaff(X), 2 - λ₁/λ₂} ≤ dim_H X` for `dimaff(X) < 2` without the strong open set
-condition or projective exponential separation, for every invariant equilibrium state, along
-the remark: the families are reduced to `⌊|b_n|⁻¹⌋` words above the threshold, which gives
-`h_2(ν_n) = 0`, `dim((proj_x ∘ π_n)_*ν_n) = 1` for all large `n`, and
-`dim((π_n)_*ν_n) = 1 + (log #W_n + log |a_n|)/(-log |b_n|) → 2 - λ₁/λ₂`. The closing commentary of
-the remark is not a claim.
--/
-noncomputable abbrev paper_4_17_1 := @BoxLike.System.threshold_bound
-noncomputable abbrev paper_4_17_2 := @BoxLike.System.threshold_bound_prose
-noncomputable abbrev paper_4_17_3 := @BoxLike.System.le_dimH_attractor_of_entropy_gt
-noncomputable abbrev paper_4_17_4 := @BoxLike.System.le_dimH_attractor_of_entropy_gt_prose
-noncomputable abbrev paper_4_17_5 := @BoxLike.lyapDim_neg_eq_threshold
-noncomputable abbrev paper_4_17_6 := @BoxLike.eventually_subsystemDim_eq_of_tendsto
-noncomputable abbrev paper_4_17_7 := @BoxLike.tendsto_one_add_sub_div
-
-/-! ## Unnumbered claims
-
-Rossi's bound `eq:hausdorff_ergodic_lyapunov` (tex lines 2598 to 2601), proved by a covering
-argument; equality holds for the equilibrium state of `thm:main_extended`.
--/
-/-- Rossi's bound `eq:hausdorff_ergodic_lyapunov` for every box-like system. -/
-theorem prose_rossi_0 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingletonClass ι]
-    (S : BoxLike.System ι) : S.RossiBound :=
-  S.rossiBound
-noncomputable abbrev prose_rossi_1 := @BoxLike.System.RossiBound
-noncomputable abbrev prose_rossi_2 := @BoxLike.System.ae_lowerLocalDim_map_proj_le
-noncomputable abbrev prose_rossi_3 := @BoxLike.System.essSup_lowerLocalDim_map_proj_le
-noncomputable abbrev prose_rossi_4 := @BoxLike.System.exists_dimH_le_of_add_energy_neg
-noncomputable abbrev prose_rossi_5 := @BoxLike.System.ae_tendsto_log_norm_matWord
-noncomputable abbrev prose_rossi_6 := @BoxLike.System.ae_tendsto_log_alpha₂_matWord
-noncomputable abbrev prose_rossi_7 := @BoxLike.ae_lowerLocalDim_le_of_dimH_le
-noncomputable abbrev prose_rossi_8 := @BoxLike.System.upperHausdorffDim_map_proj_eq
-
-/-! The squeeze `dimmaff(X) = dimaff(X)` of tex lines 515 to 515, from the first part of
-`thm:fraser`.
--/
-/-- If `dim_H X = dimaff(X)`, then `dimmaff(X) = dimaff(X)` (tex lines 515 to 515). -/
-theorem prose_squeeze_0 {ι : Type u} [Fintype ι] [Nonempty ι] (S : BoxLike.System ι)
-    (hH : dimH S.attractor = ENNReal.ofReal S.dimaff) : S.dimmaff = S.dimaff :=
-  S.dimmaff_eq_dimaff S.fraserBound_holds hH
-
-end Solution.Paper

@@ -39,7 +39,11 @@ intentional `sorry` placeholder:
 | 4.16 Equilibrium measure | `Challenge.audit_main_extended` |
 
 [Solution.lean](Solution.lean) proves these statements from [BoxLike](BoxLike.lean), for the
-full parameter range and every invariant equilibrium state. The library and Solution contain
+full parameter range and every invariant equilibrium state. It displays the definitions,
+then states the numbered results explicitly in manuscript order, with proofs applying the
+library. Its `recall` blocks check the displayed definitions against the library; recursive
+definitions are displayed through their defining equations. The final section retains the
+independent challenge statements for the comparator. The library and Solution contain
 no `sorry`. No literature result is assumed as an axiom or left as a hypothesis of the headline
 theorems. [comparator-config.json](comparator-config.json) selects the three declarations and
 permits only the standard axioms `propext`, `Classical.choice` and `Quot.sound`.

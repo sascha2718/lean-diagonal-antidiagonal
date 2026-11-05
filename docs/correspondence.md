@@ -4,8 +4,12 @@ All 44 numbered statements are assessed: 42 formalised, among them Theorem 1.2, 
 theorem, proved in `BoxLike/Rapaport/`; Theorem 1.1, the theorem of
 Hochman–Rapaport that the paper cites, recorded as a `Prop`-valued statement that is not proved;
 and Question 1.4, the question the paper poses, recorded as a proposition with no answer
-claimed. [Solution.lean](../Solution.lean) has one `PAPER_ENTRY` per statement with
-the declarations that cover it; [paper-correspondence.yaml](../paper-correspondence.yaml)
+claimed. [Solution.lean](../Solution.lean) displays the definitions and has one `PAPER_ENTRY`
+per statement, with explicit theorem declarations in manuscript order. Theorem 1.1 and
+Question 1.4 are proposition definitions, with no proof asserted. Its `recall` commands check
+the displayed definitions against the library; recursive definitions are given by their
+defining equations. Supporting declarations remain indexed here and in
+[paper-correspondence.yaml](../paper-correspondence.yaml), which
 fingerprints the statements and 48 prose spans (88 formalised, 1 cited, 3 intentionally
 unformalised, 1 literature hypothesis).
 
@@ -61,7 +65,8 @@ being reviewed at commit `60ff8b3ad41bd7260460cadbb011e5717909b4cb` of the manus
 
 ## Every numbered entry
 
-"Formalised" may mean a family of component theorems; the entry keeps their exact types. The last
+"Formalised" may mean a family of component theorems; Solution displays their hypotheses and
+conclusions and supplies the library proofs of literature inputs. The last
 column names the library theorems that stand in for a result the manuscript cites.
 
 | No. | Label | Coverage | Proved in place of a citation |

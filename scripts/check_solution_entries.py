@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""Check the Solution entry ledger and the human-facing Challenge statically.
+"""Check the explicit numbered Solution statements and the human-facing Challenge.
 
 Every currently numbered manuscript statement must have exactly one standalone
-``-- PAPER_ENTRY <label>`` line in Solution.lean. Challenge.lean must contain only
+``-- PAPER_ENTRY <label>`` line in Solution.lean, followed by its explicitly typed
+``Solution.Paper.paper_<number>`` theorem. The cited Theorem 1.1 and open Question 1.4
+are proposition definitions instead. Aliases do not count as statements.
+Challenge.lean must contain only
 the three headline theorem holes, with its definitions repeated verbatim (ignoring
 comments and token whitespace) in Solution/Definitions.lean.
 
@@ -128,6 +131,26 @@ def check_markers(path: Path, paper: list[PaperDeclaration]) -> list[str]:
             errors.append(f"{path}:{lines[0]}: extra PAPER_ENTRY {label}")
         if len(lines) != 1:
             errors.append(f"{path}: duplicate PAPER_ENTRY {label} at lines {lines}")
+    declarations = scan_lean_file(path)
+    marker_lines = sorted(line for lines in locations.values() for line in lines)
+    for statement in paper:
+        lines = locations.get(statement.label, [])
+        if len(lines) != 1:
+            continue
+        start = lines[0]
+        end = next((line for line in marker_lines if line > start), float("inf"))
+        name = "Solution.Paper.paper_" + statement.number.replace(".", "_")
+        expected_kind = "def" if statement.label in {
+            "thm:hochman_rapaport", "q:coincident-projection-dimensions"
+        } else "theorem"
+        matches = [d for d in declarations if d.name == name and start < d.line < end]
+        if len(matches) != 1 or matches[0].kind != expected_kind:
+            errors.append(f"{path}:{start}: expected an explicit {expected_kind} {name}")
+        elif ":" not in proof_body(matches[0])[0]:
+            errors.append(f"{path}:{matches[0].line}: {name} must display its statement type")
+    for declaration in declarations:
+        if declaration.name.startswith("Solution.Paper.") and declaration.kind == "abbrev":
+            errors.append(f"{path}:{declaration.line}: numbered statements must not be abbreviation lists")
     return errors
 
 
@@ -309,7 +332,7 @@ def main() -> int:
         print(f"FAILED: {len(errors)} static consistency issue(s).", file=sys.stderr)
         return 1
     mode = " with complete-status enforcement" if args.require_complete else " (coverage statuses not enforced)"
-    print(f"PASS: entry markers, Challenge shape and definition consistency{mode}.")
+    print(f"PASS: explicit numbered statements, entry markers, Challenge shape and definition consistency{mode}.")
     return 0
 
 
