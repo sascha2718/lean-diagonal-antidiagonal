@@ -668,7 +668,7 @@ theorem paper_A {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSingl
   (c : ZMod 2) :
   (S.dimaff < 2 - S.lyapunov₁ μ / S.lyapunov₂ μ → IsDoubleDim (S.marginal c μ)) ∧
     (2 - S.lyapunov₁ μ / S.lyapunov₂ μ ≤ S.dimaff → IsExactDim (S.marginal c μ) 1) := by
-  exact System.main1_dimaff_all S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) (fraserJordanJurgaDecomposition_holds)
+  exact System.main1_dimaff_all S morrisShmerkinLyapunov_holds equilibriumGibbs fraserJordanJurgaDecomposition_holds
     (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) hrot hprox hsep μ hinv heq c
 
 -- PAPER_ENTRY thm:main2
@@ -960,7 +960,7 @@ theorem paper_3_10 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSi
           (∀ (ν : Measure (ℤ → ι)),
               IsProbabilityMeasure ν → MeasurePreserving (shift 1) ν ν → MatrixTuple.IsEquilibriumState A s ν → ν = μ) ∧
             Ergodic (shift 1) μ ∧ MatrixTuple.HasGibbsBounds A s μ := by
-  exact MatrixTuple.irred_eq_state_of_fengKaenmaki (fengKaenmakiNormEquilibrium_holds) A hA hirr hs0
+  exact MatrixTuple.irred_eq_state_of_fengKaenmaki fengKaenmakiNormEquilibrium_holds A hA hirr hs0
 
 -- PAPER_ENTRY thm:two-block-normalisation
 /-! ### Lemma 3.11: Two-block normalisation
@@ -1028,7 +1028,7 @@ theorem paper_3_13 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSi
   {s : ℝ} (hrot : S.WithRotations) (hs0 : 0 < s) (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ]
   (hinv : MeasurePreserving (shift 1) μ μ) (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) :
   0 < μ (S.SigmaTau μ) ∧ 0 < μ (S.SigmaOmega μ) := by
-  exact System.sigma_tau_omega_positive_eq_measure S (equilibriumGibbs) hrot hs0 hs2 μ hinv herg heq
+  exact System.sigma_tau_omega_positive_eq_measure S equilibriumGibbs hrot hs0 hs2 μ hinv herg heq
 
 -- PAPER_ENTRY thm:eq_state_is_sum
 /-! ### Proposition 3.14: Decomposition of the equilibrium state into two Gibbs measures
@@ -1070,11 +1070,6 @@ theorem paper_3_14_7 {ι : Type u_1} [MeasurableSpace ι] {S : System ι} {s : �
   {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)} [Fintype ι] [MeasurableSingletonClass ι]
   (h : S.GibbsDecomposition s μ μ₁ μ₂) : S.lyapunov₂ μ = ∫ (y : ℤ → ι × ZMod 2), S.potential₂ 1 (y 0) ∂μ₁ := by
   exact System.GibbsDecomposition.lyapunov₂_eq_integral_potential₂ h
-
-theorem paper_3_14_8 {ι : Type u_1} [MeasurableSpace ι] {S : System ι} {s : ℝ} {μ : Measure (ℤ → ι)}
-  {μ₁ μ₂ : Measure (ℤ → ι × ZMod 2)} [Fintype ι] [MeasurableSingletonClass ι]
-  (h : S.GibbsDecomposition s μ μ₁ μ₂) : μ₂ = Measure.map flipAxis μ₁ := by
-  exact System.GibbsDecomposition.map_flip h
 
 /-! ## 4. Dimensions of the projections and the equilibrium state -/
 
@@ -1143,8 +1138,8 @@ theorem paper_4_4 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSin
       lowerHausdorffDim (S.marginal c μ) = min 1 (-entropy μ / S.lyapunov₂ μ) ∧
         0 < (S.marginal c μ) {x | HasLocalDim (S.marginal c μ) x (min 1 (-entropy μ / S.lyapunov₁ μ))} ∧
           0 < (S.marginal c μ) {x | HasLocalDim (S.marginal c μ) x (min 1 (-entropy μ / S.lyapunov₂ μ))} := by
-  exact System.eq_state_proj_dim_all S (morrisShmerkinLyapunov_holds) (equilibriumGibbs)
-    (fraserJordanJurgaDecomposition_holds) (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) hrot hprox
+  exact System.eq_state_proj_dim_all S morrisShmerkinLyapunov_holds equilibriumGibbs
+    fraserJordanJurgaDecomposition_holds (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) hrot hprox
     hsep hs0 μ hinv heq c
 
 -- PAPER_ENTRY ex:projection_double_dimensional
@@ -1152,43 +1147,47 @@ theorem paper_4_4 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSin
 
 `ex:projection_double_dimensional`. -/
 
+/-- The entropy functions and contractions used in the four-map construction. -/
+recall BoxLike.PrescribedExample.H (p : ℝ) : ℝ :=
+  -p * Real.log p - (1 - p) * Real.log (1 - p)
+recall BoxLike.PrescribedExample.J (p : ℝ) : ℝ :=
+  -p * Real.log (1 - p) - (1 - p) * Real.log p
+recall BoxLike.PrescribedExample.ratio (p : ℝ) : ℝ :=
+  (Real.log 2 + PrescribedExample.H p) / (Real.log 2 + PrescribedExample.J p)
+recall BoxLike.PrescribedExample.aOf (s₁ p : ℝ) : ℝ := (p / 2) ^ (1 / s₁)
+recall BoxLike.PrescribedExample.bOf (s₁ p : ℝ) : ℝ := ((1 - p) / 2) ^ (1 / s₁)
+
+/-- `paramsOf` bundles these contractions with `0 < b < a < 1/2`. The system `sys P t`
+has two diagonal maps `(a x + t_i, b y + t_{i+4})` and two anti-diagonal maps
+`(a y + t_i, b x + t_{i+4})`, indexed by `Fin 4`. -/
 theorem paper_4_5 {s₁ s₂ : ℝ} (hs₂ : 0 < s₂) (h₂₁ : s₂ < s₁) (hs₁ : s₁ ≤ 1) :
-  ∃ p,
-    ∃ (hp : 1 / 2 < p ∧ p < 1),
+    ∃ (p : ℝ) (hp : 1 / 2 < p ∧ p < 1),
       PrescribedExample.ratio p = s₂ / s₁ ∧
-        (∀ q ∈ Ioo (1 / 2) 1, PrescribedExample.ratio q = s₂ / s₁ → q = p) ∧
-          ∃ t,
-            have S :=
-              PrescribedExample.sys (PrescribedExample.paramsOf s₁ p (LT.lt.trans hs₂ h₂₁) hs₁ hp.left hp.right) t;
-            S.WithRotations ∧
-              S.Proximal ∧
-                S.StrongSeparation ∧
-                  S.ProjExpSeparation ∧
-                    S.dimaff = s₁ ∧
-                      (∃! μ, IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ ∧ S.IsEquilibriumState s₁ μ) ∧
-                        ∀ (μ : Measure (ℤ → Fin 4)) [IsProbabilityMeasure μ],
-                          MeasurePreserving (shift 1) μ μ →
-                            S.IsEquilibriumState s₁ μ →
-                              entropy μ = Real.log 2 + PrescribedExample.H p ∧
-                                S.lyapunov₁ μ =
-                                    p * Real.log (PrescribedExample.aOf s₁ p) +
-                                      (1 - p) * Real.log (PrescribedExample.bOf s₁ p) ∧
-                                  S.lyapunov₁ μ = -(Real.log 2 + PrescribedExample.H p) / s₁ ∧
-                                    S.lyapunov₂ μ =
-                                        p * Real.log (PrescribedExample.bOf s₁ p) +
-                                          (1 - p) * Real.log (PrescribedExample.aOf s₁ p) ∧
-                                      S.lyapunov₂ μ = -(Real.log 2 + PrescribedExample.J p) / s₁ ∧
-                                        -entropy μ / S.lyapunov₁ μ = s₁ ∧
-                                          -entropy μ / S.lyapunov₂ μ = s₂ ∧
-                                            ∀ (c : ZMod 2),
-                                              IsDoubleDim (S.marginal c μ) ∧
-                                                HasLocalDimPair (S.marginal c μ) s₁ s₂ ∧
-                                                  upperPackingDim (S.marginal c μ) = s₁ ∧
-                                                    lowerHausdorffDim (S.marginal c μ) = s₂ ∧
-                                                      0 < (S.marginal c μ) {x | HasLocalDim (S.marginal c μ) x s₁} ∧
-                                                        0 < (S.marginal c μ) {x | HasLocalDim (S.marginal c μ) x s₂} := by
-  exact PrescribedExample.projection_double_dimensional (morrisShmerkinLyapunov_holds) (equilibriumGibbs)
-    (fraserJordanJurgaDecomposition_holds) (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) hs₂ h₂₁ hs₁
+      (∀ q ∈ Ioo (1 / 2) 1, PrescribedExample.ratio q = s₂ / s₁ → q = p) ∧
+      ∃ t : Fin 8 → ℝ,
+        let S := PrescribedExample.sys
+          (PrescribedExample.paramsOf s₁ p (hs₂.trans h₂₁) hs₁ hp.1 hp.2) t
+        S.WithRotations ∧ S.Proximal ∧ S.StrongSeparation ∧ S.ProjExpSeparation ∧
+        S.dimaff = s₁ ∧
+        (∃! μ, IsProbabilityMeasure μ ∧ MeasurePreserving (shift 1) μ μ ∧
+          S.IsEquilibriumState s₁ μ) ∧
+        ∀ (μ : Measure (ℤ → Fin 4)) [IsProbabilityMeasure μ],
+          MeasurePreserving (shift 1) μ μ → S.IsEquilibriumState s₁ μ →
+          entropy μ = Real.log 2 + PrescribedExample.H p ∧
+          S.lyapunov₁ μ = p * Real.log (PrescribedExample.aOf s₁ p) +
+            (1 - p) * Real.log (PrescribedExample.bOf s₁ p) ∧
+          S.lyapunov₁ μ = -(Real.log 2 + PrescribedExample.H p) / s₁ ∧
+          S.lyapunov₂ μ = p * Real.log (PrescribedExample.bOf s₁ p) +
+            (1 - p) * Real.log (PrescribedExample.aOf s₁ p) ∧
+          S.lyapunov₂ μ = -(Real.log 2 + PrescribedExample.J p) / s₁ ∧
+          -entropy μ / S.lyapunov₁ μ = s₁ ∧ -entropy μ / S.lyapunov₂ μ = s₂ ∧
+          ∀ c : ZMod 2,
+            IsDoubleDim (S.marginal c μ) ∧ HasLocalDimPair (S.marginal c μ) s₁ s₂ ∧
+            upperPackingDim (S.marginal c μ) = s₁ ∧ lowerHausdorffDim (S.marginal c μ) = s₂ ∧
+            0 < (S.marginal c μ) {x | HasLocalDim (S.marginal c μ) x s₁} ∧
+            0 < (S.marginal c μ) {x | HasLocalDim (S.marginal c μ) x s₂} := by
+  exact PrescribedExample.projection_double_dimensional morrisShmerkinLyapunov_holds equilibriumGibbs
+    fraserJordanJurgaDecomposition_holds (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) hs₂ h₂₁ hs₁
 
 -- PAPER_ENTRY thm:gibbs_tau_omega_positive
 /-! ### Lemma 4.6: Positivity of the Gibbs measures on the orientation sets
@@ -1206,7 +1205,7 @@ theorem paper_4_6 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSin
           μ₁ (omega S.o '' S.SigmaTau μ) = 0 ∧ μ₁ (tau S.o '' S.SigmaOmega μ) = 0) ∧
       0 < μ₁ (tau S.o '' S.SigmaTau μ) ∧
         0 < μ₁ (omega S.o '' S.SigmaOmega μ) ∧ 0 < μ₂ (omega S.o '' S.SigmaTau μ) ∧ 0 < μ₂ (tau S.o '' S.SigmaOmega μ) := by
-  exact System.gibbs_tau_omega_positive S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) hrot hdiag hs0 hs2 μ hinv herg heq
+  exact System.gibbs_tau_omega_positive S morrisShmerkinLyapunov_holds equilibriumGibbs hrot hdiag hs0 hs2 μ hinv herg heq
     hdec
 
 -- PAPER_ENTRY thm:conditional_two_ways
@@ -1232,7 +1231,7 @@ theorem paper_4_7 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSin
           (y ∈ tau S.o '' S.SigmaOmega μ →
             condMeas (avgMeasure μ₁ μ₂) (S.xiBar 1) y = condMeas μ₂ (S.xiBar 1) y ∧
               condMeas μ₂ (S.xiBar 1) y = Measure.map (tau S.o) (condMeas μ (S.xiPerp μ) (unCode y))) := by
-  exact System.conditional_two_ways_normalised S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) hrot hdiag hs0 hs2 μ hinv
+  exact System.conditional_two_ways_normalised S morrisShmerkinLyapunov_holds equilibriumGibbs hrot hdiag hs0 hs2 μ hinv
     herg heq hdec
 
 -- PAPER_ENTRY thm:overline_h1_zero
@@ -1247,9 +1246,9 @@ theorem paper_4_8 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSin
   (hent : entropy μ ≤ -S.lyapunov₁ μ) [IsProbabilityMeasure μ₁] [IsProbabilityMeasure μ₂]
   (hdec : S.GibbsDecomposition s μ μ₁ μ₂) :
   ∀ᵐ (y : ℤ → ι × ZMod 2) ∂avgMeasure μ₁ μ₂, S.dimEntropyBarAt (avgMeasure μ₁ μ₂) 1 y = 0 := by
-  exact System.overline_h1_zero S (morrisShmerkinLyapunov_holds) (equilibriumGibbs)
-    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) (fengInfoSumBar_holds)
-    (fengLedrappierYoungBar_holds) hrot hdiag hsep hs0 hs2 μ hinv herg heq hent hdec
+  exact System.overline_h1_zero S morrisShmerkinLyapunov_holds equilibriumGibbs
+    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) fengInfoSumBar_holds
+    fengLedrappierYoungBar_holds hrot hdiag hsep hs0 hs2 μ hinv herg heq hent hdec
 
 -- PAPER_ENTRY thm:overline_h1_zero_large
 /-! ### Lemma 4.9: Vanishing of h̄_1 and Dirac conditional measures in the large-entropy case
@@ -1265,9 +1264,9 @@ theorem paper_4_9 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSin
   S.dimEntropyBar μ₂ 1 = 0 ∧
     ∀ᵐ (y : ℤ → ι × ZMod 2) ∂avgMeasure μ₁ μ₂,
       y ∈ S.slowPart μ → condMeas (avgMeasure μ₁ μ₂) (S.xiBar 1) y = Measure.dirac y := by
-  exact System.overline_h1_zero_large S (morrisShmerkinLyapunov_holds) (equilibriumGibbs)
-    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) (fengInfoSumBar_holds)
-    (fengLedrappierYoungBar_holds) hrot hdiag hsep hs0 hs2 μ hinv herg heq hent₂ hdec
+  exact System.overline_h1_zero_large S morrisShmerkinLyapunov_holds equilibriumGibbs
+    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) fengInfoSumBar_holds
+    fengLedrappierYoungBar_holds hrot hdiag hsep hs0 hs2 μ hinv herg heq hent₂ hdec
 
 -- PAPER_ENTRY thm:overline_h1_large
 /-! ### Lemma 4.10: The projective entropy h̄_1 of the Gibbs measures equals h_1
@@ -1282,8 +1281,8 @@ theorem paper_4_10 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSi
   S.dimEntropyBar μ₁ 1 = S.dimEntropy μ 1 ∧
     ∀ᵐ (y : ℤ → ι × ZMod 2) ∂avgMeasure μ₁ μ₂,
       y ∈ S.fastPart μ → S.dimEntropyBarAt (avgMeasure μ₁ μ₂) 1 y = S.dimEntropyBar μ₁ 1 := by
-  exact System.overline_h1_large S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) (fengInfoSum_holds)
-    (fengInfoSumBar_holds) hrot hdiag hs0 hs2 μ hinv herg heq hdec
+  exact System.overline_h1_large S morrisShmerkinLyapunov_holds equilibriumGibbs fengInfoSum_holds
+    fengInfoSumBar_holds hrot hdiag hs0 hs2 μ hinv herg heq hdec
 
 -- PAPER_ENTRY thm:eq_state_h1_zero
 /-! ### Proposition 4.11: h_1(μ) = 0 below the threshold
@@ -1295,9 +1294,9 @@ theorem paper_4_11 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSi
   (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
   (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) (hent : entropy μ ≤ -S.lyapunov₁ μ) :
   S.dimEntropy μ 1 = 0 ∧ ∀ᵐ (x : ℤ → ι) ∂μ, condMeas μ (S.xi μ 1) x = Measure.dirac x := by
-  exact System.eq_state_h1_zero S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) (fraserJordanJurgaDecomposition_holds)
-    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) (fengInfoSum_holds) (fengInfoSumBar_holds)
-    (fengLedrappierYoungBar_holds) hrot hdiag hsep hs0 hs2 μ hinv herg heq hent
+  exact System.eq_state_h1_zero S morrisShmerkinLyapunov_holds equilibriumGibbs fraserJordanJurgaDecomposition_holds
+    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) fengInfoSum_holds fengInfoSumBar_holds
+    fengLedrappierYoungBar_holds hrot hdiag hsep hs0 hs2 μ hinv herg heq hent
 
 -- PAPER_ENTRY thm:eq_state_h1_large
 /-! ### Proposition 4.12: h_1(μ) = h_0(μ) + λ_1 above the threshold
@@ -1309,9 +1308,9 @@ theorem paper_4_12 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSi
   (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
   (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) (hent : -S.lyapunov₁ μ ≤ entropy μ) :
   S.dimEntropy μ 1 = entropy μ + S.lyapunov₁ μ := by
-  exact System.eq_state_h1_large S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) (fraserJordanJurgaDecomposition_holds)
-    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) (fengInfoSum_holds) (fengInfoSumBar_holds)
-    (fengLedrappierYoungBar_holds) hrot hdiag hsep hs0 hs2 μ hinv herg heq hent
+  exact System.eq_state_h1_large S morrisShmerkinLyapunov_holds equilibriumGibbs fraserJordanJurgaDecomposition_holds
+    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) fengInfoSum_holds fengInfoSumBar_holds
+    fengLedrappierYoungBar_holds hrot hdiag hsep hs0 hs2 μ hinv herg heq hent
 
 -- PAPER_ENTRY thm:eq_state_h2_zero
 /-! ### Proposition 4.13: h_2(μ) = 0 below the threshold
@@ -1323,9 +1322,9 @@ theorem paper_4_13 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSi
   (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
   (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) (hent : entropy μ ≤ -S.lyapunov₁ μ) :
   S.dimEntropy μ 2 = 0 := by
-  exact System.eq_state_h2_zero S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) (fraserJordanJurgaDecomposition_holds)
-    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) (fengInfoSum_holds) (fengInfoSumBar_holds)
-    (fengLedrappierYoungBar_holds) hrot hdiag hsep hs0 hs2 μ hinv herg heq hent
+  exact System.eq_state_h2_zero S morrisShmerkinLyapunov_holds equilibriumGibbs fraserJordanJurgaDecomposition_holds
+    (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds) fengInfoSum_holds fengInfoSumBar_holds
+    fengLedrappierYoungBar_holds hrot hdiag hsep hs0 hs2 μ hinv herg heq hent
 
 -- PAPER_ENTRY thm:orto_partition_dirac
 /-! ### Proposition 4.14: Dirac conditional measures on the orthogonal partition
@@ -1337,9 +1336,9 @@ theorem paper_4_14 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSi
   (hs2 : s < 2) (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
   (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) (hent₂ : entropy μ ≤ -S.lyapunov₂ μ) :
   S.dimEntropy μ 2 = 0 := by
-  exact System.orto_partition_dirac S (morrisShmerkinLyapunov_holds) (equilibriumGibbs)
-    (fraserJordanJurgaDecomposition_holds) (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds)
-    (fengInfoSum_holds) (fengInfoSumBar_holds) (fengLedrappierYoungBar_holds) hrot hdiag hsep hs0 hs2 μ hinv herg heq
+  exact System.orto_partition_dirac S morrisShmerkinLyapunov_holds equilibriumGibbs
+    fraserJordanJurgaDecomposition_holds (jordanRapaportDimension_of_shmerkin shmerkinLqDimension_holds)
+    fengInfoSum_holds fengInfoSumBar_holds fengLedrappierYoungBar_holds hrot hdiag hsep hs0 hs2 μ hinv herg heq
     hent₂
 
 -- PAPER_ENTRY thm:SOSC_h2_zero
@@ -1351,7 +1350,7 @@ theorem paper_4_15 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSi
   {s : ℝ} (hrot : S.WithRotations) (hprox : S.Proximal) (hsosc : S.StrongOpenSet) (hs0 : 0 < s) (hs2 : s < 2)
   (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
   (herg : Ergodic (shift 1) μ) (heq : S.IsEquilibriumState s μ) : S.dimEntropy μ 2 = 0 := by
-  exact System.SOSC_h2_zero S (morrisShmerkinLyapunov_holds) (equilibriumGibbs) (fengInfoSum_holds) hrot hprox hsosc hs0 hs2
+  exact System.SOSC_h2_zero S morrisShmerkinLyapunov_holds equilibriumGibbs fengInfoSum_holds hrot hprox hsosc hs0 hs2
     μ hinv herg heq
 
 -- PAPER_ENTRY thm:main_extended
@@ -1391,8 +1390,8 @@ theorem paper_4_17 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableSi
   (μ : Measure (ℤ → ι)) [IsProbabilityMeasure μ] (hinv : MeasurePreserving (shift 1) μ μ)
   (heq : S.IsEquilibriumState S.dimaff μ) :
   ENNReal.ofReal (min S.dimaff (2 - S.lyapunov₁ μ / S.lyapunov₂ μ)) ≤ dimH S.attractor := by
-  exact System.threshold_bound S shannonMcMillanBreiman (morrisShmerkinLyapunov_holds) (equilibriumGibbs)
-    (fraserJordanJurgaDecomposition_holds) (fengLedrappierYoung_holds) (kittleKoglerDimension_holds) hrot hprox hfree
+  exact System.threshold_bound S shannonMcMillanBreiman morrisShmerkinLyapunov_holds equilibriumGibbs
+    fraserJordanJurgaDecomposition_holds fengLedrappierYoung_holds kittleKoglerDimension_holds hrot hprox hfree
     h9 μ hinv heq
 
 /-! ## Two unnumbered dimension consequences -/
@@ -1434,14 +1433,10 @@ theorem audit_main1 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableS
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ) (c : ZMod 2) :
     (S.dimaff < 2 - S.lyapunov₁ μ / S.lyapunov₂ μ → IsDoubleDim (S.marginal c μ)) ∧
       (2 - S.lyapunov₁ μ / S.lyapunov₂ μ ≤ S.dimaff → IsExactDim (S.marginal c μ) 1) := by
-  have hjr : BoxLike.JordanRapaportDimension.{u} :=
-    BoxLike.jordanRapaportDimension_of_shmerkin BoxLike.shmerkinLqDimension_holds
   simp only [withRotations_iff, proximal_iff, projExpSeparation_iff, dimaff_eq, shift_eq,
     isEquilibriumState_iff] at hrot hprox hsep hinv heq
   simp only [isDoubleDim_iff, isExactDim_iff, marginal_eq, dimaff_eq, lyapunov₁_eq, lyapunov₂_eq]
-  exact (toLib S).main1_dimaff_all BoxLike.morrisShmerkinLyapunov_holds
-    BoxLike.equilibriumGibbs BoxLike.fraserJordanJurgaDecomposition_holds hjr hrot hprox hsep μ
-    hinv heq c
+  exact Solution.Paper.paper_A (toLib S) hrot hprox hsep μ hinv heq c
 
 /-- Theorem 4.4 (`thm:eq_state_proj_dim`), for every `s`-equilibrium state, `s > 0`: the
 pointwise dimension of each coordinate projection exists almost everywhere and takes at most the
@@ -1489,13 +1484,10 @@ theorem audit_main2 {ι : Type u} [Fintype ι] [MeasurableSpace ι] [MeasurableS
   simp only [withRotations_iff, proximal_iff, noExactOverlaps_iff, dimaff_eq, shift_eq,
     isEquilibriumState_iff, lyapunov₁_eq, lyapunov₂_eq, strongOpenSet_iff, projExpSeparation_iff]
     at hrot hprox hfree hinv heq hor
-  refine ⟨?_, fun hsep hor' => ?_⟩
-  · rw [attractor_eq, dimaff_eq]
-    exact (toLib S).main2_full_of_library hrot hprox hfree μ hinv heq hor
-  · rw [projExpSeparation_iff] at hsep
-    simp only [dimaff_eq, lyapunov₁_eq, lyapunov₂_eq, strongOpenSet_iff] at hor'
-    rw [isExactDim_iff, proj_eq, dimaff_eq]
-    exact (toLib S).main2_furthermore_of_library hrot hprox hsep μ hinv heq hor'
+  rw [attractor_eq, dimaff_eq]
+  simp only [projExpSeparation_iff, strongOpenSet_iff, isExactDim_iff, proj_eq,
+    lyapunov₁_eq, lyapunov₂_eq]
+  exact Solution.Paper.paper_B (toLib S) hrot hprox hfree μ hinv heq hor
 
 /-- Theorem 4.16 (`thm:main_extended`), for every `s`-equilibrium state with `s = dimaff(X)`. -/
 theorem audit_main_extended {ι : Type u} [Fintype ι] [MeasurableSpace ι]
@@ -1506,18 +1498,11 @@ theorem audit_main_extended {ι : Type u} [Fintype ι] [MeasurableSpace ι]
     (hinv : MeasurePreserving (shift 1) μ μ) (heq : S.IsEquilibriumState S.dimaff μ)
     (hor : entropy μ ≤ -S.lyapunov₂ μ ∨ S.StrongOpenSet) :
     IsExactDim (μ.map S.proj) S.dimaff ∧ S.dimaff ≤ 2 := by
-  have hjr : BoxLike.JordanRapaportDimension.{u} :=
-    BoxLike.jordanRapaportDimension_of_shmerkin BoxLike.shmerkinLqDimension_holds
   simp only [withRotations_iff, proximal_iff, projExpSeparation_iff, dimaff_eq, shift_eq,
     isEquilibriumState_iff, entropy_eq, lyapunov₂_eq, strongOpenSet_iff]
     at hrot hprox hsep hinv heq hor
   rw [isExactDim_iff, proj_eq, dimaff_eq]
-  have := (toLib S).nontrivial_of_withRotations hrot
-  exact (toLib S).main_extended BoxLike.morrisShmerkinLyapunov_holds BoxLike.equilibriumGibbs
-    BoxLike.fraserJordanJurgaDecomposition_holds hjr
-    BoxLike.fengInfoSum_holds BoxLike.fengInfoSumBar_holds BoxLike.fengLedrappierYoung_holds
-    BoxLike.fengLedrappierYoungBar_holds hrot hprox
-    hsep (toLib S).dimaff_pos (toLib S).pressure_dimaff μ hinv heq hor
+  exact Solution.Paper.paper_4_16 (toLib S) hrot hprox hsep μ hinv heq hor
 
 /-- Theorem 4.16 (`thm:main_extended`) for `s ≥ 2` under the strong open set condition:
 `π_*μ` is exact-dimensional of dimension two. Rotations, proximality and separation are not

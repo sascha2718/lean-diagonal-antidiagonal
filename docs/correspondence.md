@@ -55,13 +55,18 @@ theorem directly.
 
 ## Verification
 
-On the current tree: the build passes with only the three intentional `sorry` of
-`Challenge.lean`; the axiom audit passes for 7,580 project constants and 3,463 vendored ones;
-the module header check (272 Lean sources), the vocabulary check (42 definitions), the
-Solution entry check (`--require-complete`) and the correspondence check pass, the manifest
-being reviewed at commit `60ff8b3ad41bd7260460cadbb011e5717909b4cb` of the manuscript;
-`git diff --check` is clean; the local unsandboxed comparator run accepts the three headlines
-(con-ron, nanoda and the Lean kernel).
+The last full correspondence review recorded manuscript commit
+`60ff8b3ad41bd7260460cadbb011e5717909b4cb`. The manuscript has since changed: the fingerprint
+check flags Lemma 3.7, Proposition 3.14, Theorem 4.2, Example 4.5, and the whole manuscript.
+The 5 November 2026 rewrite of Solution's presentation leaves these fingerprints unchanged;
+it does not constitute a new review of those manuscript changes.
+
+The entry check requires an explicitly typed theorem for each proved numbered result and a
+proposition definition for Theorem 1.1 and Question 1.4; abbreviation lists are rejected.
+Lean checks the displayed definitions, their recursive equations, and the numbered proofs.
+The three independent headline declarations and the 42 Challenge definitions are unchanged.
+The build, axiom audit, vocabulary check and local comparator are separate from the manuscript
+fingerprint check; their commands are in the README.
 
 ## Every numbered entry
 
