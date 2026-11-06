@@ -17,7 +17,7 @@ script checks that the manifest agrees with the manuscript, the Lean sources,
   `Challenge.lean`;
 * the headline entries, `comparator-config.json`, `Challenge.lean`, `Solution.lean` and the
   alignment section of `formalization.yaml` name the same audited theorems;
-* `docs/correspondence.md` mentions every numbered statement and every audited theorem.
+* `docs/correspondence.md` links to the statement mapping and names every audited theorem.
 
 Fingerprints hash the TeX tokens of a span, ignoring comments and layout whitespace. After a
 manuscript change has been reviewed against the Lean side, `--write-fingerprints` records the
@@ -926,16 +926,12 @@ def main() -> int:
     except (OSError, json.JSONDecodeError) as exc:
         errors.append(f"cannot read {formalization_path}: {exc}")
 
-    # docs/correspondence.md must assess every numbered statement and name every endpoint.
+    # The prose note links to the canonical mapping rather than duplicating its entries.
     correspondence_path = lean_root / "docs" / "correspondence.md"
     try:
         correspondence_text = correspondence_path.read_text(encoding="utf-8")
-        for entry in entries:
-            if entry["kind"] == "prose":
-                continue
-            key = entry.get("label") or entry["source"]
-            if key not in correspondence_text:
-                errors.append(f"docs/correspondence.md does not mention the numbered statement {key}")
+        if "(../paper-correspondence.yaml)" not in correspondence_text:
+            errors.append("docs/correspondence.md does not link to paper-correspondence.yaml")
         for name in sorted(comparator_set):
             if name.rsplit(".", 1)[-1] not in correspondence_text:
                 errors.append(f"docs/correspondence.md does not mention the audited endpoint {name}")

@@ -1,249 +1,141 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
-# Provenance metadata for the Lean formalisation accompanying
-# "Hausdorff dimension of planar box-like self-affine sets with rotations" (Käenmäki, Prokaj,
-# Simon and Troscheit, arXiv:XXXX.XXXXX).
-# Follows the mathlib-initiative formalization.yaml v0.4 self-reporting format.
-# TODO(authors): replace the placeholder arXiv:XXXX.XXXXX throughout once the paper is posted.
-
 version: "v0.4"
 
 project:
   name: "Hausdorff dimension of planar box-like self-affine sets with rotations: Lean formalisation"
   description: >-
-    Lean formalisation of the manuscript, with an entry for every numbered statement in
-    Solution.lean. Challenge.lean states the three headline results (Theorems A, B and 4.16) over
-    Mathlib with the 42 definitions their statements need; all three are proved for their full
-    ranges with no literature hypothesis. Every numbered statement is formalised, including
-    Rapaport's theorem (Theorem 1.2 of the paper, proved in BoxLike/Rapaport/), except the cited
-    theorem of Hochman–Rapaport (Theorem 1.1), recorded as a Prop-valued statement that is not
-    proved and used nowhere, and Question 1.4, which is open.
-  authors:
-    - "Sascha Troscheit"
+    Lean 4 formalisation of dimension formulas for planar box-like self-affine sets with
+    rotations and their equilibrium measures. The headline results are Theorems A, B and 4.16;
+    Solution.lean presents the numbered statements in manuscript order.
+  authors: ["Sascha Troscheit"]
   license: "Apache-2.0"
-  responsible_maintainers:
-    - "Sascha Troscheit"  # TODO(authors): confirm.
+  responsible_maintainers: ["Sascha Troscheit"]  # TODO(authors): confirm.
 
 classification:
-  arxiv: ["math.DS", "math.MG", "math.CA"]  # TODO(authors): match the categories of the arXiv submission.
-  msc2020: ["28A80", "37C45", "37D35", "68V20"]  # TODO(authors): the paper gives 28A80, 37C45, 37D35; confirm 68V20.
+  arxiv: ["math.DS", "math.MG", "math.CA"]  # TODO(authors): submission categories.
+  msc2020: ["28A80", "37C45", "37D35", "68V20"]  # TODO(authors): confirm 68V20.
 
 sources:
   - title: "Hausdorff dimension of planar box-like self-affine sets with rotations"
-    authors:
-      - "Antti Käenmäki"
-      - "R. Dániel Prokaj"
-      - "Károly Simon"
-      - "Sascha Troscheit"
+    authors: ["Antti Käenmäki", "R. Dániel Prokaj", "Károly Simon", "Sascha Troscheit"]
     type: "paper"
-    id: "arXiv:XXXX.XXXXX"  # TODO(authors): the arXiv identifier.
-    location: "Theorems A, B, 4.4 and 4.16; Section 4.1"
+    id: "arXiv:XXXX.XXXXX"  # TODO(authors): add the assigned arXiv identifier.
+    location: "diagonal-antidiagonal.tex"
     relationship: "formalizes"
-    note: >-
-      The paper whose results are formalised here. paper-correspondence.yaml maps every numbered
-      statement, with a fingerprint of its LaTeX source, to the Lean declarations.
-    license: ""  # TODO(authors): the licence under which the paper is posted.
-    author_endorsement: "participated"  # TODO(authors): confirm.
+    license: ""  # TODO(authors): paper licence.
+    author_endorsement: "participated"
+    note: "Statement mapping and source fingerprints: paper-correspondence.yaml."
   - title: "Dimension of diagonal self-affine sets and measures via non-conformal partitions"
-    authors:
-      - "Ariel Rapaport"
+    authors: ["Ariel Rapaport"]
     type: "preprint"
     id: "arXiv:2309.03985"
     location: "arXiv:2309.03985v1, Theorem 1.3 (Theorem 1.2 of the paper)"
     relationship: "other"
-    note: >-
-      Theorem 1.3 in the plane as the Prop-valued statement RapaportDiagonalDimension
-      (BoxLike/LiteratureRapaport.lean): for a box-like system with diagonal linear parts,
-      proximal, whose induced systems on both coordinate axes are exponentially separated,
-      dim_H X = min{2, dimaff(X)}. Proved as Rapaport.rapaportDiagonalDimension_holds in
-      BoxLike/Rapaport/ along Sections 2 to 7 of the source, with the vendored Kittle-Kogler
-      central limit theorem in place of Berry-Esseen (docs/correspondence.md).
-      Used by case (iii) of Theorem B. No deviation in the hypotheses or the conclusion.
+    note: "The planar case is proved in BoxLike/Rapaport/ and used in Theorem B(iii)."
   - title: "Hausdorff dimension of planar self-affine sets and measures with overlaps"
-    authors:
-      - "Michael Hochman"
-      - "Ariel Rapaport"
+    authors: ["Michael Hochman", "Ariel Rapaport"]
     type: "article"
     id: "doi:10.4171/jems/1127"
     location: "J. Eur. Math. Soc. 24 (2022), Theorem 1.1 (numbering of arXiv:1904.09812v2; Theorem 1.1 of the paper)"
     relationship: "other"
-    note: >-
-      Theorem 1.1 as the Prop-valued statement HochmanRapaportDimension
-      (BoxLike/LiteratureHochmanRapaport.lean): proximal, strongly irreducible, no common fixed
-      point, exponentially separated. Not proved; no result of the library uses it. Deviations
-      from the source: the distance of the affine coefficients (PlanarSystem.affDist) in place of
-      a left-invariant Riemannian metric, comparable along words of length n up to factors
-      exponential in n, so the same condition with another constant; the bound c^n along
-      infinitely many n in place of every n, the weaker form the source allows; proximal strongly
-      irreducible, the paper's phrasing, in place of non-conformal and totally irreducible, so the
-      statement is a consequence of the source's theorem. The printed statement of the paper
-      omits the hypothesis of no common fixed point; the Lean statement keeps it (see
-      docs/correspondence.md).
+    note: "Recorded as HochmanRapaportDimension without proof; unused by the development."
   - title: "On equality of Hausdorff and affinity dimensions, via self-affine measures on positive subsystems"
-    authors:
-      - "Ian D. Morris"
-      - "Pablo Shmerkin"
+    authors: ["Ian D. Morris", "Pablo Shmerkin"]
     type: "article"
     id: "doi:10.1090/tran/7334"
     location: "Trans. Amer. Math. Soc. 371 (2019), Theorem 3.1 and Lemmas 3.4 and 3.5 (numbering of arXiv:1602.08789v3)"
     relationship: "independently-proves"
-    note: >-
-      Theorem 3.1 as MorrisShmerkinLyapunov (BoxLike/Literature.lean), proved along Lemmas 3.4 and
-      3.5 (morrisShmerkinLyapunov_holds).
   - title: "Equilibrium states of the pressure function for products of matrices"
-    authors:
-      - "De-Jun Feng"
-      - "Antti Käenmäki"
+    authors: ["De-Jun Feng", "Antti Käenmäki"]
     type: "article"
     id: "doi:10.3934/dcds.2011.30.699"
     location: "Discrete Contin. Dyn. Syst. 30 (2011), Proposition 1.2"
     relationship: "independently-proves"
-    note: >-
-      Proposition 1.2 in the form of the source as FengKaenmakiNormEquilibrium
-      (BoxLike/LiteratureFengKaenmaki.lean), proved (fengKaenmakiNormEquilibrium_holds,
-      BoxLike/QuasiMultiplicative/); its box-like specialisations FengKaenmakiGibbs and
-      FengKaenmakiUnique follow. For tuples with rotations Proposition 3.10 is proved outright
-      (System.irred_eq_state_of_withRotations, equilibriumGibbs).
   - title: "Dimensions of equilibrium measures on a class of planar self-affine sets"
-    authors:
-      - "Jonathan M. Fraser"
-      - "Thomas Jordan"
-      - "Natalia Jurga"
+    authors: ["Jonathan M. Fraser", "Thomas Jordan", "Natalia Jurga"]
     type: "article"
     id: "doi:10.4171/jfg/85"
     location: "J. Fractal Geom. 7 (2020), Lemma 1.3 and Corollaries 1.5 and 1.6"
     relationship: "independently-proves"
-    note: >-
-      Lemma 1.3 and Corollaries 1.5 and 1.6 as FraserJordanJurgaDecomposition
-      (BoxLike/Literature.lean), proved from Bowen's theorem
-      (fraserJordanJurgaDecomposition_holds, BoxLike/FraserJordanJurga/).
   - title: "Dimension of ergodic measures projected onto self-similar sets with overlaps"
-    authors:
-      - "Thomas Jordan"
-      - "Ariel Rapaport"
+    authors: ["Thomas Jordan", "Ariel Rapaport"]
     type: "article"
     id: "doi:10.1112/plms.12337"
     location: "Proc. Lond. Math. Soc. (3) 122 (2021), Theorem 1.1 (numbering of arXiv:1908.00271)"
     relationship: "other"
-    note: >-
-      Theorem 1.1 as JordanRapaportDimension (BoxLike/Literature.lean), proved along Section 2 of
-      the source from Shmerkin's theorem (jordanRapaportDimension_of_shmerkin,
-      BoxLike/JordanRapaport.lean).
   - title: "On Furstenberg's intersection conjecture, self-similar measures, and the L^q norms of convolutions"
-    authors:
-      - "Pablo Shmerkin"
+    authors: ["Pablo Shmerkin"]
     type: "article"
     id: "arXiv:1609.07802"
     location: "Ann. of Math. (2) 189 (2019), Theorem 6.6 (numbering of arXiv:1609.07802v3)"
     relationship: "other"
     note: >-
-      The lower bound of Theorem 6.6 as ShmerkinLqDimension (BoxLike/Literature.lean), proved
-      along the source (shmerkinLqDimension_holds, BoxLike/Shmerkin/), with Theorem 3.2 after B.
-      Green's notes and Bourgain's Theorem 3.1 in a weak form from Hochman's saturation theorem of
-      the vendored library ExactOverlaps.
+      The required lower bound is proved, using a weaker form of Bourgain's structure theorem;
+      see docs/correspondence.md.
   - title: "Dimension of invariant measures for affine iterated function systems"
-    authors:
-      - "De-Jun Feng"
+    authors: ["De-Jun Feng"]
     type: "article"
     id: "doi:10.1215/00127094-2022-0014"
     location: "Duke Math. J. 172 (2023), Lemma 4.6 and Theorems 1.2 and 1.3 (numbering of arXiv:1901.01691v2)"
     relationship: "other"
-    note: >-
-      Theorems 1.2 (ii) and 1.3 in the plane as PlanarFengLedrappierYoung
-      (BoxLike/LiteraturePlanarFeng.lean), proved along Sections 4 to 6
-      (planarFengLedrappierYoung_holds, BoxLike/FengLedrappierYoung.lean); the box-like forms
-      FengLedrappierYoung and FengLedrappierYoungBar follow. Lemma 4.6 as FengInfoSum and
-      FengInfoSumBar, proved (fengInfoSum_holds, fengInfoSumBar_holds).
+    note: "The planar statements and their projective specialisations are proved."
   - title: "The exact overlaps conjecture for self-similar measures on the real line"
-    authors:
-      - "Samuel Kittle"
-      - "Constantin Kogler"
+    authors: ["Samuel Kittle", "Constantin Kogler"]
     type: "preprint"
     id: "arXiv:2610.10511"
     location: "arXiv:2610.10511 (7 October 2026), Theorem 1.1"
     relationship: "other"
-    note: >-
-      Theorem 1.1 as KittleKoglerDimension (BoxLike/Literature.lean), proved from the authors'
-      Lean formalisation of the source, the library ExactOverlaps carried verbatim in vendor/
-      (kittleKoglerDimension_holds, BoxLike/KittleKogler.lean).
+    note: "Derived from the vendored ExactOverlaps library."
   - title: "Dimension theory of iterated function systems"
-    authors:
-      - "De-Jun Feng"
-      - "Huyi Hu"
+    authors: ["De-Jun Feng", "Huyi Hu"]
     type: "article"
     id: "doi:10.1002/cpa.20276"
     location: "Comm. Pure Appl. Math. 62 (2009), Theorem 2.8"
     relationship: "other"
-    note: >-
-      Theorem 2.8 as FengHuExactDim (BoxLike/LiteratureRemarks.lean), proved along Feng–Hu's
-      density argument (fengHuExactDim_holds, BoxLike/FengHu.lean). Used only in a remark.
+    note: "Proved in BoxLike/FengHu.lean; used only in a remark."
   - title: "On the packing dimension of box-like self-affine sets in the plane"
-    authors:
-      - "Jonathan M. Fraser"
+    authors: ["Jonathan M. Fraser"]
     type: "article"
     id: "doi:10.1088/0951-7715/25/7/2075"
     location: "Nonlinearity 25 (2012), Theorem 2.3 and Corollary 2.5 (numbering of arXiv:1108.2639v1)"
     relationship: "independently-proves"
-    note: >-
-      Theorem 2.3 as System.FraserBound and System.FraserROSC (BoxLike/FraserChain.lean), proved
-      along Section 5 (System.fraserBound_holds, System.fraserROSC_holds, BoxLike/Fraser/);
-      Corollary 2.5 follows.
   - title: "Super-exponential condensation without exact overlaps"
-    authors:
-      - "Balázs Bárány"
-      - "Antti Käenmäki"
+    authors: ["Balázs Bárány", "Antti Käenmäki"]
     type: "article"
     id: "arXiv:1910.04623"
     location: "Adv. Math. 379 (2021), Theorem 2.1 (numbering of arXiv:1910.04623v4)"
     relationship: "other"
     note: >-
-      Theorem 2.1 as stated (NoOverlap.BaranyKaenmakiTheorem) is false (not_baranyKaenmakiTheorem,
-      BoxLike/BaranyKaenmakiCounterexample.lean). The form the proof of Proposition 2.7 uses,
-      NoOverlap.BaranyKaenmakiPair, is proved by a Baire category argument
-      (baranyKaenmakiPair_holds, BoxLike/BaranyKaenmaki.lean).
+      The form with constant C_0 used in Proposition 2.7 is proved. The literal source statement
+      has a counterexample; see docs/correspondence.md.
   - title: "Local dimensions of measures on infinitely generated self-affine sets"
-    authors:
-      - "Eino Rossi"
+    authors: ["Eino Rossi"]
     type: "article"
     id: "doi:10.1016/j.jmaa.2013.12.030"
     location: "J. Math. Anal. Appl. 413 (2014), Theorem 2.2"
     relationship: "independently-proves"
-    note: >-
-      Theorem 2.2 as System.RossiBound (BoxLike/DimensionFormula.lean), proved by a covering
-      argument (System.rossiBound). No theorem takes it.
   - title: "The Hausdorff dimension of self-affine fractals"
-    authors:
-      - "K. J. Falconer"
+    authors: ["K. J. Falconer"]
     type: "article"
     id: "doi:10.1017/S0305004100064926"
-    location: "Math. Proc. Cambridge Philos. Soc. 103 (1988), cited in the paper as Theorem 5.4"  # TODO(authors): check the theorem number against the source.
+    location: "Math. Proc. Cambridge Philos. Soc. 103 (1988), proof of Theorem 5.4, pp. 347–348"
     relationship: "independently-proves"
     note: >-
-      The bound min{2, dimaff(X)} for the upper Minkowski and Hausdorff dimensions, proved for
-      every planar self-affine set (PlanarSystem.dimH_attractor_le) and every box-like set
-      (System.dimH_attractor_le).
+      The proof gives the upper box-dimension bound for every translation tuple, hence the
+      Hausdorff bound.
 
-# No earlier formalisation of these results, in Lean or another system, is known to the authors.
-# The entry below formalises a cited input, not a result of the manuscript.
-# TODO(authors): confirm.
 related_formalizations:
   - id: "https://github.com/ckkogler/exact-overlaps-one-dim-lean"
     relationship: "builds-on"
     note: >-
-      Lean 4 formalisation of Kittle–Kogler, The exact overlaps conjecture for self-similar
-      measures on the real line (arXiv:2610.10511), by its authors, on the same Mathlib commit.
-      This repository carries its library ExactOverlaps verbatim in vendor/ at commit
-      99c43adec5c5127ff9a65663641fe51f57c8f7d3 and derives KittleKoglerDimension from its
-      Theorem 1.1, exact-dimensionality theorem and entropy identity (kittleKoglerDimension_holds).
+      ExactOverlaps is vendored verbatim at commit 99c43adec5c5127ff9a65663641fe51f57c8f7d3; see
+      vendor/README.md.
 
 status:
   scope: >-
-    All 44 numbered statements: 42 formalised (among them Theorem 1.2, Rapaport's theorem, proved
-    in BoxLike/Rapaport/), 1 cited (Theorem 1.1, Hochman–Rapaport, recorded as a Prop-valued
-    statement that is not proved and used nowhere) and 1 open question (Question 1.4, recorded as
-    a proposition). With the 48 prose spans the manifest reads 88 formalised, 1 cited and 3
-    intentionally unformalised, with 1 literature hypothesis. The three headline proofs are
-    complete with no literature hypothesis; the library and Solution have no sorry and no
-    declared axiom.
+    All 44 numbered statements are recorded: 42 are formalised, Theorem 1.1 is cited and unused,
+    and Question 1.4 is open. The three headline results cover their full parameter ranges
+    without unproved literature assumptions. Counts exclude the intentional Challenge holes.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: ["propext", "Classical.choice", "Quot.sound"]
@@ -259,7 +151,7 @@ status:
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
       comparator_config: "comparator-config.json"
-      literature_dependencies: ["BoxLike.RapaportDiagonalDimension"]
+      literature_dependencies: []
     - declaration: "Challenge.audit_main_extended"
       file: "Solution.lean"
       sorry_count: 0
@@ -272,64 +164,35 @@ automation:
     - method: "agent"
       models: ["Claude Opus 5.5 (claude-opus-5-5, Anthropic)"]
       framework: "Claude Code (Anthropic)"
-      tool_setup: >-
-        Agentic Lean development in Claude Code, Claude Opus 5.5 (claude-opus-5-5): a coordinator
-        agent integrating the work of parallel worker agents, one per task.
+      tool_setup: "Lean proof development with a coordinator integrating task-specific workers."
       cost:
         wall_time: "not tracked"  # TODO(authors): confirm.
         spend_usd: "subscription-based"  # TODO(authors): confirm.
         hardware: "local machine"
-      prompting_notes: "n/a"
     - method: "manual"
-      models: []
-      framework: "n/a"
-      tool_setup: >-
-        Direction of the formalisation; the decision that cited theorems enter as explicit
-        hypotheses of the results that use them.
-      # TODO(authors): add any manual statement design, review of Challenge.lean against the
-      # paper, or review of retained arguments that took place.
-      cost:
-        wall_time: "not tracked"
-        spend_usd: "not tracked"
-        hardware: "local machine"
-      prompting_notes: "n/a"
+      tool_setup: "Mathematical direction and review of the paper and formal statements."
   spend_usd: "not tracked"  # TODO(authors): confirm.
   notes: >-
-    AI tools carried out the Lean formalisation. The library has no sorry and no declared axiom;
-    the comparator audit of the three headline statements permits only propext, Classical.choice
-    and Quot.sound.
-  # TODO(authors): add the statements on manual review and on responsibility for the contents,
-  # as in the JA-ST formalisation, once they hold.
+    LLMs were used extensively for Lean formalisation. In the paper, they assisted language
+    editing, occasional prose drafting from the authors' descriptions, and reference searches
+    and checks. Mathematical drafting, routine details and checks were limited to the s >= 2
+    arguments in Lemma 3.12 and Theorems 4.4 and 4.16, Proposition 2.7, Remark 4.17 and Example
+    4.5, using the authors' own ideas and proof strategies.
 
 fidelity:
   divergences: >-
-    The alphabet is a finite type ι with an orientation o : ι → ZMod 2 in place of the labelling
-    {1, ..., N}; the alphabet of Σ_Z is ι × ZMod 2. The plane is ℝ × ℝ with the supremum norm,
-    and pointwise dimensions use its closed balls. Where the paper speaks of the unique
-    s-equilibrium state, the audited statements hold for every shift-invariant s-equilibrium
-    state. Theorem A is stated with the printed notion of a double-dimensional measure
-    (IsDoubleDim): the pointwise dimension exists almost everywhere and takes exactly two values,
-    each on a set of positive measure. Theorem B is stated with its three conditions as a
-    disjunction and its furthermore clause as a second conjunct; case (iii) uses Rapaport's
-    theorem, proved in BoxLike/Rapaport/, so no headline result takes a literature hypothesis.
-    Theorem 4.16 is stated as exact-dimensionality of the projected equilibrium state with
-    dimension dimaff(X) together with dimaff(X) ≤ 2, projective exponential separation being
-    assumed only when dimaff(X) < 2. Every cited theorem the main line uses is a theorem of the
-    library (see sources). Challenge.lean has one sorry per audited theorem; comparator-config.json
-    declares no definition_names.
+    Lean uses a finite type for the alphabet, ZMod 2 for orientations, and supremum-norm closed
+    balls in the plane. The headline statements apply to every invariant equilibrium state.
+    Scope and proof differences are recorded in docs/correspondence.md.
 
 review:
   status: "self-assessed"
-  reviewers:
-    - "Sascha Troscheit"  # TODO(authors): list the authors who assessed the formalisation.
+  reviewers: ["Antti Käenmäki", "R. Dániel Prokaj", "Károly Simon", "Sascha Troscheit"]
   notes: >-
-    The entry assessments are made with Claude Opus 5.5 agents in Claude Code, followed by Lean
-    builds; no LaTeX is changed. Scope and proof deviations are recorded in
-    docs/correspondence.md. There is no independent human review. The comparator checks that the
-    Solution proofs agree with Challenge from the permitted axioms; it does not check fidelity to
-    the paper or to the cited sources.
-  # TODO(authors): record any manual review of Challenge.lean and of the literature hypotheses
-  # against the paper and the sources.
+    The authors checked the formal statements and their dependent definitions against the paper,
+    every paper argument themselves, and every reference against its source. They take full
+    responsibility for the paper. Comparator checks agreement between Challenge and Solution;
+    correspondence with the paper is assessed by the authors.
 
 alignment:
   namespace: "Challenge"
@@ -337,33 +200,14 @@ alignment:
     - source: "Theorem A (thm:main1)"
       lean: "Challenge.audit_main1"
       module: "Challenge"
-      status: "literature-dependency"
-      note: >-
-        Full parameter range, from System.main1_dimaff_all: below the threshold the marginal is
-        the sum of two nonzero exact-dimensional Gibbs projections of distinct dimensions, hence
-        double-dimensional (Lemma 4.1); from the threshold on it is exact-dimensional of dimension
-        one; below two by the Gibbs decomposition, from two on by the orientation lift of
-        Theorem 4.4. No literature input.
+      status: "formalized"
     - source: "Theorem B (thm:main2)"
       lean: "Challenge.audit_main2"
       module: "Challenge"
-      status: "literature-dependency"
-      note: >-
-        Full parameter range, from System.main2_full_of_library and
-        System.main2_furthermore_of_library: cases (i) and (ii) along the proof of the manuscript
-        (System.main2_prose); case (iii) from Rapaport's theorem, proved in BoxLike/Rapaport/
-        (Rapaport.rapaportDiagonalDimension_holds) and applied to the homogeneous diagonal
-        subsystems (System.main2_pesc); the furthermore clause from Theorem 4.16
-        (System.main_extended_min). No literature input.
+      status: "formalized"
     - source: "Theorem 4.16 (thm:main_extended)"
       lean: "Challenge.audit_main_extended"
       module: "Challenge"
-      status: "literature-dependency"
-      note: >-
-        Full parameter range, from System.main_extended: exact dimension dimaff(X) and
-        dimaff(X) ≤ 2, with projective exponential separation required only when
-        dimaff(X) < 2. No literature input.
+      status: "formalized"
 
-acknowledgements: >-
-  Lean 4 and Mathlib (leanprover-community), the leanprover comparator with the kernels bundled
-  in the Lean toolchain, and Anthropic models as recorded under automation.
+acknowledgements: "Lean 4, Mathlib, Comparator, and the Anthropic models listed under automation."
