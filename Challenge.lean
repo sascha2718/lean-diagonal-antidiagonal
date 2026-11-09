@@ -7,7 +7,8 @@ public import Mathlib
 /-!
 # Hausdorff dimension of planar box-like self-affine sets with rotations
 
-Theorems A, B and 4.16 of Käenmäki–Prokaj–Simon–Troscheit.
+Theorems A, B and 4.16 of Käenmäki–Prokaj–Simon–Troscheit,
+[arXiv:2611.09066v1](https://arxiv.org/abs/2611.09066v1).
 The symbolic space is `ℤ → ι`; the plane is `ℝ × ℝ` with the supremum metric.
 Pointwise dimensions use closed balls. The headline statements take no literature hypothesis.
 Source comparisons and reductions are recorded in `docs/correspondence.md`.

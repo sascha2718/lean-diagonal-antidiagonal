@@ -12,19 +12,21 @@ project:
   responsible_maintainers: ["Sascha Troscheit"]  # TODO(authors): confirm.
 
 classification:
-  arxiv: ["math.DS", "math.MG", "math.CA"]  # TODO(authors): submission categories.
+  arxiv: ["math.DS"]
   msc2020: ["28A80", "37C45", "37D35", "68V20"]  # TODO(authors): confirm 68V20.
 
 sources:
   - title: "Hausdorff dimension of planar box-like self-affine sets with rotations"
     authors: ["Antti Käenmäki", "R. Dániel Prokaj", "Károly Simon", "Sascha Troscheit"]
     type: "paper"
-    id: "arXiv:XXXX.XXXXX"  # TODO(authors): add the assigned arXiv identifier.
-    location: "diagonal-antidiagonal.tex"
+    id: "arXiv:2611.09066"
+    location: "https://arxiv.org/abs/2611.09066v1"
     relationship: "formalizes"
-    license: ""  # TODO(authors): paper licence.
+    license: "CC-BY-NC-SA-4.0"
     author_endorsement: "participated"
-    note: "Statement mapping and source fingerprints: paper-correspondence.yaml."
+    note: >-
+      Version 1 submitted on 6 November 2026. The correspondence checks use the local
+      diagonal-antidiagonal.tex revision and source fingerprints in paper-correspondence.yaml.
   - title: "Dimension of diagonal self-affine sets and measures via non-conformal partitions"
     authors: ["Ariel Rapaport"]
     type: "preprint"

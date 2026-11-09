@@ -1,7 +1,7 @@
 # Numbered statements and source fingerprints. Scope differences: docs/correspondence.md.
 version: 3
 scope: "All 44 numbered statements; the whole-file fingerprint also detects changes to proofs and unnumbered material."
-source_version: "diagonal-antidiagonal.tex, working manuscript (no arXiv version yet)"
+source_version: "diagonal-antidiagonal.tex; paper: arXiv:2611.09066v1 (submitted 6 November 2026)"
 manuscript_files: ["diagonal-antidiagonal.tex"]
 manuscript_revision: "ea69be97835c7061f7c06adc1545bffebd821aa1"
 manuscript_sha256: {"diagonal-antidiagonal.tex": "08c14cd36a64a953771d9f541388913a53d04392f9cc1630cf01ee87ae228f17"}

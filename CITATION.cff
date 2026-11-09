@@ -21,4 +21,6 @@ preferred-citation:
     - family-names: Troscheit
       given-names: Sascha
   year: 2026
-  notes: "Preprint; the arXiv identifier is added when the paper is posted."
+  doi: "10.48550/arXiv.2611.09066"
+  url: "https://arxiv.org/abs/2611.09066"
+  notes: "arXiv:2611.09066 [math.DS]; version 1 submitted on 6 November 2026."

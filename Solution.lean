@@ -7,6 +7,9 @@ public import Solution.Transport
 /-!
 # Definitions and numbered statements of the manuscript
 
+Käenmäki–Prokaj–Simon–Troscheit, *Hausdorff dimension of planar box-like self-affine sets
+with rotations*, [arXiv:2611.09066v1](https://arxiv.org/abs/2611.09066v1).
+
 The definitions below display the mathematical vocabulary used by the statements. A `recall`
 command checks that both the displayed type and formula agree with the imported definition;
 it introduces no new abbreviation. Recursive definitions are displayed through their defining

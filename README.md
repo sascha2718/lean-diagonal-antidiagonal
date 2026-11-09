@@ -1,7 +1,8 @@
 # Hausdorff dimension of planar box-like self-affine sets with rotations
 
 Lean 4 formalisation of *Hausdorff dimension of planar box-like self-affine sets with rotations*
-by Antti Käenmäki, R. Dániel Prokaj, Károly Simon and Sascha Troscheit (2026).
+by Antti Käenmäki, R. Dániel Prokaj, Károly Simon and Sascha Troscheit (2026),
+[arXiv:2611.09066](https://arxiv.org/abs/2611.09066).
 
 ## Scope
 

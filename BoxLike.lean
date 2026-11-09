@@ -2,7 +2,8 @@ module
 
 /-
 `BoxLike`: a formalisation of `diagonal-antidiagonal.tex`, "Hausdorff dimension of planar
-box-like self-affine sets with rotations" (Käenmäki, Prokaj, Simon, Troscheit).
+box-like self-affine sets with rotations" (Käenmäki, Prokaj, Simon, Troscheit),
+arXiv:2611.09066v1, https://arxiv.org/abs/2611.09066v1.
 
 Built on Mathlib and on the Kittle–Kogler library `ExactOverlaps` (`vendor/`). No `sorry`, no
 axiom beyond `propext`, `Classical.choice` and `Quot.sound`. Theorems the article cites are

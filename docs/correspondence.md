@@ -1,5 +1,10 @@
 # Correspondence with the paper
 
+The paper is available as [arXiv:2611.09066v1](https://arxiv.org/abs/2611.09066v1),
+submitted on 6 November 2026. The checks below use the local `diagonal-antidiagonal.tex`
+at manuscript revision `ea69be97835c7061f7c06adc1545bffebd821aa1`; its full source fingerprint
+and all 44 numbered-statement fingerprints match the recorded correspondence.
+
 [Solution.lean](../Solution.lean) records all 44 numbered statements in manuscript order.
 It proves 42 of them. Hochman–Rapaport's
 theorem (1.1) is stated without proof and is unused; Question 1.4 remains open.
