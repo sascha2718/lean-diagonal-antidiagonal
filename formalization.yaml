@@ -7,7 +7,7 @@ project:
     Lean 4 formalisation of dimension formulas for planar box-like self-affine sets with
     rotations and their equilibrium measures. The headline results are Theorems A, B and 4.16;
     Solution.lean presents the numbered statements in manuscript order.
-  authors: ["Sascha Troscheit"]
+  authors: ["Antti Käenmäki", "R. Dániel Prokaj", "Károly Simon", "Sascha Troscheit"]
   license: "Apache-2.0"
   responsible_maintainers: ["Sascha Troscheit"]  # TODO(authors): confirm.
 

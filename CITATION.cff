@@ -2,6 +2,15 @@ cff-version: 1.2.0
 message: "If you use this formalisation, please cite the paper and this repository."
 title: "Lean formalisation of: Hausdorff dimension of planar box-like self-affine sets with rotations"
 authors:
+  - family-names: Käenmäki
+    given-names: Antti
+    affiliation: University of Eastern Finland
+  - family-names: Prokaj
+    given-names: R. Dániel
+    affiliation: University of North Texas
+  - family-names: Simon
+    given-names: Károly
+    affiliation: Budapest University of Technology and Economics
   - family-names: Troscheit
     given-names: Sascha
     affiliation: Uppsala University
